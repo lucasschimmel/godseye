@@ -13,6 +13,7 @@ import { DomainError, parseInput } from "./errors.js";
 import { environmentFor, foundationState, recordRequest, requestFor } from "./foundation-data.js";
 import { appendAudit, write } from "./journal.js";
 import { type Actor, assertOwner } from "./policy.js";
+import { assertProjectMutable } from "./project-lifecycle-view.js";
 import { getProject } from "./projects.js";
 
 function revision(actual: number, expected: number) {
@@ -42,6 +43,7 @@ export async function updateProject(
   return write(store, async (tx) => {
     const request = await requestFor(tx, actor, key, "project.update", { id, data });
     if (request.existing) return getProject(tx, actor, id);
+    await assertProjectMutable(tx, id);
     const project = await getProject(tx, actor, id);
     revision(project.revision, data.expectedRevision);
     await tx
@@ -76,6 +78,7 @@ export async function createEnvironment(
   return write(store, async (tx) => {
     const request = await requestFor(tx, actor, key, "environment.create", { projectId, data });
     if (request.existing) return getProject(tx, actor, projectId);
+    await assertProjectMutable(tx, projectId);
     const project = await getProject(tx, actor, projectId);
     revision(project.revision, data.expectedProjectRevision);
     if (project.environments.some((env) => env.name === data.name))
@@ -136,6 +139,7 @@ export async function updateEnvironment(
       data,
     });
     if (request.existing) return getProject(tx, actor, projectId);
+    await assertProjectMutable(tx, projectId);
     const project = await getProject(tx, actor, projectId),
       environment = await environmentFor(tx, actor, projectId, environmentId, true);
     revision(project.revision, data.expectedProjectRevision);

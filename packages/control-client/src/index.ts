@@ -1,26 +1,51 @@
 import type {
+  AcknowledgeIncidentInput,
   ActivationAssessment,
   AdmitDeliveryInput,
   AdmitRecoveryInput,
   BackendConfigurationDTO,
+  BackupOverviewView,
   ConfigureBackendInput,
   CreateDeliveryPolicyInput,
+  CreateProjectExportInput,
   DeliveryOverviewView,
   DeliveryPolicyView,
   DeliveryPreparationView,
   DeliveryRunView,
+  IncidentOverviewView,
+  IncidentView,
+  JobDefinitionView,
+  JobRunView,
+  JobsOverviewView,
+  MuteIncidentInput,
+  OutboxIntentView,
   PrepareArchiveCheckInput,
   PrepareBackupInput,
   PrepareDeliveryInput,
   PrepareRestoreInput,
+  ProjectExportView,
+  ProjectLifecycleView,
+  PurgeProjectInput,
+  QuarantineProjectInput,
+  ReconcileJobRunInput,
+  ReconcileOutboxInput,
   RecoveryOverviewView,
   RecoveryPreparationView,
   RecoveryRunView,
+  RegisterJobDefinitionInput,
+  ReleaseQuarantineInput,
+  ResumeProjectInput,
+  RotateDatabaseRoleInput,
+  RotationOverviewView,
+  RotationRecordView,
+  SuspendProjectInput,
+  TriggerJobInput,
 } from "@godseye/contracts";
 import {
   type AccessOperation,
   type AccessOverviewView,
   type AccessSlot,
+  type AdmissionControlView,
   type AdmitDatabaseInput,
   type AdmitInfrastructureInput,
   type AuditAnchor,
@@ -42,6 +67,7 @@ import {
   type HealthResponse,
   HttpId,
   type InfrastructureAllocation,
+  type InfrastructureHeadroomView,
   type InfrastructureOverviewView,
   type InfrastructurePreparationView,
   type OperationRequest,
@@ -56,6 +82,7 @@ import {
   type RepositoryConfigurationInput,
   type ResourceResponse,
   type ServiceIdentity,
+  type SetAdmissionInput,
   type UpdateEnvironmentInput,
   type UpdateProjectInput,
 } from "@godseye/contracts";
@@ -92,6 +119,31 @@ export function createControlClient(options: ControlClientOptions = {}) {
         input,
         key,
       ),
+    jobsOverview: () => request<JobsOverviewView>("GET", "/jobs"),
+    registerJobDefinition: (input: RegisterJobDefinitionInput, key: string) =>
+      request<JobDefinitionView>("POST", "/jobs/definitions", input, key),
+    pauseJobDefinition: (value: string, expectedRevision: number, key: string) =>
+      request<JobDefinitionView>(
+        "POST",
+        `/jobs/definitions/${id(value)}/pause`,
+        { expectedRevision },
+        key,
+      ),
+    resumeJobDefinition: (value: string, expectedRevision: number, key: string) =>
+      request<JobDefinitionView>(
+        "POST",
+        `/jobs/definitions/${id(value)}/resume`,
+        { expectedRevision },
+        key,
+      ),
+    triggerJob: (value: string, input: TriggerJobInput, key: string) =>
+      request<JobRunView>("POST", `/jobs/definitions/${id(value)}/trigger`, input, key),
+    cancelJobRun: (value: string, reason: string, key: string) =>
+      request<JobRunView>("POST", `/jobs/runs/${id(value)}/cancel`, { reason }, key),
+    reconcileJobRun: (value: string, input: ReconcileJobRunInput, key: string) =>
+      request<JobRunView>("POST", `/jobs/runs/${id(value)}/reconcile`, input, key),
+    reconcileOutboxIntent: (value: string, input: ReconcileOutboxInput, key: string) =>
+      request<OutboxIntentView>("POST", `/jobs/outbox/${id(value)}/reconcile`, input, key),
     deliveryOverview: () => request<DeliveryOverviewView>("GET", "/delivery"),
     createDeliveryPolicy: (input: CreateDeliveryPolicyInput, key: string) =>
       request<DeliveryPolicyView>("POST", "/delivery/policies", input, key),
@@ -111,6 +163,57 @@ export function createControlClient(options: ControlClientOptions = {}) {
     cleanupDeliveryPreviews: (key: string) =>
       request<{ prepared: string[]; blocked: number }>("POST", "/delivery/cleanup", {}, key),
     databaseOverview: () => request<DatabaseOverviewView>("GET", "/databases"),
+    databaseBackups: () => request<BackupOverviewView>("GET", "/databases/backups"),
+    databaseRotations: () => request<RotationOverviewView>("GET", "/databases/rotations"),
+    rotateDatabaseRole: (input: RotateDatabaseRoleInput, key: string) =>
+      request<RotationRecordView>("POST", "/databases/rotations", input, key),
+    reconcileDatabaseRotation: (value: string, key: string) =>
+      request<RotationRecordView>("POST", `/databases/rotations/${id(value)}/reconcile`, {}, key),
+    incidentOverview: () => request<IncidentOverviewView>("GET", "/incidents"),
+    evaluateIncidents: (key: string) =>
+      request<IncidentOverviewView>("POST", "/incidents/evaluations", {}, key),
+    acknowledgeIncident: (value: string, input: AcknowledgeIncidentInput, key: string) =>
+      request<IncidentView>("POST", `/incidents/${id(value)}/acknowledge`, input, key),
+    muteIncident: (value: string, input: MuteIncidentInput, key: string) =>
+      request<IncidentView>("POST", `/incidents/${id(value)}/mute`, input, key),
+    resolveIncident: (value: string, input: AcknowledgeIncidentInput, key: string) =>
+      request<IncidentView>("POST", `/incidents/${id(value)}/resolve`, input, key),
+    projectLifecycle: (project: string) =>
+      request<ProjectLifecycleView>("GET", `/projects/${id(project)}/lifecycle`),
+    suspendProject: (project: string, input: SuspendProjectInput, key: string) =>
+      request<ProjectLifecycleView>(
+        "POST",
+        `/projects/${id(project)}/lifecycle/suspend`,
+        input,
+        key,
+      ),
+    resumeProject: (project: string, input: ResumeProjectInput, key: string) =>
+      request<ProjectLifecycleView>(
+        "POST",
+        `/projects/${id(project)}/lifecycle/resume`,
+        input,
+        key,
+      ),
+    quarantineProject: (project: string, input: QuarantineProjectInput, key: string) =>
+      request<ProjectLifecycleView>(
+        "POST",
+        `/projects/${id(project)}/lifecycle/quarantine`,
+        input,
+        key,
+      ),
+    releaseProject: (project: string, input: ReleaseQuarantineInput, key: string) =>
+      request<ProjectLifecycleView>(
+        "POST",
+        `/projects/${id(project)}/lifecycle/release`,
+        input,
+        key,
+      ),
+    purgeProject: (project: string, input: PurgeProjectInput, key: string) =>
+      request<ProjectLifecycleView>("POST", `/projects/${id(project)}/lifecycle/purge`, input, key),
+    createProjectExport: (project: string, input: CreateProjectExportInput, key: string) =>
+      request<ProjectExportView>("POST", `/projects/${id(project)}/exports`, input, key),
+    projectExport: (project: string, exportId: string) =>
+      request<ProjectExportView>("GET", `/projects/${id(project)}/exports/${id(exportId)}`),
     recoveryOverview: () => request<RecoveryOverviewView>("GET", "/recovery"),
     prepareArchiveCheck: (input: PrepareArchiveCheckInput, key: string) =>
       request<RecoveryPreparationView>("POST", "/recovery/archives/preparations", input, key),
@@ -146,6 +249,10 @@ export function createControlClient(options: ControlClientOptions = {}) {
         key,
       ),
     infrastructureOverview: () => request<InfrastructureOverviewView>("GET", "/infrastructure"),
+    infrastructureHeadroom: () =>
+      request<InfrastructureHeadroomView>("GET", "/infrastructure/headroom"),
+    setInfrastructureAdmission: (input: SetAdmissionInput, key: string) =>
+      request<AdmissionControlView>("PUT", "/infrastructure/admission", input, key),
     declareInfrastructure: (input: DeclareInventoryInput, key: string) =>
       request<InfrastructureOverviewView>("PUT", "/infrastructure/inventory", input, key),
     refreshInfrastructure: (input: { expectedRevision: number }, key: string) =>

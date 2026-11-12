@@ -30,7 +30,10 @@ import { registerDeliveryRoutes } from "./delivery-routes.js";
 import { registerFoundationRoutes } from "./foundation-routes.js";
 import type { OwnerIdentity } from "./identity/index.js";
 import { registerInfrastructureRoutes } from "./infra-routes.js";
+import { registerJobsRoutes } from "./jobs-routes.js";
+import { registerLifecycleRoutes } from "./lifecycle-routes.js";
 import { registerOpenApi } from "./openapi.js";
+import { registerProtectionRoutes } from "./protection-routes.js";
 import { registerRecoveryRoutes } from "./recovery-routes.js";
 
 const Uuid = z.string().uuid();
@@ -229,7 +232,10 @@ export function createApp(
   registerDatabaseRoutes(app, core, infrastructure);
   registerBackendRoutes(app, core);
   registerRecoveryRoutes(app, infrastructure);
+  registerProtectionRoutes(app, infrastructure);
   registerDeliveryRoutes(app, infrastructure);
+  registerJobsRoutes(app, infrastructure);
+  registerLifecycleRoutes(app, infrastructure);
   registerOpenApi(app);
   app.notFound((c) =>
     c.json(

@@ -11,6 +11,7 @@ import { desc, eq } from "drizzle-orm";
 import { DomainError, parseInput } from "./errors.js";
 import { appendAudit, existingRequest, fingerprint, write } from "./journal.js";
 import { type Actor, assertOwner, assertProjectAccess } from "./policy.js";
+import { assertProjectMutable } from "./project-lifecycle-view.js";
 
 const ENVIRONMENT_DEFAULTS = { memoryMiB: 2048, cpuMilliCores: 1000, diskGiB: 20 } as const;
 
@@ -168,6 +169,7 @@ export async function configureRepository(
   return write(store, async (tx) => {
     const existing = await existingRequest(tx, key, digest);
     if (existing) return getProject(tx, actor, existing.resourceId);
+    await assertProjectMutable(tx, id);
     const project = await getProject(tx, actor, id);
     if (project.revision !== expectedRevision)
       throw new DomainError("REVISION_CONFLICT", "Project has changed; reload before saving", 409);
