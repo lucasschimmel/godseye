@@ -2,6 +2,7 @@
 import { randomUUID } from "node:crypto";
 import type { RegisterJobDefinitionInput } from "@godseye/contracts";
 import { InfrastructureEngine } from "@godseye/core";
+import type { JobOptions } from "../packages/core/src/jobs.js";
 import type {
   JobHandler,
   JobHandlerContext,
@@ -61,7 +62,12 @@ export class SenderFixture implements OutboxSender {
   }
 }
 export async function jobsFixture(
-  options: { configured?: boolean; sender?: SenderFixture; timeoutMs?: number } = {},
+  options: {
+    configured?: boolean;
+    sender?: SenderFixture;
+    timeoutMs?: number;
+    applicationEventLoader?: JobOptions["applicationEventLoader"];
+  } = {},
 ) {
   const base = await infrastructureFixture();
   const handler = new HandlerFixture();
@@ -83,6 +89,7 @@ export async function jobsFixture(
               senders,
               timeoutMs: () => options.timeoutMs ?? 40,
               dispatchTimeoutMs: 60_000,
+              applicationEventLoader: options.applicationEventLoader,
             },
     });
   const infrastructure = build();
