@@ -24,6 +24,7 @@ import {
   recoveryRunView,
   recoveryScope,
 } from "./recovery-state.js";
+import { backupOverview, backupProtection } from "./recovery-view.js";
 
 export * from "./recovery-material.js";
 export * from "./recovery-pgbackrest-info.js";
@@ -190,6 +191,16 @@ export class RecoveryEngine {
         });
       }),
     };
+  }
+  /** Read-only per-environment backup status; a degraded provider yields `unknown`, never an error. */
+  async backups(actor: Actor) {
+    assertOwner(actor);
+    const { verified: _verified, ...view } = await backupOverview(this.state);
+    return view;
+  }
+  /** Derived backup/restore flags for the database overview. */
+  async protection() {
+    return backupProtection(await backupOverview(this.state));
   }
   async assessActivation(actor: Actor, environmentId: string) {
     assertOwner(actor);

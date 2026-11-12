@@ -206,3 +206,52 @@ test("T-AC-39 T-AC-42 keeps mobile recovery forms readable and held activation e
   );
   await page.screenshot({ path: "artifacts/recovery-mobile.png", fullPage: true });
 });
+
+async function apiRequest(page: Page, path: string, post: boolean) {
+  return page.evaluate(
+    async ({ url, post, versionHeader, version }) => {
+      const response = await fetch(url, {
+        method: post ? "POST" : "GET",
+        headers: {
+          "content-type": "application/json",
+          [versionHeader]: version,
+          ...(post ? { "idempotency-key": crypto.randomUUID() } : {}),
+        },
+        ...(post ? { body: "{}" } : {}),
+      });
+      return { status: response.status, body: JSON.parse(await response.text()) };
+    },
+    {
+      url: `${LOCAL_DEFAULTS.apiBase}${path}`,
+      post,
+      versionHeader: CONTROL_API_HEADER,
+      version: CONTROL_API_VERSION,
+    },
+  );
+}
+
+test("T-AC-35 T-AC-40 shows derived backup, rotation and incident states without claiming notification or health", async ({
+  page,
+}) => {
+  await openRecovery(page);
+  await expect(
+    page.getByRole("heading", { name: "État des sauvegardes par environnement", exact: true }),
+  ).toBeVisible();
+  await expect(page.getByText(/Aucun fournisseur de sauvegarde n’est connecté/)).toBeVisible();
+  await expect(page.getByText("Aucune sauvegarde conservée", { exact: true })).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Rotation des secrets à connecter", exact: true }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Réévaluer les incidents", exact: true }).click();
+  await expect(page.getByText("Aucun incident enregistré", { exact: true })).toBeVisible();
+  await expect(page.getByText(/personne n’est prévenu automatiquement/)).toBeVisible();
+  expect(await apiRequest(page, "/databases/backups", false)).toEqual({
+    status: 200,
+    body: { provider: "unconfigured", environments: [] },
+  });
+  expect(await apiRequest(page, "/incidents/evaluations", true)).toEqual({
+    status: 200,
+    body: { notifier: "unconfigured", incidents: [] },
+  });
+  await expect(page.getByRole("button", { name: /Pivoter/ })).toHaveCount(0);
+});

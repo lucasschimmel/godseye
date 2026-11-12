@@ -22,9 +22,9 @@ describe("exact database admission through one Foundation queue", () => {
     expect(first.hash).not.toBe(second.hash);
     expect(await fixture.infrastructure.database.overview(fixture.freshOwner())).toMatchObject({
       allocations: [],
-      backup: "unqualified",
-      restore: "unqualified",
-      rotation: "unqualified",
+      backup: "unconfigured",
+      restore: "unconfigured",
+      rotation: "unconfigured",
     });
     expect(fixture.provider.effects).toEqual([]);
     expect(

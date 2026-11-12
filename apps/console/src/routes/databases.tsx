@@ -7,8 +7,12 @@ import type {
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { Fingerprint } from "lucide-react";
+import { BackupStatus } from "@/components/backup-status";
 import { DatabaseProfileForm } from "@/components/database-profile-form";
+import { IncidentsPanel } from "@/components/incidents-panel";
+import { protectionLabels } from "@/components/protection-labels";
 import { RecoveryPanel } from "@/components/recovery-panel";
+import { RotationPanel } from "@/components/rotation-panel";
 import {
   EmptyState,
   Failure,
@@ -86,7 +90,10 @@ function Databases() {
               : "Chaque admission exige les révisions courantes, la capacité disponible et une confirmation propriétaire récente."}
           </p>
           <p>
-            Sauvegarde, restauration et rotation serveur : à qualifier. La préparation locale et le
+            Protection des données, états dérivés des preuves conservées : sauvegarde{" "}
+            {protectionLabels[overview.data.backup]?.toLowerCase()}, restauration{" "}
+            {protectionLabels[overview.data.restore]?.toLowerCase()}, rotation{" "}
+            {protectionLabels[overview.data.rotation]?.toLowerCase()}. La préparation locale et le
             laboratoire natif ne qualifient pas l’isolation du serveur.
           </p>
           <p>
@@ -217,7 +224,10 @@ function Databases() {
           })}
         </div>
       )}
+      <BackupStatus projects={projects.data} />
       <RecoveryPanel projects={projects.data} databases={overview.data} fresh={fresh} />
+      <RotationPanel projects={projects.data} databases={overview.data} fresh={fresh} />
+      <IncidentsPanel projects={projects.data} />
     </>
   );
 }

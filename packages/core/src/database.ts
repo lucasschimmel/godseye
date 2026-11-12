@@ -2,6 +2,7 @@ import type {
   AdmitDatabaseInput,
   ExecutionContext,
   PrepareDatabaseInput,
+  ProtectionStateView,
 } from "@godseye/contracts";
 import { type DatabaseAccess, type Store, schema } from "@godseye/store";
 import { eq } from "drizzle-orm";
@@ -23,6 +24,7 @@ export * from "./database-material.js";
 export * from "./database-policy.js";
 export * from "./database-postgres.js";
 export * from "./database-provider.js";
+export * from "./database-rotation.js";
 export * from "./database-sql.js";
 export { DATABASE_ADAPTER_ID, DATABASE_DESTINATION } from "./database-state.js";
 
@@ -33,6 +35,15 @@ export class DatabaseEngine {
     private readonly store: Store,
     private readonly options: { now: () => Date; provider?: DatabaseProvider },
   ) {}
+  private protection?: () => Promise<{
+    backup: ProtectionStateView;
+    restore: ProtectionStateView;
+    rotation: ProtectionStateView;
+  }>;
+  /** Derived backup/restore/rotation flags; without a source they are honestly `unconfigured`. */
+  bindProtection(source: NonNullable<DatabaseEngine["protection"]>) {
+    this.protection = source;
+  }
   bind(foundation: FoundationEngine) {
     this.state = {
       store: this.store,
@@ -73,11 +84,14 @@ export class DatabaseEngine {
     }
     const preparations = await this.store.db.select().from(schema.databasePreparations);
     const allocations = await this.store.db.select().from(schema.databaseAllocations);
+    const flags = (await this.protection?.()) ?? {
+      backup: "unconfigured" as const,
+      restore: "unconfigured" as const,
+      rotation: "unconfigured" as const,
+    };
     return {
       execution,
-      backup: "unqualified" as const,
-      restore: "unqualified" as const,
-      rotation: "unqualified" as const,
+      ...flags,
       preparations: preparations.map(databasePreparationView),
       allocations: allocations.map(databaseAllocationView),
     };

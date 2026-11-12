@@ -80,14 +80,14 @@ describe("strict private owner database HTTP and client contract", () => {
     }
   });
 
-  it("T-AC-33 reports unconfigured execution and unqualified backup/restore/rotation honestly", async () => {
+  it("T-AC-33 derives unconfigured backup, restore and rotation states honestly", async () => {
     const response = await request("/databases");
     expect(response.status).toBe(200);
     expect(DatabaseOverview.parse(await response.json())).toMatchObject({
       execution: "unconfigured",
-      backup: "unqualified",
-      restore: "unqualified",
-      rotation: "unqualified",
+      backup: "unconfigured",
+      restore: "unconfigured",
+      rotation: "unconfigured",
       preparations: [],
       allocations: [],
     });

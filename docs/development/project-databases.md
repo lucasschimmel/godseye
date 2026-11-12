@@ -73,8 +73,22 @@ The latest Windows/WSL Ubuntu 26.04 run passed ten checks in 15.08 seconds using
 
 An intermittent WSL post-restart connection failure is preserved in `artifacts/test-results/pg-lab-flakiness.json` and the retained `reviews/database-lab-flakiness.json`. The fixture now bounds expected TLS/API-role connection readiness to five seconds and executes `SELECT 1` before checking persisted data. It retries connection establishment only; it never retries DDL, DML, bootstrap or provider writes and never weakens authentication.
 
+## Backup, rotation and incident views (E03.S04, local)
+
+Owner API `1.7.0` adds read-mostly protection views to `/databases`; they stay readable when the provider is degraded.
+
+| Path (under `/api/v1`) | Result |
+| --- | --- |
+| `GET /databases/backups` | Per-environment `healthy`, `lagging`, `headroom-low` or `unknown`, last base backup, archive age/lag against policy, recovery window and archive headroom. `unconfigured` without a provider; a throwing or degraded provider yields `unknown`, never `healthy`. |
+| `GET /databases/rotations`, `POST /databases/rotations`, `POST /databases/rotations/:id/reconcile` | Role-by-role rotation state. A rotation persists its intent first, allows one unresolved rotation per allocation and role, replays an idempotency key without repeating the effect, reconciles a lost commit acknowledgement by inspecting a durable marker, and records only public SHA-256 verifier fingerprints. Secret values never appear in responses, audit or logs. Without a rotation provider the route answers 503 and the view reports `unconfigured`. |
+| `GET /incidents`, `POST /incidents/evaluations`, `POST /incidents/:id/{acknowledge,mute,resolve}` | Deduplicated `archive-lag`, `headroom` and `rotation-failure` incidents with owner acknowledgement, bounded mutes and resolution. Notification delivery is `unconfigured`, `pending`, `notified` or `failed`; a failed delivery stays visible and is never reported as an alert sent. |
+
+The `/databases` console page shows the three panels. The native tests use an in-process PostgreSQL
+stand-in for the cell cluster; real-cell rotation, off-host archive probes and an actual notification
+channel remain unqualified.
+
 ## Remaining operational gates
 
 Physical E00 admission, real private deployment transport, persistent quotas and both-family firewall enforcement remain required. The subsequent [physical backup and held-recovery continuation](postgresql-recovery.md) adds a separate eleven-case actual pgBackRest/PITR lab and API `1.4.0`; default execution is still unconfigured and all-service activation remains blocked. Protected off-host recovery, production RPO/RTO, old-credential revocation/rotation and full release migration workflows remain unqualified. A backup role, restart-persistent data or a successful policy test cannot substitute for restore/archive/transition evidence.
 
-This checkpoint covers project/environment metadata, bounded previews and the local database lifecycle. Whole-project suspension across all services, export, purge, deployed preview teardown and retention workflows are not complete E03.S01 acceptance.
+This checkpoint covers project/environment metadata, bounded previews and the local database lifecycle. The [project lifecycle guide](project-lifecycle.md) adds metadata-only suspension, export and staged deletion; physical suspension of every service, application data export, deployed preview teardown and provider-driven release of allocations are still not complete E03.S01 acceptance.

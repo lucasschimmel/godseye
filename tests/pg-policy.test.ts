@@ -194,9 +194,9 @@ describe("independent PostgreSQL profile authority", () => {
   it("T-AC-31 rejects material-bearing owner DTOs rather than silently stripping fields", () => {
     const overview = {
       execution: "unconfigured",
-      backup: "unqualified",
-      restore: "unqualified",
-      rotation: "unqualified",
+      backup: "unconfigured",
+      restore: "unconfigured",
+      rotation: "unconfigured",
       preparations: [],
       allocations: [],
     };
