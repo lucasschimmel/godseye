@@ -1,0 +1,111 @@
+import {
+  ControlPlane,
+  InfrastructureEngine,
+  runDeliveryScheduler,
+  runFoundationWorker,
+} from "@godseye/core";
+import { openStore, type Store } from "@godseye/store";
+import { serve } from "@hono/node-server";
+import { createRuntimeAccess } from "./access-runtime.js";
+import { createApp } from "./app.js";
+import { loadConfiguration } from "./config.js";
+import { createOwnerIdentity } from "./identity/index.js";
+import { acquireInstance, loadIdentityMaterial, privateDirectory } from "./identity/runtime.js";
+
+async function start() {
+  const config = loadConfiguration();
+  await privateDirectory(config.stateDir);
+  if (!config.databaseUrl) await privateDirectory(config.dataDir);
+  const release = await acquireInstance(config.stateDir);
+  const abort = new AbortController();
+  let store: Store | undefined;
+  let server: ReturnType<typeof serve> | undefined;
+  let worker: Promise<void> | undefined;
+  let deliveryWorker: Promise<void> | undefined;
+  let stopping: Promise<void> | undefined;
+  function stop() {
+    stopping ??= (async () => {
+      abort.abort();
+      let failed = false;
+      if (server) await new Promise<void>((done) => server?.close(() => done()));
+      if (worker)
+        await worker.catch(() => {
+          failed = true;
+        });
+      if (deliveryWorker)
+        await deliveryWorker.catch(() => {
+          failed = true;
+        });
+      try {
+        await store?.close();
+      } catch {
+        failed = true;
+      }
+      try {
+        await release();
+      } catch {
+        failed = true;
+      }
+      if (failed) throw new Error("Local worker or storage cleanup failed");
+    })();
+    return stopping;
+  }
+  function fail(message: string) {
+    console.error(message);
+    process.exitCode = 1;
+    void stop().catch(() => {
+      console.error("Local cleanup failed after admission stopped");
+    });
+  }
+  try {
+    const signingKey = await loadIdentityMaterial(config.identityDir);
+    store = await openStore({ dataDir: config.dataDir, databaseUrl: config.databaseUrl });
+    const identity = await createOwnerIdentity(store, {
+      origin: `http://localhost:${config.consolePort}`,
+      signingKey,
+    });
+    const infrastructure = new InfrastructureEngine(store);
+    const engine = infrastructure.foundation;
+    const broker = createRuntimeAccess(store, engine, config, signingKey);
+    worker = runFoundationWorker(engine, {
+      workerId: `local-controller-${process.pid}`,
+      signal: abort.signal,
+    });
+    deliveryWorker = runDeliveryScheduler(infrastructure.delivery, { signal: abort.signal });
+    const app = createApp(
+      new ControlPlane(store),
+      config,
+      identity,
+      engine,
+      broker,
+      infrastructure,
+    );
+    server = serve({ fetch: app.fetch, port: config.apiPort, hostname: config.host }, () => {
+      console.info(
+        `G.O.D.S.E.Y.E owner console: http://localhost:${config.consolePort} (local only)`,
+      );
+      console.info(
+        "Initial enrollment: bun run owner:setup. Management always requires an owner passkey.",
+      );
+    });
+    worker.catch(() => fail("Control worker failed; stopping local admission"));
+    deliveryWorker.catch(() => fail("Delivery scheduler failed; stopping local admission"));
+    server.once("error", () => fail("Local API listener failed"));
+    for (const signal of ["SIGINT", "SIGTERM"] as const)
+      process.once(signal, () => {
+        void stop().catch(() => {
+          console.error("Local shutdown failed");
+          process.exitCode = 1;
+        });
+      });
+  } catch {
+    await stop();
+    throw new Error("Local API startup failed");
+  }
+}
+void start().catch(() => {
+  console.error(
+    "Control API failed to start. Verify local configuration, private state permissions and the process lock.",
+  );
+  process.exitCode = 1;
+});
