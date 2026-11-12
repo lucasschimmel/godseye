@@ -25,6 +25,7 @@ import {
 } from "./events.js";
 import { registerFileRoutes } from "./file-routes.js";
 import { acquireApplicationInstance } from "./instance.js";
+import { flushApplicationJobs, readApplicationJobEvent } from "./jobs-bridge.js";
 import { prepareApplicationFiles } from "./private-files.js";
 import {
   applicationSnapshot,
@@ -246,6 +247,9 @@ export async function createApplicationBackend(options: ApplicationBackendOption
     state,
     auth,
     publishEvent: (input: PublishApplicationEvent) => publishApplicationEvent(state, input),
+    flushJobs: (input?: { signal?: AbortSignal; limit?: number }) =>
+      flushApplicationJobs(state, input),
+    readJobEvent: (id: string) => readApplicationJobEvent(state, id),
     snapshot: () => state.store.exclusive(() => applicationSnapshot(state)),
     exportRecovery: (input: { directory: string }) => exportApplicationRecovery(state, input),
     importRecovery: (input: { directory: string; sourceAuthMaterial: string }) =>
