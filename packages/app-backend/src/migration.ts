@@ -1,0 +1,13 @@
+/** Application tables deliberately exclude every controller/owner table. Hash checked at every open. */
+export const APPLICATION_MIGRATION = `
+CREATE TABLE IF NOT EXISTS app_scope(id integer PRIMARY KEY CHECK(id=1),project_id text NOT NULL,environment_id text NOT NULL,migration_hash text NOT NULL,recovery_hold boolean NOT NULL,recovery_configuration jsonb,store_id text NOT NULL);
+CREATE TABLE IF NOT EXISTS app_user(id text PRIMARY KEY,name text NOT NULL,email text NOT NULL UNIQUE,email_verified boolean NOT NULL,image text,created_at timestamptz NOT NULL,updated_at timestamptz NOT NULL);
+CREATE TABLE IF NOT EXISTS app_session(id text PRIMARY KEY,user_id text NOT NULL REFERENCES app_user(id),session_value text NOT NULL UNIQUE,expires_at timestamptz NOT NULL,created_at timestamptz NOT NULL,updated_at timestamptz NOT NULL,ip_address text,user_agent text);
+CREATE TABLE IF NOT EXISTS app_account(id text PRIMARY KEY,user_id text NOT NULL REFERENCES app_user(id),account_id text NOT NULL,provider_id text NOT NULL,access_value text,refresh_value text,id_value text,password_hash text,scope text,access_expires_at timestamptz,refresh_expires_at timestamptz,created_at timestamptz NOT NULL,updated_at timestamptz NOT NULL);
+CREATE TABLE IF NOT EXISTS app_verification(id text PRIMARY KEY,identifier text NOT NULL,value text NOT NULL,expires_at timestamptz NOT NULL,created_at timestamptz NOT NULL,updated_at timestamptz NOT NULL);
+CREATE TABLE IF NOT EXISTS app_files(id text PRIMARY KEY,user_id text NOT NULL REFERENCES app_user(id),name text NOT NULL,content_type text NOT NULL,size bigint NOT NULL CHECK(size>=0),upload_offset bigint NOT NULL CHECK(upload_offset>=0 AND upload_offset<=size),status text NOT NULL CHECK(status IN ('uploading','committed','deleted')),expected_hash text,sha256 text,revision integer NOT NULL CHECK(revision>=0),pending_offset bigint,pending_hash text,cleanup_pending boolean NOT NULL,created_at timestamptz NOT NULL,expires_at timestamptz NOT NULL);
+CREATE TABLE IF NOT EXISTS app_download_grants(id text PRIMARY KEY,file_id text NOT NULL REFERENCES app_files(id),user_id text NOT NULL,expires_at timestamptz NOT NULL,revoked boolean NOT NULL);
+CREATE TABLE IF NOT EXISTS app_events(id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,user_id text NOT NULL REFERENCES app_user(id),type text NOT NULL,payload jsonb NOT NULL,event_key text NOT NULL UNIQUE,digest text NOT NULL,occurred_at timestamptz NOT NULL);
+CREATE INDEX IF NOT EXISTS app_events_user_cursor ON app_events(user_id,id);
+CREATE TABLE IF NOT EXISTS app_receipts(key text PRIMARY KEY,digest text NOT NULL,result jsonb NOT NULL);
+`;
