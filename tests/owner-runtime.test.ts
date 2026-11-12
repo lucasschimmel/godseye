@@ -1,0 +1,364 @@
+import { execFile, spawn } from "node:child_process";
+import { randomUUID } from "node:crypto";
+import { once } from "node:events";
+import { link, mkdir, realpath, rm, stat, symlink, unlink, writeFile } from "node:fs/promises";
+import { homedir, tmpdir } from "node:os";
+import { join, parse, resolve, sep } from "node:path";
+import { promisify } from "node:util";
+import { ControlPlane } from "@godseye/core";
+import { openStore, type Store, schema } from "@godseye/store";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { createOwnerIdentity } from "../apps/control-api/src/identity/index.js";
+import {
+  acquireInstance,
+  assertPrivateTarget,
+  loadIdentityMaterial,
+  privateDirectory,
+} from "../apps/control-api/src/identity/runtime.js";
+import { owner, projectInput } from "./helpers.js";
+
+const execute = promisify(execFile);
+// This case starts three PostgreSQL lifecycles plus Windows ACL processes. It measured ~13s alone
+// and exceeded the generic 30s limit during concurrent builds/browser/mutation jobs. Bound the CLI
+// separately, leaving equal time for seeding, reopening, verification and orderly cleanup.
+const offlineChildTimeoutMs = 45_000;
+const offlineScenarioTimeoutMs = offlineChildTimeoutMs * 2;
+const permissionsProgram = `
+  $ErrorActionPreference = 'Stop'
+  $target = [Environment]::GetEnvironmentVariable('GODSEYE_RUNTIME_TEST_TARGET')
+  $acl = if ([System.IO.Directory]::Exists($target)) {
+    [System.IO.Directory]::GetAccessControl($target)
+  } else {
+    [System.IO.File]::GetAccessControl($target)
+  }
+  $currentSid = [System.Security.Principal.WindowsIdentity]::GetCurrent().User.Value
+  $rules = @($acl.GetAccessRules($true, $true, [System.Security.Principal.SecurityIdentifier]) | ForEach-Object {
+    [pscustomobject]@{
+      sid = $_.IdentityReference.Translate([System.Security.Principal.SecurityIdentifier]).Value
+      type = $_.AccessControlType.ToString()
+      rights = $_.FileSystemRights.ToString()
+      inherited = $_.IsInherited
+    }
+  })
+  [pscustomobject]@{
+    owner = $acl.GetOwner([System.Security.Principal.SecurityIdentifier]).Value
+    current = $currentSid
+    protected = $acl.AreAccessRulesProtected
+    rules = $rules
+    sddl = $acl.Sddl
+  } | ConvertTo-Json -Depth 4 -Compress
+`;
+
+interface PermissionView {
+  owner: string;
+  current: string;
+  protected: boolean;
+  rules: { sid: string; type: string; rights: string; inherited: boolean }[];
+  sddl: string;
+}
+
+async function windowsPermissions(directory: string): Promise<PermissionView> {
+  const executable = join(
+    process.env.SystemRoot ?? "C:\\Windows",
+    "System32",
+    "WindowsPowerShell",
+    "v1.0",
+    "powershell.exe",
+  );
+  const result = await execute(
+    executable,
+    ["-NoProfile", "-NonInteractive", "-Command", permissionsProgram],
+    {
+      env: {
+        ...process.env,
+        PSModulePath: join(
+          process.env.SystemRoot ?? "C:\\Windows",
+          "System32",
+          "WindowsPowerShell",
+          "v1.0",
+          "Modules",
+        ),
+        GODSEYE_RUNTIME_TEST_TARGET: directory,
+      },
+    },
+  );
+  return JSON.parse(result.stdout) as PermissionView;
+}
+
+async function offlineRecovery(dataDir: string, stateDir: string) {
+  const child = spawn(
+    process.execPath,
+    ["--import", "tsx", "apps/control-api/src/owner-cli.ts", "recover", "--offline"],
+    {
+      cwd: process.cwd(),
+      env: {
+        ...process.env,
+        GODSEYE_MODE: "local",
+        NODE_ENV: "development",
+        GODSEYE_DATABASE_URL: "",
+        GODSEYE_DATA_DIR: dataDir,
+        GODSEYE_STATE_DIR: stateDir,
+      },
+      stdio: ["ignore", "pipe", "pipe"],
+    },
+  );
+  let stdout = "";
+  let stderr = "";
+  child.stdout.on("data", (chunk: Buffer) => {
+    stdout += chunk.toString();
+  });
+  child.stderr.on("data", (chunk: Buffer) => {
+    stderr += chunk.toString();
+  });
+  let timedOut = false;
+  const startedAt = performance.now();
+  const timer = setTimeout(() => {
+    timedOut = true;
+    child.kill("SIGTERM");
+  }, offlineChildTimeoutMs);
+  try {
+    const [code] = await once(child, "close");
+    // Return only a parsed in-memory fixture link; never log the enrollment ticket or key.
+    const link = stdout.match(/^http:\/\/localhost:\d+\/#enroll=([A-Za-z0-9_-]+)$/m)?.[0];
+    return {
+      code,
+      link,
+      hasFailure: stderr.includes("Owner command failed"),
+      timedOut,
+      elapsedMs: performance.now() - startedAt,
+    };
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+describe("private local owner runtime", () => {
+  let fixtureRoot: string;
+  let localRoot: string;
+
+  beforeEach(async () => {
+    const projectRoot = await realpath(process.cwd());
+    const intended = join(projectRoot, ".local");
+    await mkdir(intended, { recursive: true });
+    localRoot = await realpath(intended);
+    if (localRoot.toLowerCase() !== intended.toLowerCase())
+      throw new Error("Runtime fixtures require a workspace-local directory");
+    fixtureRoot = join(localRoot, `owner-runtime-${randomUUID()}`);
+    await mkdir(fixtureRoot, { mode: 0o700 });
+  });
+
+  afterEach(async () => {
+    const absolute = resolve(fixtureRoot);
+    if (!absolute.startsWith(`${localRoot}${sep}owner-runtime-`))
+      throw new Error("Refusing cleanup outside the runtime fixture directory");
+    await rm(absolute, { recursive: true, force: true });
+  });
+
+  it("T01 protects a fresh private directory with only owner access before identity material is written", async () => {
+    const directory = join(fixtureRoot, "private-state");
+
+    await privateDirectory(directory);
+
+    if (process.platform === "win32") {
+      const permissions = await windowsPermissions(directory);
+      expect(permissions.protected).toBe(true);
+      expect(permissions.owner).toBe(permissions.current);
+      expect(permissions.rules).toEqual([
+        { sid: permissions.current, type: "Allow", rights: "FullControl", inherited: false },
+      ]);
+    } else {
+      expect((await stat(directory)).mode & 0o777).toBe(0o700);
+    }
+  });
+
+  it("T01 T37 permits only one concurrent instance and allows a new claim after release", async () => {
+    const directory = join(fixtureRoot, "instance-state");
+    await privateDirectory(directory);
+    const claims = await Promise.allSettled(
+      Array.from({ length: 5 }, () => acquireInstance(directory)),
+    );
+    const acquired = claims.filter(
+      (claim): claim is PromiseFulfilledResult<() => Promise<void>> => claim.status === "fulfilled",
+    );
+    try {
+      expect(acquired).toHaveLength(1);
+      expect(claims.filter((claim) => claim.status === "rejected")).toHaveLength(4);
+      await expect(acquireInstance(directory)).rejects.toThrow("already running");
+    } finally {
+      for (const claim of acquired) await claim.value();
+    }
+
+    const release = await acquireInstance(directory);
+    await release();
+  });
+
+  it("T37 reclaims a stale instance only after its recorded child process has exited", async (context) => {
+    const child = spawn(process.execPath, ["-e", "process.exit(0)"], { stdio: "ignore" });
+    const pid = child.pid;
+    await once(child, "close");
+    if (pid === undefined) throw new Error("The fixture child process did not start");
+    try {
+      process.kill(pid, 0);
+      context.skip("The operating system reused the fixture PID");
+      return;
+    } catch (error) {
+      if (!(error instanceof Error && "code" in error && error.code === "ESRCH")) throw error;
+    }
+    const directory = join(fixtureRoot, "stale-state");
+    await privateDirectory(directory);
+    await writeFile(join(directory, "instance.lock"), JSON.stringify({ pid, id: randomUUID() }), {
+      mode: 0o600,
+    });
+
+    const release = await acquireInstance(directory);
+
+    await expect(acquireInstance(directory)).rejects.toThrow("already running");
+    await release();
+  });
+
+  it("T01 refuses shared roots without changing the workspace permission descriptor", async () => {
+    const workspace = resolve(process.cwd());
+    const before =
+      process.platform === "win32"
+        ? (await windowsPermissions(workspace)).sddl
+        : (await stat(workspace)).mode;
+
+    const roots = [workspace, parse(workspace).root, homedir(), tmpdir()];
+    if (process.platform === "win32") roots.push(workspace.toUpperCase(), homedir().toUpperCase());
+    for (const directory of roots) {
+      await expect(assertPrivateTarget(directory)).rejects.toThrow("shared root directory");
+    }
+
+    const after =
+      process.platform === "win32"
+        ? (await windowsPermissions(workspace)).sddl
+        : (await stat(workspace)).mode;
+    expect(before === after).toBe(true);
+  });
+
+  it("T01 rejects a junction between fresh fixture directories before changing the target permissions", async () => {
+    const source = join(fixtureRoot, "junction-source");
+    const target = join(fixtureRoot, "junction-target");
+    await Promise.all([mkdir(source), mkdir(target)]);
+    const junction = join(source, "linked-directory");
+    const before =
+      process.platform === "win32"
+        ? (await windowsPermissions(target)).sddl
+        : (await stat(target)).mode;
+    await symlink(target, junction, "junction");
+    try {
+      await expect(privateDirectory(source)).rejects.toThrow("Linked entries");
+
+      const after =
+        process.platform === "win32"
+          ? (await windowsPermissions(target)).sddl
+          : (await stat(target)).mode;
+      expect(before === after).toBe(true);
+    } finally {
+      // Remove the owned junction itself before any recursive fixture cleanup.
+      await unlink(junction);
+    }
+  });
+
+  it("T01 rejects a hard-linked fixture file before changing the other file's permissions", async () => {
+    const source = join(fixtureRoot, "hardlink-source");
+    const target = join(fixtureRoot, "hardlink-target");
+    await Promise.all([mkdir(source), mkdir(target)]);
+    const original = join(target, "fixture-data.txt");
+    const hardlink = join(source, "linked-data.txt");
+    await writeFile(original, "Owned runtime fixture data", { mode: 0o600 });
+    const before =
+      process.platform === "win32"
+        ? (await windowsPermissions(original)).sddl
+        : (await stat(original)).mode;
+    await link(original, hardlink);
+    try {
+      await expect(privateDirectory(source)).rejects.toThrow("Linked entries");
+
+      const after =
+        process.platform === "win32"
+          ? (await windowsPermissions(original)).sddl
+          : (await stat(original)).mode;
+      expect(before === after).toBe(true);
+    } finally {
+      await unlink(hardlink);
+    }
+  });
+
+  it("T01 T31 recovers offline in a fresh isolated state directory while preserving registered projects", {
+    timeout: offlineScenarioTimeoutMs,
+  }, async () => {
+    const dataDir = join(fixtureRoot, "control");
+    const stateDir = join(fixtureRoot, "state");
+    await privateDirectory(stateDir);
+    const signingKey = await loadIdentityMaterial(join(stateDir, "owner"));
+    let store: Store | undefined = await openStore({ dataDir });
+    try {
+      const identity = await createOwnerIdentity(store, {
+        origin: "http://localhost:4300",
+        signingKey,
+      });
+      const initial = await identity.prepareEnrollment("setup");
+      await store.db.insert(schema.ownerPasskey).values({
+        id: randomUUID(),
+        name: "Offline recovery fixture",
+        publicKey: "fixture-public-key-only",
+        userId: identity.ownerId,
+        credentialID: randomUUID(),
+        counter: 0,
+        deviceType: "singleDevice",
+        backedUp: false,
+        createdAt: new Date(),
+      });
+      await (await identity.auth.$context).internalAdapter.createSession(identity.ownerId);
+      const core = new ControlPlane(store);
+      const project = await core.createProject(
+        owner,
+        { ...projectInput, slug: "offline-runtime-fixture" },
+        randomUUID(),
+      );
+      await store.close();
+      store = undefined;
+
+      const recovered = await offlineRecovery(dataDir, stateDir);
+
+      expect(
+        recovered.timedOut,
+        `Offline CLI exceeded its ${offlineChildTimeoutMs}ms process deadline`,
+      ).toBe(false);
+      expect(
+        recovered.code,
+        `Offline CLI finished after ${Math.round(recovered.elapsedMs)}ms`,
+      ).toBe(0);
+      expect(Boolean(recovered.link)).toBe(true);
+      expect(recovered.hasFailure).toBe(false);
+      store = await openStore({ dataDir });
+      expect(await store.db.select().from(schema.ownerSession)).toHaveLength(0);
+      expect(await store.db.select().from(schema.ownerPasskey)).toHaveLength(0);
+      expect((await new ControlPlane(store).getProject(owner, project.id)).slug).toBe(
+        "offline-runtime-fixture",
+      );
+      const restarted = await createOwnerIdentity(store, {
+        origin: "http://localhost:4300",
+        signingKey,
+      });
+      const oldOptions = await restarted.handle(
+        new Request(
+          `http://localhost:4300/api/auth/passkey/generate-register-options?context=${encodeURIComponent(initial.ticket)}`,
+          { headers: { origin: "http://localhost:4300" } },
+        ),
+      );
+      expect(oldOptions.ok).toBe(false);
+      const ticket = recovered.link ? new URL(recovered.link).hash.slice("#enroll=".length) : "";
+      const newOptions = await restarted.handle(
+        new Request(
+          `http://localhost:4300/api/auth/passkey/generate-register-options?context=${encodeURIComponent(ticket)}`,
+          { headers: { origin: "http://localhost:4300" } },
+        ),
+      );
+      expect(newOptions.status).toBe(200);
+    } finally {
+      await store?.close();
+    }
+  });
+});
