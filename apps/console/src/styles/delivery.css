@@ -1,0 +1,237 @@
+.delivery-assurance .panel-heading {
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+.delivery-assurance .section-title {
+  padding-top: 9px;
+  min-width: 0;
+}
+.delivery-assurance-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-width: 0;
+}
+.delivery-assurance-actions button {
+  font-size: 11px;
+}
+.delivery-assurance > h2 {
+  margin: 23px 23px 12px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.delivery-assurance > p {
+  margin: 0 23px 12px;
+  max-width: 90ch;
+  color: var(--text-secondary);
+  font-size: 11px;
+  line-height: 1.8;
+}
+.delivery-assurance > p:last-child {
+  margin-bottom: 23px;
+  color: var(--accent-ink);
+}
+.delivery-policy {
+  display: grid;
+  gap: 18px;
+  padding: 24px;
+}
+.delivery-policy > h2 {
+  font-size: 14px;
+  font-weight: 600;
+}
+.delivery-policy p {
+  color: var(--text-secondary);
+  font-size: 11px;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+.delivery-policy label {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  min-width: 0;
+  color: var(--text-primary);
+  font-size: 11px;
+  font-weight: 550;
+  line-height: 1.6;
+}
+.delivery-policy input,
+.delivery-policy select {
+  min-width: 0;
+  width: 100%;
+  font-size: 12px;
+  box-shadow: none;
+}
+.delivery-policy select {
+  min-height: 36px;
+  padding: 7px 10px;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius);
+  color: var(--text-primary);
+  background: var(--surface);
+}
+.delivery-policy select:focus-visible {
+  outline: 2px solid var(--accent-ink);
+  outline-offset: 2px;
+}
+.delivery-source-fields,
+.delivery-policy-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  min-width: 0;
+}
+.delivery-policy-fields {
+  padding-top: 18px;
+  border-top: 1px solid var(--border-default);
+}
+.delivery-policy-fields > p,
+.delivery-policy-fields > .delivery-wide,
+.delivery-policy-fields > .delivery-checkbox,
+.delivery-resource-fields {
+  grid-column: 1 / -1;
+}
+.delivery-policy-fields > .mono {
+  color: var(--accent-ink);
+}
+.delivery-resource-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 18px;
+}
+.delivery-policy .delivery-checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-weight: 400;
+}
+.delivery-checkbox input {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+  margin-top: 2px;
+  accent-color: var(--accent-ink);
+}
+.delivery-policy-fields > button {
+  justify-self: start;
+  font-size: 12px;
+}
+.delivery-history > .section-title {
+  min-height: 63px;
+  margin: 0;
+  padding: 19px 23px;
+  border-bottom: 1px solid var(--border-default);
+}
+.delivery-history .panel-heading {
+  flex-wrap: wrap;
+}
+.delivery-history > p {
+  padding: 18px 23px 0;
+  color: var(--text-secondary);
+  font-size: 11px;
+  line-height: 1.8;
+}
+.delivery-history .operation-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px 23px;
+  border-bottom: 1px solid var(--border-default);
+}
+.delivery-history .operation-row:last-child {
+  border-bottom: 0;
+}
+.delivery-history .operation-row > div {
+  min-width: 0;
+}
+.delivery-history .operation-row strong {
+  font-size: 12px;
+  font-weight: 600;
+}
+.delivery-history .operation-row p,
+.delivery-history .operation-row small {
+  display: block;
+  margin-top: 7px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+.delivery-history .operation-row a {
+  color: var(--accent-ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.delivery-history .button-group {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+.delivery-history button {
+  max-width: 100%;
+  min-height: 36px;
+  height: auto;
+  white-space: normal;
+  line-height: 1.5;
+  font-size: 11px;
+  text-align: center;
+}
+@media (max-width: 680px) {
+  .delivery-assurance .panel-heading {
+    display: grid;
+    gap: 16px;
+  }
+  .delivery-assurance .section-title {
+    padding-top: 0;
+  }
+  .delivery-assurance-actions {
+    width: 100%;
+  }
+  .delivery-assurance-actions button {
+    min-width: 0;
+    height: auto;
+    min-height: 36px;
+    flex: 1 1 140px;
+    white-space: normal;
+    line-height: 1.5;
+  }
+  .delivery-assurance > h2,
+  .delivery-assurance > p {
+    margin-inline: 18px;
+  }
+  .delivery-policy {
+    padding: 21px 18px;
+  }
+  .delivery-source-fields,
+  .delivery-policy-fields,
+  .delivery-resource-fields {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .delivery-policy-fields > button {
+    max-width: 100%;
+    white-space: normal;
+    height: auto;
+    min-height: 36px;
+  }
+  .delivery-history > .section-title,
+  .delivery-history .operation-row {
+    padding-inline: 18px;
+  }
+  .delivery-history > p {
+    padding-inline: 18px;
+  }
+  .delivery-history .operation-row {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 15px;
+  }
+  .delivery-history .button-group {
+    justify-content: flex-start;
+  }
+  .delivery-history .panel-heading > button {
+    width: 100%;
+  }
+}

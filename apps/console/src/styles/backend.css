@@ -1,0 +1,96 @@
+.backend-panel {
+  margin-block: 1.5rem;
+  min-width: 0;
+  padding: 24px;
+}
+.backend-heading,
+.backend-status,
+.backend-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+}
+.backend-heading h2 {
+  margin-block: 0.4rem;
+}
+.backend-panel label {
+  display: grid;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  min-width: 0;
+}
+.backend-panel select,
+.backend-panel textarea {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid var(--border-default);
+  border-radius: 0.5rem;
+  padding: 0.7rem;
+  background: var(--surface);
+  color: var(--text-primary);
+  font: inherit;
+}
+.backend-panel textarea {
+  resize: vertical;
+}
+.backend-status {
+  justify-content: flex-start;
+  border-block: 1px solid var(--border-default);
+  padding-block: 0.8rem;
+  margin-block: 1rem;
+  font-size: 0.85rem;
+}
+.backend-status strong {
+  color: var(--accent-ink);
+}
+.backend-actions {
+  justify-content: flex-start;
+  margin-block: 1rem;
+}
+.backend-actions button {
+  white-space: normal;
+  height: auto;
+  min-height: 2.5rem;
+}
+.backend-settings {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+.backend-wide {
+  grid-column: 1 / -1;
+}
+.backend-settings .backend-check {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.backend-check input {
+  accent-color: var(--accent-ink);
+  flex-shrink: 0;
+}
+@media (max-width: 640px) {
+  .backend-panel {
+    padding: 21px 18px;
+  }
+  .backend-settings {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .backend-heading {
+    align-items: stretch;
+  }
+  .backend-heading > label {
+    width: 100%;
+  }
+  .backend-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .backend-actions button {
+    width: 100%;
+  }
+}
