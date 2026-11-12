@@ -1,0 +1,53 @@
+{
+  "kind": "local E04 GAUNTLET verification",
+  "date": "2026-11-12",
+  "baseline": { "unit": 851, "browser": 28 },
+  "new_scope": { "unit_cases": 121, "unit_files": 14, "owner_browser_journeys": 3 },
+  "focused": {
+    "total": 121,
+    "passed": 118,
+    "failed": 3,
+    "wall_seconds": 258.67,
+    "junit_summed_worker_seconds": 481.9748996,
+    "report": "artifacts/test-results/backend-focused.xml",
+    "failure_classification": "Three stale QA assumptions after instance-lock metadata and file-list pagination were introduced; authorization and preservation assertions were retained.",
+    "affected_recheck": { "selected": 3, "passed": 3, "skipped": 14, "wall_seconds": 22.3, "report": "artifacts/test-results/backend-files-post-lock.xml" }
+  },
+  "actual_mechanisms_included_in_unit_cases": [
+    "Independent persistent PGlite stores and actual BetterAuth identity/session lifecycle",
+    "Private filesystem bytes, resumable uploads, quotas and post-physical-effect transaction failures",
+    "Real local OAuth2/PKCE exchange with state and callback-origin denials",
+    "Durable recipient/cell-bound SSE, retention gaps, unread capacity and revocation",
+    "Auth/file/config export and new-environment held recovery with local component timestamps and unknown external gap",
+    "Source backend template HTTP and SDK journey, then compiled backend restart against retained state",
+    "Built browser SDK JavaScript import, no-server-import bundle inspection and independent TypeScript consumer"
+  ],
+  "browser": {
+    "initial_selected": 3,
+    "initial_passed": 3,
+    "initial_wall_seconds": 55.6,
+    "actual_screenshots_inspected": ["artifacts/backend-overview.png", "artifacts/backend-mobile.png"],
+    "note": "Initial visual inspection found flush padding; root corrected scoped styles. The root's final full browser suite covers the post-style source and refreshes screenshots."
+  },
+  "mutations": {
+    "ids": "M74-M86",
+    "selected": 13,
+    "baseline_passed": 13,
+    "killed": 13,
+    "restored_passed": 13,
+    "survived": 0,
+    "invalid": 0,
+    "sourceUnchanged": true,
+    "wall_seconds": 257.091,
+    "report": ".codex/crafts/g-o-d-s-e-y-e-cfe8/reviews/mutations-backend.json",
+    "historical_suites_rerun": false
+  },
+  "coverage": { "line": null, "branch": null, "exhaustive_mutation_score": null },
+  "final_combined_regression": "Root coordinator owns the complete old+new unit/browser evidence; this report does not substitute for that gate.",
+  "qualification_limits": [
+    "No dedicated-server mutation or real external OAuth account enrollment",
+    "No Docker/VM containment, hard storage quotas or production PostgreSQL-role qualification",
+    "No off-host backup, production recovery objectives or all-service recovery activation",
+    "No claim that all E00, E03, E05 or V1 requirements are complete"
+  ]
+}

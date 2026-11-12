@@ -1,0 +1,89 @@
+{
+  "verdict": "pass",
+  "findings": [],
+  "criteria_run": 8,
+  "criteria_passed": 8,
+  "criteria": [
+    "COH-01",
+    "COH-02",
+    "COH-03",
+    "COH-04",
+    "COH-05",
+    "COH-06",
+    "COH-07",
+    "COH-08"
+  ],
+  "review_context": {
+    "kind": "coherence",
+    "criticity": "production",
+    "fresh_context": true,
+    "producing_conversation_read": false,
+    "scope": "Backend owner settings panel, project-detail mounting, scoped stylesheet, semantic theme/shared controls, typed API connection and matching local operational copy. Source-only review against provisional DESIGN.md.",
+    "passed_observations": [
+      "All introduced component colors use semantic roles; fonts inherit the shared system. Status uses words rather than color alone.",
+      "Existing Button/Input/Failure/Loading components and environment labels are reused; no separate visual component system was introduced.",
+      "French owner copy consistently describes desired settings, prepared/disabled/held/stale state and disconnected hosted runtime. No invented health/resource metric or provider qualification is displayed.",
+      "Environment selection remounts settings by cell; the form resets against backend/project/environment revisions. Owner passkey freshness and held state disable mutations, while strict server revision checks remain authoritative.",
+      "The integration remains inside project details and uses explicit labels, a named form/region, error/loading feedback and status announcements.",
+      "Scoped mobile rules collapse fields to one column, allow multiline buttons and stretch actions; min-width:0 and bounded panel padding support the existing layout.",
+      "The provisional identity remains inexpensive to rebrand: semantic colors and inherited typography are preserved, with no baked raster branding or added motion.",
+      "Typed owner API/client and UI consistently keep runtimeConnected false; configuration saves cannot create providers, expose application material or activate a recovered destination."
+    ]
+  },
+  "not_reviewed": [
+    "No browser rendering, screenshot inspection, measured clipping/contrast, assistive-technology or keyboard run was performed in this read-only source review; actual browser evidence belongs to GAUNTLET/root.",
+    "The provisional identity has no complete semantic spacing/typography scale. COH-01/02 were applied to existing semantic roles and established sizing conventions, not used to invent a new design-system migration.",
+    "There is no separate formal voice matrix/naming inventory beyond the current DESIGN.md and existing console language; copy was compared with those actual sources.",
+    "The owner view intentionally describes preparation/disconnection; hosted health, live application use, remote qualification and full platform accessibility certification are outside this artifact."
+  ],
+  "file_hashes": [
+    {
+      "path": "apps/console/src/components/backend-panel.tsx",
+      "sha256": "6895111f9af951fa804772c14165320936e3fa551baeb174e137bd138dd2c351"
+    },
+    {
+      "path": "apps/console/src/styles/backend.css",
+      "sha256": "7648764d731956d51998ffb095e17c734fa2789b8575d5e54c495f1e0eeba5c3"
+    },
+    {
+      "path": "apps/console/src/routes/projects.$projectId.tsx",
+      "sha256": "5c45b9bcf46d05d265eb7b06918a1e3bcc91f1afcc5804e60cd85ee86f9dcafd"
+    },
+    {
+      "path": "apps/console/src/styles.css",
+      "sha256": "2ffe62cbdc40240b332171932172b265f30e2c04614cdd5111bec4d1cdfaf072"
+    },
+    {
+      "path": "apps/console/src/styles/theme.css",
+      "sha256": "2aa3494579c2bc3ff0dbfc4469d8e1d802bfba83d54d6a286112169e89b7e096"
+    },
+    {
+      "path": "apps/console/src/components/ui/button.tsx",
+      "sha256": "0559c8d842c678d0024461e1ea1b75c62d17c80e1cdf283228e07324fe75d43a"
+    },
+    {
+      "path": "apps/console/src/components/ui/input.tsx",
+      "sha256": "687d54fc409f1bf8792947b640979557eb868ea2d1a7fe2a113a380b50b5662b"
+    },
+    {
+      "path": "apps/console/src/components/shared.tsx",
+      "sha256": "825d911cfdeda9a35a402e997985af3ce0bbfcfee08ffc6b8032d26a75a41178"
+    },
+    {
+      "path": "apps/console/src/lib/api.ts",
+      "sha256": "205249df7f2280e079bb37fe97ce55a5ee807ae096bddfa9f7bce02965699b32"
+    },
+    {
+      "path": "apps/console/src/lib/environment-labels.ts",
+      "sha256": "79a4747cdbc256794dfe051133324cfe87e0bc4660b839691d1e035f79c3a037"
+    },
+    {
+      "path": "DESIGN.md",
+      "sha256": "560d0bd9fe1829e599c9c2ece9fc2d627f0ef760c6d195b2a68d9f6838dc50ea"
+    },
+    {
+      "path": "tests/e2e/backend.spec.ts",
+      "sha256": "7f6fac80457e3b1be8cbf258e0e27ae8820ab0488fb3dcdf455202bb13bed6d0"
+    }
+  ]
+}
