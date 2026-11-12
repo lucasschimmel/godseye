@@ -1,0 +1,61 @@
+import type { ControlEndpoint } from "./http-endpoints.js";
+import {
+  AdmitInfrastructure,
+  DeclareInventory,
+  InfrastructureAllocation,
+  InfrastructureOverview,
+  InfrastructurePreparation,
+  InfrastructureRevision,
+  PrepareInfrastructure,
+} from "./infrastructure.js";
+
+export const INFRASTRUCTURE_HTTP_ENDPOINTS = [
+  {
+    method: "GET",
+    path: "/infrastructure",
+    operationId: "infrastructureOverview",
+    response: InfrastructureOverview,
+    success: 200,
+    access: "owner",
+  },
+  {
+    method: "PUT",
+    path: "/infrastructure/inventory",
+    operationId: "declareInfrastructure",
+    request: DeclareInventory,
+    response: InfrastructureOverview,
+    success: 200,
+    access: "owner",
+    idempotent: true,
+  },
+  {
+    method: "POST",
+    path: "/infrastructure/refresh",
+    operationId: "refreshInfrastructure",
+    request: InfrastructureRevision,
+    response: InfrastructureOverview,
+    success: 200,
+    access: "owner",
+    idempotent: true,
+  },
+  {
+    method: "POST",
+    path: "/infrastructure/preparations",
+    operationId: "prepareInfrastructure",
+    request: PrepareInfrastructure,
+    response: InfrastructurePreparation,
+    success: 201,
+    access: "owner",
+    idempotent: true,
+  },
+  {
+    method: "POST",
+    path: "/infrastructure/admissions",
+    operationId: "admitInfrastructure",
+    request: AdmitInfrastructure,
+    response: InfrastructureAllocation,
+    success: 202,
+    access: "owner",
+    idempotent: true,
+  },
+] as const satisfies readonly ControlEndpoint[];

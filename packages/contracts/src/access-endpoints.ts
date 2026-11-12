@@ -1,0 +1,73 @@
+import {
+  AccessOperationView,
+  AccessOverview,
+  AccessRevision,
+  AccessSlotView,
+  ActivateAccessSlot,
+  CreateAccessSlot,
+  CreateServiceIdentity,
+  ServiceIdentityView,
+} from "./access.js";
+import type { ControlEndpoint } from "./http-endpoints.js";
+import { EmptyRequest } from "./http-schemas.js";
+
+export const ACCESS_HTTP_ENDPOINTS = [
+  {
+    method: "GET",
+    path: "/access",
+    operationId: "accessOverview",
+    response: AccessOverview,
+    success: 200,
+    access: "owner",
+  },
+  {
+    method: "POST",
+    path: "/access/identities",
+    operationId: "createServiceIdentity",
+    request: CreateServiceIdentity,
+    response: ServiceIdentityView,
+    success: 201,
+    access: "owner",
+    idempotent: true,
+  },
+  {
+    method: "POST",
+    path: "/access/slots",
+    operationId: "createAccessSlot",
+    request: CreateAccessSlot,
+    response: AccessSlotView,
+    success: 201,
+    access: "owner",
+    idempotent: true,
+  },
+  {
+    method: "POST",
+    path: "/access/identities/:id/revoke",
+    operationId: "revokeServiceIdentity",
+    request: AccessRevision,
+    response: ServiceIdentityView,
+    success: 200,
+    access: "owner",
+    idempotent: true,
+  },
+  {
+    method: "POST",
+    path: "/access/slots/:id/activate",
+    operationId: "activateAccessSlot",
+    request: ActivateAccessSlot,
+    response: AccessOperationView,
+    success: 200,
+    access: "owner",
+    idempotent: true,
+  },
+  {
+    method: "POST",
+    path: "/access/operations/:id/reconcile",
+    operationId: "reconcileAccessOperation",
+    request: EmptyRequest,
+    response: AccessOperationView,
+    success: 200,
+    access: "owner",
+    idempotent: true,
+  },
+] as const satisfies readonly ControlEndpoint[];
