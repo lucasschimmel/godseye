@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:godseye:project-manifest:v1",
+  "title": "Proposed V1 project manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "projectId", "slug", "revision", "environments"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "projectId": { "type": "string", "format": "uuid" },
+    "slug": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,62}$" },
+    "revision": { "type": "integer", "minimum": 0 },
+    "environments": {
+      "type": "array", "minItems": 1, "maxItems": 20,
+      "items": { "$ref": "#/$defs/environment" }
+    }
+  },
+  "$defs": {
+    "environment": {
+      "type": "object", "additionalProperties": false,
+      "required": ["environmentId", "kind", "isolationProfile", "databaseProvider", "workflowProvider", "resources", "services"],
+      "properties": {
+        "environmentId": { "type": "string", "format": "uuid" },
+        "kind": { "enum": ["development", "production", "preview"] },
+        "isolationProfile": { "const": "gvisor-service-sandbox" },
+        "databaseProvider": { "const": "dedicated-postgresql-instance" },
+        "workflowProvider": { "const": "cell-inngest" },
+        "resources": {
+          "type": "object", "additionalProperties": false,
+          "required": ["memoryMiB", "cpuMilliCores", "diskGiB", "processLimit"],
+          "properties": {
+            "memoryMiB": { "type": "integer", "minimum": 1024 },
+            "cpuMilliCores": { "type": "integer", "minimum": 100 },
+            "diskGiB": { "type": "integer", "minimum": 16 },
+            "processLimit": { "type": "integer", "minimum": 32 }
+          }
+        },
+        "services": {
+          "type": "array", "minItems": 1, "maxItems": 20,
+          "items": {
+            "type": "object", "additionalProperties": false,
+            "required": ["serviceId", "kind", "artifactDigest", "configurationRef"],
+            "properties": {
+              "serviceId": { "type": "string", "format": "uuid" },
+              "kind": { "enum": ["api", "web", "worker", "auth", "files"] },
+              "artifactDigest": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+              "configurationRef": { "type": "string", "format": "uuid" }
+            }
+          }
+        }
+      }
+    }
+  }
+}
