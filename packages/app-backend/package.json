@@ -1,0 +1,19 @@
+{
+  "name": "@godseye/app-backend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./contracts": "./src/contracts.ts"
+  },
+  "dependencies": {
+    "@electric-sql/pglite": "0.5.16",
+    "@better-auth/drizzle-adapter": "1.7.20",
+    "better-auth": "1.7.20",
+    "drizzle-orm": "0.45.4",
+    "hono": "4.13.18",
+    "pg": "8.23.1",
+    "zod": "4.6.7"
+  }
+}
