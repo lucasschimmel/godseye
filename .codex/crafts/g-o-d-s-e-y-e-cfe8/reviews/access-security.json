@@ -1,0 +1,225 @@
+{
+  "verdict": "pass",
+  "kind": "code",
+  "criticity": "production",
+  "fresh_context": true,
+  "review_date": "2026-11-11",
+  "review_state": "Final narrow source fixes independently reviewed and reproduced; no open confirmed findings. Parent combined verification remains a separate gate.",
+  "findings": [],
+  "resolved_findings": [
+    {
+      "id": "ACCESS-SEC-001",
+      "criterion": "COR-04 / post-provider dispatch authorization",
+      "status": "CONFIRMED",
+      "severity": "major",
+      "cwe": "CWE-367",
+      "evidence": "Initial frozen packages/core/src/access-operations.ts:258-260 authorized before reads, then :299-316 passed candidate/previous values to adapter.transition without post-read identity validation; settleTransition:185 checked too late.",
+      "reproduction_before": {
+        "revokedDuringRead": true,
+        "transitionDispatchedAfterRevocation": true,
+        "rejectedAfterDispatch": true,
+        "persistedState": "unknown"
+      },
+      "refutation": "Default startup admits no target adapter, limiting reachability, but a qualified adapter path is part of this module's explicit contract. The final settle check cannot undo a target transition or value handoff already dispatched after completed revocation.",
+      "refutation_survived": true,
+      "resolution": "Producer added locked post-read dispatch admission at access-operations.ts:313-343, checking fresh actor, live identity/revision/epoch, slot revision/state/versions and the same unresolved operation/adapter. Target I/O remains outside the transaction.",
+      "independent_reverification": [
+        {
+          "revokedDuringRead": true,
+          "transitionDispatchedAfterRevocation": false,
+          "persistedState": "unknown"
+        },
+        {
+          "epochAdvancedDuringRead": true,
+          "transitionDispatchedAfterFence": false,
+          "persistedState": "unknown"
+        }
+      ],
+      "resolution_state": "verified"
+    },
+    {
+      "id": "ACCESS-SEC-002",
+      "criterion": "COR-04 / immutable task context and usage",
+      "status": "CONFIRMED",
+      "severity": "major",
+      "cwe": "CWE-367",
+      "evidence": "Initial frozen packages/core/src/access-redemption.ts:69,73-85,101-105,117-129 retained caller-owned context/use references across provider awaits: initial budget charge could use one grant while later validation used another.",
+      "reproduction_before": {
+        "originalRunCancelledDuringRead": true,
+        "contextSwappedToOtherValidRun": true,
+        "delivered": true
+      },
+      "refutation": "Private consumers are trusted and the replacement run may have independent valid authority; nevertheless the broker promises to bind the handoff and single charge to one immutable admitted execution context. A mutable alias permitted a cancelled original run to bypass its subsequent live-state validation.",
+      "refutation_survived": true,
+      "resolution": "Producer added detached structuredClone plus strict TaskSnapshot validation at access-redemption.ts:23-48,98-104 before the first await. All later checks and charges use the private parsed snapshot.",
+      "independent_reverification": {
+        "originalRunCancelledDuringRead": true,
+        "contextSwappedToOtherValidRun": true,
+        "delivered": false,
+        "rejected": true,
+        "replacementGrantCost": 0
+      },
+      "resolution_state": "verified"
+    },
+    {
+      "id": "ACCESS-SEC-003",
+      "criterion": "COR-04 / durable private-handoff audit intent",
+      "status": "CONFIRMED",
+      "severity": "major",
+      "cwe": "CWE-778",
+      "evidence": "packages/core/src/access-redemption.ts:178-193 (snapshot-refrozen version): access.material.delivered is appended in the final transaction, then deliver receives material; a callback exception throws PRIVATE_HANDOFF_FAILED inside that transaction and rolls its audit entry back.",
+      "reproduction": "Using the in-memory accessFixture and an activated runtime slot, record core.listAudit length, consumeStatic with a callback that compares/copies the fixture material then throws, and record the audit length again. Observed copiedMaterialBeforeException=true, reportedFailure=true, auditEventsBefore=9, auditEventsAfter=9, durableNewAuditEvents=0. No material/proof was printed.",
+      "refutation": "The caller is trusted and the failure is sanitized, but neither fact undoes the already received material. Earlier slot/issuance audit records do not establish this access attempt. No separate durable pre-handoff intent exists on the inspected runtime path.",
+      "refutation_survived": true,
+      "suggestion": "Commit a metadata-only access-attempt intent before private delivery, preserve final locked revoke/cancel admission, and keep callback or commit failure from erasing the only evidence of possible exposure.",
+      "resolution": "Producer now commits access.material.handoff_attempted before callback in access-redemption.ts:179-205; final locked transaction revalidates authority and runs the synchronous callback at :206-228. Failures retain the intent and record handoff_unknown or handoff_denied at :229-252, with sanitized audit-unavailable fallback.",
+      "independent_reverification": [
+        {
+          "durableNewAuditEvents": 2,
+          "copiedMaterialBeforeException": true,
+          "materialLeaked": false,
+          "reportedFailure": true,
+          "actions": [
+            "access.material.handoff_attempted",
+            "access.material.handoff_unknown"
+          ],
+          "scenario": "copy then throw",
+          "code": "PRIVATE_HANDOFF_FAILED"
+        },
+        {
+          "copiedBeforeFinalTransactionAbort": true,
+          "durableNewAuditEvents": 2,
+          "reportedFailure": true,
+          "actions": [
+            "access.material.handoff_attempted",
+            "access.material.handoff_unknown"
+          ],
+          "scenario": "injected final transaction abort after callback",
+          "materialLeaked": false
+        }
+      ],
+      "resolution_state": "verified"
+    }
+  ],
+  "criteria_run": 13,
+  "criteria_passed": 13,
+  "active_rubric": "FABER code production +kind=concurrent; deterministic selector executed",
+  "coverage": [
+    "All access facade/state/registry/redemption/provider/operation and Bao transport/policy modules inspected.",
+    "Store access schema, migration 0003_access and ordered checksummed migration guard inspected.",
+    "Owner API middleware, metadata routes, strict DTOs/endpoints, generated OpenAPI inventory and private owner client inspected.",
+    "Runtime configuration, protected controller authority loading, stdin/file CLI and explicit controller replacement inspected.",
+    "Console /access UI inspected: no material-bearing input/reveal or private consumption endpoint.",
+    "Native OpenBao fixture lifecycle/private paths, installer checksum/binary pin behavior and Jenkins bao:install invocation inspected.",
+    "Existing first-party broker, task, rotation, HTTP, transport, CLI, real-provider and browser test sources inspected as supporting evidence; tests are not represented as independently rerun."
+  ],
+  "independent_execution": [
+    "In-memory reproduction of revoked-identity dispatch race before the fix, and revoke/epoch post-fix probes.",
+    "Two actual FoundationEngine runs with original cancellation and caller-owned context substitution, before and after the snapshot fix.",
+    "Synchronous throw-with-material and rejected asynchronous callback probes: PRIVATE_HANDOFF_FAILED, materialLeaked=false and unhandledRejection=false.",
+    "Throw-after-copy runtime audit-count probe confirming the remaining unrecorded exposure.",
+    "Post-fix copy-then-throw probe and injected final-transaction abort retain durable attempted/unknown audit metadata without material leakage."
+  ],
+  "not_reviewed": [
+    "Final combined build, full regression, browser and native OpenBao runs: parent/GAUNTLET own those executions; this reviewer has not rerun them.",
+    "Real upstream PostgreSQL transition/revocation qualification: no production target adapter is registered by default.",
+    "Deployed server TLS/private routing, multi-process PostgreSQL behavior, sandbox/OS containment, multi-node availability, off-host recovery custody and snapshot replacement remain separate acceptance gates.",
+    "Repository-wide dependency/SAST scanning, performance, coverage percentages and mutation percentages were not independently measured in this focused review.",
+    "Actual environment files, private keys, generated runtime state and files with prohibited sensitive names were not read; all probe material remained in disposable process memory."
+  ],
+  "review_constraints": {
+    "source_edits": false,
+    "git_operations": false,
+    "external_actions": false
+  },
+  "reviewed_source_sha256": [
+    {
+      "path": "packages/core/src/access.ts",
+      "sha256": "898b000fd90a4dea95d81833eeef76372e3d02324357b3133a64051fcb4cce9a"
+    },
+    {
+      "path": "packages/core/src/access-state.ts",
+      "sha256": "d5e8093b1b830d5b362abe8a06ff7f8bfccea18796cebfe49ce97de7793977b2"
+    },
+    {
+      "path": "packages/core/src/access-registry.ts",
+      "sha256": "2949c1b9f8cd4400098600ad926243d25f6e66b77919eda6a8ec290101fa364a"
+    },
+    {
+      "path": "packages/core/src/access-redemption.ts",
+      "sha256": "f6555277fa95016172791e800c9f042d31066afbdbe03137b9eccb0c10a7f687"
+    },
+    {
+      "path": "packages/core/src/access-provider.ts",
+      "sha256": "9e921ce4cc21d890c7da39b9b57749a12f933fdbf243cfccbdff18e1d2ae0304"
+    },
+    {
+      "path": "packages/core/src/access-operations.ts",
+      "sha256": "ac2abd14ec12992f9b5680584b01f1d1f2fe5baff5031facd90a1d74c2bfd7ce"
+    },
+    {
+      "path": "packages/core/src/bao-provider.ts",
+      "sha256": "7010af32d2ffd0a83853dd5c08e6b50c1da94aeed67ebd9ace6dd727bc78554e"
+    },
+    {
+      "path": "packages/core/src/bao-policy.ts",
+      "sha256": "a14c2eaede12034f0cabe7a553c8b224d70abd1431982b53dadf36e5dbda23ad"
+    },
+    {
+      "path": "packages/store/src/access-schema.ts",
+      "sha256": "1135241189af9b743823edca7dc1f48eeed579dd92c1a660e74ee292e0eee3b8"
+    },
+    {
+      "path": "packages/store/migrations/0003_access.sql",
+      "sha256": "6ccb7aafeac663373b9cf41fd59564c5ef36020081a3d6961a3574484ad4433e"
+    },
+    {
+      "path": "apps/control-api/src/access-runtime.ts",
+      "sha256": "789e2e864853bc96f4ebc5c7402df20c385a9ff34495dc8333039565fa5a0e0c"
+    },
+    {
+      "path": "apps/control-api/src/access-cli.ts",
+      "sha256": "19e24f0e5e54181c773d5928a8dc057e54de35b59ce61683a6c813b9762993d6"
+    },
+    {
+      "path": "apps/control-api/src/access-routes.ts",
+      "sha256": "3af39d7ffafddd5fe8309229f2d78531cefb5131d21112fd64ec00524434e868"
+    },
+    {
+      "path": "apps/control-api/src/server.ts",
+      "sha256": "9c2f3cbce49f6e23dff2adf6f16a2d8a2cd98d72021a1b21ad8d3553051b0d01"
+    },
+    {
+      "path": "apps/control-api/src/app.ts",
+      "sha256": "659c95103f155b19063f959b9a0f7f04ae7242bc650b3c55f8aa65e882445de7"
+    },
+    {
+      "path": "packages/contracts/src/access.ts",
+      "sha256": "21eee374f8bb555e5ba5ee9ac614668d2b4f353127378057385d2994ca3ce81e"
+    },
+    {
+      "path": "packages/contracts/src/access-endpoints.ts",
+      "sha256": "b858c17a2393a7bd0a16194a7bfeaa815d9016f97cb733a84f79b3cff1caafe8"
+    },
+    {
+      "path": "packages/control-client/src/index.ts",
+      "sha256": "6ddda72e27a9159194db38a0451bfefe3392d786a6da15c9d7c31e83599ad0b3"
+    },
+    {
+      "path": "apps/console/src/routes/access.tsx",
+      "sha256": "b127809f1c756abcc5782325c4dc72fbddab9aa9b8d85fe00ecfab40843217ec"
+    },
+    {
+      "path": "scripts/install-openbao.mjs",
+      "sha256": "e18a75277e509825a4ac4b53624c555bd450b0fd2411d53b99f073efee1cf49b"
+    },
+    {
+      "path": "tests/openbao-fixture.ts",
+      "sha256": "5b1abeac864141119dae417eb2df4d61784612dfb26f42eca4240b4efd88da35"
+    },
+    {
+      "path": "Jenkinsfile",
+      "sha256": "e423fc4aa63b34b1d6bf62f5063c19215b1d5f0a53c3f601dd2ae8e9d4232773"
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "status": "ok",
+  "scope": "Local first-party Bun migration and E02.S02 broker",
+  "at": "2026-11-11T17:28:18.9773669Z",
+  "findings": [],
+  "diff": {
+    "new": 0,
+    "resolved": 3,
+    "unchanged_waived": 0
+  },
+  "scanners_run": [
+    "bun audit --json (all scopes): zero advisories",
+    "Gitleaks8.30.1 full tracked history: zero findings",
+    "Gitleaks8.30.1 allowlisted final source snapshot232 files: zero findings",
+    "Focused dangerous-sink patterns: no eval/new Function/HTML injection/execSync matches"
+  ],
+  "scanners_missing": [
+    "semgrep comprehensive SAST",
+    "complete SBOM generator"
+  ],
+  "logic_review": "Fresh security/FABER review: three confirmed issues fixed and independently reverified; no open findings. This is source review and disposable local fault testing, not production containment certification.",
+  "tooling": {
+    "openbao": "2.7.2 published archive SHA256 verified; release signature not verified; Windows actual qualification only",
+    "gitleaks": "8.30.1 published archive SHA256 verified; redaction100",
+    "bun": "1.4.4 registry SHA512 verified plus Proto published checksum"
+  },
+  "exclusions": [
+    "Actual runtime data, private material and .env files were not scanned/read; source snapshot contains selected first-party files only",
+    "Remote private networking, real database credential transition and off-host recovery not qualified",
+    "No waiver or full coverage/mutation percentage introduced"
+  ]
+}

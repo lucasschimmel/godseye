@@ -1,0 +1,26 @@
+{
+  "verdict": "pass",
+  "kind": "code",
+  "scope": "Static-only supplementary review of browser fixture metadata and temporary-state isolation",
+  "review_date": "2026-11-11",
+  "findings": [],
+  "criteria_run": 5,
+  "criteria_passed": 5,
+  "evidence": [
+    "playwright.config.ts:8-18 creates a fresh godseye-e2e temporary run directory by default and rejects explicit data paths outside the temporary root lexically; no development database/state default is selected.",
+    "playwright.config.ts:20-34 separates console/access into distinct state/control subdirectories and default port pairs. :64-78 starts each application with explicit local mode, data/state paths, ports, empty database URL, and reuseExistingServer=false.",
+    "playwright.config.ts:51-62 supplies project-specific ownerStateDir, ownerApiPort and ownerConsolePort metadata; the independent owner-auth project is not assigned either shared console instance.",
+    "tests/e2e/owner-fixture.ts:59-79 requires explicit metadata and baseURL, validates the API port range, matches the base origin to the configured localhost console origin, and canonically resolves both temporary root and selected state directory before any fixture identity-material read.",
+    "tests/e2e/owner-fixture.ts:80-99 derives the test-only enrollment proof from the selected temporary state, sends it only to the explicit loopback API port, and enrolls at the validated project baseURL. There is no fallback to the owner's ordinary state directory."
+  ],
+  "notes": [
+    "The config's root-path check is lexical; the enrollment helper's separate realpath containment check is the canonical guard before identity-material reading. These are not described as a general defense against deliberately hostile owner-supplied filesystem configuration.",
+    "Distinct port defaults provide isolation. Explicit colliding port overrides fail application startup rather than enabling reuse of an existing server."
+  ],
+  "not_reviewed": [
+    "Production broker code and the existing access-security.json findings were not rereviewed or changed.",
+    "Browser execution was not rerun by this reviewer. The supplied 16/16 browser and 215-unit results remain parent-owned execution evidence.",
+    "No actual environment file, identity key, runtime state, enrollment proof or other generated private material was read."
+  ],
+  "review_constraints": {"source_edits": false, "git_operations": false, "external_actions": false}
+}

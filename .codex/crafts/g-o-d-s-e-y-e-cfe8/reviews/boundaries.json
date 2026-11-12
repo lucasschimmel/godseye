@@ -1,0 +1,74 @@
+{
+  "verdict": "pass",
+  "kind": "code-and-coherence",
+  "criticity": "production-intent; explicit local adapter only",
+  "scope": "Read-only local boundary review of apps/control-api/src, apps/console/src, apps/console/vite.config.ts, infra/jenkins, compose*.yaml, Jenkinsfile, scripts/dev.mjs and scripts/build-api.mjs. No production-readiness certification.",
+  "findings": [],
+  "criteria_run": 10,
+  "criteria_passed": 10,
+  "criteria": [
+    "Explicit local-mode and production refusal",
+    "Loopback listeners and Host validation",
+    "Origin/content-type browser mutation boundary",
+    "Bounded raw webhook intake and signature handoff",
+    "Public error normalization and server configuration secrecy",
+    "Stored-data React rendering and SSR data boundary",
+    "Shell/configuration source-to-sink review",
+    "Jenkins controller/build separation configuration",
+    "COH-02 semantic component tokens",
+    "COH-06 desktop/mobile local-state honesty, navigation, focus and reduced-motion implementation"
+  ],
+  "verified_boundaries": [
+    "apps/control-api/src/config.ts:12 refuses missing or non-local GODSEYE_MODE and NODE_ENV=production; server.ts uses the configured constant 127.0.0.1 listener. No production authentication is implemented or inferred.",
+    "Real read-only GET /api/v1/health probes using node:http at ports 4300 and 4301 returned 403 for attacker.example and 127.0.0.1.attacker.example Host values, and 200 for the intended loopback Host. Spoofed forwarding headers are unused by the application check. Undici fetch custom Host behavior was excluded from evidence.",
+    "Real read-only GET /api/v1/health probes returned 403 for Origin https://attacker.example both directly and through the Vite proxy. No Access-Control-Allow-Origin header was returned. Source rejects non-JSON mutations before the handlers; GET routes have no reviewed mutation sinks.",
+    "apps/control-api/src/app.ts:39-48 applies the 256 KiB body boundary and :92 passes exact arrayBuffer bytes to the core. packages/core/src/github.ts:31-43 verifies HMAC using timingSafeEqual before JSON parsing. No raw payload or configured key is returned by the HTTP adapter.",
+    "app.ts:108-136 returns fixed generic unexpected/parser errors and request IDs. Reviewed DomainError messages are fixed text or validated state values; no configured database URL or webhook key reaches the public response.",
+    "Project names, descriptions, repository values and audit fields reach React text/attribute rendering. No dangerouslySetInnerHTML, innerHTML, eval or user-controlled external link sink was found in the assigned UI. Queries are disabled during SSR and the router creates a per-router QueryClient; server configuration is not imported by the UI.",
+    "scripts/dev.mjs uses spawn with argument arrays and no shell option; scripts/build-api.mjs resolves static workspace imports. Jenkins shell commands are constant literals. The trusted source URL is passed as a System.getenv value to the Git DSL rather than interpolated into Groovy source or a shell command.",
+    "infra/jenkins/jenkins.yaml:3 configures zero controller executors, :5 disables the inbound agent port, and :39 restricts the configured owner job to main with no pull-request discovery. compose.ci.yaml binds only loopback and mounts only jenkins_home, with no Docker socket or host workspace. Agent isolation remains unconfigured and unverified.",
+    "artifacts/console-desktop.png and artifacts/console-mobile.png were visually inspected. The maritime rail, mineral canvas, explicit local/offline status and empty measurements match DESIGN.md. Mobile uses horizontal navigation overflow; focus-visible, skip navigation and prefers-reduced-motion rules exist. A real read-only Playwright computed-style check confirmed the primary action has white rgb(255,255,255) text on teal rgb(20,123,128), refuting a screenshot-only dark-text suspicion."
+  ],
+  "supplied_evidence": [
+    "Caller supplied 62 passing tests and four passing E2E journeys; these were read for scope and not rerun or counted as new coverage by this reviewer.",
+    "Caller supplied a clean pnpm audit --prod result."
+  ],
+  "not_reviewed": [
+    "Production authentication, internet exposure, remote infrastructure providers, Proxmox/gVisor isolation, execution workers, recovery and real PostgreSQL concurrency: not implemented or outside this local review.",
+    "Jenkins runtime/plugin compatibility, controller startup, agent provisioning and effective build sandboxing: Jenkins was not started and no agent is configured.",
+    "No external scans, remote actions, source mutations, destructive probes, real webhook deliveries or project mutations were performed.",
+    "Semgrep and gitleaks are unavailable; static source inspection is the explicit SAST/secret-scanning degradation and is not equivalent to executable scanner coverage.",
+    "No full browser accessibility audit, exhaustive interactive screen-state review, formal contrast audit, voice-matrix review or repository-wide reuse audit was performed. Visual evidence covers the supplied desktop/mobile overview plus one computed-style check."
+  ],
+  "history": [
+    {
+      "verdict": "pass-with-findings",
+      "findings": [
+        {
+          "id": "BOUNDARY-001",
+          "criterion": "COH-02",
+          "status": "CONFIRMED",
+          "severity": "minor",
+          "evidence": "apps/console/src/styles.css:435 consumes primitive var(--teal) for .text-link; :673 and :678 consume primitive teal/amber for status semantics. DESIGN.md:11 requires semantic CSS variables to own component colors; the stylesheet already defines semantic --color-primary, --color-accent-foreground and --color-ring at :8, :15 and :20.",
+          "refutation": "All colors are centralized, so rebranding is inexpensive and no security consequence follows. Nevertheless, component selectors bypass the semantic tier and bind action, state and navigation roles to palette names, directly violating active COH-02. This is a minor token-layering issue, not a release blocker or evidence of poor rendered contrast.",
+          "refutation_survived": true,
+          "suggestion": "Consume semantic action, state and navigation color aliases in component selectors; keep palette variables inside the token declarations."
+        }
+      ],
+      "scope": "Original local boundary review before semantic color remediation"
+    }
+  ],
+  "remediation_verification": {
+    "finding": "BOUNDARY-001",
+    "status": "RESOLVED",
+    "scope": "Scoped source recheck only; no new broad security review",
+    "evidence": [
+      "apps/console/src/styles/overview.css:41 uses semantic --accent-ink for .text-link; panels.css:119 uses --accent-ink and :124 uses --attention-ink for status roles.",
+      "apps/console/src/styles/theme.css:31-39 declares semantic accent, navigation and attention roles; styles.css:2-14 imports the split sheets in order.",
+      "All twelve split sheets are below 400 lines. A scoped executable check found no remaining legacy palette references and no literal hex colors outside theme.css."
+    ],
+    "not_reviewed": [
+      "No new browser screenshots, interaction journeys, broad security analysis or test reruns; prior review evidence and limitations remain applicable."
+    ]
+  }
+}
