@@ -67,3 +67,101 @@ control-side event ingestion path in a later stage; today no backend event reach
 - Handlers run in the controller process in this stage; production isolation will use the remote worker.
 - The background pump `runJobScheduler` exists but is not started by `server.ts` while no engine is
   configured.
+
+## Implementation status amendment — 2026-11-12
+
+The accepted decisions above describe the original local checkpoint. The server now starts the
+fixture scheduler only with `GODSEYE_JOBS_LOCAL_FIXTURES=enabled`; history/retention and owner run
+reconciliation are implemented. Default startup remains unconfigured. This amendment does not
+qualify Inngest/Redis, authenticated application ingress or remote workers. See the current
+[jobs operator guide](../development/application-jobs.md) and
+[E01–E06 audit/remediation record](../reviews/2026-11-12-e01-e06-audit.md) for the local hardening
+tranche and its separate verification evidence.
+
+## Application-event/Inngest continuation amendment — 2026-11-12
+
+The original decisions and checkpoint above are retained as history. This continuation connects the
+independent application backend to per-cell Inngest coordination while preserving Foundation's sole
+effect authority; it does not replace the existing lease, approval, HOLD or protected-effect journal.
+
+1. The application store persists a separate `app_job_events` bridge intent in the transaction that
+   publishes a trusted event. A custom POST route's `emitEvent` joins its business transaction. SSE
+   pruning is independent of unresolved intent; no browser endpoint gains generic job-publication
+   authority. The captured scope, store producer and epoch are server-owned.
+2. A bounded sender forwards committed immutable envelopes to the cell's configured event ingress.
+   Engine acceptance alone is insufficient: source delivery is acknowledged only after a durable
+   Foundation admission receipt exists. Transport attempts use fresh Inngest IDs but keep immutable
+   domain identity across redrive, including after SDK retry exhaustion or a long HOLD. Timeout does
+   not release an actual unresolved call or invent business completion.
+3. A real signed Inngest SDK worker verifies its configured cell and producer, admits matching
+   Foundation jobs once and durably observes their results. Unknown/reconciling effects remain
+   unresolved; the Inngest worker cannot independently authorize external side effects. The additive
+   controller receipt records immutable event identity, hash and correlated job IDs, without copying
+   business payloads into the shared controller database. A trusted cell-specific loader retrieves
+   the source payload under the job deadline and rechecks hash/lease before handler execution.
+4. Inngest owns cron scheduling for explicitly configured cells; the fixture cron scheduler excludes
+   them. Worker registration binds the exact definition hash. Definition changes, pause and lifecycle
+   restrictions remain authoritative at admission, including after an old registration fires.
+5. Source payload retention begins only after confirmed settlement of the correlated runs, all
+   retained attempts and related outbox effects. Unknown and cancelled-but-uncertain effects preserve
+   payload/history. Settlement scans advance past older unknown rows. Retained metadata receipts
+   continue suppressing replay after settled payloads or ordinary terminal run history are pruned.
+6. The present local worker coordinates trusted registered handlers that still execute through
+   Foundation in the controller. It does not qualify arbitrary tenant-code execution, production
+   worker isolation or managed process supervision. Independent native engine directories/keys are
+   useful evidence without proving container/network boundaries.
+
+The pinned SDK is `inngest` 4.26.2 (Apache-2.0). The pinned native server is 1.52.0; its current license
+is SSPL 1.0 with an additional Apache 2.0 grant effective after three years. Source availability and
+SDK licensing are not a claim that the new server release is already Apache-2.0. See the
+[server license](https://github.com/inngest/inngest/blob/v1.52.0/LICENSE.md) and
+[SDK package metadata](https://registry.npmjs.org/inngest/4.26.2).
+
+The [operator guide](../development/application-jobs.md) describes the explicit native local launcher,
+prepared per-cell external-service manifests, composition and migrations. The configured
+`local_inngest` owner status is not a health attestation. Actual native SDK registration uses `PUT`;
+the advertised v2 sync route returns 501 in the pinned OSS server. Queue capacity is at least five
+workers because that version's scanner requires five free slots; the launcher uses ten.
+External Redis/workflow PostgreSQL, host/network/quota enforcement, supervision, complete retention
+and E03/E12 coordinated recovery/activation remain separately owned work. Neither a native embedded
+state profile nor engine-event acceptance proves these release obligations.
+
+Local verification for this continuation is now recorded in the
+[final evidence table](../../tests/STRATEGY.md#final-frozen-local-evidence): the fresh complete default
+suite and both explicit native Inngest cases passed, including actual owner-store composition and
+post-start disable without controller failure. Static checks, selected mutations, browser regression,
+independent source/security review and canonical build/smoke passed. Initial failures and their
+corrections remain recorded. This local result does not change the future qualification boundaries
+or the original decisions preserved above.
+
+## Autonomous-worker/external-persistence amendment — 2026-11-12
+
+This appended amendment preserves the accepted decisions and preceding checkpoints above.
+The local completion contract moves jobs consumption into a trusted supervisor independent of
+owner HTTP, with one first-party application/SDK/handler subprocess per cell. Foundation remains
+the sole authority for lease/effect/approval/outbox decisions; IPC is scoped to the parent-created
+child channel and never selects authority from arbitrary project/grant fields. Children receive
+no owner DSN, owner identity material or other cell's keys.
+
+The shared control journal must be PostgreSQL for independent processes. Owner HTTP and supervisor
+filter their designated adapters before validating queued work or reconciling leases, preventing
+one consumer from failing or fencing another's jobs. The supervisor holds both its own process lock and a PostgreSQL advisory runtime lock; a second
+supervisor is refused, and loss of the advisory-lock session stops authority.
+Current cron catalogs reconcile into signed registration without a second calendar, while stale
+hashes, pause and lifecycle/HOLD/epoch checks remain authoritative.
+
+Both external PostgreSQL and Redis are mandatory per engine in this topology, including the
+independent platform engine. Configured service failure cannot select an embedded fallback.
+PostgreSQL holds workflow configuration/history and Redis holds queue/run state. The upstream
+initial event stream remains in-memory, so the application transactional outbox and durable
+Foundation receipt remain necessary through engine crashes. Acknowledgement of `/e` is insufficient.
+
+The implementation now has scoped actual waiting-workflow restart, owner-HTTP-independent execution,
+protected uncertainty, live-cron and supervisor-hard-kill evidence plus frozen source review. Full
+regression, selected mutation and canonical build/smoke gates now pass as recorded in the final
+[local evidence](../../tests/STRATEGY.md#autonomous-workers-and-external-persistence--final-local-evidence).
+The requested local software slice is complete; deployed whole-epic acceptance remains separate.
+Trusted subprocesses do not qualify arbitrary-code containment, deployed quotas/network controls,
+off-host custody or coordinated recovery/activation. The [operator guide](../development/application-jobs.md)
+and [E06 completion criteria](../spec/v1.md#autonomous-workers-and-external-persistence-continuation)
+record the current boundary.
