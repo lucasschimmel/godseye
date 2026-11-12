@@ -1,6 +1,6 @@
 # Local application backend and TypeScript SDK
 
-Status: verified local E04 implementation, 2026-11-12; combined tests, browser journeys, builds, source reviews and selected mutations passed. The application API is separate from owner administration. Hosted runtime/provider qualification, off-host recovery and full V1 acceptance remain open. See [ADR-010](../adr/ADR-010-independent-application-backend.md).
+Status: verified historical E04 checkpoint plus the local E06 event/job extension, 2026-11-12. The application API is separate from owner administration. The [current verification strategy](../../tests/STRATEGY.md#application-events-and-per-cell-inngest-continuation--2026-11-12) records this extension separately from the E04 evidence below. Hosted runtime/provider qualification, off-host recovery and full V1 acceptance remain open. See [ADR-010](../adr/ADR-010-independent-application-backend.md).
 
 ## Boundaries and packages
 
@@ -13,7 +13,7 @@ Status: verified local E04 implementation, 2026-11-12; combined tests, browser j
 
 An application cell is exactly one project/environment. Its application database and private file root are independent of the controller's owner store and other cells. PGlite is the local development driver; the intended hosted database remains the cell's independent PostgreSQL instance. Local directory/process separation does not qualify Docker/VM containment or host quotas.
 
-The dedicated application listener uses `/api/app/v1`; its version is `1.0.0`. The owner control API is `1.6.0`. Requests bind `X-Godseye-Project` and `X-Godseye-Environment` to the runtime's server-owned cell. `X-Godseye-App-Version`, when supplied, must match the supported application API version. OAuth redirects use their fixed listener and provider/state binding because browsers cannot attach these custom headers to redirects.
+The dedicated application listener uses `/api/app/v1`; its version is `1.0.0`. The current owner control API is `1.9.0`; the historical E04 checkpoint below used `1.6.0`. Requests bind `X-Godseye-Project` and `X-Godseye-Environment` to the runtime's server-owned cell. `X-Godseye-App-Version`, when supplied, must match the supported application API version. OAuth redirects use their fixed listener and provider/state binding because browsers cannot attach these custom headers to redirects.
 
 ## Run a standalone local fixture
 
@@ -60,6 +60,15 @@ Held recovery environments, suspended projects, expired previews and lifecycle/c
 
 For managed local composition, `applicationLifecycleGuard(controlStore, { projectId, environmentId, configurationRevision })` from `@godseye/core` returns the private lifecycle callback. Pass it to `openLocalApplication` or the template's `createTemplateApplication`. The callback checks current desired configuration, matching project/environment revisions, activation epoch and lifecycle protections. Paths, auth material and runtime limits remain private operator inputs; saving the owner form does not automatically launch this composition.
 
+The normal local control server can now launch that composition explicitly through
+`GODSEYE_INNGEST_CELLS`, using existing enabled/current backend settings and the same owner job
+journal. Follow [the managed local cell procedure](application-jobs.md#attach-cells-to-the-existing-owner-dashboard)
+for its strict scope/port JSON and restart. It preserves independent application stores and starts
+no owner account/project/definition automatically. The status field `runtimeConnected` remains
+desired-configuration metadata rather than a new per-cell health observation; actual deployment
+qualification is still separate. The standalone demo has its own store and does not appear in that
+owner dashboard.
+
 ## Application authentication
 
 Application users sign up/sign in independently of dashboard owner passkeys. Email/password authentication uses Better Auth with transactional database operations, finite sessions and cell-specific HttpOnly cookies. Browser responses omit raw session values. Neither an owner cookie nor another application's cookie authenticates this cell.
@@ -102,7 +111,7 @@ The client attaches exact cell/version headers and uses application cookies with
 
 Cookies use `SameSite=Lax`: the browser frontend and backend must share a site, or use an appropriate same-origin proxy. Exact CORS allowlisting alone does not enable third-party cookies between unrelated domains. The localhost example uses the same site across ports. There is no application bearer/JWT issuance API; native session values remain intentionally absent from JSON. Real domain/proxy/cookie deployment is still an E05 qualification step.
 
-Custom backend routes register fixed relative paths with input/output Zod schemas and receive authenticated `{ user, input, db }`. POST handlers run inside the application transaction/idempotency boundary and should confine mutations to that transaction. External side effects need the durable job/effect integration from E06 rather than untracked retries inside an HTTP handler.
+Custom backend routes register fixed relative paths with input/output Zod schemas and receive authenticated `{ user, input, db, emitEvent }`. POST handlers run inside the application transaction/idempotency boundary and should confine mutations to that transaction. `emitEvent({ type, payload, idempotencyKey })` stages a trusted job event in that same transaction; a rollback removes both business SQL and event intent. This method does not publish a user SSE event, and GET handlers cannot emit. External side effects belong in the scoped job/effect path rather than untracked retries inside an HTTP handler. See [application job composition](application-jobs.md#application-events-and-durable-job-intent).
 
 ## Private files
 
@@ -142,9 +151,23 @@ The convenience `upload` computes the actual SHA-256 and is capped at **16 MiB**
 
 ## Domain events
 
-Domain events use authenticated SSE with durable cursors and bounded retention. A client encountering missing history refetches application state instead of assuming no events were lost. Trusted backend code publishes domain events; there is no generic browser event-publication or database-change-feed endpoint. Production Inngest job updates are a separate E06 integration.
+Domain events use authenticated SSE with durable cursors and bounded retention. A client encountering missing history refetches application state instead of assuming no events were lost. Trusted backend code publishes domain events; there is no generic browser event-publication or database-change-feed endpoint. With the optional server-side jobs transport configured, publication also writes durable job intent. The user SSE subscription and Inngest worker progress remain separate streams.
 
 Trusted runtime code calls `publishEvent({ userId, type, payload, idempotencyKey })`; publication verifies the recipient and finite payload limits. Event cursors are signed for the exact cell and user. `Last-Event-ID` cannot be copied to another user's stream or another environment.
+
+The private `jobs: { transport, timeoutMs?, maxPending?, retentionDays? }` runtime option enables the bridge. Its
+`flushJobs({ signal?, limit? })` method dispatches already committed intent; normal publication does
+not wait on Inngest or execute a job in the HTTP transaction. The bridge owns independent
+`app_job_events` storage so SSE retention cannot discard pending work. The server-derived scope,
+store producer ID and captured activation epoch travel with each immutable envelope; the receiver
+checks them again before same-cell job admission. The supplied Inngest transport acknowledges only
+after a durable Foundation receipt exists, while the correlated run reports actual business
+completion or uncertainty. Full payloads remain cell-owned; the shared controller retains only
+metadata/hashes and IDs. The configured `applicationEventLoader` retrieves them through the exact
+trusted runtime's private `readJobEvent`, with hash/lease checks and a bounded acquisition deadline.
+The [jobs guide](application-jobs.md) describes composition, backlog/deadline behavior and recovery
+limits. Omitting jobs configuration preserves the existing SSE-only publication mode; calling a
+custom POST handler's `emitEvent` without configured jobs refuses the transaction with 503.
 
 ```ts
 const abort = new AbortController();
@@ -178,7 +201,12 @@ This application snapshot does not establish a shared PostgreSQL PITR point, dat
 
 ## Verification and remaining qualification
 
-The full browser regression passed **31/31 journeys in 181.393319 seconds (JUnit)**. Selected backend mutations **M74–M86 all thirteen killed in 257.091 seconds**, with thirteen baseline and thirteen restored checks passing and original source hashes unchanged. Frozen source reviews passed with 78 backend/code hashes and twelve UI hashes verified stable by the coordinator. Canonical console/API/SDK/template builds, the final affected backend rebuild, actual compiled-template HTTP/restart and SDK-consumer checks passed. Lint checked 381 files; types, generated control OpenAPI `1.6.0` and 62/62 local acceptance trace links passed. Final combined unit/integration verification passed 972/972 cases across 72 files in 751.83 seconds (Vitest; 752.705 seconds for the whole command).
+The historical E04 browser regression passed **31/31 journeys in 181.393319 seconds (JUnit)**. Selected backend mutations **M74–M86 all thirteen killed in 257.091 seconds**, with thirteen baseline and thirteen restored checks passing and original source hashes unchanged. Frozen source reviews passed with 78 backend/code hashes and twelve UI hashes verified stable by the coordinator. Canonical console/API/SDK/template builds, the final affected backend rebuild, actual compiled-template HTTP/restart and SDK-consumer checks passed. Lint checked 381 files; types, generated control OpenAPI `1.6.0` and 62/62 local acceptance trace links passed. That combined unit/integration verification passed 972/972 cases across 72 files in 751.83 seconds (Vitest; 752.705 seconds for the whole command).
+
+The later event/Inngest continuation passed the fresh 1,191-case default run, two explicit native
+Inngest cases, 41 browser journeys, six selected mutations and final static/review/build/smoke gates.
+The [final evidence table](../../tests/STRATEGY.md#final-frozen-local-evidence) keeps these separate from
+the historical E04 checkpoint, including native exclusions, initial failures and scanner limits.
 
 The unit JUnit root value, 1386.4307773 seconds, sums worker execution and is not elapsed wall time. The full run XML is retained locally as `artifacts/test-results/backend-unit-full.xml`. Native PostgreSQL/pgBackRest laboratories from prior tranches were not rerun for this E04 checkpoint. Local E04 completion does not certify every full V1 scenario family.
 
