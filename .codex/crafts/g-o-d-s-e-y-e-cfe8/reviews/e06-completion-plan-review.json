@@ -1,0 +1,53 @@
+{
+  "verdict": "pass-with-findings",
+  "kind": ["plan", "spec"],
+  "criticity": "production",
+  "fresh_context": true,
+  "findings": [
+    {
+      "id": "E06-PLAN-01",
+      "criterion": "PLN-02 / SPC-02",
+      "status": "CONFIRMED",
+      "severity": "minor",
+      "evidence": ".codex/crafts/g-o-d-s-e-y-e-cfe8/e06-completion-design.md:74-78 names T-E06-D01 through D05; reviews/e06-completion-test-strategy.md:11-17 instead names W01 through W06 and C01. The design and planned tests have no explicit mapping. The shared P03 ID also spans platform rejection in the design (:81) but two-cell restore/isolation in the strategy (:20).",
+      "refutation_survived": true,
+      "refutation": "The prose is substantially aligned and the design calls its IDs provisional. That makes this a traceability correction, not evidence that behavior was omitted; provisional IDs still cannot identify the eventual proof unambiguously.",
+      "suggestion": "Adopt the GAUNTLET IDs as canonical or add an explicit many-to-many mapping, retaining separate platform rejection proof."
+    },
+    {
+      "id": "E06-PLAN-02",
+      "criterion": "SPC-07",
+      "status": "CONFIRMED",
+      "severity": "major",
+      "evidence": ".codex/crafts/g-o-d-s-e-y-e-cfe8/e06-completion-design.md:33-40 introduces createWorker({scope}), a typed handler map, strict method schemas and active execution callbacks but does not pin the IPC method/envelope/result/error schemas or callback lifetime contract. These are new independently executing process boundaries.",
+      "refutation_survived": true,
+      "refutation": "A single production executor avoids independent-team drift, and existing JobEngine types can be reused. Neither pins the new serializable protocol: two readers could permit different method sets, correlation identifiers or late-callback behavior while satisfying this prose.",
+      "suggestion": "Pin or reference the actual versioned protocol schemas, allowed methods, caller-derived scope, result/error forms, payload limits and callback expiry/disconnect behavior before freezing the implementation."
+    },
+    {
+      "id": "E06-PLAN-03",
+      "criterion": "SPC-06 / PLN-09",
+      "status": "CONFIRMED",
+      "severity": "major",
+      "evidence": ".codex/crafts/g-o-d-s-e-y-e-cfe8/e06-completion-design.md:48 promises a supervisor process lock and :76 restart survival; reviews/e06-completion-test-strategy.md:15 covers worker death and :21 covers startup/shutdown cleanup. Neither specifies or tests supervisor hard-kill followed by restart while native engines/listeners remain alive, including how ownership is proved before reusing or stopping them. e06-completion.json:23,29,35 provides success checkpoints but no explicit safe mid-story failure path.",
+      "refutation_survived": true,
+      "refutation": "Parent/child IPC disconnect can terminate cell workers, and owned launch helpers may already clean up normal shutdown. A hard-killed supervisor cannot run normal cleanup; the design does not require engine children to exit with IPC or define startup reconciliation of occupied ports/private state. Existing helper behavior must be explicitly adopted and tested to refute the gap.",
+      "suggestion": "Define deterministic orphan handling and ownership-safe restart refusal/reconciliation, then add a hard-kill supervisor restart test proving no duplicate calendars, unrelated process termination, lost pending work or blind unknown-effect replay."
+    }
+  ],
+  "criteria_run": 16,
+  "criteria_passed": 11,
+  "not_reviewed": [
+    "PLN-08 inactive: no parallel production epics are planned; satellite ownership is outside this plan review.",
+    "Changing implementation, executable tests, native restart behavior and security scanner results are not reviewed here; the implementation remains in progress.",
+    "Dedicated-server, Docker/gVisor hostile-code containment, host-wide power-loss durability and coordinated disaster recovery remain explicitly outside local qualification."
+  ],
+  "positive_boundaries": [
+    "Cell environment and exec-argument allowlists exclude owner database/authentication and foreign-cell material; IPC connection determines scope. This is a local first-party authority boundary, not a same-user hostile-code sandbox.",
+    "Supervisor admission explicitly preserves current hash, pause, HOLD, epoch and project lifecycle while owner HTTP is absent; GAUNTLET W06 includes suspension, preview expiry and backend disable.",
+    "Inngest alone owns the cron calendar; current catalog reconciliation requires explicit signed SDK registration and rejects stale hashes. The final proof must include removal/pause/resume and late old registrations.",
+    "The separate platform engine is in scope with independent PostgreSQL, Redis and keys and rejects application envelopes.",
+    "Research explicitly identifies the in-memory engine ingress crash window and requires durable application-outbox retention until Foundation receipt.",
+    "Actual external PostgreSQL/Redis pending-work restart evidence is required; generated configuration and historical test totals cannot close E06."
+  ]
+}
