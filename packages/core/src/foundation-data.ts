@@ -26,6 +26,12 @@ export interface FoundationOptions {
     runId: string,
     actor: Actor,
   ) => Promise<void>;
+  /** Trusted gate for the worker claim; returning false leaves the run queued (e.g. heavy-task concurrency). */
+  claimGate?: (
+    tx: DatabaseAccess,
+    plan: typeof schema.executionPlans.$inferSelect,
+    runId: string,
+  ) => Promise<boolean>;
   approvalPolicy?: (input: CreateExecutionPlanInput) => boolean;
   releaseQueued?: (tx: DatabaseAccess, runId: string) => Promise<void>;
   settlement?: (tx: DatabaseAccess, runId: string, status: string) => Promise<void>;
@@ -40,6 +46,7 @@ export interface FoundationState {
   delegatedAuthority?: FoundationOptions["delegatedAuthority"];
   admission?: FoundationOptions["admission"];
   approvalPolicy?: FoundationOptions["approvalPolicy"];
+  claimGate?: FoundationOptions["claimGate"];
   releaseQueued?: FoundationOptions["releaseQueued"];
   settlement?: FoundationOptions["settlement"];
   uncertainty?: FoundationOptions["uncertainty"];
@@ -60,6 +67,7 @@ export function foundationState(store: Store, options: FoundationOptions): Found
     delegatedAuthority: options.delegatedAuthority,
     admission: options.admission,
     approvalPolicy: options.approvalPolicy,
+    claimGate: options.claimGate,
     releaseQueued: options.releaseQueued,
     settlement: options.settlement,
     uncertainty: options.uncertainty,

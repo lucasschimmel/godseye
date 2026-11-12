@@ -28,6 +28,8 @@ const reasons = labelMap({
     "Ce PC de développement ne mesure pas le serveur dédié ni sa VM professionnelle.",
   "Declare the physical host, guest commitments and professional pool first":
     "Déclarez d’abord l’hôte, les VM et le pool professionnel.",
+  "New admission is paused by the owner; reads, reconciliation and protective stops continue":
+    "Les nouvelles admissions sont suspendues par le propriétaire. Les lectures, la réconciliation et les arrêts de protection continuent.",
   "No independently qualified local infrastructure provider is registered":
     "Aucun service de provisionnement local n’est qualifié.",
 });

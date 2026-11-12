@@ -65,6 +65,15 @@ export function observationReasons(observation: InfrastructureObservationInput |
     if (!available) reasons.push(`Unqualified capability: ${capability}`);
   return reasons;
 }
+/** Missing evidence is "unknown"; expired or malformed freshness windows are "stale", never healthy. */
+export function observationStateOf(observation: InfrastructureObservationInput | null, now: Date) {
+  if (!observation) return "unknown" as const;
+  const observed = Date.parse(observation.observedAt),
+    expires = Date.parse(observation.expiresAt);
+  return now.getTime() < observed || expires <= now.getTime() || expires - observed > 300_000
+    ? ("stale" as const)
+    : ("observed" as const);
+}
 const dimensions = ["cpuMilliCores", "memoryMiB", "storageGiB", "pids"] as const;
 function fits(
   total: Omit<InfrastructureCapacityInput, "pids"> & { pids: number | null },
@@ -146,28 +155,10 @@ export async function validateCapacity(
     existingId,
   );
 }
-export async function validatePoolCapacity(
-  tx: DatabaseAccess,
-  desired: DeclareInventoryInput,
-  observation: InfrastructureObservationInput,
-  requested: InfrastructureCapacityInput,
-  existingId?: string,
-) {
-  validateDesired(structuredClone(desired));
-  if (
-    !observation.hostCapacity ||
-    !fits(observation.hostCapacity, [
-      desired.host.headroom,
-      ...desired.guests.map((guest) => guest.capacity),
-    ])
-  )
-    throw new DomainError(
-      "CAPACITY_EXCEEDED",
-      "Observed host cannot satisfy guest commitments and host headroom",
-      409,
-    );
+/** Every active professional-pool reservation ledger, shared by admission checks and headroom reporting. */
+export async function poolRequirements(tx: DatabaseAccess, existingId?: string) {
   const rows = await tx.select().from(schema.infrastructureAllocations);
-  const reserved = [];
+  const reserved: CompiledApplication[] = [];
   for (const row of rows) {
     if (row.state === "released" || row.id === existingId) continue;
     reserved.push(preparationManifest(await preparationFor(tx, row.preparationId)));
@@ -192,8 +183,30 @@ export async function validatePoolCapacity(
   requirements.push(
     ...(await recoveryCommitments(tx, existingId)),
     ...(await deliveryCommitments(tx, existingId)),
-    requested,
   );
+  return requirements;
+}
+export async function validatePoolCapacity(
+  tx: DatabaseAccess,
+  desired: DeclareInventoryInput,
+  observation: InfrastructureObservationInput,
+  requested: InfrastructureCapacityInput,
+  existingId?: string,
+) {
+  validateDesired(structuredClone(desired));
+  if (
+    !observation.hostCapacity ||
+    !fits(observation.hostCapacity, [
+      desired.host.headroom,
+      ...desired.guests.map((guest) => guest.capacity),
+    ])
+  )
+    throw new DomainError(
+      "CAPACITY_EXCEEDED",
+      "Observed host cannot satisfy guest commitments and host headroom",
+      409,
+    );
+  const requirements = [...(await poolRequirements(tx, existingId)), requested];
   // Cells fit inside the already committed professional VM, never added again to physical guest memory.
   if (
     !fits(desired.pool.capacity, [desired.pool.headroom, ...requirements]) ||

@@ -1,8 +1,14 @@
-import type { InfrastructureOverviewView, OwnerSecurityView, ProjectDTO } from "@godseye/contracts";
+import type {
+  InfrastructureHeadroomView,
+  InfrastructureOverviewView,
+  OwnerSecurityView,
+  ProjectDTO,
+} from "@godseye/contracts";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { Fingerprint, RefreshCw, Server, ShieldCheck } from "lucide-react";
 import { useState } from "react";
+import { InfrastructureHeadroomPanel } from "@/components/infra-headroom-panel";
 import { InfrastructureInventoryForm } from "@/components/infra-inventory-form";
 import { InfrastructureWorkloadForm } from "@/components/infra-workload-form";
 import { useOwner } from "@/components/owner-gate";
@@ -22,6 +28,9 @@ function Infrastructure() {
   const inventory = useQuery(
     resource<InfrastructureOverviewView>("infrastructure", "/infrastructure"),
   );
+  const headroom = useQuery(
+    resource<InfrastructureHeadroomView>("infrastructure-headroom", "/infrastructure/headroom"),
+  );
   const security = useQuery(resource<OwnerSecurityView>("owner-security", "/owner/security"));
   const projects = useQuery(resource<ProjectDTO[]>("projects", "/projects"));
   const [busy, setBusy] = useState(false),
@@ -34,7 +43,12 @@ function Infrastructure() {
     setMessage("");
     try {
       await work();
-      await Promise.all([inventory.refetch(), security.refetch(), owner.refresh()]);
+      await Promise.all([
+        inventory.refetch(),
+        headroom.refetch(),
+        security.refetch(),
+        owner.refresh(),
+      ]);
     } catch (error) {
       setFailure(error instanceof Error ? error : new Error("L’action n’a pas abouti."));
     } finally {
@@ -196,6 +210,23 @@ function Infrastructure() {
                 </p>
               </section>
             </div>
+            {headroom.data && (
+              <InfrastructureHeadroomPanel
+                data={headroom.data}
+                fresh={fresh}
+                busy={busy}
+                onAdmission={(state, reason) =>
+                  void action(async () => {
+                    await mutate(
+                      "/infrastructure/admission",
+                      { expectedRevision: headroom.data?.admission.revision ?? 0, state, reason },
+                      "PUT",
+                    );
+                    setMessage(state === "paused" ? "Admission suspendue." : "Admission rouverte.");
+                  })
+                }
+              />
+            )}
             <section className="panel">
               <div className="panel-heading">
                 <SectionTitle>Inventaire souhaité</SectionTitle>

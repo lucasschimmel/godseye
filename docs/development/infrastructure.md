@@ -46,6 +46,14 @@ Allocate distinct private IPv4 and ULA IPv6 subnets from registered pools. Rejec
 
 Prepared network policy is deny-by-default. Docker's internal-network setting alone does not block every bridge-gateway/host-service path. Both IPv4 and IPv6 host/forwarding enforcement require separate evidence. This stage does not publish database/admin ports or make an application publicly routable; domain/TLS delivery remains E05.
 
+## Headroom, pressure and bounded heavy work (E02.S04)
+
+`GET /infrastructure/headroom` reports, per host and professional pool, capacity, committed, protected reserve and free for CPU, memory, data storage, WAL and PIDs. Committed values come from the existing reservation ledgers; capacity requires a fresh professional-VM observation, otherwise the value is `unknown` (never healthy). Pressure is `ok`/`warn`/`critical`/`unknown` from (committed + protected reserve) / capacity with thresholds 80 % and 95 % (`INFRASTRUCTURE_PRESSURE` in the contracts). WAL shares the data volume's capacity and pressure.
+
+Heavy tasks (agent runs, builds, database backup/restore/export/migrate and recovery full/diff/restore) share the single Foundation queue: at most one runs at a time and four wait (`HEAVY_TASK_LIMITS`). A further intention is refused inside the enqueue transaction with `HEAVY_QUEUE_FULL` (429) and holds no budget or reservation; the headroom view shows the running/waiting counts and whether the queue is full. The worker claim leaves a heavy run queued while the slot is taken.
+
+`PUT /infrastructure/admission` (owner, fresh passkey, `Idempotency-Key`, expected revision, reason required to pause) pauses or reopens new admission. A pause refuses non-protective enqueues with `ADMISSION_PAUSED` (409) and sets `executionAvailable=false`; reads, reconciliation, stops/quarantine/cancel, approvals and recovery restores continue, and work admitted before the pause is still consumed. Migration `0014_infra_admission.sql` stores the switch.
+
 ## Execution and recovery
 
 The existing FoundationEngine owns the operation, consumer, effect identity, lease, epoch/fence and task grant. Admission binds the exact preparation hash into its cell command and exact owner approval; the generic Foundation endpoints cannot bypass fresh authority or atomic physical reservations. Physical allocations remain separate from logical environment rows, allowing later replacement/restore destinations to coexist without changing the source cell into a new identity.

@@ -4,6 +4,7 @@ import {
   InfrastructureRevision,
   LOCAL_DEFAULTS,
   PrepareInfrastructure,
+  SetAdmission,
 } from "@godseye/contracts";
 import { DomainError, type InfrastructureEngine } from "@godseye/core";
 import type { Hono } from "hono";
@@ -24,6 +25,16 @@ export function registerInfrastructureRoutes(
     return infrastructure;
   };
   app.get(base, async (c) => c.json(await available().overview(c.get("actor"))));
+  app.get(`${base}/headroom`, async (c) => c.json(await available().headroom(c.get("actor"))));
+  app.put(`${base}/admission`, async (c) =>
+    c.json(
+      await available().setAdmission(
+        c.get("actor"),
+        SetAdmission.parse(await c.req.json()),
+        c.req.header("idempotency-key") ?? "",
+      ),
+    ),
+  );
   app.put(`${base}/inventory`, async (c) =>
     c.json(
       await available().declareInventory(

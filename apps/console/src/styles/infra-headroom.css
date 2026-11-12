@@ -1,0 +1,60 @@
+.headroom-scope,
+.headroom-queue,
+.headroom-admission {
+  padding: 0.5rem 1.25rem 1rem;
+  display: grid;
+  gap: 0.6rem;
+}
+.headroom-table-wrap {
+  overflow-x: auto;
+}
+.headroom-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.83rem;
+}
+.headroom-table th,
+.headroom-table td {
+  padding: 0.45rem 0.6rem;
+  text-align: left;
+  border-top: 1px solid var(--border-default);
+  white-space: nowrap;
+}
+.headroom-table small {
+  color: var(--text-secondary);
+  white-space: normal;
+}
+.headroom-pause {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: end;
+}
+.headroom-pause label {
+  display: grid;
+  gap: 0.25rem;
+  font-size: 0.8rem;
+}
+.headroom-pause input {
+  min-height: 2.5rem;
+  padding: 0.5rem;
+  color: var(--text-primary);
+  border: 1px solid var(--border-default);
+  background: var(--canvas);
+  border-radius: var(--radius);
+}
+.pressure-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-weight: 600;
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+}
+.pressure-ok {
+  color: var(--accent-ink);
+}
+.pressure-warn,
+.pressure-critical {
+  color: var(--danger-ink);
+}

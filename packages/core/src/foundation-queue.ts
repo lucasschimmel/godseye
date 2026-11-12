@@ -285,6 +285,7 @@ export async function claim(
         await rejectQueued(tx, state, run, error.code);
         continue;
       }
+      if (state.claimGate && !(await state.claimGate(tx, plan, run.id))) continue;
       const [project] = await tx
         .select()
         .from(schema.projects)

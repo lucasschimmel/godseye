@@ -10,12 +10,14 @@ import { type DatabaseAccess, schema } from "@godseye/store";
 import { eq } from "drizzle-orm";
 import { DomainError, parseInput } from "./errors.js";
 import { foundationState, recordRequest, requestFor } from "./foundation-data.js";
+import { admissionControlFor } from "./infra-admission.js";
 import { immutableSnapshot } from "./infra-policy.js";
 import {
   assertInfrastructureFresh,
   type InfrastructureState,
   inventoryFor,
   observationReasons,
+  observationStateOf,
   validateDesired,
 } from "./infra-state.js";
 import { appendAudit, write } from "./journal.js";
@@ -33,6 +35,10 @@ export async function infrastructureOverview(
   const reasons = observationReasons(inventory.observation, state.now());
   if (!inventory.desired)
     reasons.push("Declare the physical host, guest commitments and professional pool first");
+  if ((await admissionControlFor(tx)).state === "paused")
+    reasons.push(
+      "New admission is paused by the owner; reads, reconciliation and protective stops continue",
+    );
   if (!state.provider?.qualified)
     reasons.push("No independently qualified local infrastructure provider is registered");
   return InfrastructureOverview.parse({
@@ -40,11 +46,7 @@ export async function infrastructureOverview(
     revision: inventory.revision,
     observation: inventory.observation,
     observationRevision: inventory.observationRevision,
-    observationState: !inventory.observation
-      ? "unknown"
-      : Date.parse(inventory.observation.expiresAt) <= state.now().getTime()
-        ? "stale"
-        : "observed",
+    observationState: observationStateOf(inventory.observation, state.now()),
     executionAvailable: reasons.length === 0,
     executionReasons: reasons,
     preparations: preparations.map(({ expectedProjectRevision: _, ...row }) => ({

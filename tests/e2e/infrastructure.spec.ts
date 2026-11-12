@@ -132,3 +132,28 @@ test("T-AC-24 keeps public IPv4 exceptions explicit after native owner confirmat
   );
   await page.screenshot({ path: "artifacts/infrastructure-mobile.png", fullPage: true });
 });
+
+test("T-AC-24 T05 shows unknown headroom for local observations and pauses then resumes admission", async ({
+  page,
+}) => {
+  await projectAndInfrastructure(page);
+  await page.getByRole("button", { name: "Confirmer mon identité", exact: true }).click();
+  await expect(page.getByRole("status")).toHaveText("Votre identité a été confirmée.");
+  const headroom = page.getByRole("region", { name: "Marge et pression" });
+  await expect(headroom.getByText("Pression globale : Inconnu")).toBeVisible();
+  await expect(headroom.getByText(/0 en cours sur 1 · 0 en attente sur 4/)).toBeVisible();
+
+  await headroom.getByLabel("Motif de la suspension").fill("Vérification du disque");
+  await headroom.getByRole("button", { name: "Suspendre l’admission", exact: true }).click();
+
+  await expect(page.getByRole("status")).toHaveText("Admission suspendue.");
+  await expect(headroom.getByRole("heading", { name: "Admission suspendue" })).toBeVisible();
+  await expect(headroom.getByText(/Motif : Vérification du disque/)).toBeVisible();
+  await expect(page.getByText(/nouvelles admissions sont suspendues/)).toBeVisible();
+  await page.reload();
+  await expect(headroom.getByRole("heading", { name: "Admission suspendue" })).toBeVisible();
+
+  await page.getByRole("button", { name: "Confirmer mon identité", exact: true }).click();
+  await headroom.getByRole("button", { name: "Reprendre l’admission", exact: true }).click();
+  await expect(headroom.getByRole("heading", { name: "Admission ouverte" })).toBeVisible();
+});
