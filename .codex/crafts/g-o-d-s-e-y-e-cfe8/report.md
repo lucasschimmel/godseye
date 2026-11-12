@@ -1,4 +1,75 @@
-# E04 local application backend and private GitHub publication — 2026-11-12
+## Local E06 completion — autonomous workers and external persistence
+
+The requested local E06 software slice is complete and verified on 2026-11-12. Seven public documents are frozen,109relative links/25anchors pass, and final read-only Git hygiene passes. The owner HTTP process and trusted jobs supervisor are independent. Scoped first-party application workers and the platform engine use separate native Inngest instances and mandatory workflow PostgreSQL/Redis. Live cron registration, durable event receipts, remote outbox and owner-requested read-only reconciliation preserve Foundation authority.
+
+Evidence: 1,225 ordinary tests passed across 104 files; 11 opt-in native cases were separately verified (nine new plus two legacy), and eight Python helper regressions passed. Full Vitest wall time was 950.24 seconds. Seven selected mutations were killed with green baseline/restored cases and unchanged sources; this is not an exhaustive mutation score.
+
+Lint527/types/control1.9/app1.0 contracts, dependency audit0/495, complete build and built API smoke passed. Independent source review covers42runtime paths plus installer/provisioner scopes,47unique production files; post-full SHA drift0 and scoped Gitleaks raw0. Semgrep/full SBOM tools were unavailable; the12manifest inventory is explicitly degraded. Eleven canonical criteria are bound through declared executable aliases.
+
+Exact evidence: reviews/e06-completion-final-gates.json, reviews/e06-completion-tests.json, reviews/e06-completion-trace.json, reviews/e06-completion-code-review.json and reviews/e06-completion-source-freeze.json. Initial cron-format, late-authority and provisioning failures remain recorded with corrections and regression proofs.
+
+Native first-party processes do not qualify hostile-code containment, deployed network/quotas/capacity or coordinated E03/E12 disaster recovery. An explicit PostgreSQL owner journal is required; existing PGlite data is preserved without automatic migration. No actual owner enrollment, dedicated-server action, system service/global installation or Git mutation occurred. Prior source checkpoints below are historical evidence for their own scope.
+
+---
+
+# Local E06 application events and Inngest continuation — 2026-11-12
+
+Status: requested local tranche complete. Canonical continuation: `inngest-continuation.json`.
+E06 remains a partial V1 epic; this checkpoint does not qualify the dedicated host or distributed workers.
+
+The independent application outbox now commits with trusted business publications, retains cell-owned
+payloads and acknowledges only durable scoped Foundation admission. Inngest has a real authenticated
+per-project/environment SDK/server composition, startup cron binding, a runnable standalone command
+and opt-in integration with the existing owner Store and Jobs dashboard. Scope, producer UUID, epoch,
+digest, leases, HOLD and unknown-effect semantics remain enforced. Prepared Docker profiles require
+independent Redis/workflow PostgreSQL state and immutable image inputs; they are not deployed proof.
+
+| Final gate | Evidence |
+| --- | --- |
+| Full unit/integration | 1191 passed; two native scenarios off in ordinary suite, separately passed; 99 passed files/100 collected; 945.55s Vitest wall; `artifacts/test-results/inngest-unit-final.xml` |
+| Explicit native | Two real-engine scenarios passed in28.62s: independent two-cell app->SDK->Foundation chain and existing owner-store composition, scoped loader and disable without controller failure; `inngest-final-native.xml` |
+| Browser | 41/41,502.140759s JUnit; `inngest-e2e.xml` |
+| Focused | 55 passed,242.23s; later administration-mode assertions are covered by the final full suite; `inngest-final-focused.xml` |
+| Mutation | Six selected kills, baseline/restored6/6, original source unchanged;232.656s; `reviews/mutations-inngest.json` |
+| Static/build | Lint494files, types, OpenAPI1.9.0, canonical console/API/SDK/backend build and actual built-API health smoke passed |
+| Source/security | Independent review with58frozen hashes; root recheck unchanged. Gitleaks58allowlisted source paths: raw1, independently triaged non-secret bootstrap literal, true0; no suppression. Full Bun audit0/495. Semgrep/Syft/cdxgen unavailable; manifest inventory is degraded |
+| Trace/reuse | All12new E06 test IDs bound and verified; scoped147-export delta, global grep graph still stale |
+
+The initial batch and serialized failures are retained in `tests/STRATEGY.md` and the continuation.
+They exposed a real compiled-workspace dependency omission and deterministic Windows private-tree
+ACL overhead. Both were fixed and reverified, without raising CLI deadlines. The measured identical
+1301-entry profile improved44.736s->2.993s while retaining ACL-drift/link/containment checks. Unrelated
+malformed job configuration cannot block independent owner/private CLI administration.
+
+Activation and remaining limits: `docs/development/application-jobs.md`. Existing enabled backend
+configuration and explicit `GODSEYE_INNGEST_CELLS` are required; no owner, project or definition is
+created automatically. Distributed/controller-offline application execution, live catalog refresh,
+external persistence/platform-engine integration and coordinated recovery remain separate work.
+No dedicated-server action, owner enrollment, commit, push, branch change or remote mutation occurred.
+
+Memory: outcome-1794513363-0ff094dc joins prediction-1794507901-34943bc7.
+
+---
+
+The earlier reports below are historical checkpoints.
+# Local E01–E06 audit remediation — 2026-11-12
+
+Current continuation: four audited defects corrected with sixteen behavioral regressions;
+five selected mutations killed with green baseline/restored checks and unchanged source;
+fresh independent review passed, fourteen reviewed source/test hashes verified, and targeted
+redacted source scanning found no findings. Final lint checks 471 files. Types, generated
+OpenAPI 1.8.0, complete build and compiled API smoke passed. Full post-fix regression passed
+1,146/1,146 unit/integration cases across 93 files in 1,033.11 seconds (Vitest) and 41/41
+browser journeys in 315.46236 seconds (JUnit). Canonical state: `audit-remediation.json`; findings and current software/
+qualification boundaries: `docs/reviews/2026-11-12-e01-e06-audit.md`.
+
+E03/E05/E06 remain partial: coordinated lifecycle/recovery, concrete delivery/CI providers,
+and real per-cell workflow engine/application ingress are still software work. No server,
+GitHub publication, release or physical qualification occurred in this continuation.
+
+The following E04/publication report is historical evidence for its original checkpoint.
+
+## Historical E04 application backend and private GitHub publication
 
 ## Outcome
 

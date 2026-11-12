@@ -86,3 +86,27 @@
 - Full E04 gate972unit72files751.83sVitest/752.705commandwall;31browser181.393319s;13selectedmutations257.091s;62localcriteria. Original native PostgreSQL/pgBackRest labs were not rerun this tranche.
 - User explicitly requests PRIVATE GitHub godseye: README-only main initially, mainreservedreleases via PR; developactive with granular smallresponsibilitycommits. Preserve original coarsehistory on localbackuprefs. No externalserverdeployment authorized.
 - Repository workflow is docs/development/git-workflow.md. Repo-scoped crafts-godseye playbook holds new durable lessons; graph fallback remains grep.
+
+## E01–E06 audit remediation — 2026-11-12
+
+- R1–R4 corrected locally with sixteen RED-to-GREEN regressions; full1146unit93files1033.11s/41browser315.46236s/five selected mutation kills and independent review passed. Original source unchanged by mutation experiments; reviewed fourteen-file hashes verified after global regression.
+- Reject definition changes while any run is nonterminal; an owner editing a new definition is not reconciliation of an old unknown effect.
+- Deadlines fence observations and retain actual-call capacity until settlement. Filter occupied cell/destination scopes before pagination; otherwise fifty older pending rows can starve healthy work.
+- Reapproval uses a separate capacity-only hook in the existing transaction, not physical provider reservation. Test production InfrastructureEngine wiring and failed receipt rollback.
+- Jenkins archive patterns must cover actual configured Playwright trace/screenshot output before cleanup. Prepared Jenkins is still not a qualified CI runtime.
+- Current public spec/plan and internal state explicitly keep E03/E05/E06 software work separate from dedicated-host qualification. No new user preference beyond confirmed local-only scope; no commit/push or server change.
+
+## Local E06 application events and Inngest — 2026-11-12
+
+- Final requested local integration is implemented on the existing owner Store/Jobs view, independently configured per-cell native engines and signed SDK endpoints. Default remains off; exact prepared backend scope/revision, six listener identities and producer store UUID are server-owned.
+- Source event payload stays in its application store; control receipts retain metadata/digest/run refs only. Engine HTTP acceptance does not acknowledge source delivery: durable domain admission does. Transport attempts may change while domain identity remains fixed.
+- Include payload acquisition in the execution deadline, retain actual-call slots, and forbid late loader invocation. Unknown/cancelled effects, missing history and unresolved outbox block source-payload disposal; rotate settlement scans beyond occupied rows.
+- Verify real pinned OSS behavior: SDK PUT registration, minimum five free queue workers, and loopback hostname normalization at the exact port. Native embedded storage does not qualify external Redis/workflow PostgreSQL or host containment.
+- Actual compiled backend restart caught an external workspace-contract import; bundle both first-party dependencies. Windows1301-entry ACL profile took44.736s with per-file processes and2.993s after read-only canonical batching, retaining native drift/link/containment checks and original CLI deadlines. Admin recovery ignores unrelated engine configuration, without weakening server or base security validation.
+- Final1191ordinary cases across100collectedfiles (2native cases separately passed),41browser,6selectedmutationkills,494-filelint/types/OpenAPI1.9/build/smoke and independent58-pathsource review passed. Initial failed batches remain historical evidence. No new user preference: local-only scope/Bun retained; no owner enrollment, server or Git mutation.
+- Outcome outcome-1794513363-0ff094dc joins prediction-1794507901-34943bc7. Full graph remains legacy grep/stale; scoped147-export delta and12test-ID trace are recorded.
+
+## Autonomous E06 local completion — 2026-11-12
+- Trusted supervisor is independent of owner HTTP; cell code runs in scope-bound child processes with sanitized environments. Session-held PostgreSQL singleton loss fences admission after every awaited authorization boundary. Read-only reconciliation has a separate current-lease checkpoint and cannot renew mutation authority.
+- Native guardian holds the actual ChildProcess handle; never kill persisted numeric PIDs. Atomic private service state and independent all-resource cleanup preserve restart authority. Inngest1.52 cron identities are canonical UTC RFC3339, not opaque IDs; actual dynamic calendar tests exposed the mismatch.
+- Final1225ordinary/11separate native/8Python/7curatedkills,47frozenproductionhashes,static/build/smoke/docs passed. Docker/VM/untrusted-code/capacity/off-host/coordinated recovery remains unqualified. No new user preference beyond confirmed local-only/Bun/customSDK; no dedicated-server/Git/actualownerdata mutation.
