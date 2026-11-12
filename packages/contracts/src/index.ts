@@ -1,4 +1,5 @@
 export * from "./access.js";
+export * from "./application-events.js";
 export * from "./backend-configuration.js";
 export { LOCAL_DEFAULTS } from "./config.js";
 export * from "./database.js";

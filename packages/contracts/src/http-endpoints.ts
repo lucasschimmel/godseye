@@ -36,7 +36,7 @@ import { OwnerSecurityResponse, OwnerStatusResponse } from "./owner.js";
 import { PROTECTION_HTTP_ENDPOINTS } from "./protection-endpoints.js";
 import { RECOVERY_HTTP_ENDPOINTS } from "./recovery-endpoints.js";
 
-export const CONTROL_API_VERSION = "1.8.0" as const;
+export const CONTROL_API_VERSION = "1.9.0" as const;
 export const CONTROL_API_HEADER = "x-godseye-api-version" as const;
 export interface ControlEndpoint {
   method: "GET" | "POST" | "PUT";

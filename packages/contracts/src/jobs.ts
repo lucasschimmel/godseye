@@ -35,7 +35,9 @@ export const CronExpression = z
   .regex(/^(?:[\d*/,-]+\s+){4}[\d*/,-]+$/);
 export const JobTrigger = z.discriminatedUnion("kind", [
   z.object({ kind: z.literal("cron"), cron: CronExpression }).strict(),
-  z.object({ kind: z.literal("event"), eventType: Slug }).strict(),
+  z
+    .object({ kind: z.literal("event"), eventType: z.string().regex(/^[a-z][a-z0-9_.-]{0,63}$/) })
+    .strict(),
   z.object({ kind: z.literal("manual") }).strict(),
 ]);
 export const JobLimits = z
@@ -145,7 +147,7 @@ export const ReconcileJobRun = z
 export type ReconcileJobRunInput = z.infer<typeof ReconcileJobRun>;
 export const JobEngineStatus = z
   .object({
-    state: z.enum(["unconfigured", "local_fixture", "unavailable"]),
+    state: z.enum(["unconfigured", "local_fixture", "local_inngest", "unavailable"]),
     reason: z.string().max(240),
     heldEnvironmentIds: z.array(Id),
   })
