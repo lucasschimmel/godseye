@@ -1,0 +1,629 @@
+{
+  "verdict": "pass",
+  "review_state": "frozen-backend-final-refutation-complete",
+  "kind": "code",
+  "scope": "Local E03.S03 recovery backend, shared HOLD, exact authority, pgBackRest compiler/provider, archive refresh, repository capacity and broker read-only material integration",
+  "frozen": true,
+  "freeze_manifest": "reviews/recovery-backend-freeze.json",
+  "freeze_schema_version": 3,
+  "hashes_verified_before": 126,
+  "hashes_verified_after": 126,
+  "hash_mismatches": 0,
+  "reviewed_snapshot": [
+    {
+      "path": "apps/control-api/src/access-cli.ts",
+      "sha256": "19e24f0e5e54181c773d5928a8dc057e54de35b59ce61683a6c813b9762993d6"
+    },
+    {
+      "path": "apps/control-api/src/access-routes.ts",
+      "sha256": "3af39d7ffafddd5fe8309229f2d78531cefb5131d21112fd64ec00524434e868"
+    },
+    {
+      "path": "apps/control-api/src/access-runtime.ts",
+      "sha256": "789e2e864853bc96f4ebc5c7402df20c385a9ff34495dc8333039565fa5a0e0c"
+    },
+    {
+      "path": "apps/control-api/src/api-types.ts",
+      "sha256": "334950dc74ba90e8ac8c617ea814d4843b97da76941625175a466451fe42a1d8"
+    },
+    {
+      "path": "apps/control-api/src/app.ts",
+      "sha256": "66b53edcd8de658008922910e2de8042e8007296e8f7a35fe859028591257cd8"
+    },
+    {
+      "path": "apps/control-api/src/config.ts",
+      "sha256": "924354658faa57903a5aae10fa5300e36967945b3d17551d06b29f9e64d2d826"
+    },
+    {
+      "path": "apps/control-api/src/database-routes.ts",
+      "sha256": "5facb74db55147c27770871ab7ee1fa0304940f934a9c5f7b3397b1f161a7ca0"
+    },
+    {
+      "path": "apps/control-api/src/foundation-routes.ts",
+      "sha256": "9a76d3d22153491987a4d8e4edf1ae892451f75321bee16c64827f5738a35852"
+    },
+    {
+      "path": "apps/control-api/src/identity/auth-config.ts",
+      "sha256": "85b2cb359e8881c1ed35e4e722246bdc8926f848aee976a80464be050829a12b"
+    },
+    {
+      "path": "apps/control-api/src/identity/enrollment.ts",
+      "sha256": "d9e839a6af759e45b20659eb5e58e787e41078ce405b0db90e9f2d492e1543b0"
+    },
+    {
+      "path": "apps/control-api/src/identity/index.ts",
+      "sha256": "e2df81a8672904c7c1eb61c4384b585e64752eb2dd9205405739fd5150259154"
+    },
+    {
+      "path": "apps/control-api/src/identity/local-admin.ts",
+      "sha256": "b57906333a761948d09c2762b035d6efb7e4d2ff60bb9330e09b5457bf75de7d"
+    },
+    {
+      "path": "apps/control-api/src/identity/runtime.ts",
+      "sha256": "6acd59d1b5f12b54f9d52190b9ec5f4d1b2f8b1676414e4838751f182ee8c3e0"
+    },
+    {
+      "path": "apps/control-api/src/identity/security.ts",
+      "sha256": "570b36b92215f0d057cbb91de9dabb288d9fb8765ea2896394ccdb6df123545c"
+    },
+    {
+      "path": "apps/control-api/src/identity/shared.ts",
+      "sha256": "bd837c6fe3cbf88486096729ffccf0c9f0335b6338b7efe2dfc6ae6a42790e64"
+    },
+    {
+      "path": "apps/control-api/src/infra-routes.ts",
+      "sha256": "55f50477e8bc6dce2b1c00738fa5cad42bbed2e0314425d10244a4206decf191"
+    },
+    {
+      "path": "apps/control-api/src/openapi.ts",
+      "sha256": "08a7dde4112133fe5438e7f5176ffed1fdade510b96a801c15dda8f956b0b2ff"
+    },
+    {
+      "path": "apps/control-api/src/owner-cli.ts",
+      "sha256": "d37a2054d395741450c748288422d7e62615483557fa3b653969bbfe29e8a643"
+    },
+    {
+      "path": "apps/control-api/src/recovery-routes.ts",
+      "sha256": "14e0bd329766fb5660dd283da687938b87c9d4efca876ab9eced4dfc7dbe182b"
+    },
+    {
+      "path": "apps/control-api/src/server.ts",
+      "sha256": "577d5af2b9a3bf5c4cfb4ba34d5f83a9ba759e4025669de924b57ab5f9a2cc16"
+    },
+    {
+      "path": "docs/contracts/control-openapi.json",
+      "sha256": "239d28df1362dc251498f3db929673dae8179a426ed60a9e3e4d520106dd1885"
+    },
+    {
+      "path": "Jenkinsfile",
+      "sha256": "b5bb20ee1f5161c3f4eb58fb199c6c2783ecdbe3bc1bbe30ebe77017579f5726"
+    },
+    {
+      "path": "package.json",
+      "sha256": "3694c2a9623fa9fd424f93f969a3dfd19035d5ae917dc80b80e204732f546669"
+    },
+    {
+      "path": "packages/contracts/src/access-endpoints.ts",
+      "sha256": "b858c17a2393a7bd0a16194a7bfeaa815d9016f97cb733a84f79b3cff1caafe8"
+    },
+    {
+      "path": "packages/contracts/src/access.ts",
+      "sha256": "21eee374f8bb555e5ba5ee9ac614668d2b4f353127378057385d2994ca3ce81e"
+    },
+    {
+      "path": "packages/contracts/src/config.ts",
+      "sha256": "7fb1c9937203eb1bf5c64e80022243b0f40d6e5cc86255bd5b29dc0d4e5f2300"
+    },
+    {
+      "path": "packages/contracts/src/database-endpoints.ts",
+      "sha256": "d61b2b3caee5837a7eecc9645b07dff1d8fae1eb30ee3ca14bb8f4d2f137d668"
+    },
+    {
+      "path": "packages/contracts/src/database.ts",
+      "sha256": "4acba4a88cc93a53ebdf7f19b147bb14ced7d5ec9a42e08a30d9575012432bf8"
+    },
+    {
+      "path": "packages/contracts/src/foundations.ts",
+      "sha256": "23383eef25400cd98c3decd0ff34cffd71d5d4abec0b1b4fce7a98c91cef48d1"
+    },
+    {
+      "path": "packages/contracts/src/http-domain.ts",
+      "sha256": "e60d9e965e9b87b3bbac793210f6c4caf79b8b75ee7ab31e1e24dd20e3973f48"
+    },
+    {
+      "path": "packages/contracts/src/http-endpoints.ts",
+      "sha256": "3876d2a76277046b2e84accbddaec8d3ff33d8cda4f4597c25dcec079d1ff1e9"
+    },
+    {
+      "path": "packages/contracts/src/http-openapi.ts",
+      "sha256": "24daa5ddfb4ad77e3c1c2072073410565322063f2a53c9c318ce3762f563b3de"
+    },
+    {
+      "path": "packages/contracts/src/http-schemas.ts",
+      "sha256": "527494ddbdab4dcbdefea94ee9c80b8941094a09dcb601c12b9eaf1f1c016f1c"
+    },
+    {
+      "path": "packages/contracts/src/http.ts",
+      "sha256": "c65f8ad3edb4695ec4648e69e780a45bd84781a4ec3cad0ccb0f6343930dce2a"
+    },
+    {
+      "path": "packages/contracts/src/index.ts",
+      "sha256": "ec35a5638c21e192649ccfeefefaa33db114da208f1deba1a4afe1ce42860eca"
+    },
+    {
+      "path": "packages/contracts/src/infra-endpoints.ts",
+      "sha256": "e2801f4c88e2d0c83caf95351cb875bb59d0f1acff0258951410c888045bcb86"
+    },
+    {
+      "path": "packages/contracts/src/infrastructure.ts",
+      "sha256": "87ce9e97b49c08d756f171621c9a54e581c97bdff2bd5a63175f0952dec8fc07"
+    },
+    {
+      "path": "packages/contracts/src/manifest.ts",
+      "sha256": "1686021902da0d663425a0f59b98c9facd0dada581152d23c3977438b95881cb"
+    },
+    {
+      "path": "packages/contracts/src/owner.ts",
+      "sha256": "79e5876ad050dc651f8be1c6eca4e0aacae11485c0976d867ae2b690204d41c2"
+    },
+    {
+      "path": "packages/contracts/src/recovery-endpoints.ts",
+      "sha256": "61da2b763d96c8110da7e00b9649f20e0acd5073e2455758d5d26a81cf19bb45"
+    },
+    {
+      "path": "packages/contracts/src/recovery.ts",
+      "sha256": "fc68ae537c35e5895ab96a4052e4aca6473794c557d6b3cf0712f43a178332f8"
+    },
+    {
+      "path": "packages/control-client/src/index.ts",
+      "sha256": "9373fa86b7fb88eeb74dc840bac51efeca158e694658a473fdd8f188cef57bed"
+    },
+    {
+      "path": "packages/control-client/src/transport.ts",
+      "sha256": "39252335069b4ab6ac6ccdfc4a53fd05a038de9f565534b7c2267407d09d5ae5"
+    },
+    {
+      "path": "packages/core/src/access-operations.ts",
+      "sha256": "ac2abd14ec12992f9b5680584b01f1d1f2fe5baff5031facd90a1d74c2bfd7ce"
+    },
+    {
+      "path": "packages/core/src/access-provider.ts",
+      "sha256": "9e921ce4cc21d890c7da39b9b57749a12f933fdbf243cfccbdff18e1d2ae0304"
+    },
+    {
+      "path": "packages/core/src/access-recovery-inspection.ts",
+      "sha256": "f6733faf084a0c29964127ce724e53f915947f55cb0d12f3c9086f230b8dbf08"
+    },
+    {
+      "path": "packages/core/src/access-redemption.ts",
+      "sha256": "88e7d94176d7e550bd4d2c26dc63e8b3dc463c6da0b3f6a9cc6904b7457715c0"
+    },
+    {
+      "path": "packages/core/src/access-registry.ts",
+      "sha256": "2949c1b9f8cd4400098600ad926243d25f6e66b77919eda6a8ec290101fa364a"
+    },
+    {
+      "path": "packages/core/src/access-state.ts",
+      "sha256": "b8140b6fc785e5e4f9b1c71938d3060e42f31c7acca2bf11432da7ac572894e1"
+    },
+    {
+      "path": "packages/core/src/access.ts",
+      "sha256": "5fe9b2f77a5cc2ffeedb2e130257ac61f91793fa7f46e6f5a4fc71b99a32d6e0"
+    },
+    {
+      "path": "packages/core/src/audit-export.ts",
+      "sha256": "7e663becd05feb94442369633506e2cb2986f9c54710d69caee38877c33a69d3"
+    },
+    {
+      "path": "packages/core/src/bao-policy.ts",
+      "sha256": "a14c2eaede12034f0cabe7a553c8b224d70abd1431982b53dadf36e5dbda23ad"
+    },
+    {
+      "path": "packages/core/src/bao-provider.ts",
+      "sha256": "7010af32d2ffd0a83853dd5c08e6b50c1da94aeed67ebd9ace6dd727bc78554e"
+    },
+    {
+      "path": "packages/core/src/database-acl-inspection.ts",
+      "sha256": "97654762b346fcfe009fd28482ca234be815bc639d5c791fd8d4585601cbe634"
+    },
+    {
+      "path": "packages/core/src/database-execution.ts",
+      "sha256": "07398c4d7692d083ea5c5971594c2030002a6f4689f376db64237f3f405588b3"
+    },
+    {
+      "path": "packages/core/src/database-hba-inspection.ts",
+      "sha256": "52709cf1b8c74e888fa208e177983be3dbe0b769b74793e0b530a4b2907d8791"
+    },
+    {
+      "path": "packages/core/src/database-inspection.ts",
+      "sha256": "7d901ea6a509250dfe28239cd65f35c2b1c0f369743e2c606be7b833a2a99e90"
+    },
+    {
+      "path": "packages/core/src/database-material.ts",
+      "sha256": "e1ad13fe9cc0f322ac67caa843b6bdc5c75a447d5196b0a7733e4233c31be2ea"
+    },
+    {
+      "path": "packages/core/src/database-policy.ts",
+      "sha256": "51ba4dc4fe5d0c88b3e94ad70bda8a5ef474fe09ec9b4eeded82e21d7eb64f25"
+    },
+    {
+      "path": "packages/core/src/database-postgres.ts",
+      "sha256": "bdbfb01018d3359463ce8158d448247df7cce6266d6d57e2538be580f476dad4"
+    },
+    {
+      "path": "packages/core/src/database-preparation.ts",
+      "sha256": "dfa031e02f05956d2543a40470fbe8c6d6f9149480e91ab974112dfdb821a71d"
+    },
+    {
+      "path": "packages/core/src/database-provider.ts",
+      "sha256": "056d0ce85a19ea5fec4f50e093744f14cec6fb3025c886cea21d65069e3db388"
+    },
+    {
+      "path": "packages/core/src/database-sql.ts",
+      "sha256": "96d84499c26f0f1edafe3700fa6af59ee21914b2d4613c52b7f0f8d58e1b1cad"
+    },
+    {
+      "path": "packages/core/src/database-state.ts",
+      "sha256": "1d15121dae3f4841e1c8d719a419bbf86b530f28ea9b0e67e44168d242970f3a"
+    },
+    {
+      "path": "packages/core/src/database.ts",
+      "sha256": "5f2676491abe29e5c4c62feaf83ae15683e2b80726a46fda7e65c4af8548563d"
+    },
+    {
+      "path": "packages/core/src/errors.ts",
+      "sha256": "f495b9508e43efa185d87c8590c8b6c334f3f38b0d4a028a13e145355006a11c"
+    },
+    {
+      "path": "packages/core/src/foundation-data.ts",
+      "sha256": "60c4e7bdfeeae5cf37ac3456f61f4d55169b21f149645c328d7284e0900892eb"
+    },
+    {
+      "path": "packages/core/src/foundation-effects.ts",
+      "sha256": "3c31ede0f1db988282810ba952de8c00e2bc97c1686bbbf01d010796efef0c37"
+    },
+    {
+      "path": "packages/core/src/foundation-grants.ts",
+      "sha256": "0948894ac530992d6cfc5862506250ef7d203dd77cfc60757c168f933ea6d8fc"
+    },
+    {
+      "path": "packages/core/src/foundation-outcome.ts",
+      "sha256": "1d616c9b64dec9019df8bebb169704a72c0869e2c083af42e3e89acc592510fa"
+    },
+    {
+      "path": "packages/core/src/foundation-plans.ts",
+      "sha256": "3ab96daf75c02b64d4986efe22095a707b05d33d7524ef5a351b2658632ee190"
+    },
+    {
+      "path": "packages/core/src/foundation-queue.ts",
+      "sha256": "3ab8e7188aa55f551e70a4f95f7c880ee17f907c22bba8a36d4c8743c920bdcf"
+    },
+    {
+      "path": "packages/core/src/foundation-retention.ts",
+      "sha256": "d19b5e57ca44c904ca873f1952f2e432cb1da890deea867902291f1ffa72e825"
+    },
+    {
+      "path": "packages/core/src/foundations.ts",
+      "sha256": "b00a6e52b8f622294e9b1d82df4c3f289bd3d21b6a0f4556f46c1321fc1904e3"
+    },
+    {
+      "path": "packages/core/src/github.ts",
+      "sha256": "f8c40aab271be97949f5fa0807cb311237e574befd4b8f95e0f069d6dd17ffd4"
+    },
+    {
+      "path": "packages/core/src/index.ts",
+      "sha256": "11f6914b5eb232d27039533c3a26d7e549dcf2fbfe305536a1d8e94637a6dfc5"
+    },
+    {
+      "path": "packages/core/src/infra-collector.ts",
+      "sha256": "084d304acb4d1cc7c2e7bdeff8f1617bd33351ede401bd32dcb07f18dbb20ae8"
+    },
+    {
+      "path": "packages/core/src/infra-docker-inspection.ts",
+      "sha256": "06f6817a4924894ce7a056a84940ac593586ef01041ed47a1157d33cc54bb31a"
+    },
+    {
+      "path": "packages/core/src/infra-docker-policy.ts",
+      "sha256": "ec7d7a174fbc9418e12b4d6601da5adf4b8472da105a9f2bf370cc26f949b765"
+    },
+    {
+      "path": "packages/core/src/infra-docker-provider.ts",
+      "sha256": "36ca0edf1a02ac41fc496159855dc5f44ab245660bea812737f8abb7868edc2a"
+    },
+    {
+      "path": "packages/core/src/infra-docker-transport.ts",
+      "sha256": "d426ccb276c233842d0ca7c5237fc61a96e3b037e1ade1c9076ab8445259185f"
+    },
+    {
+      "path": "packages/core/src/infra-execution.ts",
+      "sha256": "5cf6cf25f830db631dd05cba1b556a72d9b753037e83ccf337232ed562114a3d"
+    },
+    {
+      "path": "packages/core/src/infra-inventory.ts",
+      "sha256": "bfc8a811e077cbb13e5562b67ef1cb6312b6d2211e6d9055ed60fd38ae4a7e64"
+    },
+    {
+      "path": "packages/core/src/infra-network.ts",
+      "sha256": "147423a98db4a0e196d02c1046c6b07a4e26e5cfaae1529e8dcc7fdd4f179351"
+    },
+    {
+      "path": "packages/core/src/infra-policy.ts",
+      "sha256": "9ea9b7893a4c469849c903259300743faa5dc6b05a66f22266d24f6fc9c1468b"
+    },
+    {
+      "path": "packages/core/src/infra-preparation.ts",
+      "sha256": "2620f10a8300a5f8c1f9c3c8142813e1c4fa678de6f78afa3c1fb866e5fcbb34"
+    },
+    {
+      "path": "packages/core/src/infra-provider.ts",
+      "sha256": "4a08af5a6c26a6b6b792e57fde8f5679ae11d63b55fddf394e17fee6a070a753"
+    },
+    {
+      "path": "packages/core/src/infra-quarantine.ts",
+      "sha256": "7257181d5d9ad27a0abdb6f969b35f18207ca923a08a9abebbee61bb7c1ce733"
+    },
+    {
+      "path": "packages/core/src/infra-settlement.ts",
+      "sha256": "72f57c3b4b767429bdaebb92af74a6192790d08dbd288454d24779850258e3ff"
+    },
+    {
+      "path": "packages/core/src/infra-state.ts",
+      "sha256": "7fdcad91b8fb237538794eb14e5af5d2a5aa236d2065beeaeed12ba2f743169a"
+    },
+    {
+      "path": "packages/core/src/infra-steps.ts",
+      "sha256": "a5157b5b248546005bd47691f0d08379c39cd8521b227dfe78523cd32c3a7f27"
+    },
+    {
+      "path": "packages/core/src/infrastructure.ts",
+      "sha256": "fbb6ab3c8a6b4e945d105e4ab05379e461bb6cfcc19fc48746dee6e9129ca9c0"
+    },
+    {
+      "path": "packages/core/src/journal.ts",
+      "sha256": "3307cc4a52d3bcade88f7d0cf65e346fb70c2f28fa41f78606e5ea065b3da153"
+    },
+    {
+      "path": "packages/core/src/operations.ts",
+      "sha256": "29371e35ec82692fc07a18280c387defa36a5ccfe0ead542f28f318088469692"
+    },
+    {
+      "path": "packages/core/src/policy.ts",
+      "sha256": "8d6ff3d9635554a16988da45b26bfe36ebdeae3125d0e319aa5df7d32b95e6d1"
+    },
+    {
+      "path": "packages/core/src/project-management.ts",
+      "sha256": "e213756ac20f3bc55e62c0ca8dbedd8e0a68bf01f85b8c885d5629e77b2a5774"
+    },
+    {
+      "path": "packages/core/src/projects.ts",
+      "sha256": "bc16a3594a2d134bd68a8bd7f1c67e1cdd437f6bcaa7b3f5a2cb8df274c22b32"
+    },
+    {
+      "path": "packages/core/src/recovery-admission.ts",
+      "sha256": "24bfccabb1b457816d4b45bcc3690e409b2e035c06e228eeb7cd3a700ca76fbf"
+    },
+    {
+      "path": "packages/core/src/recovery-capacity.ts",
+      "sha256": "67f6232a2e97e84921de843ce40c36c8f2022c331283dd02d8c91cb9969e8340"
+    },
+    {
+      "path": "packages/core/src/recovery-execution.ts",
+      "sha256": "0d3a3a94f684752348ac479eb091c609d6d3ce278059245a0a328fc8cfe1eea5"
+    },
+    {
+      "path": "packages/core/src/recovery-material.ts",
+      "sha256": "63a02f82f47772ab55cfec0c81a41396b38ad621329b76f222203c6835422ca3"
+    },
+    {
+      "path": "packages/core/src/recovery-pgbackrest-info.ts",
+      "sha256": "ce0141261f4321efcbd66a488f2ada70c051ace09549f3306c865489554af34e"
+    },
+    {
+      "path": "packages/core/src/recovery-pgbackrest-policy.ts",
+      "sha256": "da23490f055819ddc9a57a2b8b67bb6086fdb699f99a9d6faf47d8872143960c"
+    },
+    {
+      "path": "packages/core/src/recovery-pgbackrest-provider.ts",
+      "sha256": "6ad1b1533a9cbb3f92f011a8de4dec9609d3b827744e28b0655ef37600eb11d0"
+    },
+    {
+      "path": "packages/core/src/recovery-postgres-policy.ts",
+      "sha256": "fdac458315780106c9eeb25df29c1b4c847a507b7151bd9a4a22873221081d1c"
+    },
+    {
+      "path": "packages/core/src/recovery-preparation.ts",
+      "sha256": "c090da0ca36ad62a862fab71ca424f78f48f28818c56c0c755dea6faa40ba1f4"
+    },
+    {
+      "path": "packages/core/src/recovery-provider.ts",
+      "sha256": "ff2ca068ef04b3e98a31494367cc79d1788af01d8baab5f445d36ac3f4ff7735"
+    },
+    {
+      "path": "packages/core/src/recovery-state.ts",
+      "sha256": "67e6e77d395703714a05f324907bee7df01590346baa4dc55510d7b8669eb466"
+    },
+    {
+      "path": "packages/core/src/recovery.ts",
+      "sha256": "7deeb188a85ed88d65175179fe2fd2122ffe713d32de28257600f8db7fb1b1f9"
+    },
+    {
+      "path": "packages/store/migrations/0000_control.sql",
+      "sha256": "f34d0e91dbdf82496e80cdae23c1b340ac5a970a577ff857f71b815150ace1c3"
+    },
+    {
+      "path": "packages/store/migrations/0001_foundations.sql",
+      "sha256": "bd7dcfc2706d77ba2690a6ab27b5ca595982d8c65fc2447f976f00bcac5bd8c7"
+    },
+    {
+      "path": "packages/store/migrations/0002_owner_identity.sql",
+      "sha256": "a293f3815dda093bb8a22ffdad9473b1036a3a1e12efcd47c1b0b77d632aa8c1"
+    },
+    {
+      "path": "packages/store/migrations/0003_access.sql",
+      "sha256": "6ccb7aafeac663373b9cf41fd59564c5ef36020081a3d6961a3574484ad4433e"
+    },
+    {
+      "path": "packages/store/migrations/0004_infrastructure.sql",
+      "sha256": "c494483cd82a7675e2d2407dccb177a5c5d923301a93d2b54235b817bdbb67fb"
+    },
+    {
+      "path": "packages/store/migrations/0005_database.sql",
+      "sha256": "57fa64191a0dc9bcfb32b78437ba9a9d7d562fcead55d929f84ff3a061cac3e1"
+    },
+    {
+      "path": "packages/store/migrations/0006_recovery.sql",
+      "sha256": "2927b562578fbadd79dd5a362280a2ca46596e8f9c74b6e237c955747703a158"
+    },
+    {
+      "path": "packages/store/src/access-schema.ts",
+      "sha256": "1135241189af9b743823edca7dc1f48eeed579dd92c1a660e74ee292e0eee3b8"
+    },
+    {
+      "path": "packages/store/src/database-schema.ts",
+      "sha256": "7bbe83534ba27f8bea41b9a994375313e7204920c8d51a4edbaffa310d28780b"
+    },
+    {
+      "path": "packages/store/src/foundation-schema.ts",
+      "sha256": "cf0565058dd858a561b03c6a8030bc4795be47f3d9d94d4304f57a1648e348e1"
+    },
+    {
+      "path": "packages/store/src/index.ts",
+      "sha256": "67df6a88ba21a9c6426ca1dc8496a7f73fc9c1dab53b8d888a7b04f5d65586f9"
+    },
+    {
+      "path": "packages/store/src/infra-schema.ts",
+      "sha256": "5b41b613564f7e4fc7a4175780b939bd8aa6072f1f2433a9d01026358c137212"
+    },
+    {
+      "path": "packages/store/src/migrations.ts",
+      "sha256": "e7bfe8bfcef4a4cde5c7984a4995b0b1e333507823731809fa72580f67c06b79"
+    },
+    {
+      "path": "packages/store/src/owner-schema.ts",
+      "sha256": "1b5e72fe9987af8cc821ebabb6c38bf202b7fa9b8ec41eee037cd3a818652e25"
+    },
+    {
+      "path": "packages/store/src/recovery-schema.ts",
+      "sha256": "ddde1f9391d533cc2ffba11affbe04c08576483033e771ab4edfcf8ec5434a25"
+    },
+    {
+      "path": "packages/store/src/schema.ts",
+      "sha256": "75301ebd8d54ea72aba222098a5d80ebbe5da1af441efd041de2c8742eaaf2c9"
+    },
+    {
+      "path": "vitest.config.ts",
+      "sha256": "4ed1bef98c5ce243aaf82c34db6c2279afc97e852ccb6101c02532b8a97e219e"
+    }
+  ],
+  "findings": [],
+  "criteria_run": 22,
+  "criteria_passed": 22,
+  "resolved_findings": [
+    {
+      "id": "REC-SEC-001",
+      "resolution": "CONFIRMED_FIXED",
+      "evidence": "recovery-provider.ts:194-195 rejects either target volume matching either source volume; pgBackRestBinding requires source pgWal and pgBackRestRestoreArguments compares destination data/WAL against all source data/WAL/config/socket/repository/include/lock/log paths.",
+      "before": "Cross-swapped source data/WAL inspection accepted=true",
+      "after": "Same disposable probe accepted=false; positive distinct physical clone fixtures remain accepted."
+    },
+    {
+      "id": "REC-SEC-002",
+      "resolution": "CONFIRMED_FIXED",
+      "evidence": "recovery-provider.ts:132 bounds actual advertised recoverableFrom by FOUNDATION_DEFAULTS.restoreWindowMs, independent of scheduled full-generation count. fullRetention remains minimum two, maximum four; unresolved effect evidence never expires and resolved Foundation evidence retains the restore window plus seven days.",
+      "before": "Fresh archiveCheckedAt with August-to-November advertised coverage accepted=true",
+      "after": "Same disposable probe accepted=false; policy/history/retention targeted cases pass."
+    },
+    {
+      "id": "REC-SEC-003",
+      "resolution": "CONFIRMED_FIXED",
+      "evidence": "recovery-material.ts provides separate withInspectionMaterial; ManagedPgBackRestProvider.invoke chooses it only for fixed info inspection. access-recovery-inspection.ts:20-92 checks reconciling status, exact source environment/plan/command/preparation/hash/run/step/effect/fence/lease/epoch/grant identifier and zero-cost fixed-purpose use. AccessBroker rechecks before/after provider I/O and final synchronized handoff.",
+      "before": "Running repository handoff worked; read-only reconciliation failed FENCED",
+      "after": "Independent real-broker probe: inspection delivered once, twelve forged context/use variants denied, ordinary withMaterial still denied, old mutation grant remained revoked and the unknown backup reconciled to backup-created."
+    }
+  ],
+  "observations": [
+    {
+      "id": "OBS-RECONCILE-HOLD",
+      "status": "RECHECKED_BOUNDARY_STRENGTHENED",
+      "evidence": "foundation-effects.ts now checks durable environment HOLD before reconciliation admission, before callback and before settlement. Original generic probe now yields callbacks=0 and RECOVERY_HOLD.",
+      "calibration": "Original generic callback invocation was not established as an activation exploit; keep that distinction in the audit trail."
+    },
+    {
+      "id": "OBS-ARCHIVE-REFRESH",
+      "status": "RESOLVED_LOCAL_FUNCTIONAL_GAP",
+      "evidence": "prepareArchiveCheck/check command, strict authenticated HTTP/client contracts, immutable backupSnapshot, exact independently checked backup/manifest/timeline/LSN identity and non-regressing per-snapshot recoverableTo support explicit archive interval refresh. Metadata updates the existing backup ID. Lost-ACK check reconciliation preserves immutable journal scope.",
+      "qualification": "Explicit owner-triggered qualified checks; no automatic scheduling/continuous monitoring consumer is claimed."
+    },
+    {
+      "id": "OBS-REPOSITORY-KEY-LIFETIME",
+      "status": "REFUTED_AS_FIXED_IDENTITY_DEPENDENCY",
+      "evidence": "Independent normal-API probe created a backup, advanced source epoch, created fresh backup-purpose identity and worker/slot with the same retained synthetic repository key, and admitted a fresh owner restore. Old proof denied; new authority delivered; restore-verified and recoveryHold=true.",
+      "qualification": "This proves the current private contract permits renewed dedicated authority. Durable repository-key retention/rebinding on a real off-host provider remains part of its future qualification."
+    }
+  ],
+  "executables": [
+    {
+      "command": "node --import tsx artifacts/recovery-security-probe.mts",
+      "result": "source-volume-cross-alias=false; advertised-window-over-thirty-days=false; generic reconcile callbacks=0, RECOVERY_HOLD"
+    },
+    {
+      "command": "node --import tsx artifacts/recovery-material-security-probe.mts",
+      "result": "Original mutating bridge still correctly denies reconciling context: initial=true,reconciled=false,FENCED"
+    },
+    {
+      "command": "node --import tsx artifacts/recovery-inspection-final-probe.mts",
+      "result": "inspection reads=1, ordinaryDenied=true, adverseDenials=12, status=backup-created; grant remained revoked"
+    },
+    {
+      "command": "node --import tsx artifacts/recovery-renewed-authority-final-probe.mts",
+      "result": "oldDenied=true,newAuthorityDelivered=true,state=restore-verified,held=true"
+    },
+    {
+      "command": "node node_modules/vitest/vitest.mjs run tests/recovery-material.test.ts tests/recovery-archive.test.ts tests/recovery-hold.test.ts tests/recovery-policy.test.ts --reporter=dot --maxWorkers=1 --outputFile=artifacts/recovery-security-targeted.xml",
+      "result": "4 files passed;106 tests passed;41.03 seconds"
+    }
+  ],
+  "satisfied_constraints": [
+    "Strict owner HTTP inputs accept registered IDs, bounded policy, revisions, hash and target time; browser supplies no paths/SQL/stanzas/CLI/material.",
+    "Recovery prepares/admissions use exact source identity, source catalog/system lineage, private repository mapping, current qualification, owner freshness, source epoch and shared atomic pool reservations.",
+    "Target logical environment is server-owned and permanently held; no activation action exists. Missing file/auth/config/non-rewound business-effect/producer-fence adapters remain explicit blockers.",
+    "Normal create-plan, enqueue, claim, lease/heartbeat/grant and static/task broker material handoffs observe recovery HOLD; ordinary metadata updates cannot clear it.",
+    "Restore commands select exact repository/backup/time/timeline with pause and no delta/force; inherited archive hooks, replication hooks, HBA and runtime ingress are replaced before startup.",
+    "Restored catalogs and system_identifier preserve source lineage; target must report paused recovery and source-retained evidence.",
+    "Unknown effects and lost acknowledgments retain target/source obligations and never retry destructive mutation; queued release only succeeds before any recovery intention.",
+    "No material is placed in subprocess argv, owner DTOs, audit entries or generic provider error text; native process uses shell=false and bounded stdout/time.",
+    "Read-only inspection authority binds the immutable recovery journal; it does not renew a task grant or permit backup/restore/check dispatch.",
+    "Repository capacity deduplicates the maximum retained repository+archive obligation per repository ID; each concurrent unknown/reserved run retains separate staging, and every restore retains separate target capacity. Admission compares the atomic additional obligation inside the existing shared pool ledger.",
+    "New archive checks cannot change source/catalog/repository/manifest/base/timeline/LSN identity or shrink their prepared snapshot interval; immutable backupSnapshot prevents a successful metadata refresh from rewriting its own durable intention scope.",
+    "Destination evidence now includes exact requested targetTime/timeline and explicit targetReached together with paused recovery; local native qualification remains unavailable."
+  ],
+  "not_reviewed": [
+    "UI/browser review is separate and pending the requested UI freeze; this is the final BACKEND verdict only.",
+    "The 126-file manifest was hash-verified before and after. Deep review focused on recovery and its changed shared authority/integration paths; unrelated backend contents in that manifest were not re-audited wholesale.",
+    "Full global suite, complete build/typecheck and native eleven-case pgBackRest2.60 run are owned/reported by coordinator/lab; this reviewer independently ran only the listed106 targeted cases and disposable probes.",
+    "Actual .env/private keys/private material/runtime/PGDATA/real-cell or external server state: never read or operated. Disposable in-memory fixtures and synthetic keys only.",
+    "Real production private transport, durable off-host repository/key lifecycle, firewall/Docker/VM containment, hard quotas, actual RPO/RTO and all-service activation remain unqualified.",
+    "No full production certification. Default activation must remain blocked; Foundation run-specific effect IDs/epoch revocation do not replace stable business-effect history and all-producer fencing."
+  ],
+  "audit_supplements": [
+    {
+      "id": "LEASE-ORDER-V3",
+      "verdict": "pass",
+      "scope": "Only packages/core/src/foundation-data.ts validateLease ordering delta;125 other backend hashes and8 frozen UI hashes unchanged",
+      "old_sha256": "9b75465244c94751443a084346a8dc160460241bd5be363fb0b6abe41edc7468",
+      "new_sha256": "60c4e7bdfeeae5cf37ac3456f61f4d55169b21f149645c328d7284e0900892eb",
+      "evidence": "foundation-data.ts:150-183 checks the recorded run, complete context identity/lease/epoch, effect key and command fingerprint first, returning FENCED409 for forged known-run context. :184-189 then enforces recovery HOLD against recorded row.run.projectId/environmentId. This still precedes grant charging/heartbeat mutation/dispatch and returns no usable authority while held.",
+      "refutation": "Moving HOLD below structural validation does not create a bypass: successful validation cannot return before environmentFor reads the trusted recorded environment, and forged caller project/environment values are already rejected. It restores the existing error contract without granting access.",
+      "executables": [
+        {
+          "command": "node node_modules/vitest/vitest.mjs run tests/foundations-authority.test.ts tests/recovery-hold.test.ts --reporter=dot --maxWorkers=1 --outputFile=artifacts/recovery-security-lease-order.xml",
+          "result": "2 files/13 tests passed in26.50s:6 legacy authority and7 recovery-HOLD cases."
+        }
+      ],
+      "backend_manifest_version": 3,
+      "backend_hashes_match": 126,
+      "ui_hashes_match": 8,
+      "not_reviewed": "No broad backend/UI/native rerun; full596 unit and24 browser regressions remain owned by coordinator."
+    }
+  ]
+}
