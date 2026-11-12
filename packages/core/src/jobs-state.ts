@@ -8,7 +8,8 @@ import {
   type OutboxIntentView,
 } from "@godseye/contracts";
 import { type DatabaseAccess, type Store, schema } from "@godseye/store";
-import { and, eq, gt, inArray, isNotNull, lte, or } from "drizzle-orm";
+import { and, eq, gt, inArray, isNotNull, lte, or, sql } from "drizzle-orm";
+import type { AnyPgColumn } from "drizzle-orm/pg-core";
 import { DomainError } from "./errors.js";
 import { environmentFor, type FoundationState } from "./foundation-data.js";
 import type { FoundationEngine } from "./foundations.js";
@@ -30,7 +31,13 @@ export interface JobHandlerContext {
   effectKey: string;
   /** Unique per foundation attempt. */
   attemptKey: string;
+  /** Durable scoped application payload; absent on manual/cron/legacy internal events. */
+  event?: import("@godseye/contracts").ApplicationJobEnvelopeInput;
   signal: AbortSignal;
+  /** Rechecks the original Foundation lease at the last physical worker boundary. */
+  assertActive(): Promise<void>;
+  /** Read-only reconciliation lease only; never grants mutation or a new effect. */
+  assertReconciliation(): Promise<void>;
   /** Writes an outbox intent in the run's own cell; refused once the worker lease is fenced. */
   outbox(intent: OutboxIntentInput): Promise<OutboxIntentView>;
 }
@@ -60,11 +67,16 @@ export type OutboxSendResult =
 export interface OutboxSender {
   /** True only when the receiver deduplicates by effect key, making a re-send of an abandoned claim safe. */
   dedupesByEffectKey: boolean;
-  send(delivery: OutboxDelivery): Promise<OutboxSendResult>;
+  send(delivery: OutboxDelivery, signal?: AbortSignal): Promise<OutboxSendResult>;
   /** Optional read-only probe used to move unknown deliveries into reconciliation. */
-  inspect?(delivery: OutboxDelivery): Promise<"delivered" | "absent" | "unknown">;
+  inspect?(
+    delivery: OutboxDelivery,
+    signal?: AbortSignal,
+  ): Promise<"delivered" | "absent" | "unknown">;
 }
 export interface JobState {
+  detached?: boolean;
+  managedEnvironmentIds?: ReadonlySet<string>;
   store: Store;
   now: () => Date;
   foundation: FoundationEngine;
@@ -75,13 +87,18 @@ export interface JobState {
   dispatchTimeoutMs: number;
   maxOutboxAttempts: number;
   aborts: Map<string, AbortController>;
+  outboxCalls: Set<string>;
+  inngestEnvironmentIds: ReadonlySet<string>;
+  applicationEventLoader?: import("./jobs.js").JobOptions["applicationEventLoader"];
+  applicationPayloadLoads: Map<string, Promise<unknown>>;
 }
 export const jobsActor = (projectId: string): Actor => ({
   id: JOBS_SCHEDULER_ID,
   kind: "service",
   projectIds: [projectId],
 });
-export const jobsConfigured = (state: JobState) => !!state.handlers || !!state.senders;
+export const jobsConfigured = (state: JobState) =>
+  !!state.handlers || !!state.senders || !!state.detached;
 export function assertJobsConfigured(state: JobState) {
   if (!jobsConfigured(state))
     throw new DomainError(
@@ -198,6 +215,8 @@ export async function activeCell(
   projectId: string,
   environmentId: string,
 ) {
+  if (state.managedEnvironmentIds && !state.managedEnvironmentIds.has(environmentId))
+    throw new DomainError("FORBIDDEN", "Environment is not managed by this job runtime", 403);
   const environment = await environmentFor(
     tx,
     actor,
@@ -216,6 +235,11 @@ export async function activeCell(
   if (environment.expiresAt && environment.expiresAt.getTime() <= state.now().getTime())
     throw new DomainError("DELIVERY_HOLD", "Expired environments cannot run jobs", 409);
   return { environment, project };
+}
+
+export function jobEnvironmentFilter(state: JobState, column: AnyPgColumn) {
+  const ids = state.managedEnvironmentIds;
+  return ids ? (ids.size ? inArray(column, [...ids]) : sql`false`) : undefined;
 }
 export const activeRunsFilter = (definitionId: string, protectedPolicy: boolean) =>
   and(
