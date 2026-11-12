@@ -1,0 +1,539 @@
+{
+  "scope": "Local E04 application backend, project authentication, private files, realtime and TypeScript SDK",
+  "phase": "local-application-backend-complete",
+  "remote_gate": "E00 pending; no dedicated-server changes performed",
+  "local_acceptance": [
+    {
+      "id": "AC-01",
+      "status": "verified",
+      "contract": "spec.md"
+    },
+    {
+      "id": "AC-02",
+      "status": "verified",
+      "contract": "spec.md"
+    },
+    {
+      "id": "AC-03",
+      "status": "verified",
+      "contract": "spec.md"
+    },
+    {
+      "id": "AC-04",
+      "status": "verified",
+      "contract": "spec.md"
+    },
+    {
+      "id": "AC-05",
+      "status": "verified",
+      "contract": "spec.md"
+    },
+    {
+      "id": "AC-06",
+      "status": "verified",
+      "contract": "spec.md"
+    },
+    {
+      "id": "AC-07",
+      "status": "verified",
+      "contract": "spec.md"
+    },
+    {
+      "id": "AC-08",
+      "status": "verified",
+      "contract": "spec.md"
+    },
+    {
+      "id": "AC-09",
+      "status": "verified",
+      "contract": "spec.md"
+    },
+    {
+      "id": "AC-10",
+      "status": "verified",
+      "contract": "spec.md"
+    },
+    {
+      "id": "AC-11",
+      "status": "verified",
+      "contract": "spec.md"
+    },
+    {
+      "id": "AC-12",
+      "status": "verified",
+      "contract": "spec.md"
+    },
+    {
+      "id": "AC-13",
+      "status": "verified",
+      "contract": "spec.md"
+    },
+    {
+      "id": "AC-14",
+      "status": "verified",
+      "contract": "spec.md"
+    },
+    {
+      "id": "AC-15",
+      "status": "verified",
+      "contract": "spec.md"
+    },
+    {
+      "id": "AC-16",
+      "status": "verified",
+      "contract": "spec.md"
+    },
+    {
+      "id": "AC-17",
+      "status": "verified",
+      "contract": "spec.md"
+    },
+    {
+      "id": "AC-18",
+      "status": "verified",
+      "contract": "spec.md"
+    },
+    {
+      "id": "AC-19",
+      "status": "verified",
+      "contract": "spec.md"
+    },
+    {
+      "id": "AC-20",
+      "status": "verified",
+      "contract": "spec.md"
+    },
+    {
+      "id": "AC-21",
+      "status": "verified",
+      "contract": "spec.md"
+    },
+    {
+      "id": "AC-22",
+      "status": "verified",
+      "contract": "spec.md"
+    },
+    {
+      "id": "AC-23",
+      "status": "verified",
+      "contract": "spec.md"
+    },
+    {
+      "id": "AC-24",
+      "status": "verified",
+      "contract": "spec.md"
+    },
+    {
+      "id": "AC-25",
+      "status": "verified",
+      "contract": "spec.md"
+    },
+    {
+      "id": "AC-26",
+      "status": "verified",
+      "contract": "spec.md"
+    },
+    {
+      "id": "AC-27",
+      "status": "verified",
+      "contract": "spec.md"
+    },
+    {
+      "id": "AC-28",
+      "status": "verified",
+      "contract": "spec.md"
+    },
+    {
+      "id": "AC-29",
+      "status": "verified",
+      "contract": "spec.md"
+    },
+    {
+      "id": "AC-30",
+      "status": "verified",
+      "contract": "spec.md"
+    },
+    {
+      "id": "AC-31",
+      "status": "verified",
+      "contract": "spec.md"
+    },
+    {
+      "id": "AC-32",
+      "status": "verified",
+      "contract": "spec.md"
+    },
+    {
+      "id": "AC-33",
+      "status": "verified",
+      "contract": "spec.md"
+    },
+    {
+      "id": "AC-34",
+      "status": "verified",
+      "contract": "spec.md"
+    },
+    {
+      "id": "AC-35",
+      "status": "verified",
+      "contract": "spec.md"
+    },
+    {
+      "id": "AC-36",
+      "status": "verified",
+      "contract": "spec.md"
+    },
+    {
+      "id": "AC-37",
+      "status": "verified",
+      "contract": "spec.md"
+    },
+    {
+      "id": "AC-38",
+      "status": "verified",
+      "contract": "spec.md"
+    },
+    {
+      "id": "AC-39",
+      "status": "verified",
+      "contract": "spec.md"
+    },
+    {
+      "id": "AC-40",
+      "status": "verified",
+      "contract": "spec.md"
+    },
+    {
+      "id": "AC-41",
+      "status": "verified",
+      "contract": "spec.md"
+    },
+    {
+      "id": "AC-42",
+      "status": "verified",
+      "contract": "spec.md"
+    },
+    {
+      "id": "AC-43",
+      "status": "verified",
+      "contract": "spec.md"
+    },
+    {
+      "id": "AC-44",
+      "status": "verified",
+      "contract": "spec.md"
+    },
+    {
+      "id": "AC-45",
+      "status": "verified",
+      "contract": "spec.md"
+    },
+    {
+      "id": "AC-46",
+      "status": "verified",
+      "contract": "spec.md"
+    },
+    {
+      "id": "AC-47",
+      "status": "verified",
+      "contract": "spec.md"
+    },
+    {
+      "id": "AC-48",
+      "status": "verified",
+      "contract": "spec.md"
+    },
+    {
+      "id": "AC-49",
+      "status": "verified",
+      "contract": "spec.md"
+    },
+    {
+      "id": "AC-50",
+      "status": "verified",
+      "contract": "spec.md"
+    },
+    {
+      "id": "AC-51",
+      "status": "verified",
+      "contract": "spec.md"
+    },
+    {
+      "id": "AC-52",
+      "status": "verified",
+      "contract": "spec.md"
+    },
+    {
+      "status": "verified",
+      "id": "AC-53",
+      "contract": "spec.md"
+    },
+    {
+      "status": "verified",
+      "id": "AC-54",
+      "contract": "spec.md"
+    },
+    {
+      "status": "verified",
+      "id": "AC-55",
+      "contract": "spec.md"
+    },
+    {
+      "status": "verified",
+      "id": "AC-56",
+      "contract": "spec.md"
+    },
+    {
+      "status": "verified",
+      "id": "AC-57",
+      "contract": "spec.md"
+    },
+    {
+      "status": "verified",
+      "id": "AC-58",
+      "contract": "spec.md"
+    },
+    {
+      "status": "verified",
+      "id": "AC-59",
+      "contract": "spec.md"
+    },
+    {
+      "status": "verified",
+      "id": "AC-60",
+      "contract": "spec.md"
+    },
+    {
+      "status": "verified",
+      "id": "AC-61",
+      "contract": "spec.md"
+    },
+    {
+      "status": "verified",
+      "id": "AC-62",
+      "contract": "spec.md"
+    }
+  ],
+  "full_stories": [
+    {
+      "id": "E01.S01",
+      "status": "partial",
+      "done": "Workspace, checksummed migrations, static checks, tests, build and local smoke",
+      "remaining": "Jenkins runtime and agent/artifact qualification"
+    },
+    {
+      "id": "E01.S02",
+      "status": "local-complete",
+      "done": "Strict versioned HTTP schemas, generated OpenAPI, private owner control client, scoped registries and qualified adapter admission",
+      "remaining": "Hosted-application SDK belongs to E04; real provider compatibility requires later qualification"
+    },
+    {
+      "id": "E01.S03",
+      "status": "local-complete",
+      "done": "Durable consumer, effects/reconciliation, epochs, leases/fencing, fresh exact approvals, scoped grants, atomic budgets and retention",
+      "remaining": "Real PostgreSQL multiprocess and each external provider qualification"
+    },
+    {
+      "id": "E01.S04",
+      "status": "partial",
+      "done": "Hash-linked audit, authentication outbox, paginated export, independent anchor/gap/truncation verification",
+      "remaining": "Protected off-host transport/storage and complete production telemetry"
+    },
+    {
+      "id": "E02.S01",
+      "status": "local-complete",
+      "done": "Fixed owner, resident UV passkeys, absolute sessions, fresh sensitive actions, key/session management and local online/offline recovery",
+      "remaining": "Personal passkey enrollment, server private-access origin, protected backups and hardware/recovery qualification"
+    },
+    {
+      "id": "E05.CI-local",
+      "status": "partial",
+      "done": "Authenticated push/PR intake, exact GitHub source verifier, bounded policy and shared durable delivery consumer; private Jenkins configuration prepared",
+      "remaining": "Actual GitHub App credentials, Jenkins transport/isolated agents/registry and hosting qualification"
+    },
+    {
+      "id": "E02.S02",
+      "status": "local-complete",
+      "done": "OpenBao broker with exact limited policies, cell/purpose/worker identities, private stdin/file material channels, revocable proofs, real task fencing, durable audit, CAS/reconciliation and qualified rotation contracts; native Raft/seal/restart and private CLI tests",
+      "remaining": "Real upstream database/service adapter qualification, deployed injection, private remote admission and off-host seal/unseal/recovery qualification"
+    },
+    {
+      "id": "E02.S03",
+      "status": "local-complete",
+      "done": "Desired/observed inventory, immutable isolation profiles, atomic hierarchical capacity and dual-stack reservations, Foundation-based provisioning/reconciliation, typed Docker provider contract, owner UI/API and real unprivileged OCI lab",
+      "remaining": "Actual Docker/runtime/helper implementations, persistent quotas, both-family host/forwarding firewall and E00 target qualification; remote effects unavailable"
+    },
+    {
+      "id": "E03.S01",
+      "status": "partial",
+      "done": "Local revision-safe project/environment metadata and bounded previews; exact database lifecycle/reservations/reconciliation on shared Foundation",
+      "remaining": "Aggregate lifecycle across application/ingress/jobs, full project suspension/export and staged deletion/purge remain later qualified work"
+    },
+    {
+      "id": "E03.S02",
+      "status": "local-complete",
+      "done": "Independent PostgreSQL18 cell profiles, separate PGDATA/WAL/app+workflow databases, private scoped roles, SCRAM/TLS/HBA, actual catalog ACL inspection and three-cluster native lab",
+      "remaining": "Actual isolated deployed instance transport, Docker/VM firewall and hard CPU/memory/storage quotas, real remote material injection and E00 qualification"
+    },
+    {
+      "id": "E03.S03",
+      "status": "partial",
+      "done": "Local physical pgBackRest full/differential/WAL policy, archive refresh, shared durable execution/capacity, new recovery-held environment with retained source/catalog lineage, bounded read-only material reconciliation, metadata recovery coverage and real signed-tool paused PITR laboratory",
+      "remaining": "Actual off-host repository/transport and hardquota/firewall qualification; file/auth/config recovery snapshots, complete business-effect journal/fencing, all-service explicit activation, retained-key/lost-controller recovery and qualified schedules"
+    },
+    {
+      "id": "E03.S04",
+      "status": "partial",
+      "done": "Owner database/backup/archive/recovery views, explicit archive checks and freshness/headroom/hold status; restored targets excluded from ordinary provisioning/access selectors",
+      "remaining": "Production telemetry/incident integration, qualified rotation and deployment/recovery/custody operational qualification"
+    },
+    {
+      "remaining": "Actual disposable isolated Jenkins guests, scoped checkout broker, registry/scanner authority and publication qualification",
+      "done": "Local immutable build/provenance/check gates, exact source selection and trusted disposable Node/HTTP provider lab",
+      "status": "partial",
+      "id": "E05.S01"
+    },
+    {
+      "remaining": "Actual Coolify/runtime helper, owned DNS/TLS/edge binding and both-family deployment qualification",
+      "done": "Replaceable private provider seam, exact physical mappings, readiness/promotion/cleanup and safe HTTPS preview references",
+      "status": "partial",
+      "id": "E05.S02"
+    },
+    {
+      "remaining": "Deployed cell/identity/backend isolation, measured resource costs and separately approved persistent final purge",
+      "done": "Distinct synthetic-only PR environments, finite capacity/count/TTL, verified close, protective stop/unpublish and retained uncertain reservations",
+      "status": "partial",
+      "id": "E05.S03"
+    },
+    {
+      "remaining": "Qualified production migration execution/compatibility, live smoke/traffic and retained-image rollback on actual hosting",
+      "done": "Serialized deployment lane, current-policy checks/configuration, readiness/smoke gates and eligible immutable rollback without database rewind",
+      "status": "partial",
+      "id": "E05.S04"
+    },
+    {
+      "remaining": "Actual GitHub App enrollment, private token acquisition and live outage/permission qualification",
+      "done": "Signed push/PR exact intake, deduplication/fanout, first-party installation/repository/current-head verifier and actual Foundation composition",
+      "status": "partial",
+      "id": "E05.S05"
+    },
+    {
+      "remaining": "Actual Jenkins delivery transport/controller/isolated agents, recurring schedules and retained artifact qualification",
+      "done": "Existing private Jenkins configuration and platform pipeline; local delivery dispatch/result provider protocol and durable effect reconciliation",
+      "status": "prepared",
+      "id": "E05.S06"
+    },
+    {
+      "remaining": "Qualified production provider enforcement; destructive/incompatible migrations and restore activation retain separate approvals",
+      "done": "Fresh owner exact finite standing policy, private delegated authority, immutable check gates, revocation/expiry/source fencing and terminal race handling",
+      "status": "partial",
+      "id": "E05.S07"
+    },
+    {
+      "remaining": "Hosted independent PostgreSQL/broker/transport, external OAuth account and email-delivery qualification",
+      "status": "local-complete",
+      "id": "E04.S01",
+      "done": "Dedicated application store and actual Better Auth email/password/OAuth2 PKCE with exact cell/origin/session authority"
+    },
+    {
+      "remaining": "Deployed filesystem hard quotas/containment, protected off-host recovery, physical-PITR alignment and all-service activation",
+      "status": "local-complete",
+      "id": "E04.S02",
+      "done": "Private bounded resumable files, durable physical intents, quotas, hashes, session-bound grants, retained cleanup and held file/auth/config recovery"
+    },
+    {
+      "remaining": "Real hosting/proxy qualification and Inngest job integration in E06",
+      "status": "local-complete",
+      "id": "E04.S03",
+      "done": "Trusted durable user-scoped domain SSE with authenticated cursors, retention/refetch, revocation, bounded buffers/lifetimes and shutdown"
+    },
+    {
+      "remaining": "Actual deployed origin/runtime qualification and per-existing-app migration cutover",
+      "status": "local-complete",
+      "id": "E04.S04",
+      "done": "Separate versioned TypeScript SDK, standalone browser bundle/declarations, typed custom routes and runnable source-to-compiled backend template"
+    }
+  ],
+  "implementation_mode": "Sequential core implementation with mandatory gitsmith/GAUNTLET/SCRIBE/FABER satellites; no parallel epic implementation swarm",
+  "continuation": [
+    {
+      "id": "E02.S03-local",
+      "status": "local-complete",
+      "depends": [
+        "E02.S02-local"
+      ],
+      "contract": "infrastructure-design.md"
+    },
+    {
+      "id": "E03-local",
+      "status": "local-complete",
+      "depends": [
+        "E02.S03-local"
+      ],
+      "contract": "database-design.md"
+    },
+    {
+      "id": "E03-recovery-local",
+      "status": "local-complete",
+      "depends": [
+        "E03-local"
+      ],
+      "contract": "recovery-design.md"
+    },
+    {
+      "id": "E05-delivery-local",
+      "status": "local-complete",
+      "depends": [
+        "E03-local",
+        "E02.S03-local"
+      ],
+      "contract": "delivery-design.md"
+    }
+  ],
+  "delivery_sequence": [
+    {
+      "id": "source-policy",
+      "status": "verified",
+      "evidence": "95 source/schema +15 policy authority cases"
+    },
+    {
+      "id": "pipeline-artifact-release",
+      "status": "verified",
+      "evidence": "strict provider evidence tests running"
+    },
+    {
+      "id": "previews-owner-ui",
+      "status": "verified"
+    },
+    {
+      "id": "combined-trial-review-ship",
+      "status": "verified"
+    }
+  ],
+  "backend_sequence": [
+    {
+      "id": "E04.S01-local",
+      "status": "local-complete"
+    },
+    {
+      "id": "E04.S02-local",
+      "status": "local-complete"
+    },
+    {
+      "id": "E04.S03-local",
+      "status": "local-complete"
+    },
+    {
+      "id": "E04.S04-local",
+      "status": "local-complete"
+    }
+  ],
+  "github_publication": {
+    "legacyHistory": "preserved in local backup refs",
+    "sourceCheckout": "unchanged while final tests run",
+    "develop": "final verified source/docs ready for granular publication; gitsmith final export pending",
+    "visibility": "private",
+    "main": "README-only presentation; release PR required; owner-only review count zero",
+    "repository": "lucasschimmel/godseye"
+  }
+}

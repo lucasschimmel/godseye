@@ -1,0 +1,21 @@
+{
+  "project_id": "g-o-d-s-e-y-e-cfe8",
+  "mode": "feat: local application backend / project auth / files / SSE / TypeScript SDK",
+  "criticity": "production",
+  "runtime": "Node 24",
+  "package_manager": "Bun1.4.4 (project-local verified tool; Node24 application/test runtime)",
+  "language": "TypeScript strict",
+  "frontend": "TanStack Start/React/Tailwind/shadcn",
+  "backend": "Hono/Zod",
+  "database": "Drizzle/PostgreSQL; PGlite local",
+  "test": "Vitest/Playwright",
+  "ci": "Jenkins",
+  "swarm": "sequential implementation; satellites delegated",
+  "notes": [
+    "Context7 unavailable: official docs and installed types used",
+    "Docker CLI present; daemon unavailable",
+    "Ubuntu 26.04 reported by owner, not verified; Proxmox target Debian-based Rescue install later",
+    "Remote E00 deferred by explicit local-first request; no physical qualification implied"
+  ],
+  "auth": "Better Auth 1.7.20 / UV-required resident WebAuthn passkeys / fixed local owner"
+}

@@ -1,0 +1,64 @@
+{
+  "constraints": [
+    "latest ADR-002",
+    "one professional VM plus games VM",
+    "one IPv4 target, max2; IPv6first",
+    "customSDK; Hermescore; no n8n",
+    "local-first now, dedicated-server setup later",
+    "Jenkins and main-branch CI/CD newly requested",
+    "Finish local foundations and owner authentication; server work explicitly deferred",
+    "Bun replaces pnpm by explicit user instruction; Node24 runtime retained",
+    "Local-only E02.S02 OpenBao broker; server access deferred",
+    "Current local E02.S03 only; desired inventory cannot qualify target execution",
+    "One physical Proxmox +professional/games/optional task VM; inspect stopped app before start, no native fallback",
+    "Current E03 local project/environment and independent PostgreSQL cells; native lab is not Docker/VM containment qualification; full backup/PITR remains E03.S03",
+    "Current local E03.S03 physical backup/PITR into a NEW recovery-held environment; source retained. No all-service activation/off-host/Docker qualification claim.",
+    "Physical clone retains source PostgreSQL system ID/catalog namespace. Foundation effect keys are per-run, not complete business-effect deduplication; epoch advancement alone cannot fence all external producers/static identities.",
+    "Current E05 local only: exact GitHub source/policy, trusted immutable artifacts and bounded isolated previews; no live providers or server activation."
+  ],
+  "sources": [
+    "docs/spec/v1.md",
+    "docs/spec/isolation.md",
+    "docs/spec/networking.md",
+    "docs/plan/v1-development.md",
+    "Cortex 30-stacks/tanstack-start.md",
+    "Cortex 30-stacks/drizzle.md",
+    "docs/adr/ADR-004-owner-authority-and-foundations.md",
+    "docs/development/owner-access.md",
+    ".codex/crafts/g-o-d-s-e-y-e-cfe8/broker-design.md",
+    ".codex/crafts/g-o-d-s-e-y-e-cfe8/reviews/broker-test-strategy.md",
+    ".codex/crafts/g-o-d-s-e-y-e-cfe8/infrastructure-design.md",
+    ".codex/crafts/g-o-d-s-e-y-e-cfe8/reviews/infrastructure-test-strategy.md",
+    ".codex/crafts/g-o-d-s-e-y-e-cfe8/reviews/infrastructure-plan-review.json",
+    ".codex/crafts/g-o-d-s-e-y-e-cfe8/database-design.md",
+    ".codex/crafts/g-o-d-s-e-y-e-cfe8/reviews/database-test-strategy.md",
+    ".codex/crafts/g-o-d-s-e-y-e-cfe8/recovery-design.md",
+    "delivery-design.md",
+    "Cortex60-research/godseye-application-delivery/2026-11-11-snapshot.md (official GitHub/Coolify API facts, no live qualification)",
+    "Agentics memory/playbooks/crafts-godseye.md (repo-scoped extension; shared crafts playbook over curation cap)"
+  ],
+  "track_record": [
+    "Bun baseline153unit/14browser preserved. Final215unit across20files,16browser,18selectedmutationkills,build/smoke,18localcriteria,zero-advisory audit and zero-finding Gitleaks verified. Three fresh-review issues fixed and independently reverified. Remote/providers/fullV1 remain gated.",
+    "E02.S03 local complete:325unit30files,18browser,4actualWSLrunsc,31selectedmutants,26localcriteria,build/smoke,audit0,Gitleaks0. Four backend +one presentation review findings fixed independently; Docker/helper/remote qualification remains blocked.",
+    "Local E03:421unit37files676.45s singleworker,21browser112.584583s,10nativePG cases across3clusters,47curatedmutants,34localcriteria,API1.3/build/smoke/staticpass;backend6/UI2 review entries resolved. All-service project lifecycle, backup/PITR/rotation and deployed containment remain unqualified.",
+    "Local recovery:596unit45files408.36s,24browser140.767398s,11actualPG/pgBackRest49.52s,61curatedkills+affected2postfix,43localcriteria,API1.4/static/build/smokepass.3backend+1UI findings independently corrected; source retained/new held env; off-host/custody/ancillary/activation unqualified.",
+    "Local E05:851unit58files569.99s;28browser163.404282s+4poststyle58.082768s;12actualtrustedNode/HTTPlab cases included;13selectedmutationkills/13baseline/restored/sourceunchanged;52localcriteria;API1.5/build/smoke/types/defensivebackend8+UI5resolved source reviews. No external GitHub/Jenkins/Coolify/guest/domain qualification."
+  ],
+  "playbook": [
+    "Do not confuse API submission with completed execution",
+    "Reconcile unknown effects before retry",
+    "Own scheduler state and test consumer processes, not only handlers",
+    "Consume enrollment tickets in the real auth transaction; bind sensitive authority to server-derived recent passkey sessions",
+    "Test Windows native DACLs and offline CLI recovery using disposable paths; reject shared roots and links",
+    "Retain reservations while provider mutations may still materialize; repeat durable protective stops after late starts. Bind proof target and generation. Direct OCI evidence does not qualify Docker quotas/firewalls.",
+    "Inspect actual existing/default/column grants; separate physical scope from queued generation; renew same-allocation lifecycle authority after observation/metadata edits. PostgreSQL temp limit is per-backend disk. Keep form fields revision-bound while preserving feedback.",
+    "Preserve source catalogue lineage in physical clones; enforce durable hold before all dispatch. Exact archive check refreshes metadata without new base backup. Reconciliation material read must not revive mutation authority; native pause alone is not target-reached proof.",
+    "Compose real strict source/provider/Foundation boundaries; preserve terminal authority and old physical provider binding in uncertainty; read-only preview reconciliation must preserve HOLD/no renewed grants. Actual mobile action/text bounds catch clipping missed by document width."
+  ],
+  "missing": [
+    "hardware/remoteaccess not provided and intentionally deferred",
+    "Context7 unavailable",
+    "Native local trusted fixture execution does not qualify untrusted repository builds, Jenkins guests, Coolify or public DNS/TLS.",
+    "Cortex TanStack/Drizzle/Zod notes expired2026-09-19: consulted as historical hints only, official current docs and installedtypes govern syntax."
+  ]
+}
