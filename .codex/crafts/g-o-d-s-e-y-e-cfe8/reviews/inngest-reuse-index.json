@@ -1,0 +1,363 @@
+{
+  "method": "scoped PowerShell export index",
+  "date": "2026-11-12T19:26:50.0869539+01:00",
+  "parent": "graph/symbols.json",
+  "fullGraphFresh": false,
+  "files": [
+    "packages/core/src/jobs.ts",
+    "packages/core/src/jobs-state.ts",
+    "packages/core/src/jobs-runs.ts",
+    "packages/core/src/jobs-execution.ts",
+    "packages/core/src/jobs-definitions.ts",
+    "packages/core/src/jobs-scheduler.ts",
+    "packages/app-backend/src/events.ts",
+    "packages/app-backend/src/custom.ts",
+    "packages/app-backend/src/state.ts",
+    "packages/app-backend/src/store.ts",
+    "packages/app-backend/src/runtime.ts",
+    "packages/app-backend/src/local.ts",
+    "apps/control-api/src/server.ts"
+  ],
+  "symbols": [
+    {
+      "file": "packages/core/src/jobs.ts",
+      "line": 38,
+      "signature": "export type { OutboxWrite } from \"./jobs-outbox.js\";"
+    },
+    {
+      "file": "packages/core/src/jobs.ts",
+      "line": 39,
+      "signature": "export type { JobEventInput } from \"./jobs-runs.js\";"
+    },
+    {
+      "file": "packages/core/src/jobs.ts",
+      "line": 40,
+      "signature": "export type * from \"./jobs-state.js\";"
+    },
+    {
+      "file": "packages/core/src/jobs.ts",
+      "line": 43,
+      "signature": "export interface JobOptions {"
+    },
+    {
+      "file": "packages/core/src/jobs.ts",
+      "line": 60,
+      "signature": "export class JobEngine {"
+    },
+    {
+      "file": "packages/core/src/jobs.ts",
+      "line": 179,
+      "signature": "export async function runJobScheduler("
+    },
+    {
+      "file": "packages/core/src/jobs-state.ts",
+      "line": 17,
+      "signature": "export const JOBS_ADAPTER_ID = \"local.jobs\";"
+    },
+    {
+      "file": "packages/core/src/jobs-state.ts",
+      "line": 18,
+      "signature": "export const JOBS_DESTINATION = \"jobs.local\";"
+    },
+    {
+      "file": "packages/core/src/jobs-state.ts",
+      "line": 19,
+      "signature": "export const JOBS_TOOL = \"job.run\";"
+    },
+    {
+      "file": "packages/core/src/jobs-state.ts",
+      "line": 20,
+      "signature": "export const JOBS_SCHEDULER_ID = \"jobs-scheduler\";"
+    },
+    {
+      "file": "packages/core/src/jobs-state.ts",
+      "line": 21,
+      "signature": "export const JOB_TERMINAL_STATES = [\"succeeded\", \"failed\", \"cancelled\"] as const;"
+    },
+    {
+      "file": "packages/core/src/jobs-state.ts",
+      "line": 24,
+      "signature": "export interface JobHandlerContext {"
+    },
+    {
+      "file": "packages/core/src/jobs-state.ts",
+      "line": 37,
+      "signature": "export type JobHandlerResult = Pick<EffectOutcomeInput, \"status\" | \"evidenceRef\">;"
+    },
+    {
+      "file": "packages/core/src/jobs-state.ts",
+      "line": 38,
+      "signature": "export interface JobHandler {"
+    },
+    {
+      "file": "packages/core/src/jobs-state.ts",
+      "line": 43,
+      "signature": "export interface OutboxIntentInput {"
+    },
+    {
+      "file": "packages/core/src/jobs-state.ts",
+      "line": 48,
+      "signature": "export interface OutboxDelivery {"
+    },
+    {
+      "file": "packages/core/src/jobs-state.ts",
+      "line": 56,
+      "signature": "export type OutboxSendResult ="
+    },
+    {
+      "file": "packages/core/src/jobs-state.ts",
+      "line": 60,
+      "signature": "export interface OutboxSender {"
+    },
+    {
+      "file": "packages/core/src/jobs-state.ts",
+      "line": 70,
+      "signature": "export interface JobState {"
+    },
+    {
+      "file": "packages/core/src/jobs-state.ts",
+      "line": 83,
+      "signature": "export const jobsActor = (projectId: string): Actor => ({"
+    },
+    {
+      "file": "packages/core/src/jobs-state.ts",
+      "line": 88,
+      "signature": "export const jobsConfigured = (state: JobState) => !!state.handlers || !!state.senders;"
+    },
+    {
+      "file": "packages/core/src/jobs-state.ts",
+      "line": 89,
+      "signature": "export function assertJobsConfigured(state: JobState) {"
+    },
+    {
+      "file": "packages/core/src/jobs-state.ts",
+      "line": 97,
+      "signature": "export const definitionView = (row: typeof schema.jobDefinitions.$inferSelect) =>"
+    },
+    {
+      "file": "packages/core/src/jobs-state.ts",
+      "line": 113,
+      "signature": "export const runView = (row: typeof schema.jobRuns.$inferSelect) =>"
+    },
+    {
+      "file": "packages/core/src/jobs-state.ts",
+      "line": 130,
+      "signature": "export const outboxView = (row: typeof schema.jobOutbox.$inferSelect) =>"
+    },
+    {
+      "file": "packages/core/src/jobs-state.ts",
+      "line": 145,
+      "signature": "export async function definitionFor(tx: DatabaseAccess, actor: Actor, id: string) {"
+    },
+    {
+      "file": "packages/core/src/jobs-state.ts",
+      "line": 154,
+      "signature": "export async function jobRunFor(tx: DatabaseAccess, actor: Actor, id: string) {"
+    },
+    {
+      "file": "packages/core/src/jobs-state.ts",
+      "line": 160,
+      "signature": "export async function outboxFor(tx: DatabaseAccess, actor: Actor, id: string) {"
+    },
+    {
+      "file": "packages/core/src/jobs-state.ts",
+      "line": 167,
+      "signature": "export async function heldEnvironmentIds(tx: DatabaseAccess, now: Date): Promise<string[]> {"
+    },
+    {
+      "file": "packages/core/src/jobs-state.ts",
+      "line": 198,
+      "signature": "export async function activeCell("
+    },
+    {
+      "file": "packages/core/src/jobs-state.ts",
+      "line": 224,
+      "signature": "export const activeRunsFilter = (definitionId: string, protectedPolicy: boolean) =>"
+    },
+    {
+      "file": "packages/core/src/jobs-state.ts",
+      "line": 235,
+      "signature": "export const dueDefinitions = (now: Date) =>"
+    },
+    {
+      "file": "packages/core/src/jobs-state.ts",
+      "line": 237,
+      "signature": "export const futureOnly = (now: Date) => gt(schema.jobDefinitions.nextFireAt, now);"
+    },
+    {
+      "file": "packages/core/src/jobs-runs.ts",
+      "line": 25,
+      "signature": "export interface NewRun {"
+    },
+    {
+      "file": "packages/core/src/jobs-runs.ts",
+      "line": 33,
+      "signature": "export async function createRun(state: JobState, tx: DatabaseAccess, input: NewRun) {"
+    },
+    {
+      "file": "packages/core/src/jobs-runs.ts",
+      "line": 86,
+      "signature": "export async function triggerJob("
+    },
+    {
+      "file": "packages/core/src/jobs-runs.ts",
+      "line": 133,
+      "signature": "export type JobEventInput = z.infer<typeof EventInput>;"
+    },
+    {
+      "file": "packages/core/src/jobs-runs.ts",
+      "line": 135,
+      "signature": "export async function ingestJobEvent(state: JobState, actor: Actor, input: JobEventInput) {"
+    },
+    {
+      "file": "packages/core/src/jobs-runs.ts",
+      "line": 172,
+      "signature": "export async function cancelJobRun("
+    },
+    {
+      "file": "packages/core/src/jobs-execution.ts",
+      "line": 19,
+      "signature": "export const HANDLER_UNAVAILABLE_EVIDENCE = \"job:handler-unavailable\";"
+    },
+    {
+      "file": "packages/core/src/jobs-execution.ts",
+      "line": 20,
+      "signature": "export const TIMEOUT_EVIDENCE = \"job:timeout\";"
+    },
+    {
+      "file": "packages/core/src/jobs-execution.ts",
+      "line": 93,
+      "signature": "export async function executeJob("
+    },
+    {
+      "file": "packages/core/src/jobs-execution.ts",
+      "line": 128,
+      "signature": "export async function fenceJob(state: JobState, context: ExecutionContext) {"
+    },
+    {
+      "file": "packages/core/src/jobs-definitions.ts",
+      "line": 41,
+      "signature": "export async function registerJobDefinition("
+    },
+    {
+      "file": "packages/core/src/jobs-definitions.ts",
+      "line": 135,
+      "signature": "export async function changeJobPause("
+    },
+    {
+      "file": "packages/core/src/jobs-scheduler.ts",
+      "line": 22,
+      "signature": "export interface JobsTickResult {"
+    },
+    {
+      "file": "packages/core/src/jobs-scheduler.ts",
+      "line": 153,
+      "signature": "export async function jobsTick(state: JobState, signal?: AbortSignal): Promise<JobsTickResult> {"
+    },
+    {
+      "file": "packages/app-backend/src/events.ts",
+      "line": 17,
+      "signature": "export type PublishApplicationEvent = Omit<z.infer<typeof Publish>, \"payload\"> & {"
+    },
+    {
+      "file": "packages/app-backend/src/events.ts",
+      "line": 52,
+      "signature": "export function publishApplicationEvent(state: ApplicationState, raw: PublishApplicationEvent) {"
+    },
+    {
+      "file": "packages/app-backend/src/events.ts",
+      "line": 119,
+      "signature": "export async function applicationEventStream("
+    },
+    {
+      "file": "packages/app-backend/src/custom.ts",
+      "line": 12,
+      "signature": "export interface ApplicationRouteContext<Input = undefined> {"
+    },
+    {
+      "file": "packages/app-backend/src/custom.ts",
+      "line": 17,
+      "signature": "export interface ApplicationRouteRegistry {"
+    },
+    {
+      "file": "packages/app-backend/src/custom.ts",
+      "line": 30,
+      "signature": "export function applicationRouteRegistry("
+    },
+    {
+      "file": "packages/app-backend/src/state.ts",
+      "line": 8,
+      "signature": "export interface ApplicationLifecycle {"
+    },
+    {
+      "file": "packages/app-backend/src/state.ts",
+      "line": 28,
+      "signature": "export type ApplicationOAuthProvider = z.infer<typeof OAuthProvider>;"
+    },
+    {
+      "file": "packages/app-backend/src/state.ts",
+      "line": 29,
+      "signature": "export interface ApplicationBackendOptions {"
+    },
+    {
+      "file": "packages/app-backend/src/state.ts",
+      "line": 43,
+      "signature": "export function applicationState(input: ApplicationBackendOptions) {"
+    },
+    {
+      "file": "packages/app-backend/src/state.ts",
+      "line": 146,
+      "signature": "export type ApplicationState = ReturnType<typeof applicationState>;"
+    },
+    {
+      "file": "packages/app-backend/src/state.ts",
+      "line": 147,
+      "signature": "export async function guardApplication(state: ApplicationState, expectedEpoch?: number) {"
+    },
+    {
+      "file": "packages/app-backend/src/store.ts",
+      "line": 14,
+      "signature": "export type ApplicationDatabase = PgliteDatabase<typeof schema> | NodePgDatabase<typeof schema>;"
+    },
+    {
+      "file": "packages/app-backend/src/store.ts",
+      "line": 15,
+      "signature": "export type ApplicationAccess = Pick<"
+    },
+    {
+      "file": "packages/app-backend/src/store.ts",
+      "line": 19,
+      "signature": "export interface ApplicationStore {"
+    },
+    {
+      "file": "packages/app-backend/src/store.ts",
+      "line": 30,
+      "signature": "export function serialApplicationLane() {"
+    },
+    {
+      "file": "packages/app-backend/src/store.ts",
+      "line": 38,
+      "signature": "export async function openApplicationStore(options: {"
+    },
+    {
+      "file": "packages/app-backend/src/runtime.ts",
+      "line": 38,
+      "signature": "export async function createApplicationBackend(options: ApplicationBackendOptions) {"
+    },
+    {
+      "file": "packages/app-backend/src/runtime.ts",
+      "line": 268,
+      "signature": "export async function boundedBody(request: Request, maximum: number) {"
+    },
+    {
+      "file": "packages/app-backend/src/local.ts",
+      "line": 11,
+      "signature": "export interface LocalApplicationOptions"
+    },
+    {
+      "file": "packages/app-backend/src/local.ts",
+      "line": 17,
+      "signature": "export async function openLocalApplication(options: LocalApplicationOptions) {"
+    }
+  ]
+}

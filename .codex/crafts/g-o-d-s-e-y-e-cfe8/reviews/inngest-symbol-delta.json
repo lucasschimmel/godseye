@@ -1,0 +1,782 @@
+{
+  "method": "Scoped export delta",
+  "date": "2026-11-12T20:35:50.3194111+01:00",
+  "fullGraphFresh": false,
+  "sourcePaths": [
+    "apps/control-api/src/config.ts",
+    "apps/control-api/src/server.ts",
+    "apps/control-api/src/inngest-config.ts",
+    "apps/control-api/src/inngest-native.ts",
+    "apps/control-api/src/inngest-runtime.ts",
+    "apps/jobs-local/src/server.ts",
+    "apps/console/src/components/jobs-panel.tsx",
+    "packages/app-backend/src/jobs-bridge.ts",
+    "packages/app-backend/src/jobs-migration.ts",
+    "packages/app-backend/src/events.ts",
+    "packages/app-backend/src/custom.ts",
+    "packages/app-backend/src/state.ts",
+    "packages/app-backend/src/store.ts",
+    "packages/app-backend/src/runtime.ts",
+    "packages/app-backend/src/schema.ts",
+    "packages/app-backend/src/migration.ts",
+    "packages/app-backend/src/local.ts",
+    "packages/app-backend/src/index.ts",
+    "packages/contracts/src/application-events.ts",
+    "packages/contracts/src/jobs.ts",
+    "packages/contracts/src/index.ts",
+    "packages/core/src/jobs-application.ts",
+    "packages/core/src/inngest.ts",
+    "packages/core/src/jobs.ts",
+    "packages/core/src/jobs-state.ts",
+    "packages/core/src/jobs-execution.ts",
+    "packages/core/src/jobs-scheduler.ts",
+    "packages/core/src/jobs-retention.ts",
+    "packages/core/src/index.ts",
+    "packages/core/src/infrastructure.ts",
+    "packages/store/src/jobs-schema.ts",
+    "scripts/install-inngest.mjs",
+    "scripts/inngest-compose.mjs",
+    "scripts/build-backend.mjs",
+    "apps/control-api/src/identity/permissions.ts",
+    "apps/control-api/src/identity/runtime.ts",
+    "apps/control-api/src/owner-cli.ts",
+    "apps/control-api/src/access-cli.ts"
+  ],
+  "exports": [
+    {
+      "file": "apps/control-api/src/config.ts",
+      "line": 13,
+      "signature": "export function loadConfiguration("
+    },
+    {
+      "file": "apps/control-api/src/config.ts",
+      "line": 55,
+      "signature": "export type Configuration = ReturnType<typeof loadConfiguration>;"
+    },
+    {
+      "file": "apps/control-api/src/inngest-config.ts",
+      "line": 4,
+      "signature": "export const LocalInngestCell = z"
+    },
+    {
+      "file": "apps/control-api/src/inngest-config.ts",
+      "line": 16,
+      "signature": "export type LocalInngestCell = z.infer<typeof LocalInngestCell>;"
+    },
+    {
+      "file": "apps/control-api/src/inngest-config.ts",
+      "line": 17,
+      "signature": "export function parseInngestCells("
+    },
+    {
+      "file": "apps/control-api/src/inngest-native.ts",
+      "line": 18,
+      "signature": "export async function openLocalInngestMaterial(directory: string) {"
+    },
+    {
+      "file": "apps/control-api/src/inngest-native.ts",
+      "line": 42,
+      "signature": "export async function startNativeInngest(options: {"
+    },
+    {
+      "file": "apps/control-api/src/inngest-runtime.ts",
+      "line": 30,
+      "signature": "export async function prepareLocalInngest(options: {"
+    },
+    {
+      "file": "apps/console/src/components/jobs-panel.tsx",
+      "line": 31,
+      "signature": "export function JobsPanel() {"
+    },
+    {
+      "file": "packages/app-backend/src/jobs-bridge.ts",
+      "line": 12,
+      "signature": "export type ApplicationJobEnvelope = ApplicationJobEnvelopeInput;"
+    },
+    {
+      "file": "packages/app-backend/src/jobs-bridge.ts",
+      "line": 13,
+      "signature": "export interface ApplicationJobTransport {"
+    },
+    {
+      "file": "packages/app-backend/src/jobs-bridge.ts",
+      "line": 18,
+      "signature": "export interface ApplicationJobsOptions {"
+    },
+    {
+      "file": "packages/app-backend/src/jobs-bridge.ts",
+      "line": 61,
+      "signature": "export async function enqueueApplicationJobEvent("
+    },
+    {
+      "file": "packages/app-backend/src/jobs-bridge.ts",
+      "line": 110,
+      "signature": "export async function flushApplicationJobs("
+    },
+    {
+      "file": "packages/app-backend/src/jobs-bridge.ts",
+      "line": 204,
+      "signature": "export async function readApplicationJobEvent(state: ApplicationState, id: string) {"
+    },
+    {
+      "file": "packages/app-backend/src/jobs-migration.ts",
+      "line": 2,
+      "signature": "export const APPLICATION_JOBS_MIGRATION = `"
+    },
+    {
+      "file": "packages/app-backend/src/events.ts",
+      "line": 18,
+      "signature": "export type PublishApplicationEvent = Omit<z.infer<typeof Publish>, \"payload\"> & {"
+    },
+    {
+      "file": "packages/app-backend/src/events.ts",
+      "line": 53,
+      "signature": "export function publishApplicationEvent(state: ApplicationState, raw: PublishApplicationEvent) {"
+    },
+    {
+      "file": "packages/app-backend/src/events.ts",
+      "line": 126,
+      "signature": "export async function applicationEventStream("
+    },
+    {
+      "file": "packages/app-backend/src/custom.ts",
+      "line": 14,
+      "signature": "export interface ApplicationRouteContext<Input = undefined> {"
+    },
+    {
+      "file": "packages/app-backend/src/custom.ts",
+      "line": 21,
+      "signature": "export interface ApplicationRouteRegistry {"
+    },
+    {
+      "file": "packages/app-backend/src/custom.ts",
+      "line": 34,
+      "signature": "export function applicationRouteRegistry("
+    },
+    {
+      "file": "packages/app-backend/src/state.ts",
+      "line": 9,
+      "signature": "export interface ApplicationLifecycle {"
+    },
+    {
+      "file": "packages/app-backend/src/state.ts",
+      "line": 29,
+      "signature": "export type ApplicationOAuthProvider = z.infer<typeof OAuthProvider>;"
+    },
+    {
+      "file": "packages/app-backend/src/state.ts",
+      "line": 30,
+      "signature": "export interface ApplicationBackendOptions {"
+    },
+    {
+      "file": "packages/app-backend/src/state.ts",
+      "line": 45,
+      "signature": "export function applicationState(input: ApplicationBackendOptions) {"
+    },
+    {
+      "file": "packages/app-backend/src/state.ts",
+      "line": 165,
+      "signature": "export type ApplicationState = ReturnType<typeof applicationState>;"
+    },
+    {
+      "file": "packages/app-backend/src/state.ts",
+      "line": 166,
+      "signature": "export async function guardApplication(state: ApplicationState, expectedEpoch?: number) {"
+    },
+    {
+      "file": "packages/app-backend/src/store.ts",
+      "line": 14,
+      "signature": "export type ApplicationDatabase = PgliteDatabase<typeof schema> | NodePgDatabase<typeof schema>;"
+    },
+    {
+      "file": "packages/app-backend/src/store.ts",
+      "line": 15,
+      "signature": "export type ApplicationAccess = Pick<"
+    },
+    {
+      "file": "packages/app-backend/src/store.ts",
+      "line": 19,
+      "signature": "export interface ApplicationStore {"
+    },
+    {
+      "file": "packages/app-backend/src/store.ts",
+      "line": 30,
+      "signature": "export function serialApplicationLane() {"
+    },
+    {
+      "file": "packages/app-backend/src/store.ts",
+      "line": 38,
+      "signature": "export async function openApplicationStore(options: {"
+    },
+    {
+      "file": "packages/app-backend/src/runtime.ts",
+      "line": 39,
+      "signature": "export async function createApplicationBackend(options: ApplicationBackendOptions) {"
+    },
+    {
+      "file": "packages/app-backend/src/runtime.ts",
+      "line": 272,
+      "signature": "export async function boundedBody(request: Request, maximum: number) {"
+    },
+    {
+      "file": "packages/app-backend/src/schema.ts",
+      "line": 4,
+      "signature": "export const appScope = pgTable(\"app_scope\", {"
+    },
+    {
+      "file": "packages/app-backend/src/schema.ts",
+      "line": 13,
+      "signature": "export const user = pgTable(\"app_user\", {"
+    },
+    {
+      "file": "packages/app-backend/src/schema.ts",
+      "line": 22,
+      "signature": "export const session = pgTable(\"app_session\", {"
+    },
+    {
+      "file": "packages/app-backend/src/schema.ts",
+      "line": 34,
+      "signature": "export const account = pgTable(\"app_account\", {"
+    },
+    {
+      "file": "packages/app-backend/src/schema.ts",
+      "line": 51,
+      "signature": "export const verification = pgTable(\"app_verification\", {"
+    },
+    {
+      "file": "packages/app-backend/src/schema.ts",
+      "line": 59,
+      "signature": "export const files = pgTable(\"app_files\", {"
+    },
+    {
+      "file": "packages/app-backend/src/schema.ts",
+      "line": 78,
+      "signature": "export const grants = pgTable(\"app_download_grants\", {"
+    },
+    {
+      "file": "packages/app-backend/src/schema.ts",
+      "line": 87,
+      "signature": "export const events = pgTable(\"app_events\", {"
+    },
+    {
+      "file": "packages/app-backend/src/schema.ts",
+      "line": 98,
+      "signature": "export const authSchema = { user, session, account, verification };"
+    },
+    {
+      "file": "packages/app-backend/src/schema.ts",
+      "line": 99,
+      "signature": "export const receipts = pgTable(\"app_receipts\", {"
+    },
+    {
+      "file": "packages/app-backend/src/schema.ts",
+      "line": 105,
+      "signature": "export const jobEvents = pgTable(\"app_job_events\", {"
+    },
+    {
+      "file": "packages/app-backend/src/migration.ts",
+      "line": 2,
+      "signature": "export const APPLICATION_MIGRATION = `"
+    },
+    {
+      "file": "packages/app-backend/src/local.ts",
+      "line": 11,
+      "signature": "export interface LocalApplicationOptions"
+    },
+    {
+      "file": "packages/app-backend/src/local.ts",
+      "line": 17,
+      "signature": "export async function openLocalApplication(options: LocalApplicationOptions) {"
+    },
+    {
+      "file": "packages/app-backend/src/index.ts",
+      "line": 2,
+      "signature": "export type { ApplicationRouteContext, ApplicationRouteRegistry } from \"./custom.js\";"
+    },
+    {
+      "file": "packages/contracts/src/application-events.ts",
+      "line": 4,
+      "signature": "export const ApplicationJobEnvelope = z"
+    },
+    {
+      "file": "packages/contracts/src/application-events.ts",
+      "line": 17,
+      "signature": "export type ApplicationJobEnvelopeInput = z.infer<typeof ApplicationJobEnvelope>;"
+    },
+    {
+      "file": "packages/contracts/src/application-events.ts",
+      "line": 18,
+      "signature": "export const APPLICATION_JOB_EVENT = \"godseye/application.event\" as const;"
+    },
+    {
+      "file": "packages/contracts/src/jobs.ts",
+      "line": 8,
+      "signature": "export const JOB_POLICY_VERSION = \"jobs-v1\" as const;"
+    },
+    {
+      "file": "packages/contracts/src/jobs.ts",
+      "line": 9,
+      "signature": "export const JOB_TRIGGER_KINDS = [\"cron\", \"event\", \"manual\"] as const;"
+    },
+    {
+      "file": "packages/contracts/src/jobs.ts",
+      "line": 10,
+      "signature": "export const JOB_EFFECT_POLICIES = [\"read_only\", \"idempotent\", \"protected\"] as const;"
+    },
+    {
+      "file": "packages/contracts/src/jobs.ts",
+      "line": 11,
+      "signature": "export const JOB_RUN_STATES = ["
+    },
+    {
+      "file": "packages/contracts/src/jobs.ts",
+      "line": 21,
+      "signature": "export const OUTBOX_STATES = ["
+    },
+    {
+      "file": "packages/contracts/src/jobs.ts",
+      "line": 32,
+      "signature": "export const CronExpression = z"
+    },
+    {
+      "file": "packages/contracts/src/jobs.ts",
+      "line": 36,
+      "signature": "export const JobTrigger = z.discriminatedUnion(\"kind\", ["
+    },
+    {
+      "file": "packages/contracts/src/jobs.ts",
+      "line": 43,
+      "signature": "export const JobLimits = z"
+    },
+    {
+      "file": "packages/contracts/src/jobs.ts",
+      "line": 51,
+      "signature": "export const RegisterJobDefinition = z"
+    },
+    {
+      "file": "packages/contracts/src/jobs.ts",
+      "line": 63,
+      "signature": "export type RegisterJobDefinitionInput = z.infer<typeof RegisterJobDefinition>;"
+    },
+    {
+      "file": "packages/contracts/src/jobs.ts",
+      "line": 64,
+      "signature": "export const JobDefinition = z"
+    },
+    {
+      "file": "packages/contracts/src/jobs.ts",
+      "line": 81,
+      "signature": "export type JobDefinitionView = z.infer<typeof JobDefinition>;"
+    },
+    {
+      "file": "packages/contracts/src/jobs.ts",
+      "line": 82,
+      "signature": "export const JobDefinitionChange = z.object({ expectedRevision: Revision }).strict();"
+    },
+    {
+      "file": "packages/contracts/src/jobs.ts",
+      "line": 83,
+      "signature": "export const TriggerJob = z"
+    },
+    {
+      "file": "packages/contracts/src/jobs.ts",
+      "line": 90,
+      "signature": "export type TriggerJobInput = z.infer<typeof TriggerJob>;"
+    },
+    {
+      "file": "packages/contracts/src/jobs.ts",
+      "line": 91,
+      "signature": "export const CancelJobRun = z.object({ reason: z.string().min(3).max(240) }).strict();"
+    },
+    {
+      "file": "packages/contracts/src/jobs.ts",
+      "line": 92,
+      "signature": "export const JobRun = z"
+    },
+    {
+      "file": "packages/contracts/src/jobs.ts",
+      "line": 110,
+      "signature": "export type JobRunView = z.infer<typeof JobRun>;"
+    },
+    {
+      "file": "packages/contracts/src/jobs.ts",
+      "line": 111,
+      "signature": "export const OutboxIntent = z"
+    },
+    {
+      "file": "packages/contracts/src/jobs.ts",
+      "line": 127,
+      "signature": "export type OutboxIntentView = z.infer<typeof OutboxIntent>;"
+    },
+    {
+      "file": "packages/contracts/src/jobs.ts",
+      "line": 128,
+      "signature": "export const ReconcileOutbox = z"
+    },
+    {
+      "file": "packages/contracts/src/jobs.ts",
+      "line": 135,
+      "signature": "export type ReconcileOutboxInput = z.infer<typeof ReconcileOutbox>;"
+    },
+    {
+      "file": "packages/contracts/src/jobs.ts",
+      "line": 140,
+      "signature": "export const ReconcileJobRun = z"
+    },
+    {
+      "file": "packages/contracts/src/jobs.ts",
+      "line": 147,
+      "signature": "export type ReconcileJobRunInput = z.infer<typeof ReconcileJobRun>;"
+    },
+    {
+      "file": "packages/contracts/src/jobs.ts",
+      "line": 148,
+      "signature": "export const JobEngineStatus = z"
+    },
+    {
+      "file": "packages/contracts/src/jobs.ts",
+      "line": 155,
+      "signature": "export const JobsOverview = z"
+    },
+    {
+      "file": "packages/contracts/src/jobs.ts",
+      "line": 163,
+      "signature": "export type JobsOverviewView = z.infer<typeof JobsOverview>;"
+    },
+    {
+      "file": "packages/core/src/jobs-application.ts",
+      "line": 20,
+      "signature": "export interface ApplicationEventAuthority {"
+    },
+    {
+      "file": "packages/core/src/jobs-application.ts",
+      "line": 25,
+      "signature": "export function applicationCellLifecycle(state: JobState, authority: ApplicationEventAuthority) {"
+    },
+    {
+      "file": "packages/core/src/jobs-application.ts",
+      "line": 32,
+      "signature": "export function triggerInngestCron("
+    },
+    {
+      "file": "packages/core/src/jobs-application.ts",
+      "line": 92,
+      "signature": "export function ingestApplicationEvent("
+    },
+    {
+      "file": "packages/core/src/jobs-application.ts",
+      "line": 170,
+      "signature": "export function applicationEventAccepted("
+    },
+    {
+      "file": "packages/core/src/jobs-application.ts",
+      "line": 198,
+      "signature": "export async function applicationEventSettled("
+    },
+    {
+      "file": "packages/core/src/jobs-application.ts",
+      "line": 265,
+      "signature": "export function applicationEventRuns("
+    },
+    {
+      "file": "packages/core/src/inngest.ts",
+      "line": 16,
+      "signature": "export interface InngestCellOptions {"
+    },
+    {
+      "file": "packages/core/src/inngest.ts",
+      "line": 52,
+      "signature": "export function createInngestCell(options: InngestCellOptions) {"
+    },
+    {
+      "file": "packages/core/src/jobs.ts",
+      "line": 47,
+      "signature": "export type { ApplicationEventAuthority } from \"./jobs-application.js\";"
+    },
+    {
+      "file": "packages/core/src/jobs.ts",
+      "line": 49,
+      "signature": "export type { OutboxWrite } from \"./jobs-outbox.js\";"
+    },
+    {
+      "file": "packages/core/src/jobs.ts",
+      "line": 50,
+      "signature": "export type { JobEventInput } from \"./jobs-runs.js\";"
+    },
+    {
+      "file": "packages/core/src/jobs.ts",
+      "line": 51,
+      "signature": "export type * from \"./jobs-state.js\";"
+    },
+    {
+      "file": "packages/core/src/jobs.ts",
+      "line": 54,
+      "signature": "export interface JobOptions {"
+    },
+    {
+      "file": "packages/core/src/jobs.ts",
+      "line": 78,
+      "signature": "export class JobEngine {"
+    },
+    {
+      "file": "packages/core/src/jobs.ts",
+      "line": 237,
+      "signature": "export async function runJobScheduler("
+    },
+    {
+      "file": "packages/core/src/jobs-state.ts",
+      "line": 17,
+      "signature": "export const JOBS_ADAPTER_ID = \"local.jobs\";"
+    },
+    {
+      "file": "packages/core/src/jobs-state.ts",
+      "line": 18,
+      "signature": "export const JOBS_DESTINATION = \"jobs.local\";"
+    },
+    {
+      "file": "packages/core/src/jobs-state.ts",
+      "line": 19,
+      "signature": "export const JOBS_TOOL = \"job.run\";"
+    },
+    {
+      "file": "packages/core/src/jobs-state.ts",
+      "line": 20,
+      "signature": "export const JOBS_SCHEDULER_ID = \"jobs-scheduler\";"
+    },
+    {
+      "file": "packages/core/src/jobs-state.ts",
+      "line": 21,
+      "signature": "export const JOB_TERMINAL_STATES = [\"succeeded\", \"failed\", \"cancelled\"] as const;"
+    },
+    {
+      "file": "packages/core/src/jobs-state.ts",
+      "line": 24,
+      "signature": "export interface JobHandlerContext {"
+    },
+    {
+      "file": "packages/core/src/jobs-state.ts",
+      "line": 39,
+      "signature": "export type JobHandlerResult = Pick<EffectOutcomeInput, \"status\" | \"evidenceRef\">;"
+    },
+    {
+      "file": "packages/core/src/jobs-state.ts",
+      "line": 40,
+      "signature": "export interface JobHandler {"
+    },
+    {
+      "file": "packages/core/src/jobs-state.ts",
+      "line": 45,
+      "signature": "export interface OutboxIntentInput {"
+    },
+    {
+      "file": "packages/core/src/jobs-state.ts",
+      "line": 50,
+      "signature": "export interface OutboxDelivery {"
+    },
+    {
+      "file": "packages/core/src/jobs-state.ts",
+      "line": 58,
+      "signature": "export type OutboxSendResult ="
+    },
+    {
+      "file": "packages/core/src/jobs-state.ts",
+      "line": 62,
+      "signature": "export interface OutboxSender {"
+    },
+    {
+      "file": "packages/core/src/jobs-state.ts",
+      "line": 72,
+      "signature": "export interface JobState {"
+    },
+    {
+      "file": "packages/core/src/jobs-state.ts",
+      "line": 88,
+      "signature": "export const jobsActor = (projectId: string): Actor => ({"
+    },
+    {
+      "file": "packages/core/src/jobs-state.ts",
+      "line": 93,
+      "signature": "export const jobsConfigured = (state: JobState) => !!state.handlers || !!state.senders;"
+    },
+    {
+      "file": "packages/core/src/jobs-state.ts",
+      "line": 94,
+      "signature": "export function assertJobsConfigured(state: JobState) {"
+    },
+    {
+      "file": "packages/core/src/jobs-state.ts",
+      "line": 102,
+      "signature": "export const definitionView = (row: typeof schema.jobDefinitions.$inferSelect) =>"
+    },
+    {
+      "file": "packages/core/src/jobs-state.ts",
+      "line": 118,
+      "signature": "export const runView = (row: typeof schema.jobRuns.$inferSelect) =>"
+    },
+    {
+      "file": "packages/core/src/jobs-state.ts",
+      "line": 135,
+      "signature": "export const outboxView = (row: typeof schema.jobOutbox.$inferSelect) =>"
+    },
+    {
+      "file": "packages/core/src/jobs-state.ts",
+      "line": 150,
+      "signature": "export async function definitionFor(tx: DatabaseAccess, actor: Actor, id: string) {"
+    },
+    {
+      "file": "packages/core/src/jobs-state.ts",
+      "line": 159,
+      "signature": "export async function jobRunFor(tx: DatabaseAccess, actor: Actor, id: string) {"
+    },
+    {
+      "file": "packages/core/src/jobs-state.ts",
+      "line": 165,
+      "signature": "export async function outboxFor(tx: DatabaseAccess, actor: Actor, id: string) {"
+    },
+    {
+      "file": "packages/core/src/jobs-state.ts",
+      "line": 172,
+      "signature": "export async function heldEnvironmentIds(tx: DatabaseAccess, now: Date): Promise<string[]> {"
+    },
+    {
+      "file": "packages/core/src/jobs-state.ts",
+      "line": 203,
+      "signature": "export async function activeCell("
+    },
+    {
+      "file": "packages/core/src/jobs-state.ts",
+      "line": 229,
+      "signature": "export const activeRunsFilter = (definitionId: string, protectedPolicy: boolean) =>"
+    },
+    {
+      "file": "packages/core/src/jobs-state.ts",
+      "line": 240,
+      "signature": "export const dueDefinitions = (now: Date) =>"
+    },
+    {
+      "file": "packages/core/src/jobs-state.ts",
+      "line": 242,
+      "signature": "export const futureOnly = (now: Date) => gt(schema.jobDefinitions.nextFireAt, now);"
+    },
+    {
+      "file": "packages/core/src/jobs-execution.ts",
+      "line": 23,
+      "signature": "export const HANDLER_UNAVAILABLE_EVIDENCE = \"job:handler-unavailable\";"
+    },
+    {
+      "file": "packages/core/src/jobs-execution.ts",
+      "line": 24,
+      "signature": "export const TIMEOUT_EVIDENCE = \"job:timeout\";"
+    },
+    {
+      "file": "packages/core/src/jobs-execution.ts",
+      "line": 111,
+      "signature": "export async function executeJob("
+    },
+    {
+      "file": "packages/core/src/jobs-execution.ts",
+      "line": 184,
+      "signature": "export async function fenceJob(state: JobState, context: ExecutionContext) {"
+    },
+    {
+      "file": "packages/core/src/jobs-scheduler.ts",
+      "line": 22,
+      "signature": "export interface JobsTickResult {"
+    },
+    {
+      "file": "packages/core/src/jobs-scheduler.ts",
+      "line": 154,
+      "signature": "export async function jobsTick(state: JobState, signal?: AbortSignal): Promise<JobsTickResult> {"
+    },
+    {
+      "file": "packages/core/src/jobs-retention.ts",
+      "line": 10,
+      "signature": "export interface RetentionResult {"
+    },
+    {
+      "file": "packages/core/src/jobs-retention.ts",
+      "line": 89,
+      "signature": "export async function pruneJobs(state: JobState): Promise<RetentionResult> {"
+    },
+    {
+      "file": "packages/core/src/index.ts",
+      "line": 41,
+      "signature": "export class ControlPlane {"
+    },
+    {
+      "file": "packages/core/src/infrastructure.ts",
+      "line": 43,
+      "signature": "export interface InfrastructureOptions {"
+    },
+    {
+      "file": "packages/core/src/infrastructure.ts",
+      "line": 62,
+      "signature": "export class InfrastructureEngine {"
+    },
+    {
+      "file": "packages/core/src/infrastructure.ts",
+      "line": 192,
+      "signature": "export type * from \"./infra-provider.js\";"
+    },
+    {
+      "file": "packages/store/src/jobs-schema.ts",
+      "line": 15,
+      "signature": "export const applicationJobEvents = pgTable(\"application_job_events\", {"
+    },
+    {
+      "file": "packages/store/src/jobs-schema.ts",
+      "line": 25,
+      "signature": "export const jobDefinitions = pgTable("
+    },
+    {
+      "file": "packages/store/src/jobs-schema.ts",
+      "line": 47,
+      "signature": "export const jobRuns = pgTable("
+    },
+    {
+      "file": "packages/store/src/jobs-schema.ts",
+      "line": 83,
+      "signature": "export const jobOutbox = pgTable("
+    },
+    {
+      "file": "scripts/inngest-compose.mjs",
+      "line": 27,
+      "signature": "export function compileInngestCell(raw) {"
+    },
+    {
+      "file": "scripts/inngest-compose.mjs",
+      "line": 147,
+      "signature": "export function compileInngestCells(raw) {"
+    },
+    {
+      "file": "apps/control-api/src/identity/permissions.ts",
+      "line": 30,
+      "signature": "export function inheritedPrivateEntries(system: string, paths: string[]): Promise<Set<number>> {"
+    },
+    {
+      "file": "apps/control-api/src/identity/runtime.ts",
+      "line": 21,
+      "signature": "export async function assertPrivateTarget(directory: string) {"
+    },
+    {
+      "file": "apps/control-api/src/identity/runtime.ts",
+      "line": 57,
+      "signature": "export async function privateDirectory(directory: string) {"
+    },
+    {
+      "file": "apps/control-api/src/identity/runtime.ts",
+      "line": 112,
+      "signature": "export async function loadIdentityMaterial(identityDir: string) {"
+    },
+    {
+      "file": "apps/control-api/src/identity/runtime.ts",
+      "line": 131,
+      "signature": "export async function acquireInstance(stateDir: string) {"
+    },
+    {
+      "file": "apps/control-api/src/identity/runtime.ts",
+      "line": 166,
+      "signature": "export function identityPaths(dataDir: string, stateOverride?: string) {"
+    }
+  ]
+}
