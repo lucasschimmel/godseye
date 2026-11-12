@@ -1,0 +1,87 @@
+# Local application delivery
+
+Status: local E05 implementation, 2026-11-12. Owner API `1.5.0` and the `/pipelines` console implement local policy/source/build/release/preview management. Default source and executor are **unconfigured**, and remote qualification remains **unqualified**. The combined run passed 851/851 unit/integration cases across 58 files in 569.99 seconds wall time and 28/28 browser journeys in 163.404282 seconds (JUnit), including four delivery journeys. Static checks (320 linted files, types and API `1.5.0` consistency), build/smoke and frozen backend/UI source reviews passed. The narrow responsive-CSS follow-up passed four delivery browser journeys in 58.082768 seconds with refreshed desktop/mobile visual checks; all thirteen selected delivery mutations were killed with green baseline/restored checks and unchanged original sources. Final build/smoke passed after the stylesheet change. The preceding 596-unit/24-browser recovery checkpoint is historical evidence. This does not complete full E05 or V1.
+
+## Configure and authorize a project
+
+Run the ordinary [local startup](local.md), enroll/sign in with the owner passkey and register a project. In its project page, bind the numeric GitHub repository/installation IDs, full repository name and followed branch. The repository `autoDeploy` checkbox stores a preference; it grants no standing delivery authority.
+
+Open `/pipelines` and confirm owner identity with a recent passkey ceremony. Create a separate delivery policy for the exact project's development or production environment and current project/environment revisions. Recovery-held environments and ordinary manually registered previews cannot be standing-policy targets. Policy creation remains useful without a connected provider; it neither checks out code nor deploys resources.
+
+Choose `static` or `node`, a relative repository context such as `.` or `apps/web`, unique named required checks, artifact/resource ceilings, preview limits, expiry and optional automatic delivery. Unknown keys are rejected. Repository URLs, absolute paths, arbitrary commands, credentials, source SHAs, provider IDs and artifact attestations cannot be supplied as execution authority.
+
+| Policy field | Accepted range |
+| --- | --- |
+| Expiry | Future time, no more than 30 days from creation |
+| Required checks | 1–16 unique names |
+| Maximum artifact size | 1–4096 MiB |
+| Concurrent previews | 0–8 per policy; at most eight retained project previews |
+| Preview TTL | 1–720 hours, additionally bounded by policy expiry |
+| CPU per stage | 10–64000 millicores |
+| Memory per stage | 32–262144 MiB |
+| Storage per stage | 1–4096 GiB |
+| Process ceiling | 8–4096 |
+
+Policies snapshot repository binding and revisions. Expiry/revocation, project suspension, metadata/repository revision drift and recovery HOLD prevent stale work from gaining delivery authority. Revoke with the current policy revision; create a new policy when its scope must change. Revocation does not prove an already serving resource has stopped. Retained resources and uncertain outcomes still require exact inspection/cleanup.
+
+## Synchronize and build
+
+Raw-byte HMAC intake accepts matching nondeleted branch pushes and same-repository PR `opened`, `synchronize`, `reopened` and `closed` events. Shared repositories fan out transactionally to matching projects. Exact replay is deduplicated; conflicting reuse of a delivery ID returns 409. A queued `pending_verification` event is an intention, not current-head or successful-build evidence.
+
+Use **Synchroniser GitHub** for the policy. Synchronization independently checks installation access, repository identity and the current branch/PR head before producing immutable preparations. For PRs it verifies base repository/ref, head repository/ref/SHA and current open state. Forks are denied. Stale source events become superseded; event timestamps or arrival order cannot authorize an old build or destroy a reopened preview.
+
+Review the exact prepared hash and admit its build. A private source provider and independently qualified executor are required for real work. The existing FoundationEngine owns execution, leases, fences, epochs, scoped grants, capacity and durable effect intentions. No repository script runs on the controller. Generic Foundation commands, service actors and the legacy preference cannot manufacture the private delivery delegation.
+
+Trusted build evidence binds artifact digest/size, source repository/installation/commit, recipe, builder, unique passing checks, scan result, configuration/schema compatibility and provenance. Owner HTTP has no artifact-attestation endpoint. Repository-authored success output and mutable image tags cannot confer trusted artifact identity.
+
+## Release, rollback and uncertainty
+
+A successful build exposes **Préparer le déploiement**. Release preparation selects that exact artifact; admission reserves the serialized environment lane. Source and policy/provider generation are checked again around external I/O. Stage, inspected readiness/smoke and compatible configuration/schema must precede traffic selection. Failed pre-promotion checks leave the prior artifact serving.
+
+The default scheduler starts with the local API but does no delivery work while source/executor are absent. With qualified providers and an active policy's explicit `autoDeploy` authority, it synchronizes events, prepares/admit builds and releases through Foundation. Manual policy mode retains owner preparation/admission. The scheduler never authorizes rollback or broadens the stored policy.
+
+History distinguishes prepared, reserved, building, built, staged, active, retired, released, unknown and quarantined outcomes. A successful request or provider process exit alone is not active traffic. Existing and staged runtimes plus retained artifacts consume shared environment/professional capacity; unknown effects retain their reservations.
+
+Use **Réconcilier sans relancer** for uncertain runs. This uses Foundation's read-only reconciliation path and exact persisted intentions/resources; it does not repeat a lost-acknowledgment build, promotion or cleanup blindly. Missing evidence preserves uncertainty.
+
+For **Préparer un retour d’image**, select an eligible inspected prior deployment with a retained artifact and a current CI source intention. The current source must independently verify against the active policy, while artifact identity remains that of the selected older release. The earlier artifact's historical CI head cannot stand in for current source authority. Current recipe/configuration and required checks must still accept the retained evidence. Rollback requires a fresh exact owner action and switches only the image/traffic; it never rewinds a database. Destructive/incompatible migration, new privileges, domain rerouting and live recovery activation remain separately authorized/unqualified.
+
+## Preview lifecycle
+
+A verified same-repository PR receives a distinct server-owned environment with finite resources and an expiry no later than policy expiry. Data is empty/synthetic only; production databases/files/identities are never cloned into it. Prepared metadata is not a running cell. Display a URL only for a currently active, unexpired preview after exact inspected runtime/endpoint evidence. Expired previews lose their displayed URL even before physical cleanup is confirmed.
+
+TTL expiry or independently verified PR closure permits protective stop/unpublish and disposal of exact owned ephemeral application/build/staged resources. **Préparer l’arrêt des previews expirées** prepares bounded cleanup intentions; a 200 response is not proof of physical absence. The scheduler can admit cleanup even after ordinary standing delivery authority expires or is revoked. PR closure is rechecked so an obsolete close event cannot stop a reopened PR.
+
+Unknown or late effects remain visible and retain capacity. A preview is retired only after exact owned-resource absence is inspected; retain its metadata tombstone and protected recovery/audit history. This operation does not authorize generic cell quarantine, persistent PostgreSQL/volume destruction, project/source deletion or final purge. Persistent-data purge remains a separate fresh-approved operation under the [V1 authority table](../spec/v1.md).
+
+## Owner API 1.5.0
+
+All paths below are under `/api/v1` and require authenticated owner access. All mutations require `Idempotency-Key` and fresh passkey authority. The generated [OpenAPI](../contracts/control-openapi.json), [strict schemas](../../packages/contracts/src/delivery.ts) and internal owner client define exact DTOs. There is no delivery CLI or browser credential-enrollment command.
+
+| Method/path | Request and result |
+| --- | --- |
+| `GET /delivery` | Metadata overview; source/execution configuration and literal remote `unqualified`; 200 |
+| `POST /delivery/policies` | Registered project/environment, revisions and bounded policy; 201 |
+| `POST /delivery/policies/:id/revoke` | `{ expectedRevision }`; 200 |
+| `POST /delivery/synchronize` | `{ policyId }`; preparation IDs and blocked count; 200 |
+| `POST /delivery/preparations` | `{ policyId, ciRunId, intent, artifactId?, deploymentId? }`; immutable preparation; 201 |
+| `POST /delivery/admissions` | `{ preparationId, expectedHash }`; reserved delivery run; 201 |
+| `POST /delivery/cleanup` | `{}`; expired-preview cleanup preparation IDs and blocked count; 200 |
+
+Preparation intents are `build`, `release`, `rollback` and `cleanup`. A build cannot accept artifact/deployment references; release requires a trusted artifact, rollback an eligible prior deployment and cleanup an exact owned ephemeral preview. `POST /foundation/runs/:id/reconcile` is the existing owner reconciliation route, not a new delivery executor API. Validation/conflicts/unavailable providers expose safe codes without private material or raw tool logs.
+
+## Actual local laboratory and qualification limits
+
+```sh
+bun run test:delivery:lab
+```
+
+This alias selects `tests/delivery-lab.test.ts`, which is also included in the default Vitest suite. It uses trusted disposable fixture builds, production `ManagedDeliveryProvider`, actual artifact bytes/hashes, child processes and loopback HTTP readiness/traffic-switch/rollback/cleanup. The final unit run included **12 fixture checks in 3.24 seconds**; the earlier focused run passed in 4.21 seconds. Do not add those twelve checks to the unit aggregate. It does not connect a GitHub account or deploy a user's application. Exact combined history and the remaining follow-up are recorded below and in [verification history](../../tests/STRATEGY.md).
+
+The final combined `bun run test` run passed **851/851 cases across 58 files in 569.99 seconds wall time**. JUnit aggregates 1029.9576847 seconds across suites; that is not wall time. The full browser run passed **28/28 in 163.404282 seconds (JUnit)**, including four new delivery journeys. Lint checked 320 files; types, generated API `1.5.0` consistency and build/built-API smoke passed. All 52 local traceability criteria are recorded as verified; this is local acceptance, not complete V1 release certification. No native PostgreSQL laboratory was rerun for this delivery checkpoint.
+
+Defensive backend source review passed on 44 reviewed hashes after eight resolved items; UI source review passed after five resolved items. Neither report certifies remote providers or a complete security penetration test. Coordinator screenshot review subsequently found layout clipping and prompted a narrow responsive-CSS correction. After that change, all four delivery browser journeys passed in 58.082768 seconds; the coordinator inspected refreshed desktop/mobile screenshots and confirmed the identity controls, cleanup button and text no longer clip. The earlier full 28-journey run remains archived separately; this rechecks four existing journeys and does not create 32 unique cases. Final build and compiled-API smoke passed after the CSS change; backend production code remained unchanged.
+
+The scoped `bun run test:mutation:delivery` run killed **13/13 selected mutations** in 132.631 seconds: twelve new M62–M73 plus affected historical M07. All thirteen baseline/restored checks passed, with zero survivors/invalid cases and unchanged original sources. The report is `.codex/crafts/g-o-d-s-e-y-e-cfe8/reviews/mutations-delivery.json`. The earlier 61-case matrix was not rerun and retains its historical scope; no exhaustive mutation/coverage percentage is inferred. Preliminary Gitleaks history/373-file source scanning reported zero findings; final staged secret scanning remains pending.
+
+The local API constructs no source/executor provider by default. The GitHub adapter and managed delivery transport are private integration seams; a configuration boolean or browser association cannot qualify them. `configured` means an adapter was supplied, not that remote capability passed admission. Live GitHub App enrollment/token exchange, Jenkins controller/disposable build guest, registry/scanner authority, Coolify deployment, Docker/gVisor quotas/firewall, DNS/TLS/public preview domains, production migrations and off-host durability remain unqualified. A native trusted fixture cannot establish untrusted-code containment. See [CI preparation](ci.md) and [ADR-009](../adr/ADR-009-local-application-delivery.md).
