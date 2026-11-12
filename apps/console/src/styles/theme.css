@@ -1,0 +1,54 @@
+@theme inline {
+  --color-background: var(--canvas);
+  --color-foreground: var(--text-primary);
+  --color-card: var(--surface);
+  --color-card-foreground: var(--text-primary);
+  --color-primary: var(--accent-ink);
+  --color-primary-foreground: var(--surface);
+  --color-secondary: var(--surface-subtle);
+  --color-secondary-foreground: var(--text-primary);
+  --color-muted: var(--surface-subtle);
+  --color-muted-foreground: var(--text-secondary);
+  --color-accent: var(--accent-surface);
+  --color-accent-foreground: var(--accent-ink);
+  --color-destructive: var(--danger-ink);
+  --color-destructive-foreground: var(--surface);
+  --color-border: var(--border-default);
+  --color-input: var(--border-default);
+  --color-ring: var(--accent-ink);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) + 2px);
+  --radius-sm: calc(var(--radius) - 2px);
+}
+
+:root {
+  --canvas: #edf0ed;
+  --surface: #ffffff;
+  --text-primary: #172a32;
+  --text-secondary: #68787e;
+  --border-default: #e0e6e3;
+  --surface-subtle: #f6f8f6;
+  --accent-ink: #147b80;
+  --accent-surface: #e7f2ee;
+  --navigation-surface: #0d1720;
+  --navigation-raised: #12232f;
+  --navigation-text: #b3c0c8;
+  --navigation-muted: #7f939e;
+  --navigation-border: #26353e;
+  --attention-ink: #98631a;
+  --attention-surface: #f9f4e6;
+  --danger-ink: #a13c3c;
+  --danger-ink-surface: #fbeeee;
+  --radius: 6px;
+  --font-body: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-display: "Bahnschrift", "Aptos Display", "Segoe UI", sans-serif;
+  --font-data: "Cascadia Code", "SFMono-Regular", Consolas, monospace;
+  --rail-width: 242px;
+  --space-unit: 4px;
+  font-family: var(--font-body);
+  color: var(--text-primary);
+  background: var(--canvas);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}

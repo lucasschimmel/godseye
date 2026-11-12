@@ -1,0 +1,31 @@
+.page-heading {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+}
+.eyebrow {
+  color: var(--text-secondary);
+  font: 9px var(--font-data);
+  letter-spacing: 1.7px;
+  margin-bottom: 12px;
+}
+h1 {
+  font-family: var(--font-display);
+  font-size: clamp(26px, 2.2vw, 34px);
+  letter-spacing: -1.15px;
+  font-weight: 550;
+  line-height: 1.2;
+}
+.page-heading p:not(.eyebrow) {
+  margin-top: 11px;
+  color: var(--text-secondary);
+  font-size: 12px;
+  line-height: 1.6;
+}
+.page-heading > a,
+.page-heading > button {
+  flex-shrink: 0;
+  font-size: 11px;
+}
