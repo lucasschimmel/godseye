@@ -1,0 +1,23 @@
+name: godseye-local
+services:
+  postgres:
+    profiles: ["postgres"]
+    image: postgres:18@sha256:e3d24f6906d0760bf4da0dae872415391ededefad23fd471c47dc53b0ddf3c42
+    environment:
+      POSTGRES_USER: godseye_control
+      POSTGRES_DB: godseye_control
+      POSTGRES_PASSWORD: "${GODSEYE_LOCAL_DATABASE_PASSWORD:?Set GODSEYE_LOCAL_DATABASE_PASSWORD}"
+    ports:
+      - "127.0.0.1:${GODSEYE_LOCAL_DATABASE_PORT:-5433}:5432"
+    volumes:
+      - control_postgres:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U godseye_control -d godseye_control"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    mem_limit: 1g
+    cpus: 1
+    security_opt: ["no-new-privileges:true"]
+volumes:
+  control_postgres:

@@ -1,0 +1,48 @@
+jenkins:
+  systemMessage: "G.O.D.S.E.Y.E private CI controller. Builds require isolated agents."
+  numExecutors: 0
+  mode: EXCLUSIVE
+  slaveAgentPort: -1
+  securityRealm:
+    local:
+      allowsSignup: false
+      users:
+        - id: "${JENKINS_OWNER_ID}"
+          password: "${JENKINS_OWNER_PASSWORD}"
+  authorizationStrategy:
+    globalMatrix:
+      entries:
+        - user:
+            name: "${JENKINS_OWNER_ID}"
+            permissions:
+              - "Overall/Administer"
+  crumbIssuer:
+    standard:
+      excludeClientIPFromCrumb: false
+security:
+  gitHostKeyVerificationConfiguration:
+    sshHostKeyVerificationStrategy: "knownHostsFileVerificationStrategy"
+unclassified:
+  location:
+    url: "${JENKINS_PRIVATE_URL}"
+jobs:
+  - script: >
+      pipelineJob('godseye-platform') {
+        description('Trusted owner main branch only. No pull request discovery. Agent provisioning must be qualified separately.')
+        definition {
+          cpsScm {
+            scm {
+              git {
+                remote {
+                  url(System.getenv('GODSEYE_SOURCE_URL'))
+                  def sourceReadCredential = System.getenv('GODSEYE_SOURCE_CREDENTIALS_ID')
+                  if (sourceReadCredential) { credentials(sourceReadCredential) }
+                }
+                branch('*/main')
+              }
+            }
+            scriptPath('Jenkinsfile')
+            lightweight(true)
+          }
+        }
+      }

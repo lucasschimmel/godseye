@@ -1,0 +1,23 @@
+name: godseye-ci
+services:
+  jenkins:
+    build:
+      context: .
+      dockerfile: infra/jenkins/Dockerfile
+    environment:
+      JENKINS_OWNER_ID: "${JENKINS_OWNER_ID:?Set JENKINS_OWNER_ID}"
+      JENKINS_OWNER_PASSWORD: "${JENKINS_OWNER_PASSWORD:?Set JENKINS_OWNER_PASSWORD}"
+      JENKINS_PRIVATE_URL: "${JENKINS_PRIVATE_URL:-http://127.0.0.1:8081/}"
+      GODSEYE_SOURCE_URL: "${GODSEYE_SOURCE_URL:?Set the trusted G.O.D.S.E.Y.E repository URL}"
+      GODSEYE_SOURCE_CREDENTIALS_ID: "${GODSEYE_SOURCE_CREDENTIALS_ID:-}"
+    ports:
+      - "127.0.0.1:${GODSEYE_LOCAL_JENKINS_PORT:-8081}:8080"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+    mem_limit: 2g
+    cpus: 1
+    pids_limit: 256
+    security_opt: ["no-new-privileges:true"]
+    restart: "no"
+volumes:
+  jenkins_home:
