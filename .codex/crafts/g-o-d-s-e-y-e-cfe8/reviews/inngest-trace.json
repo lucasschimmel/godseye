@@ -1,0 +1,97 @@
+{
+  "status": "bound-and-verified",
+  "criteria": [
+    {
+      "id": "T-E06-A01",
+      "files": [
+        "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\tests\\backend-jobs-ingress.test.ts"
+      ],
+      "found": true
+    },
+    {
+      "id": "T-E06-A03",
+      "files": [
+        "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\tests\\backend-jobs-bridge.test.ts",
+        "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\tests\\backend-jobs-ingress.test.ts"
+      ],
+      "found": true
+    },
+    {
+      "id": "T-E06-B01",
+      "files": [
+        "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\tests\\backend-jobs-bridge.test.ts"
+      ],
+      "found": true
+    },
+    {
+      "id": "T-E06-B02",
+      "files": [
+        "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\tests\\backend-jobs-bridge.test.ts"
+      ],
+      "found": true
+    },
+    {
+      "id": "T-E06-B03",
+      "files": [
+        "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\tests\\backend-jobs-bridge.test.ts"
+      ],
+      "found": true
+    },
+    {
+      "id": "T-E06-B04",
+      "files": [
+        "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\tests\\backend-jobs-bridge.test.ts",
+        "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\tests\\backend-jobs-ingress.test.ts",
+        "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\tests\\inngest-cell.test.ts"
+      ],
+      "found": true
+    },
+    {
+      "id": "T-E06-I01",
+      "files": [
+        "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\tests\\inngest-cell.test.ts",
+        "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\tests\\inngest-compose.test.ts"
+      ],
+      "found": true
+    },
+    {
+      "id": "T-E06-I02",
+      "files": [
+        "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\tests\\backend-jobs-ingress.test.ts",
+        "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\tests\\inngest-cell.test.ts"
+      ],
+      "found": true
+    },
+    {
+      "id": "T-E06-I03",
+      "files": [
+        "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\tests\\backend-jobs-ingress.test.ts"
+      ],
+      "found": true
+    },
+    {
+      "id": "T-E06-L01",
+      "files": [
+        "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\tests\\inngest-native.test.ts"
+      ],
+      "found": true
+    },
+    {
+      "id": "T-E06-R01",
+      "files": [
+        "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\tests\\inngest-config.test.ts"
+      ],
+      "found": true
+    },
+    {
+      "id": "T-E06-R03",
+      "files": [
+        "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\tests\\inngest-runtime.test.ts"
+      ],
+      "found": true
+    }
+  ],
+  "proof": "1191 ordinary cases passed in final full run;2 native cases separately passed; all12 mapped E06 IDs bound",
+  "ordinaryReport": "artifacts/test-results/inngest-unit-final.xml",
+  "nativeReport": "artifacts/test-results/inngest-final-native.xml"
+}

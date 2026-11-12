@@ -1,0 +1,57 @@
+{
+  "kind": "GAUNTLET E06 application events and per-cell Inngest verification",
+  "date": "2026-11-12",
+  "scope": "Local only; no Docker service, dedicated server, remote provider or production persistence qualification",
+  "status": "Initial focused/native evidence recorded; main control runtime tests authored and frozen; root owns final full-suite and serialized ordinary/native qualification",
+  "testFiles": {
+    "tests/backend-jobs-bridge.test.ts": 11,
+    "tests/backend-jobs-ingress.test.ts": 13,
+    "tests/inngest-cell.test.ts": 5,
+    "tests/inngest-compose.test.ts": 4,
+    "tests/inngest-config.test.ts": 5,
+    "tests/inngest-runtime.test.ts": { "ordinary": 4, "nativeOptIn": 1 },
+    "tests/inngest-native.test.ts": 1
+  },
+  "coverage": { "line": null, "branch": null, "reason": "Not measured; no percentage claim" },
+  "layers_run": ["durable application/control-store integration", "signed SDK worker HTTP contracts", "actual native Inngest process and HTTP composition", "selected behavioral mutations", "prepared Compose compiler direct Node assertions"],
+  "evidence": {
+    "focusedCheckpoint": { "passed": 26, "files": 3, "wallSeconds": 64.87, "note": "Successful pre-retention-regression focused run; subsequent same-path report was overwritten by an invalid concurrent-cache attempt" },
+    "reviewRegressions": { "passed": 3, "wallSeconds": 10, "artifact": "artifacts/test-results/inngest-review-regressions.xml", "note": "Unknown cancelled effect retention, source-loader deadline, and settlement fairness; later added stronger late-resolution/history-pruning assertions await root verification" },
+    "native": {
+      "passed": 1,
+      "testSeconds": 59.695,
+      "wallSeconds": 70.82,
+      "artifact": "artifacts/test-results/inngest-native.xml",
+      "command": "GODSEYE_INNGEST_LAB=enabled bunx vitest run tests/inngest-native.test.ts",
+      "engineVersion": "1.52.0-065cbda5b",
+      "sdkVersion": "4.26.2",
+      "behavior": "Two independent authenticated native engines with distinct generated authority, four listener ports and SQLite/embedded queue roots each; private app publication commits intent, signed SDK callback admits exact-cell work, Foundation handler receives matching business payload and reaches terminal success; foreign event key and unsigned callback denied",
+      "limits": "Foundation terminal results verified; separate Inngest API COMPLETED status and external PostgreSQL/Redis not qualified"
+    },
+    "mutation": { "selected": 6, "killed": 6, "survived": 0, "invalid": 0, "baseline": 6, "restored": 6, "sourceUnchanged": true, "wallSeconds": 232.656, "report": "reviews/mutations-inngest.json", "score": null, "note": "Curated experiment, not exhaustive mutation score" },
+    "composeCompiler": { "result": "Direct Node assertions passed", "vitestCases": 4, "vitestExecution": "Pending root final targeted gate", "behavior": "Distinct scope/authority/network/listener, immutable image digests, private PostgreSQL/Redis and local engine port, queue worker lower bound, prepared-only status" }
+  },
+  "flaky": [],
+  "environmentFailures": [
+    "Initial run before dependency installation completed could not resolve drizzle-orm; no tests discovered, not a behavioral RED",
+    "Concurrent root/native focused commands shared Vitest filesystem module cache, producing ENOENT before suite discovery; recorded as invalid environmental run, not an application assertion failure"
+  ],
+  "resolvedFindings": [
+    "App additive migration attempted multiple commands in a prepared statement; split execution now passes",
+    "Pinned real queue requires at least five free workers; native lab now uses ten, prepared compiler rejects fewer than five",
+    "Pinned real OSS /v2/apps/{id}/syncs returns 501; native lab registers with SDK PUT",
+    "Real engine normalizes loopback callback host to localhost; exact-port loopback aliases accepted while SDK signature validation remains mandatory",
+    "Controller retains event metadata only; source-cell loader is digest-bound",
+    "Engine HTTP acceptance alone does not acknowledge source event; durable domain receipt required",
+    "Unknown cancelled effects, missing retained history and unsettled outbox prevent payload settlement",
+    "Settlement inspection rotates beyond old unknown rows and payload loading is deadline-bounded"
+  ],
+  "runnerChange": "Future mutation sandboxes use their own cacheDir and fsModuleCachePath outside the shared node_modules junction. Existing suite dispatch remains intact; syntax/lint checked, this cache-only amendment was made after the six-mutant experiment.",
+  "mainControlRuntime": {
+    "ordinaryScenariosAuthored": 9,
+    "nativeScenariosAuthored": 1,
+    "status": "Lint and typecheck pass; serialized executable qualification awaits root full-suite completion",
+    "behavior": "Strict default-off metadata configuration; configured owner cell membership; existing-store composition; single bind; real listener collision cleanup and lock reuse; native authenticated custom publication to scoped application.archive job; owner backend disable yields application 423 and no global pump failure after 1100 ms"
+  },
+  "gaps": ["Root final full-suite counts and final focused pass must be joined before reporting complete verification", "New Compose, main configuration and runtime Vitest files were authored after root full-suite startup", "No native container firewall/quota qualification, external workflow PostgreSQL/Redis restart qualification, or coordinated recovery qualification"]
+}
