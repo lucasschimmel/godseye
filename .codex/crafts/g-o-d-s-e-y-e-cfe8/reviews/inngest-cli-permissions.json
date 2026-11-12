@@ -1,0 +1,32 @@
+{
+  "finding": "Existing offline owner/access CLI deadlines were consumed by redundant Windows ACL subprocesses on a reopened local PostgreSQL directory",
+  "status": "production fix and controlled phase probe passed; parent owns actual owner/access CLI regression run and independent security review",
+  "fixture": "Fresh disposable local control PostgreSQL store with all current migrations, closed before child reopen; 1301 filesystem entries; no owner keys, provider proofs or credential values printed",
+  "baselineMs": {
+    "childPrivateDirectory": 44736,
+    "childStoreOpenFromStart": 45152,
+    "childStoreClosedFromStart": 45182,
+    "parentSeedAndChildTotal": 51740
+  },
+  "fixedMs": {
+    "childPrivateDirectory": 2993,
+    "childStoreOpenFromStart": 3377,
+    "childStoreClosedFromStart": 3400,
+    "parentSeedAndChildTotal": 8807
+  },
+  "files": [
+    "apps/control-api/src/identity/permissions.ts",
+    "apps/control-api/src/identity/runtime.ts"
+  ],
+  "preservedGuarantees": [
+    "Shared-root refusal and pre-mutation tree checks unchanged",
+    "Root DACL still replaced atomically with protected current-owner FullControl only",
+    "Read-only bounded PowerShell inspection receives canonical path metadata through stdin JSON, never file contents",
+    "Skipping redundant reset requires exactly one inherited canonical Allow rule for the current SID with exact FullControl, proper directory inheritance flags and no propagation restriction",
+    "Protected, explicit, broad, denied, noncanonical or otherwise mismatched child ACLs retain the original per-entry guarded icacls /reset /L behavior",
+    "Every descendant, including skipped canonical entries, still receives fresh JS symbolic-link, hard-link and canonical containment checks before returning",
+    "No recursive OS mutation, timeout increase, skipped regression or weakened ACL requirement"
+  ],
+  "diagnosticCorrection": "The first bounded read-only batch failed closed because Windows PowerShell ConvertFrom-Json preserves the parsed array as one pipeline object. Removing an extra array wrapper fixed the protocol; the subsequent full 1301-entry probe passed.",
+  "verification": "Biome passed on production changes; three additional actual-Windows drift/late-link regressions authored by GAUNTLET and lint/typecheck passed; actual CLI suite reruns are the parent's next gate"
+}

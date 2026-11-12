@@ -1,0 +1,39 @@
+{
+  "date": "2026-11-12T19:36:23.2262896+01:00",
+  "sdk": "inngest4.26.2",
+  "resolved": [
+    {
+      "override": "inngest>zod4.6.7",
+      "surface": "SDK imports zod/v3 compatibility entrypoint",
+      "advisory": "GHSA-mrhx-c7xc-m3w5"
+    },
+    {
+      "override": "rimraf>glob14.0.6",
+      "advisory": "GHSA-3g3m-2fjr-6pw4"
+    },
+    {
+      "override": "glob>minimatch11.0.8",
+      "advisory": "GHSA-g3hv-75wg-m249"
+    }
+  ],
+  "audit": {
+    "findings": 0,
+    "exit": 0,
+    "packages": 495,
+    "command": "bun audit"
+  },
+  "compatibility": {
+    "status": "passed",
+    "initialProbe": "Windows backslash glob pattern did not match; corrected POSIX glob matched and removed owned fixture",
+    "command": "Native rimraf5 wildcard fixture using patched glob/minimatch"
+  },
+  "sources": [
+    "https://registry.npmjs.org/glob/14.0.6",
+    "https://registry.npmjs.org/minimatch/11.0.8",
+    "https://github.com/advisories/GHSA-mrhx-c7xc-m3w5"
+  ],
+  "limits": [
+    "Real SDK/native lab still pending at this checkpoint",
+    "No exhaustive SBOM or semgrep scan claimed"
+  ]
+}
