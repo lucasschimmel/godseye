@@ -1,0 +1,62 @@
+{
+  "kind": "scribe-final-documentation-verification",
+  "generatedAt": "2026-11-12T18:16:39.758385+00:00",
+  "verdict": "pass",
+  "written": [
+    "docs/spec/v1.md",
+    "docs/plan/v1-development.md",
+    "docs/development/foundations.md",
+    "docs/development/application-jobs.md",
+    "docs/development/ci.md",
+    "docs/adr/ADR-011-durable-jobs-and-outbox.md",
+    "CHANGELOG.md",
+    "tests/STRATEGY.md",
+    "docs/reviews/2026-11-12-e01-e06-audit.md"
+  ],
+  "verified": {
+    "documents": 9,
+    "localLinksChecked": 89,
+    "anchorsChecked": 7,
+    "missingTargets": [],
+    "anchorDrift": [],
+    "stalePendingClaims": []
+  },
+  "baseline": {
+    "docs/spec/v1.md": "8e8889f95626c16d98afb554dae95493c30f4087e979f1c80211746d1ac31486",
+    "docs/plan/v1-development.md": "8a4b58f1259dfb6ad86ae10ae6319f01918d59a2f91e4790f0a36f08b4effb4c",
+    "docs/development/foundations.md": "d17cfbff42d56abfd1d29819c5db10918b0375054d29bbc7bb55c5d832bce0c9",
+    "docs/development/application-jobs.md": "19beb5029f1f1dbbec53705e47f6a141cc97d37b6627fde17635becdebc668bc",
+    "docs/development/ci.md": "983d35ef0a413009ebe8d74a027072c31647604f442bdc854da5ff28c2784b66",
+    "docs/adr/ADR-011-durable-jobs-and-outbox.md": "d22eefe83c42cde972a946a779b1cf06f29afacc8f9d0e8f41a5970405133a74",
+    "CHANGELOG.md": "7c28ef139ed11ab0a7266b17b600cd2753224588989d1ad942b2fb00a7b9215e",
+    "tests/STRATEGY.md": "6628c62ea973362a641c6bfdf5ed1ed33381de69991c56ab25cd195c2e637ed9",
+    "docs/reviews/2026-11-12-e01-e06-audit.md": "b17922ddba3a80dfeac9a49fbb801cdec7ac4d990d2e18ff08563cc19cb22744"
+  },
+  "evidence": {
+    "unit": {
+      "passed": 1146,
+      "files": 93,
+      "durationSeconds": 1033.11
+    },
+    "browser": {
+      "passed": 41,
+      "durationSeconds": 315.46236
+    },
+    "newRegressions": 16,
+    "selectedMutationKills": 5,
+    "lintFiles": 471,
+    "controlApi": "1.8.0",
+    "applicationApi": "1.0.0",
+    "dedicatedServerChanged": false
+  },
+  "skipped": [
+    {
+      "what": "external HTTP link availability",
+      "why": "local documentation verification only"
+    },
+    {
+      "what": "native labs / dedicated server / Jenkins runtime qualification",
+      "why": "explicit local-only scope; no new functional execution for docs"
+    }
+  ]
+}
