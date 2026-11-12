@@ -1,0 +1,72 @@
+{
+  "status": "presentation-published-develop-prepared-awaiting-final-gates",
+  "repository": "https://github.com/lucasschimmel/godseye",
+  "privacy": "private",
+  "owner": { "login": "lucasschimmel", "id": 62193295 },
+  "defaultBranch": "main",
+  "main": {
+    "commit": "b0a3300cdb5c6474e612276f1daf9058c36550fb",
+    "files": ["README.md"],
+    "readback": "GitHub contents API, repository metadata and ls-remote agree",
+    "protection": {
+      "requiresPullRequest": true,
+      "enforceAdmins": true,
+      "requiredApprovingReviews": 0,
+      "allowForcePushes": false,
+      "allowDeletions": false,
+      "requiredStatusChecks": null,
+      "verifiedByIndependentGet": true
+    }
+  },
+  "publicationCorrection": {
+    "cause": "Existing local main referenced the first historical checkpoint. Presentation bootstrap refused it, but a subsequent PowerShell command continued and pushed that old branch to the newly created private repository.",
+    "resolution": "Preserved original local main; verified only the owner's initial remote branch existed; replaced exactly that erroneous branch using a lease bound to b641f51f3b4dd7829ed66827ba0a575e3504cd9c. No other work or collaborator history was overwritten. Main was protected after independent README-only readback.",
+    "workingSourceUntouched": true
+  },
+  "originalHistory": {
+    "baseline": "d3902e1c14be2249f33737e5db5024cd9d60dbd6",
+    "checkpointCount": 7,
+    "backupRef": "backup/pre-github-publication-20261112",
+    "originalMainBackupRef": "backup/original-main-before-publication"
+  },
+  "developPlan": {
+    "artifact": "artifacts/git-publication/commit-plan.json",
+    "draftGroups": 100,
+    "maximumFilesPerGroup": 10,
+    "scope": "All first-party repository files, grouped by responsibility; exact coverage regenerated after final state/docs writes",
+    "provenance": "Publication snapshots; intermediate commits are not claimed to have been individually buildable or tested",
+    "published": false
+  },
+  "graph": {
+    "method": "grep",
+    "symbols": 965,
+    "reusables": 40,
+    "incrementallyRescannedFiles": 119,
+    "jsonLinesValidated": true,
+    "publicationAnchor": "Will be updated to a reachable source-complete ancestor in the new develop series before graph/state publication"
+  },
+  "scanner": {
+    "history": "Gitleaks 8.30.1, seven original commits, exit 0 and zero findings",
+    "preliminaryStaged": "Raw structured staged scan found one synthetic-placeholder false positive; raw redacted report retained",
+    "rawArtifact": "artifacts/security/backend-staged-preliminary-structured-gitleaks.json",
+    "classificationArtifact": "artifacts/security/backend-staged-effective-classification.json",
+    "exactFalsePositive": {
+      "file": "packages/app-backend/src/local.ts",
+      "line": 37,
+      "rule": "generic-api-key",
+      "literalSha256": "9b73983c1ccebb28bd2969b5b9d0db1bfc7081627b06e066071071167de0a27c",
+      "normalizedStagedSourceSha256": "fb588d0f362c17395c71d11125471c8b9f9f794c064d7fd20d9fe847ca497cc6",
+      "justification": "Temporary applicationState is used only for protected material-file opening; actual runtime authentication uses separately generated 48-random-byte material. The placeholder never becomes serving authority. Classification is bound to the frozen exact source/literal hash, path, line and scanner rule."
+    },
+    "effectiveCredentialFindings": 0,
+    "vulnerabilityWaivers": 0,
+    "sourceChangedForScanner": false,
+    "finalScans": "Pending final source/state freeze"
+  },
+  "preliminarySourceSize": {
+    "checkedFirstPartySourceFiles": 367,
+    "maximumLines": 400,
+    "overLimit": 0,
+    "excluded": "Generated routeTree.gen.ts; sensitive filenames are never read"
+  }
+}

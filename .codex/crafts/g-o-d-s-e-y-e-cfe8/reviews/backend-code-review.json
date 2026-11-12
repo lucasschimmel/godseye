@@ -1,0 +1,416 @@
+{
+  "verdict": "pass",
+  "findings": [],
+  "criteria_run": 13,
+  "criteria_passed": 13,
+  "criteria": [
+    "COR-01",
+    "COR-02",
+    "COR-03",
+    "COR-04",
+    "SAF-01",
+    "SAF-02",
+    "SAF-03",
+    "REU-01",
+    "REU-02",
+    "HYG-01",
+    "HYG-02",
+    "HYG-03",
+    "HYG-04"
+  ],
+  "review_context": {
+    "kind": "code",
+    "criticity": "production",
+    "fresh_context": true,
+    "producing_conversation_read": false,
+    "scope": "Frozen local E04 application backend, SDK and standalone declarations/build pipeline, local helper/template, owner configuration contracts/store/core/API/client integration. Read-only defensive source review; security-auditor adapted to source tracing only.",
+    "acceptance_observations": {
+      "AC-53": "Independent cell scope/migration/store UUID, server-owned paths and listener scope separate application users from owner identities. Single runtime is enforced using PostgreSQL advisory ownership plus health fencing, PGlite process lock, runtimeActive and filesystem instance lock/store binding.",
+      "AC-54": "Better Auth transactional adapter, derived cell cookie/authority, bounded route/body/rate/session policy, strict signup inputs, explicit data-only configured OAuth providers/PKCE and callback origin/provider checks are present. Native session values are removed from public JSON.",
+      "AC-55": "runtime.ts:126-127 captures epoch before body/lane waits; state.ts:148 inherits it through AsyncLocalStorage. Explicit stream epochs remain bound. Core metadata and lifecycle independently inspect raw preview deadlines; guard reads project/environment/configuration/epoch inside the existing control lock transaction.",
+      "AC-56": "Quota reservations precede bytes; pending chunk offset/hash persists before I/O, retained partial prefixes are verified and resumed, full writes/reads loop and sync precedes metadata advancement. Completion verifies actual bytes; deletion tombstones before unlink and retains quota until cleanup settlement.",
+      "AC-57": "Owner-scoped lookups, safe server identifiers, root/link/descriptor checks, grant/session/lifecycle revalidation and bounded downloads are present. Recovery schema/HMAC/scope/aggregate quotas and durable HOLD precede restored state; source time coverage and unknown external recovery gap are explicit.",
+      "AC-58": "Only trusted runtime publishes events, with durable idempotency and recipient checks. SSE cursors bind cell/user and gaps request refetch; browsers have no arbitrary publication route.",
+      "AC-59": "Pull-driven finite SSE/download resources include cancellation, lifetime, current-session/lifecycle checks and shutdown cleanup. Final download closure retains its promise; runtime snapshots and awaits closers before releasing ownership.",
+      "AC-60": "Separate browser SDK validates version/DTOs/response bounds, binds scope and fixed paths, supports abort and observed-cursor reconnection. Convenience upload computes actual SHA-256 under a documented16MiB cap; larger streams use bounded low-level methods. Standalone declarations rewrite application-contract imports and the output manifest has no server dependency.",
+      "AC-61": "Explicit standalone loopback template is distinct from controller-managed lifecycle authority; owner configuration remains metadata-only and runtimeConnected is literal false. File quota cannot exceed the declared environment disk budget. Typed custom POST uses supplied transaction for business mutation/session verification.",
+      "AC-62": "Reviewed tests cover actual stores/HTTP/template process restart, local PKCE, recovery/files, faulted durable intents, epoch changes, SDK contracts and independently consumed built declarations. Execution and full regression outcomes remain the caller/GAUNTLET gate, not inferred from source."
+    }
+  },
+  "resolved_findings": [
+    {
+      "id": "BCR-001",
+      "evidence": "packages/core/src/backend-configuration.ts:32,184 checks raw expiry independently; applicationLifecycleGuard uses write(store) and matching current revisions."
+    },
+    {
+      "id": "BRI-001",
+      "evidence": "packages/app-backend/src/file-read.ts reserves finite capacity, cleans setup failures and retains close promise through descriptor closure; runtime.ts:256-261 snapshots/awaits closers before closing store."
+    },
+    {
+      "id": "BRI-002",
+      "evidence": "store.ts dedicated PG advisory session/healthy fence or local process lock; runtime.ts denies duplicate store factories and acquires file-root lock; private-files.ts marker binds store UUID."
+    },
+    {
+      "id": "BRI-003",
+      "evidence": "Single runtime ownership prevents already-open duplicate stores; recovery.ts durably persists HOLD before import and store.ts reloads it on reopen."
+    },
+    {
+      "id": "BRI-004",
+      "evidence": "io.ts loops short writes/reads; file-write.ts verifies and resumes retained partial chunk prefix then syncs and hashes before durable offset advancement."
+    },
+    {
+      "id": "BSR-001",
+      "evidence": "recovery.ts:106,118,160 uses the shared RECOVERY_METADATA_BYTES limit for export and import; strict envelope/archive schemas bound and validate rows before copying."
+    },
+    {
+      "id": "BSR-002",
+      "evidence": "state.ts now exposes explicit data-only ApplicationOAuthProvider validated by a strict schema; arbitrary function/discovery options are deliberately outside the documented supported contract, with no structuredClone failure."
+    },
+    {
+      "id": "BSR-003",
+      "evidence": "packages/sdk/src/files.ts computes actual content SHA-256 before initiating, rejects supplied-hash mismatch and returns matching committed replay; different same-length content changes the initiation digest."
+    },
+    {
+      "id": "FINAL-SHUTDOWN",
+      "evidence": "file-read.ts:134-146 retains the descriptor-close promise and removes registries after closure; runtime.ts:254-264 retains shutdown promise and snapshots closers before abort."
+    },
+    {
+      "id": "QA-CUSTOM-POST",
+      "evidence": "custom.ts final session id/user/expiry check uses handler transaction rather than the global PGlite connection, preserving transactional business mutation without deadlock."
+    }
+  ],
+  "not_reviewed": [
+    "No active security assessment, external target/tooling, credential material read, dependency audit or deployed containment testing occurred. SAF checks cover reviewed source paths, not all repository history.",
+    "The reviewer did not rerun lint/types/tests/build/mutations. Source includes actual test scenarios, but final executable outcomes, full regression counts and artifact freshness must be recorded by root/GAUNTLET.",
+    "Native PostgreSQL multiprocess/advisory failure behavior, physical quotas, off-host recovery, real OAuth enrollment, Docker/VM containment, TLS/IPv6, remote providers and full V1 release remain unqualified.",
+    "Application snapshot timestamps expose local inspection/copy intervals and explicitly unknown external PostgreSQL recovery point/gap; they do not qualify cross-service PITR or safe activation. Held imports have no activation API.",
+    "Instance locks fail closed. Interrupted acquisition leaving instance.guard, PID reuse and operator stale-lock handling are not certified by this source pass or the normal restart journey.",
+    "Application routes are trusted server code. Their transaction interface does not make arbitrary external side effects durable; E06/effect-journal composition remains separate.",
+    "Migration hash checks reject incompatible existing local schemas; this is not qualification of an automatic production migration/rollback process.",
+    "Rendered desktop/mobile/keyboard observations are recorded separately by browser QA; see backend-ui-review.json for source coherence coverage."
+  ],
+  "file_hashes": [
+    {
+      "path": ".codex/crafts/g-o-d-s-e-y-e-cfe8/backend-design.md",
+      "sha256": "f7afb5f73db75c61bf8f0f673737df842f17997e17dea5c21b67dc4deba4d051"
+    },
+    {
+      "path": "apps/backend-template/package.json",
+      "sha256": "e0c62c7574927bc6f5fa363c03b9a47cfa69947e639214d7ea0d4fb1ae5494e9"
+    },
+    {
+      "path": "apps/backend-template/src/application.ts",
+      "sha256": "af9a893272f4d20518fd66a2ef1d7b944a28936a65875e4c2b3c199e8284d546"
+    },
+    {
+      "path": "apps/backend-template/src/server.ts",
+      "sha256": "1a6f24aff7434f9df050801eb09abe1699f23a98e79c8e7f59af207f12d6a26f"
+    },
+    {
+      "path": "apps/control-api/src/app.ts",
+      "sha256": "6684c7ccd173a78647841197f66f6da84ac470b99da90c18b8e8df9ed8bb97ec"
+    },
+    {
+      "path": "apps/control-api/src/backend-routes.ts",
+      "sha256": "bc5a6b6d57e962f1ac9c1e16d57ca50b4972ef97cc97db96ab72ffbffa8be97f"
+    },
+    {
+      "path": "dist/sdk/app-contracts.d.ts",
+      "sha256": "817083a10c909cc705e94ffae7d5168573d1e48d3b0a4b2124006c4386b65b68"
+    },
+    {
+      "path": "dist/sdk/bundle-report.json",
+      "sha256": "33485152aa7ac400dcae9789028c087c18ce193612024e0e560685b4965eaf77"
+    },
+    {
+      "path": "dist/sdk/events.d.ts",
+      "sha256": "a4b540c6bbee6f0b66f25128d136545742dea505ddbe3d290a15d4b5527af4c6"
+    },
+    {
+      "path": "dist/sdk/files.d.ts",
+      "sha256": "50cb7bbb0f79de647714d424c1dd395eb3d50445c07ba05d31d302a69322d7ef"
+    },
+    {
+      "path": "dist/sdk/index.d.ts",
+      "sha256": "1891ddba5364534c8120d59282ef2f34bfce44818caafc00749c590bc5fe0779"
+    },
+    {
+      "path": "dist/sdk/package.json",
+      "sha256": "739eec6362d9cd783debfec2448ab82e7984a90b973bc3983b475d52e141ef4b"
+    },
+    {
+      "path": "dist/sdk/transport.d.ts",
+      "sha256": "d8a853d9b1cac933de742fc84f635aef3d9c841ba598ce4025441781644e33c9"
+    },
+    {
+      "path": "docs/development/application-backend.md",
+      "sha256": "814da64611ff09bb196b832ea6b2e1775246d0821dc528f448b52755f891ca49"
+    },
+    {
+      "path": "packages/app-backend/package.json",
+      "sha256": "2aa48c2cabb906f9f88e648d4ac7b9f33f0f462c2f6f75b8a01688c893130f22"
+    },
+    {
+      "path": "packages/app-backend/src/auth.ts",
+      "sha256": "e25ee8f9f91067a5df11181ecfaeae2335249a18a59bfa4c409dade59e63b8f0"
+    },
+    {
+      "path": "packages/app-backend/src/contracts.ts",
+      "sha256": "3b825274a84065168a07131e20515fe9c5fb7156e6b5c785be53a4774419f60e"
+    },
+    {
+      "path": "packages/app-backend/src/custom.ts",
+      "sha256": "87793d7549f1960516259d2fa495244bd639134affa670979d2ee6ee1080914c"
+    },
+    {
+      "path": "packages/app-backend/src/events.ts",
+      "sha256": "5623b94a8c752a5e15042a33768c2fca11b48e916aecdf87172317cfaac8bc85"
+    },
+    {
+      "path": "packages/app-backend/src/file-read.ts",
+      "sha256": "e8a2d54c6abd28350fc4ccfb126f59507716d9e7002a10850f1950f9faf2fe9f"
+    },
+    {
+      "path": "packages/app-backend/src/file-routes.ts",
+      "sha256": "29db3c831f2d242c49128341e50fd5f71d0850d68a725559dc9586affbb20d27"
+    },
+    {
+      "path": "packages/app-backend/src/file-state.ts",
+      "sha256": "94866dcd71e309844678ced81abdcfeafa63f50ba99666a891efec358ce8544e"
+    },
+    {
+      "path": "packages/app-backend/src/file-write.ts",
+      "sha256": "01214feda10a66cfda395301d3ecf126b7f3552c94fb9d11db19407912082fce"
+    },
+    {
+      "path": "packages/app-backend/src/index.ts",
+      "sha256": "e60972e32cf1aab1b65ea84166fa9e7453b0310b829d93c1fc6cbb7e60e5d2d0"
+    },
+    {
+      "path": "packages/app-backend/src/instance.ts",
+      "sha256": "4d7d1113644cd45afb09a8d7328b0b595d3597f603321d0cbfa32a083b3ffe98"
+    },
+    {
+      "path": "packages/app-backend/src/io.ts",
+      "sha256": "7169c40de523856d633b08d9a5a098af3fea05e5ba52c3af9d0f9051d6468d1c"
+    },
+    {
+      "path": "packages/app-backend/src/local.ts",
+      "sha256": "fb588d0f362c17395c71d11125471c8b9f9f794c064d7fd20d9fe847ca497cc6"
+    },
+    {
+      "path": "packages/app-backend/src/migration.ts",
+      "sha256": "5801351e5adc6d76c6623e1a5afe4607b94a72cf14123ff5d8c9cbf2eeb0b167"
+    },
+    {
+      "path": "packages/app-backend/src/private-files.ts",
+      "sha256": "d2e46f422204aaeaa54e1ff909f70205fa24bc39ec1e86ba5c9070fafe947317"
+    },
+    {
+      "path": "packages/app-backend/src/recovery-contract.ts",
+      "sha256": "a9f12d777f0832c9e64ced55ac5eda6f7db7a482d40e5162e3b7788de040bb82"
+    },
+    {
+      "path": "packages/app-backend/src/recovery-snapshot.ts",
+      "sha256": "c642fce756a153ed2a7ffd7c6a4ceb1a86649335fa5dfff0cfb1b56f0a8ece6b"
+    },
+    {
+      "path": "packages/app-backend/src/recovery.ts",
+      "sha256": "6b0ca5ceab002f1fbd1de4fef9036e56ef0e40b60bb9a9cb4a3b1b8f89924710"
+    },
+    {
+      "path": "packages/app-backend/src/runtime.ts",
+      "sha256": "dbb4c4491808a18452ee833eab03fbfc39a7ac07947c150577e36e6a12bdf8e2"
+    },
+    {
+      "path": "packages/app-backend/src/schema.ts",
+      "sha256": "ce22a23a715a8425c52b5e053b81f63a5d329c732341a6cb32ed0b5112f7a697"
+    },
+    {
+      "path": "packages/app-backend/src/state.ts",
+      "sha256": "48f5fdbf154508c00f15b86708006c983749cf7face20337acfa1db94e325813"
+    },
+    {
+      "path": "packages/app-backend/src/store.ts",
+      "sha256": "d35c72b45bf0ec7dd5bc728659b865d97c7cb7cf6e428e6d10d5f17b84238887"
+    },
+    {
+      "path": "packages/app-backend/tsconfig.contracts.json",
+      "sha256": "cd06124d8b9181b6c3a77224df016b2b4739892681f35a6f6b4cd6a00d19ad48"
+    },
+    {
+      "path": "packages/contracts/src/backend-configuration.ts",
+      "sha256": "31fbabbb60574a748c8f45fd09e94292a610cb2a7479d73f66422a79f86576c5"
+    },
+    {
+      "path": "packages/contracts/src/backend-endpoints.ts",
+      "sha256": "8f319586e85ed8a17a685613f0550a1a0d79bae32611727c38cc632f937fe8b2"
+    },
+    {
+      "path": "packages/contracts/src/http-endpoints.ts",
+      "sha256": "c4b5d83fb784ca7887babc5c86c5994c3f298649eff57a2eb33f609a24d5421b"
+    },
+    {
+      "path": "packages/contracts/src/index.ts",
+      "sha256": "c498b4481e10cdf669e434da3d870a0b694633ba1a4e27fedb653666a15ec588"
+    },
+    {
+      "path": "packages/control-client/src/index.ts",
+      "sha256": "800f280d39a701177d7f00d622f7773457b192c818d3b56309266e2347d7f97f"
+    },
+    {
+      "path": "packages/control-client/src/transport.ts",
+      "sha256": "39252335069b4ab6ac6ccdfc4a53fd05a038de9f565534b7c2267407d09d5ae5"
+    },
+    {
+      "path": "packages/core/src/backend-configuration.ts",
+      "sha256": "9741118d4fbaf3c1f14dca1f85a1f8d47d835bdb2083848ec1cde23077c420e0"
+    },
+    {
+      "path": "packages/core/src/foundation-data.ts",
+      "sha256": "1743d36b33381bf2856e77fbf4e25a3c6afef846e1eedad14731dd70d608cb95"
+    },
+    {
+      "path": "packages/core/src/index.ts",
+      "sha256": "a673efe957160fb15b149fcaf9ba8002c0dbd2553b88f79d66dd72dc2d4a3c68"
+    },
+    {
+      "path": "packages/core/src/journal.ts",
+      "sha256": "3307cc4a52d3bcade88f7d0cf65e346fb70c2f28fa41f78606e5ea065b3da153"
+    },
+    {
+      "path": "packages/core/src/policy.ts",
+      "sha256": "8d6ff3d9635554a16988da45b26bfe36ebdeae3125d0e319aa5df7d32b95e6d1"
+    },
+    {
+      "path": "packages/core/src/projects.ts",
+      "sha256": "3571812ac5209761cbdbe7412d4b7a590c6638eea9870b24e6a321d036dfd3d1"
+    },
+    {
+      "path": "packages/sdk/package.json",
+      "sha256": "195cce29823dd24fbfd84a30e76af78e35e6f24f79e0335fa408befac62b45d4"
+    },
+    {
+      "path": "packages/sdk/src/events.ts",
+      "sha256": "47b558e295948a331cfb1b6f49b9b6c8c461db1b67386236e9afb05c83c1f0ba"
+    },
+    {
+      "path": "packages/sdk/src/files.ts",
+      "sha256": "33824861f810a4dba9d4f0a25c8996cd0a8272cdae9553cb9ab20e1799e93d71"
+    },
+    {
+      "path": "packages/sdk/src/index.ts",
+      "sha256": "e5638a56cb8b1870ca4ebbd87c364a43eec79ee43ab9f94c42133cf40afcb78a"
+    },
+    {
+      "path": "packages/sdk/src/transport.ts",
+      "sha256": "4464b0af0f03cc3129b6d0b3cd019980ddb6ceaf4f8d36cb31cd8d2bee98efc9"
+    },
+    {
+      "path": "packages/sdk/tsconfig.build.json",
+      "sha256": "0a4ecb999d304032296e8cd5c440dd514cc0f73044772074633242211da51fea"
+    },
+    {
+      "path": "packages/store/migrations/0008_backend_configuration.sql",
+      "sha256": "05cc9f4bf81b7043d6d7a896134a4ff14d1c2abfbcd02e178b1ece8e75db0186"
+    },
+    {
+      "path": "packages/store/src/backend-schema.ts",
+      "sha256": "6213448ce248a70cf1ed06966fa03df95cc2bb40a8e9cf2e63e8bfdc5eeb0369"
+    },
+    {
+      "path": "packages/store/src/schema.ts",
+      "sha256": "81e06c077d6133bbfbf4b76544bdcc1690af0a63d20a9d995213e2c8f88d82b0"
+    },
+    {
+      "path": "scripts/build-backend.mjs",
+      "sha256": "e4f3e44d7616abae4e2a6bc88bc3548908558d9b637a666e1b0b6098fe7a02cd"
+    },
+    {
+      "path": "scripts/build-sdk.mjs",
+      "sha256": "e05b06bbafb1537cd2aaa87b5c73d673aaa56c1eb3fd740b77301f3c993009f2"
+    },
+    {
+      "path": "tests/backend-auth.test.ts",
+      "sha256": "f3c9588aceb6a9026f4646d4c8f10e3f368fff6864e5cc8543fc7e1e328dc961"
+    },
+    {
+      "path": "tests/backend-control.test.ts",
+      "sha256": "0ea5cec2884423fb6a8ae78779b75faa91906796b87df37c94e3f5eed88ddb00"
+    },
+    {
+      "path": "tests/backend-download-limits.test.ts",
+      "sha256": "2dc22f171606c424e33dc9c390198398a5b9150e4f6c6d1a972a698e7652fb73"
+    },
+    {
+      "path": "tests/backend-events.test.ts",
+      "sha256": "2be88199b26118d32f661c5bd0a226f37b89d82cf743c80a04569c2074805287"
+    },
+    {
+      "path": "tests/backend-file-faults.test.ts",
+      "sha256": "b1e084208b3e03bf408897f3c25ea636178292fb6f8fec9d8a9c7f467a54339d"
+    },
+    {
+      "path": "tests/backend-file-fixture.ts",
+      "sha256": "d722409bae6c97373e0e4443666365445259ede8f830a94f62b94fe36f4691b2"
+    },
+    {
+      "path": "tests/backend-file-limits.test.ts",
+      "sha256": "4a184d8c7ffad49fcc756967b9d1f1bb56c5a9492c9af1b344483be5ff033fcf"
+    },
+    {
+      "path": "tests/backend-files.test.ts",
+      "sha256": "000e7673628eae01651e621dbe4a5bfa66226a3b6c2d9ff1efac0837b2f47256"
+    },
+    {
+      "path": "tests/backend-fixture.ts",
+      "sha256": "9739db41cbfb11a70f6e9d0169f0fdaea5bb693bceb04744ac238bd5cebd1dd0"
+    },
+    {
+      "path": "tests/backend-oauth.test.ts",
+      "sha256": "76d2954521949b2d5e6f75f40a18df2d113028dcfd945adbae55efec0c793ca0"
+    },
+    {
+      "path": "tests/backend-recovery.test.ts",
+      "sha256": "45e303b0f546dfeb0dfd003b785e2eb669ce5980969f7008024035cf240454c7"
+    },
+    {
+      "path": "tests/backend-request-fencing.test.ts",
+      "sha256": "338ca1cc7ea0888bf1df0ceef89883651aca4ca021ac66f00c83333ba6455d6c"
+    },
+    {
+      "path": "tests/backend-stream-fixture.ts",
+      "sha256": "69828ba6461ed67ac926874b72ddafeb8bb90e9c33817033e852fa73067bd603"
+    },
+    {
+      "path": "tests/backend-stream-limits.test.ts",
+      "sha256": "f2d842b2e1bcb49121e3055cc97876adb757ad82d3535ba5d19b69ea49f23180"
+    },
+    {
+      "path": "tests/backend-template.test.ts",
+      "sha256": "1e7890f3d4e52057056b20de2725a6af945ab38b0bffa059d26d037993a26312"
+    },
+    {
+      "path": "tests/e2e/backend.spec.ts",
+      "sha256": "7f6fac80457e3b1be8cbf258e0e27ae8820ab0488fb3dcdf455202bb13bed6d0"
+    },
+    {
+      "path": "tests/sdk-contract.test.ts",
+      "sha256": "efa4c47a9c13bb1bbdd8c449bd276758b4947cc80c738ae37400a707067ef424"
+    },
+    {
+      "path": "tests/sdk-integration.test.ts",
+      "sha256": "b010634b9c7a2a5ab7285a34c8a1406aacd74b32cb152750a96fb142cff4c09e"
+    }
+  ],
+  "final_hash_supplement": {
+    "path": "tests/backend-files.test.ts",
+    "verdict": "pass",
+    "observation": "Reviewed final QA assertion alignment: initiation replay still requires exactly one opaque object ID equal to the initial object; server-owned lock metadata is excluded from this object-only count. Linked-root denial still compares the exact before/after root listing, preserving the original source directory. Foreign-user empty listing now asserts the complete paginated DTO {files:[],nextCursor:null}. No assertion weakening or production change found; no tests executed by reviewer."
+  },
+  "final_documentation_supplement": {
+    "path": "docs/development/application-backend.md",
+    "verdict": "pass",
+    "observation": "Reviewed final documentation-only evidence update against coordinator-reported completed gates:972/972 unit/integration cases across72 files in751.83s Vitest/752.705s whole command,31/31 browser journeys in181.393319s,13 selected mutations in257.091s. The guide distinguishes summed-worker JUnit time from elapsed wall time, retains local-runtime/unknown external recovery-gap and held-activation boundaries, and leaves hosted/off-host/OAuth-account/fullV1 qualification open. No production/test change or new runtime execution by reviewer."
+  }
+}
