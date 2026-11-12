@@ -1,0 +1,32 @@
+{
+  "status": "ok-with-declared-coverage-gaps",
+  "scope": "Local first-party E02.S03 infrastructure",
+  "at": "2026-11-11T19:12:02.4897926Z",
+  "findings": [],
+  "diff": {
+    "unchangedWaived": 0,
+    "resolvedBackend": 4,
+    "resolvedPresentation": 1,
+    "new": 0
+  },
+  "scanners_run": [
+    "bun audit --json all scopes: zero advisories",
+    "Gitleaks8.30.1 tracked history: zero findings",
+    "Gitleaks8.30.1 final allowlisted288-file first-party source snapshot: zero findings",
+    "Gitleaks8.30.1 final staged gate: exit 0, zero findings; redact100; report artifacts/security/infra-staged.json"
+  ],
+  "scanners_missing": [
+    "Semgrep comprehensive SAST",
+    "complete SBOM generator"
+  ],
+  "logic_review": "Fresh independent security/FABER PASS0open. Four confirmed backend findings and one presentation lookup issue fixed and independently reverified; source hashes recorded.",
+  "tooling": {
+    "gvisor": "release-20261102.0 published SHA256 verified; signature not verified; Windows/WSL actual only",
+    "gitleaks": "8.30.1 published archive SHA256 verified; redaction100"
+  },
+  "exclusions": [
+    "Actual runtime data/private material/.env files not scanned or read",
+    "No real Docker quota/firewall/helper or remote containment qualification",
+    "31 curated mutations are not a full mutation score; no waiver introduced"
+  ]
+}

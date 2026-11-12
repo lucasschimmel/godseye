@@ -1,0 +1,44 @@
+{
+  "scope": "Explicit unprivileged OCI systrap laboratory, not professional-VM provisioning qualification",
+  "runtime": "release-20261102.0",
+  "runtimeArchiveSha256": "6f6b1a8f0f4665a403238135167d0d990bfaeaff5544abf68f5e0d822b35484a",
+  "fixture": "Alpine3.24.4 BusyBox+musl only",
+  "fixtureArchiveSha256": "cdaa38cb8de3537967ee5b6c9b6cd00cc962da2b018e6eea48696bb274923012",
+  "checksumValidated": true,
+  "signatureVerified": false,
+  "actualHost": "Windows/WSL Ubuntu Linux6.6.87.2",
+  "actualGuest": "4.19.0-gvisor",
+  "tests": 4,
+  "checks": [
+    "actual gVisor marker and pinned version",
+    "guest UID1000 with no capabilities",
+    "own fixture visible; foreign fixture root absent",
+    "read-only root rejects write",
+    "bounded1MiB tmpfs rejects2MiB copy with ENOSPC",
+    "fixture-owned IPv4/IPv6 listener positive controls succeed outside guest; network-none guest cannot connect"
+  ],
+  "qualificationGaps": [
+    "ignore-cgroups used for fixed benign fixture only; CPU/RAM/PIDs not qualified",
+    "temporary tmpfs bound is not persistent data quota",
+    "direct OCI is not Docker firewall/network/professional-VM qualification",
+    "no system installation, kernel configuration, privilege escalation or Hetzner action",
+    "Linux native branch implemented but only Windows/WSL executed"
+  ],
+  "optionalCleanup": {
+    "automaticReview": "blocked by policy, no further reason",
+    "executed": false,
+    "action": "remove locally generated Python bytecode cache",
+    "retried": false,
+    "alternative": "Leave bytecode and add normal Python cache ignores via gitsmith"
+  },
+  "durationSeconds": 14.65,
+  "at": "2026-11-11T18:20:37.9017387Z",
+  "finalAliasRun": {
+    "command": "bun run test:infra:lab",
+    "passed": 4,
+    "tests": 4,
+    "testDurationSeconds": 17.027,
+    "totalDurationSeconds": 17.26,
+    "evidence": "Parent-orchestrator final alias execution on the same Windows/WSL Ubuntu environment; original run preserved above"
+  }
+}

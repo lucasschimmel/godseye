@@ -1,0 +1,340 @@
+{
+  "verdict": "pass",
+  "kind": "code",
+  "reviewer": "Fresh-context FABER / security-auditor satellite; no production or test authorship",
+  "review_scope": "Local E03 backend only; source review plus independent disposable native PostgreSQL and fault-contract probes",
+  "criticity": "production contract; local qualification only",
+  "findings": [],
+  "criteria_run": 21,
+  "criteria_passed": 21,
+  "criteria": [
+    "COR-01",
+    "COR-02",
+    "COR-03",
+    "COR-04",
+    "SAF-01",
+    "SAF-02",
+    "SAF-03",
+    "REU-01",
+    "REU-02",
+    "HYG-01",
+    "HYG-02",
+    "HYG-03",
+    "HYG-04",
+    "DB-exact-admission",
+    "DB-private-material",
+    "DB-effective-ACL",
+    "DB-TLS-HBA",
+    "DB-provider-freshness",
+    "DB-durable-uncertainty",
+    "DB-reservation-retention",
+    "DB-revision-recovery"
+  ],
+  "resolved_findings": [
+    {
+      "id": "DB-S-001",
+      "criterion": "DB-effective-ACL",
+      "status": "CONFIRMED",
+      "severity": "blocker",
+      "cwe": "CWE-863",
+      "resolution": "fixed-and-independently-reprobed",
+      "evidence": "Original database-inspection.ts:inspectSchemas certified policyVerified:true after a real migration owner granted reader INSERT on an analysis table, and after it added a schema-scoped INSERT default for future tables. Independent PostgreSQL18 probes confirmed actual reader writes in both cases. The first correction still missed pg_attribute.attacl: INSERT(id) remained usable while policyVerified:true. Final database-acl-inspection.ts:44 checks column ACLs as well; database-inspection.ts:185 invokes existing-object and global/schema-default ACL inspection.",
+      "refutation": "These are administrator/migration-induced drifts, not an owner HTTP grant-injection path. However, independent effective inspection is specifically the guard against falsely settling a drifted instance ready. A reader demonstrably writing violates the active readonly contract even when bootstrap originally emitted correct SQL.",
+      "refutation_survived": true,
+      "before_probe": "artifacts/security/database-review-probe.before.json",
+      "after_probe": "artifacts/security/database-review-probe.json",
+      "after_result": "Baseline and repaired policy pass. Existing table, future-default and column INSERT drifts each fail policy verification. The fixture still demonstrates the underlying forbidden write exists during each deliberate drift, then revokes it; native fixture cleanup succeeds."
+    },
+    {
+      "id": "DB-S-002",
+      "criterion": "DB-provider-freshness",
+      "status": "CONFIRMED",
+      "severity": "major",
+      "cwe": "CWE-20",
+      "resolution": "fixed-and-independently-reprobed",
+      "evidence": "assertDatabaseQualification originally accepted expiresAt:'invalid-expiry': Date.parse returned NaN and both comparison guards evaluated false. database-state.ts:113 now explicitly requires a finite parsed expiry. Independent before/after probe changes invalidQualificationExpiryAccepted from true to false.",
+      "refutation": "The qualifier is privately injected and unavailable by default, so no public caller can supply this proof. It nevertheless represents the freshness authority boundary, and malformed trusted-adapter evidence must not count as fresh qualification.",
+      "refutation_survived": true,
+      "before_probe": "artifacts/security/database-review-probe.before.json",
+      "after_probe": "artifacts/security/database-review-probe.json"
+    },
+    {
+      "id": "DB-S-003",
+      "criterion": "DB-revision-recovery",
+      "status": "CONFIRMED",
+      "severity": "major",
+      "cwe": "CWE-664",
+      "resolution": "fixed-and-independently-reprobed",
+      "evidence": "Original prepareDatabase always minted a new allocationId. After ready provision, either project rename or ordinary fresh observation renewal invalidated the original lifecycle preparation; fresh preparation then could not suspend the existing allocation. database-preparation.ts:59,80 now renews preparation against the server-retained allocation only with the exact immutable profile. It binds current revisions/observation without changing the old preparation.",
+      "refutation": "Rejecting stale preparations is correct. The defect was the absence of any fresh-authority path to the same verified instance, making ordinary renewal permanently disable suspend/resume. The correction preserves stale rejection and introduces exact server-owned rebinding.",
+      "refutation_survived": true,
+      "before_probe": "artifacts/security/database-lifecycle-probe.before.json",
+      "after_probe": "artifacts/security/database-lifecycle-probe.json",
+      "after_result": "Original stale preparation is still rejected. New preparation retains the original allocationId and physically suspends it after both metadata edit and observation renewal, with exactly one provision and one suspend."
+    },
+    {
+      "id": "DB-S-004",
+      "criterion": "COR-04",
+      "status": "CONFIRMED",
+      "severity": "major",
+      "cwe": "CWE-367",
+      "resolution": "fixed-and-independently-reprobed",
+      "evidence": "bootstrapPostgres originally checked authority before awaiting a new application-database connection, then dispatched SQL after that await without a fresh check. A connector fault probe revoking authority during connect observed one post-revocation REVOKE ALL ON SCHEMA public FROM PUBLIC. database-postgres.ts:87 now rechecks before SQL dispatch after the awaited connection.",
+      "refutation": "The observed escaped statement narrowed privileges and the next guard correctly stopped bootstrap; no data disclosure or privilege increase was demonstrated. The confirmed defect is narrower: a physical SQL mutation crossed the stated fresh-before-effect boundary.",
+      "refutation_survived": true,
+      "before_probe": "artifacts/security/database-dispatch-probe.before.json",
+      "after_probe": "artifacts/security/database-dispatch-probe.json",
+      "after_result": "Post-revocation SQL mutation count is zero."
+    },
+    {
+      "id": "DB-S-005",
+      "criterion": "DB-durable-uncertainty",
+      "status": "CONFIRMED",
+      "severity": "major",
+      "cwe": "CWE-664",
+      "resolution": "fixed-and-independently-reprobed",
+      "evidence": "Ready physical generation1 followed by queued suspend generation2 and cancellation before dispatch left allocation generation2 while physical scope remained generation1. Retry generation3 incorrectly expected physical generation2, quarantining the genuine instance as PROFILE_DRIFT. database-preparation.ts:174 and database-execution.ts:198,265 now persist and compare last independently verified physical scope separately from admission generation.",
+      "refutation": "Admission generations should remain monotonic, and identity mismatch must still quarantine. The bug was equating every admission with a physical mutation, including an explicitly undispatched cancelled operation. Keeping the last verified scope preserves both monotonic fencing and truthful physical identity.",
+      "refutation_survived": true,
+      "before_result": "Independent probe: cancellation restored ready metadata generation2; retry generation3 quarantined with PROFILE_DRIFT; effects contained only provision.",
+      "after_probe": "artifacts/security/database-queued-cancel-probe.json",
+      "after_result": "Cancellation retains ready generation2, retry reaches suspended generation3, and effects contain exactly provision then suspend."
+    },
+    {
+      "id": "DB-P-001",
+      "criterion": "DB-TLS-HBA",
+      "status": "CONFIRMED",
+      "severity": "major",
+      "cwe": "CWE-20",
+      "resolution": "fixed-and-independently-reprobed",
+      "evidence": "Earlier plan-boundary review demonstrated regex acceptance of 10.0.0.0/0, fd00::/0 and invalid 10.999.999.999/32. Current renderDatabaseHba uses the shared canonical private-subnet parser, omits bootstrap TCP allows and requires explicit TLS/SCRAM role/database rules plus both-family reject fallback. Current inspection validates ordered HBA and bounded private source masks.",
+      "refutation": "Private origin reduced input exposure but did not make invalid or overbroad CIDRs restrictive. Current independent regression probes reject all original bad values.",
+      "refutation_survived": true,
+      "after_probe": "artifacts/security/database-review-probe.json"
+    }
+  ],
+  "boundaries_checked": [
+    {
+      "evidence": "infrastructure.ts:43-66; apps/control-api/src/server.ts:57-59",
+      "result": "One composed FoundationEngine and one runtime worker supply database and infrastructure admission/settlement/uncertainty. No database provider is injected by the default server."
+    },
+    {
+      "evidence": "database-preparation.ts:reserveDatabase; database-execution.ts:databaseExecutionGate",
+      "result": "Generic Foundation plans cannot bypass dedicated databaseCommands. Admission and dispatch bind exact preparation/hash/project/environment/revisions, owner approval, tools/destination, target/provider binding, epoch, generation, actual grant and lease. Capacity joins share the serialized control transaction."
+    },
+    {
+      "evidence": "database-material.ts:withMaterial; access-redemption.ts:consume; database-routes.ts; contracts/database.ts",
+      "result": "Role material stays inside private broker callbacks; task references bind provisioning manifest/project/environment/epoch and real Foundation grant/lease checks. HTTP schemas reject SQL, endpoints, paths, provider bindings and material fields; owner DTOs omit physical mapping and material."
+    },
+    {
+      "evidence": "database-postgres.ts:postgresConnectionFactory; database-policy.ts:renderDatabaseHba; database-hba-inspection.ts",
+      "result": "Private TCP client requires CA/hostname verification and TLS>=1.2. Bootstrap TCP access is absent. Ordered effective HBA validation rejects unexpected roles/databases/transports and missing both-family default rejects."
+    },
+    {
+      "evidence": "database-execution.ts:assertPhysical/inspectAndRecord/reconcileDatabase; database.ts:releaseQueued/settlement",
+      "result": "Success requires exact independently inspected system identity, allocation/provider mapping, scope, profile/config hash, data/WAL bindings and effective policy when running. Unknown effects retain reservations; reconciliation is read-only and never adopts, recreates or deletes a cluster."
+    },
+    {
+      "evidence": "artifacts/security/database-reconcile-probe.json",
+      "result": "After lost provision ACK and controller reconstruction, refreshed same-target observation permits read-only reconciliation to ready with no repeated mutation. Metadata changed after the uncertain effect remains unknown and rejects promotion with REVISION_CONFLICT."
+    }
+  ],
+  "refuted_hypotheses": [
+    {
+      "claim": "A reconstructed ManagedPostgresProvider cannot settle a stopped cluster because its in-memory verified map is empty.",
+      "refutation": "database-execution.ts:assertPhysical requires policyVerified only when running. A stopped instance instead requires previously persisted independently verified system identity and exact providerRef/scope/volumes, so the empty cache alone does not prevent settlement."
+    },
+    {
+      "claim": "A late resume can be followed by an unsafe replacement mutation while its effect is unresolved.",
+      "refutation": "Non-provision lifecycle admission requires the exact ready/suspended allocation; unknown/quarantined allocations are not admitted. Unknown states retain capacity and physical identity; no automatic repair/recreate/delete path exists."
+    }
+  ],
+  "verification": {
+    "native": "Independent disposable signed cached PostgreSQL18.6 fixtures; production bootstrap and catalog inspection; baseline, table/default/column ACL drift and repair. Material generated in memory and no existing runtime or material files inspected.",
+    "fault_probes": [
+      "database-dispatch-probe",
+      "database-lifecycle-probe",
+      "database-queued-cancel-probe",
+      "database-reconcile-probe"
+    ],
+    "reported_upstream": "Caller separately owns GAUNTLET suite, native seven-case regression, static checks and final full-suite run. These are not re-labelled as reviewer-executed tests.",
+    "artifact_root": "artifacts/security/",
+    "fixture_cleanup": "All reviewer-created native fixtures cleaned through the ownership-checked laboratory cleanup; PGlite stores closed. No remote/server/global install operations."
+  },
+  "sources": [
+    "https://www.postgresql.org/docs/18/auth-pg-hba-conf.html (consulted 2026-11-11)",
+    "https://www.postgresql.org/docs/18/sql-alterdefaultprivileges.html (consulted 2026-11-11; existing and future grants differ, global and per-schema defaults compose)",
+    "https://www.postgresql.org/docs/18/functions-info.html (consulted 2026-11-11; effective privilege inquiry functions)"
+  ],
+  "source_hashes": [
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\packages\\core\\src\\database-acl-inspection.ts",
+      "sha256": "97654762b346fcfe009fd28482ca234be815bc639d5c791fd8d4585601cbe634"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\packages\\core\\src\\database-execution.ts",
+      "sha256": "07398c4d7692d083ea5c5971594c2030002a6f4689f376db64237f3f405588b3"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\packages\\core\\src\\database-hba-inspection.ts",
+      "sha256": "52709cf1b8c74e888fa208e177983be3dbe0b769b74793e0b530a4b2907d8791"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\packages\\core\\src\\database-inspection.ts",
+      "sha256": "7d901ea6a509250dfe28239cd65f35c2b1c0f369743e2c606be7b833a2a99e90"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\packages\\core\\src\\database-material.ts",
+      "sha256": "e1ad13fe9cc0f322ac67caa843b6bdc5c75a447d5196b0a7733e4233c31be2ea"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\packages\\core\\src\\database-policy.ts",
+      "sha256": "51ba4dc4fe5d0c88b3e94ad70bda8a5ef474fe09ec9b4eeded82e21d7eb64f25"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\packages\\core\\src\\database-postgres.ts",
+      "sha256": "bdbfb01018d3359463ce8158d448247df7cce6266d6d57e2538be580f476dad4"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\packages\\core\\src\\database-preparation.ts",
+      "sha256": "dfa031e02f05956d2543a40470fbe8c6d6f9149480e91ab974112dfdb821a71d"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\packages\\core\\src\\database-provider.ts",
+      "sha256": "056d0ce85a19ea5fec4f50e093744f14cec6fb3025c886cea21d65069e3db388"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\packages\\core\\src\\database-sql.ts",
+      "sha256": "96d84499c26f0f1edafe3700fa6af59ee21914b2d4613c52b7f0f8d58e1b1cad"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\packages\\core\\src\\database-state.ts",
+      "sha256": "1d15121dae3f4841e1c8d719a419bbf86b530f28ea9b0e67e44168d242970f3a"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\packages\\core\\src\\database.ts",
+      "sha256": "5f2676491abe29e5c4c62feaf83ae15683e2b80726a46fda7e65c4af8548563d"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\packages\\core\\src\\project-management.ts",
+      "sha256": "029e2998f519fb86e7524dbaf6963b0f29376b07b2a0c491a60cb4f36ed9cf3b"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\packages\\core\\src\\projects.ts",
+      "sha256": "bc16a3594a2d134bd68a8bd7f1c67e1cdd437f6bcaa7b3f5a2cb8df274c22b32"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\packages\\core\\src\\infrastructure.ts",
+      "sha256": "6400e8fef92a46237f6cf4928ae01fa2b48a8e6c14e72a050664b270a0b6b268"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\packages\\core\\src\\infra-state.ts",
+      "sha256": "0e06695c854ae2603a3a4270de49bb71cf098dbb0632d1748187f9b5658d41d7"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\packages\\core\\src\\infra-preparation.ts",
+      "sha256": "2620f10a8300a5f8c1f9c3c8142813e1c4fa678de6f78afa3c1fb866e5fcbb34"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\packages\\core\\src\\access-redemption.ts",
+      "sha256": "c26b6024d0b5a47f29ef501445d9cf1c93f4fb1dc295470d0673fd382293a9d9"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\packages\\core\\src\\infra-network.ts",
+      "sha256": "147423a98db4a0e196d02c1046c6b07a4e26e5cfaae1529e8dcc7fdd4f179351"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\packages\\core\\src\\foundation-data.ts",
+      "sha256": "d7a31b1a1e15c1edb73e7a5eb44af546750afcd0b46ed7d1cf30cc4e676de28c"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\packages\\core\\src\\foundation-queue.ts",
+      "sha256": "6c4dbcc731750ed400faaad5cc3ea26b3158edfde1daf0887eda905b5fb6df10"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\packages\\core\\src\\foundation-effects.ts",
+      "sha256": "62118783bc71ec82860b35591186003102ab7953951f9f0911788c778041494e"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\packages\\core\\src\\foundation-plans.ts",
+      "sha256": "3ab96daf75c02b64d4986efe22095a707b05d33d7524ef5a351b2658632ee190"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\packages\\core\\src\\foundations.ts",
+      "sha256": "02a44008d063569f5ee26d47539556c1b33486e0cd9e6fac1feb5eb15c04e3ab"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\packages\\contracts\\src\\database.ts",
+      "sha256": "4acba4a88cc93a53ebdf7f19b147bb14ced7d5ec9a42e08a30d9575012432bf8"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\packages\\contracts\\src\\database-endpoints.ts",
+      "sha256": "d61b2b3caee5837a7eecc9645b07dff1d8fae1eb30ee3ca14bb8f4d2f137d668"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\packages\\contracts\\src\\foundations.ts",
+      "sha256": "9bd0427089b70ea2d74d7b8829b0e55cc31417e4ccb7f47bcd5a2d1446b16769"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\packages\\contracts\\src\\http-domain.ts",
+      "sha256": "73397fbca7f9c4af9e67ffa3ff33411da96af89bc5228538d9cbbb5534b88d5c"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\packages\\contracts\\src\\http-schemas.ts",
+      "sha256": "2acb21503a50ed15d12132c55694ff0cc2789b343fc079f766f416a916c6aea7"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\packages\\contracts\\src\\http-endpoints.ts",
+      "sha256": "272e92f3abf136b47882aa3357743ea321138d9bd04cf759105e7390e3713d75"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\packages\\store\\src\\database-schema.ts",
+      "sha256": "7bbe83534ba27f8bea41b9a994375313e7204920c8d51a4edbaffa310d28780b"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\packages\\store\\src\\schema.ts",
+      "sha256": "448ef325d4f1e0d9fbb6ff6111fd803418e00bf95eb6d7cf4730bc4f452bfb6d"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\packages\\store\\migrations\\0005_database.sql",
+      "sha256": "57fa64191a0dc9bcfb32b78437ba9a9d7d562fcead55d929f84ff3a061cac3e1"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\apps\\control-api\\src\\database-routes.ts",
+      "sha256": "5facb74db55147c27770871ab7ee1fa0304940f934a9c5f7b3397b1f161a7ca0"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\apps\\control-api\\src\\app.ts",
+      "sha256": "206071adb89123404dfa664e5a979d9bcab33d7fad7b2f450bc7b32ae145b07b"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\apps\\control-api\\src\\server.ts",
+      "sha256": "577d5af2b9a3bf5c4cfb4ba34d5f83a9ba759e4025669de924b57ab5f9a2cc16"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\packages\\control-client\\src\\index.ts",
+      "sha256": "f782b0452eb7063ff63ee59e961da2081cecc796d0ec635fa6e2b87a1ecc2082"
+    }
+  ],
+  "not_reviewed": [
+    "UI, browser layout and final owner journey: separate follow-on after UI freeze.",
+    "Actual qualified professional/remote provider, deployed firewall, Docker/VM containment, CPU/memory/filesystem hard quota, production native transport or real multi-process control PostgreSQL: unavailable and not certified by these fixtures.",
+    "Physical backup/PITR, off-host recovery, restore activation and upstream credential transition/rotation remain explicitly unqualified; local E03 does not certify them.",
+    "Active effects fenced by later metadata/epoch changes can remain unknown with retained reservations; readonly observation does not itself authorize stale promotion or replacement. No recovery claim beyond the tested same-target observation-renewal path is made.",
+    "No broad dependency CVE audit or whole-repository re-audit of previously reviewed features; this is scoped source review and independent behavior probing of the local database change.",
+    "No existing environment file, private key, actual material file or pre-existing live runtime was read. Review artifacts contain generated metadata and nonmaterial SQL only.",
+    "Final repository lint/type/full tests and mutation coverage remain caller-owned; no numeric coverage/mutation metric is inferred here."
+  ],
+  "generated_at": "2026-11-11T20:34:37.482631Z",
+  "version_supplement": {
+    "reviewed_at": "2026-11-11T20:42:10.5005708Z",
+    "source": "packages/contracts/src/http-endpoints.ts:33",
+    "change": "CONTROL_API_VERSION 1.2.0 -> 1.3.0",
+    "previous_sha256": "9308056d8eccb9110d741257f56b0ac6ac59b081dce4720789c065079a3ccf3e",
+    "current_sha256": "272e92f3abf136b47882aa3357743ea321138d9bd04cf759105e7390e3713d75",
+    "verification": "Independent byte-level reconstruction: replacing only the 1.3.0 constant with 1.2.0 reproduces the exact previously reviewed SHA256; no other source delta in this file.",
+    "frozen_manifest_sha256": "d1913da366707007ea67a322a784873c358670c86cdf931ccb54b9c5c820821b",
+    "semantic_probe_rerun": false,
+    "verdict": "pass"
+  }
+}

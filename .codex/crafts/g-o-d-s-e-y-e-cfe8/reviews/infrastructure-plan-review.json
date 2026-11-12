@@ -1,0 +1,62 @@
+{
+  "verdict": "pass",
+  "kind": "plan",
+  "criticity": "production",
+  "reviewed_at": "2026-11-11",
+  "review_mode": "fresh-context security-auditor/FABER satellite; plan only",
+  "artifacts": [
+    ".codex/crafts/g-o-d-s-e-y-e-cfe8/infrastructure-design.md",
+    ".codex/crafts/g-o-d-s-e-y-e-cfe8/reviews/infrastructure-test-strategy.md",
+    ".codex/crafts/g-o-d-s-e-y-e-cfe8/plan.json",
+    "docs/adr/ADR-002-professional-vm-and-dual-stack.md",
+    "docs/spec/isolation.md"
+  ],
+  "findings": [],
+  "criteria_run": 8,
+  "criteria_passed": 8,
+  "criteria": {
+    "PLN-01": "AC-19 through AC-26 describe observable refusals, state distinctions and durable outcomes; INF01 through INF24 supply negative and fault scenarios.",
+    "PLN-02": "Each AC has a named T-AC identifier and verification boundary; GAUNTLET strategy supplies concrete INF scenario IDs to bind to published implementation contracts.",
+    "PLN-03": "E02.S03-local depends on already local-complete E02.S02; preparation is independent of unavailable execution qualification. E03 databases and E05 public delivery are explicitly excluded.",
+    "PLN-04": "Strategy execution order begins with immutable contracts, policy, refusal, capacity and concurrency; durability and post-I/O races precede broad UI closure. Real lab evidence remains separately bounded.",
+    "PLN-05": "No delivery estimate is asserted; prior 215 unit/integration, 16 browser and 18 selected-mutation baseline is attributed rather than fabricated as a new run.",
+    "PLN-06": "The plan binds FoundationEngine, Node24/Bun1.4.4, PGlite, owner passkey freshness and ADR-002 professional-pool topology.",
+    "PLN-07": "Local inventory, immutable preparation and fail-closed typed provider integration fit the authorized scope. No remote activation, system configuration, per-project VM farm or destructive purge is added.",
+    "PLN-09": "Per-step durable intents, stable identities, uncertain reservations, exact reconciliation and quarantine define failure checkpoints without falsely rolling back in-flight effects."
+  },
+  "security_gate_evidence": [
+    {
+      "criterion": "authority and scope",
+      "evidence": "infrastructure-design.md:13,15,21,37,39; owner declarations cannot produce collector evidence or opaque provider authority; snapshots and live grants/epochs/fences surround privileged I/O."
+    },
+    {
+      "criterion": "capacity and storage quotas",
+      "evidence": "infrastructure-design.md:25,29,33,43; real backend enforcement is distinct from reservation arithmetic, host/professional accounting avoids double charging, and uncertain effects retain reservations."
+    },
+    {
+      "criterion": "dual-stack management and egress containment",
+      "evidence": "infrastructure-design.md:25,31,33,39; trusted both-family firewall evidence is required separately from network allocation. isolation.md I02/I15 remains normative; a Docker internal bridge alone cannot satisfy this gate."
+    },
+    {
+      "criterion": "effective application profile",
+      "evidence": "infrastructure-design.md:23,25,41; exact runtime/systrap, identity, security flags, limits, mounts, IPAM and ownership must be inspected. isolation.md additionally requires required runtime/configuration validation before application code starts."
+    },
+    {
+      "criterion": "ambiguous effects and foreign resources",
+      "evidence": "infrastructure-design.md:37,43; durable pre-dispatch intent, stable allocation identity, retained uncertainty, exact ownership/configuration and quarantine prohibit blind retry or label-only adoption/deletion."
+    }
+  ],
+  "implementation_review_focus": [
+    "Inspect and fence created effective configuration before starting application code; inspect actual resources again before verified readiness, including after rediscovery/recreation.",
+    "A Docker Internal network alone does not prove host/bridge-gateway or egress denial; require separately observed enforcement for both IP families.",
+    "Do not promote owner declarations, operator booleans, synthetic fixture observations or a standalone runsc probe into real provider qualification.",
+    "A rootless runsc probe using ignore-cgroups and network none provides no Docker firewall, CPU/memory/PID or persistent-data-quota qualification."
+  ],
+  "not_reviewed": [
+    "PLN-08 inactive: sequential production implementation with independent review/test/documentation satellites, not parallel shared-source epic implementation.",
+    "Production source, executable infrastructure contracts and implementation tests: no source-freeze artifact supplied for this plan-only review.",
+    "Actual Docker daemon, runtime profile, quota backend, packet filtering, Proxmox/Hetzner and remote host qualification: unavailable or outside authorized local scope.",
+    "Parent-reported baseline and rootless runsc probe were not rerun by this reviewer.",
+    "Dependency/secret scanners and final code security review remain source-freeze gates; no actual private material was inspected."
+  ]
+}
