@@ -1,9 +1,11 @@
+import { createHash } from "node:crypto";
 import { and, eq } from "drizzle-orm";
 import type { Hono } from "hono";
 import type { z } from "zod";
 import { type ApplicationAuth, requireApplicationSession } from "./auth.js";
 import { APP_BASE, ApplicationError, type ApplicationUser } from "./contracts.js";
 import { fileMutation } from "./file-state.js";
+import { enqueueApplicationJobEvent } from "./jobs-bridge.js";
 import { boundedBody } from "./runtime.js";
 import { session } from "./schema.js";
 import { type ApplicationState, guardApplication } from "./state.js";
@@ -13,6 +15,8 @@ export interface ApplicationRouteContext<Input = undefined> {
   user: ApplicationUser;
   input: Input;
   db: ApplicationAccess;
+  /** Only writable POST transactions can emit; scope and user are derived by the runtime. */
+  emitEvent(input: { type: string; payload: unknown; idempotencyKey: string }): Promise<void>;
 }
 export interface ApplicationRouteRegistry {
   get<Output>(
@@ -47,7 +51,18 @@ export function applicationRouteRegistry(
         const epoch = await guardApplication(state);
         const identity = await requireApplicationSession(state, auth, c.req.raw.headers);
         const result = output.parse(
-          await handler({ user: identity.user, input: undefined, db: state.store.db }),
+          await handler({
+            user: identity.user,
+            input: undefined,
+            db: state.store.db,
+            emitEvent: async () => {
+              throw new ApplicationError(
+                "READ_ONLY_ROUTE",
+                "GET routes cannot emit job events",
+                405,
+              );
+            },
+          }),
         );
         await requireApplicationSession(state, auth, c.req.raw.headers);
         await guardApplication(state, epoch);
@@ -79,7 +94,28 @@ export function applicationRouteRegistry(
             { action: `custom:${path}`, input: parsed.data },
             async (tx) => {
               const response = output.parse(
-                await handler({ user: identity.user, input: parsed.data, db: tx }),
+                await handler({
+                  user: identity.user,
+                  input: parsed.data,
+                  db: tx,
+                  emitEvent: async (event) => {
+                    if (!state.jobs)
+                      throw new ApplicationError(
+                        "CAPABILITY_UNAVAILABLE",
+                        "Application job bridge is not configured",
+                        503,
+                      );
+                    const key = createHash("sha256")
+                      .update(`custom:${path}:${identity.user.id}:${event.idempotencyKey}`)
+                      .digest("hex");
+                    await enqueueApplicationJobEvent(
+                      state,
+                      tx,
+                      { key, userId: identity.user.id, type: event.type, payload: event.payload },
+                      await guardApplication(state),
+                    );
+                  },
+                }),
               );
               // Stay on the transaction connection: global auth queries deadlock PGlite here.
               const [currentSession] = await tx

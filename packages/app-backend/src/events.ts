@@ -3,6 +3,7 @@ import { and, asc, desc, eq, gt, lt } from "drizzle-orm";
 import { z } from "zod";
 import { type ApplicationAuth, requireApplicationSession } from "./auth.js";
 import { ApplicationError, type ApplicationEventView } from "./contracts.js";
+import { enqueueApplicationJobEvent } from "./jobs-bridge.js";
 import { appScope, events, receipts, user } from "./schema.js";
 import { type ApplicationState, guardApplication } from "./state.js";
 
@@ -92,6 +93,12 @@ export function publishApplicationEvent(state: ApplicationState, raw: PublishApp
         throw new ApplicationError("INTERNAL_ERROR", "Application event was not persisted", 500);
       const result = eventView(inserted);
       await tx.insert(receipts).values({ key, digest, result });
+      await enqueueApplicationJobEvent(
+        state,
+        tx,
+        { key, userId: input.userId, type: input.type, payload: input.payload },
+        epoch,
+      );
       const retained = await tx
         .select({ id: events.id })
         .from(events)
