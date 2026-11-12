@@ -1,0 +1,99 @@
+{
+  "kind": "curated behavioral mutation experiment",
+  "suite": "audit",
+  "runnerTimeoutMs": 180000,
+  "startedAt": "2026-11-12T17:56:58.946Z",
+  "finishedAt": "2026-11-12T17:57:59.488Z",
+  "scope": "5 selected mutations; not an exhaustive mutation score or coverage claim",
+  "isolation": "Temporary source copies with explicit Vitest workspace aliases; original source never mutated",
+  "baseline": {
+    "status": "passed",
+    "passed": 5
+  },
+  "restored": {
+    "status": "passed",
+    "passed": 5
+  },
+  "sourceUnchanged": true,
+  "selected": 5,
+  "killed": 5,
+  "survived": 0,
+  "invalid": 0,
+  "results": [
+    {
+      "id": "A01",
+      "file": "packages/core/src/jobs-definitions.ts",
+      "behavior": "Permit a new definition to relax a protected unresolved effect",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "T18 immutable authority while job effects remain unresolved (audit R1) refuses to relax an unknown protected effect into an automatic retry",
+            "message": "Error: promise resolved \"{ …(13) }\" instead of rejecting"
+          }
+        ]
+      }
+    },
+    {
+      "id": "A02",
+      "file": "packages/core/src/jobs-outbox-call.ts",
+      "behavior": "Wait indefinitely for the provider instead of fencing the send at its deadline",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "T19 bounded outbox provider calls and scheduler liveness (audit R2) bounds a hung send, preserves unknown and ignores its late acknowledgement",
+            "message": "AssertionError: expected false to be true // Object.is equality"
+          }
+        ]
+      }
+    },
+    {
+      "id": "A03",
+      "file": "packages/core/src/jobs-outbox.ts",
+      "behavior": "Treat a timed-out inspection as successful delivery",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "T19 bounded outbox provider calls and scheduler liveness (audit R2) bounds a hung inspection and does not accept a late delivered probe",
+            "message": "AssertionError: expected 'delivered' to be 'reconciling' // Object.is equality"
+          }
+        ]
+      }
+    },
+    {
+      "id": "A04",
+      "file": "packages/core/src/infrastructure.ts",
+      "behavior": "Omit the production heavy-capacity requeue gate",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "T05 T37 heavy admission after approval expiry (audit R3) enforces the same renewed heavy admission through the production Infrastructure composition",
+            "message": "Error: promise resolved \"{ …(13) }\" instead of rejecting"
+          }
+        ]
+      }
+    },
+    {
+      "id": "A05",
+      "file": "Jenkinsfile",
+      "behavior": "Remove the actual Playwright diagnostics directory from the archive",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "T39 retained CI browser diagnostics (audit R4) archives the configured browser traces and screenshots before workspace cleanup",
+            "message": "AssertionError: expected false to be true // Object.is equality"
+          }
+        ]
+      }
+    }
+  ]
+}
