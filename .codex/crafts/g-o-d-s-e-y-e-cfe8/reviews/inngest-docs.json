@@ -1,0 +1,142 @@
+{
+  "currentRequirements": [
+    "Durable app transaction intent and domain-receipt acknowledgement",
+    "Cell-owned payload/hash-bound deadline/lease-checked loader",
+    "Unknown/cancelled uncertain settlement retention and safe redrive",
+    "Signed exact-port loopback workers and exclusive calendar",
+    "Strict existing-owner runtime configuration; dynamic HOLD/disable parks without controller failure",
+    "I13 administrative/recovery independence under malformed job configuration"
+  ],
+  "evidence": {
+    "browser": {
+      "junitSeconds": 502.140759,
+      "artifact": "artifacts/test-results/inngest-e2e.xml",
+      "passed": 41
+    },
+    "native": {
+      "artifact": "artifacts/test-results/inngest-final-native.xml",
+      "passed": 2,
+      "wallSeconds": 28.62,
+      "ordinaryFiltered": 4
+    },
+    "gitleaks": {
+      "suppression": false,
+      "falsePositive": "Known bootstrap placeholder independently inspected",
+      "kilobytes": 556,
+      "paths": 58,
+      "rawFindings": 1,
+      "artifact": "artifacts/security/inngest-gitleaks-frozen.json",
+      "actualFindings": 0
+    },
+    "review": {
+      "result": "pass",
+      "productionPaths": 45,
+      "rootHashRecheck": "No mismatches",
+      "report": "reviews/inngest-code-review.json",
+      "testToolPaths": 13,
+      "frozenHashCount": 58
+    },
+    "focused": {
+      "scope": "Before last administrative assertions; later fresh full run covers them",
+      "wallSeconds": 242.23,
+      "nativeDisabled": 1,
+      "files": 8,
+      "passed": 55,
+      "artifact": "artifacts/test-results/inngest-final-focused.xml"
+    },
+    "static": {
+      "ownerContract": "1.9.0",
+      "applicationContract": "1.0.0",
+      "lintFiles": 494,
+      "types": "pass"
+    },
+    "audit": {
+      "vulnerabilities": 0,
+      "packages": 495
+    },
+    "mutations": {
+      "sourceUnchanged": true,
+      "killed": 6,
+      "restored": 6,
+      "report": "reviews/mutations-inngest.json",
+      "baseline": 6,
+      "wallSeconds": 232.656,
+      "selected": 6
+    },
+    "fullDefault": {
+      "total": 1193,
+      "nativeDisabled": 2,
+      "nativeOnlySkippedFiles": 1,
+      "artifact": "artifacts/test-results/inngest-unit-final.xml",
+      "passedFiles": 99,
+      "passed": 1191,
+      "vitestWallSeconds": 945.55
+    },
+    "addedOrdinary": {
+      "windowsAcl": 3,
+      "total": 45,
+      "inngest": 42
+    },
+    "build": "Full canonical console/API/standalone SDK/declarations/backend passed",
+    "smoke": {
+      "seconds": 8.67,
+      "remoteServerConnected": false,
+      "result": "pass"
+    }
+  },
+  "verdict": "pass",
+  "gitAndServer": "No commit, push, remote owner service or dedicated-server change",
+  "kind": "SCRIBE source and final-proof documentation verification",
+  "remainingQualification": [
+    "E03/E05/E06 remain partial",
+    "Production worker/transport supervision and controller-offline execution",
+    "External Redis/workflow PostgreSQL and image/network/quota/container qualification",
+    "Full coordinated recovery/producer fencing and off-host acceptance",
+    "Semgrep/Syft/cdxgen unavailable; no complete SBOM or coverage percentage"
+  ],
+  "verified": {
+    "anchors": 19,
+    "commands": [
+      "node scripts/inngest-compose.mjs --help",
+      "node --import tsx apps/jobs-local/src/server.ts --help"
+    ],
+    "remainingPendingClaims": "None for this local continuation; historical checkpoints and future release qualifications preserved",
+    "drifted": [],
+    "clean": 112,
+    "checked": 112,
+    "signatures": "Compared with core/app, managed runtime, compiler, administrative configuration and Windows ACL source; version1.9 owner contract",
+    "relativeLinks": 112
+  },
+  "date": "2026-11-12",
+  "status": "complete",
+  "historyPreserved": [
+    "Initial non-green1170/2/4 plus OpenBao beforeAll",
+    "Serial45second CLI timeout reproduction",
+    "Windows1301fileprofile44.736s ACL/store0.416s to2.993s ACL, unchanged deadlines",
+    "Actual compiled backend workspace-contract regression and2/2 corrected checks",
+    "Native queue minimum and loopback alias failures",
+    "Earlier scoped/historical audit and E04/E05/E06 counts"
+  ],
+  "hashes": {
+    "tests/STRATEGY.md": "d957a5e9705e6984822b5eeb5597a454cb8539f6b4b14323853d75e82da20c6f",
+    "CHANGELOG.md": "e1ccc497e877f4941bd2953f8d1a9a657c61174639fe912edc3125a972250a61",
+    "docs/adr/ADR-011-durable-jobs-and-outbox.md": "39663705b3f7063c8ea75603d4cec65a2fd8b53ee5d7f8ddcd046f09d29a9f5f",
+    "docs/development/ci.md": "b5c874abe5b5b897fac9f1fa0429d9ff3992243c5efbaa775c6f12f4e7c1c372",
+    "docs/spec/v1.md": "b7d5ce0531f6efb2c4b280fe7a7867015f09ea7ab4ed932ebc4f0f68cd4b81d5",
+    "docs/development/foundations.md": "785fc6c54e0ef91b4a218c5dbf2af41bc55091af599cac2559f749bc15f0632e",
+    "docs/plan/v1-development.md": "a7627e1e08c5125ac1d79546f7811dac556742fbfa3a37796e6deda16941cad6",
+    "docs/development/application-jobs.md": "9a356d4188aa9853abb171d6bad38d8fdcaa6f26324469422a7462a673469f73",
+    "docs/development/application-backend.md": "d4db8ea9e4ac873390e922636f2faaddf6012d1e7d6b8923e97951479b669e15"
+  },
+  "written": [
+    "docs/spec/v1.md",
+    "docs/plan/v1-development.md",
+    "docs/development/application-jobs.md",
+    "docs/development/application-backend.md",
+    "docs/adr/ADR-011-durable-jobs-and-outbox.md",
+    "docs/development/ci.md",
+    "docs/development/foundations.md",
+    "CHANGELOG.md",
+    "tests/STRATEGY.md"
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "status": "passed-local-request",
+  "at": "2026-11-12T20:59:03.8515758+01:00",
+  "unit": {
+    "vitestWallSeconds": 945.55,
+    "collectedFiles": 100,
+    "artifact": "artifacts/test-results/inngest-unit-final.xml",
+    "failures": 0,
+    "total": 1193,
+    "errors": 0,
+    "nativeDisabled": 2,
+    "passed": 1191
+  },
+  "native": {
+    "failures": 0,
+    "vitestWallSeconds": 28.62,
+    "passed": 2,
+    "artifact": "artifacts/test-results/inngest-final-native.xml",
+    "filteredOut": 4
+  },
+  "browser": {
+    "failures": 0,
+    "artifact": "artifacts/test-results/inngest-e2e.xml",
+    "passed": 41,
+    "seconds": 502.140759
+  },
+  "focused": {
+    "passed": 55,
+    "seconds": 242.23
+  },
+  "mutations": {
+    "originalSourceUnchanged": true,
+    "killed": 6,
+    "selected": 6,
+    "baseline": 6,
+    "restored": 6
+  },
+  "static": {
+    "builtSmoke": "pass; remote disconnected",
+    "fullBuild": "pass",
+    "lint": "494files pass",
+    "types": "pass",
+    "contracts": "pass",
+    "controlApi": "1.9.0",
+    "applicationApi": "1.0.0"
+  },
+  "security": {
+    "sourceReview": "PASS",
+    "falsePositive": 1,
+    "suppression": false,
+    "sourceHashes": 58,
+    "auditFindings": 0,
+    "rootSourceDrift": 0,
+    "limits": "Semgrep/Syft/cdxgen unavailable; degraded manifest inventory",
+    "raw": 1,
+    "gitleaksPaths": 58,
+    "trueFindings": 0,
+    "auditPackages": 495
+  },
+  "documentation": {
+    "anchors": 19,
+    "review": "PASS",
+    "hashes": 9,
+    "rootDocDrift": 0,
+    "relativeLinks": 112
+  },
+  "trace": {
+    "criteria": 12,
+    "missing": 0
+  },
+  "git": "See reviews/inngest-git.json final read-only hygiene",
+  "serverChanges": false,
+  "gitMutations": false,
+  "epicE06": "partial; distributed/offline workers, catalog refresh, external persistence/platform engine and coordinated recovery remain",
+  "outcome": "outcome-1794513363-0ff094dc"
+}
