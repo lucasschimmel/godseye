@@ -16,6 +16,8 @@ export interface Store {
   transaction<T>(work: (tx: DatabaseAccess) => Promise<T>): Promise<T>;
   close(): Promise<void>;
   driver: "pglite" | "postgres";
+  /** A session-held PostgreSQL singleton lock, independent of any local directory spelling. */
+  lockRuntime?(name: string, onLost?: () => void): Promise<() => Promise<void>>;
 }
 
 export async function openStore(
@@ -23,7 +25,11 @@ export async function openStore(
 ): Promise<Store> {
   if (options.databaseUrl) {
     const pool = new pg.Pool({ connectionString: options.databaseUrl, max: 5 });
+    let bootstrap: pg.PoolClient | undefined;
     try {
+      bootstrap = await pool.connect();
+      // Session advisory lock exists before migration tables do, protecting concurrent cold starts.
+      await bootstrap.query("SELECT pg_advisory_lock(714620061)");
       await migrate(
         (statement) => pool.query(statement),
         async (work) => {
@@ -50,10 +56,58 @@ export async function openStore(
         transaction: (work) => db.transaction(work),
         close: () => pool.end(),
         driver: "postgres",
+        async lockRuntime(name, onLost) {
+          const connection = await pool.connect();
+          try {
+            const result = await connection.query<{ locked: boolean }>(
+              "SELECT pg_try_advisory_lock(hashtextextended($1, 0)) AS locked",
+              [name],
+            );
+            if (!result.rows[0]?.locked)
+              throw new Error("Another trusted runtime owns this database consumer partition");
+          } catch {
+            connection.release(true);
+            throw new Error("Trusted runtime database ownership could not be acquired");
+          }
+          let released = false,
+            lost = false;
+          const fail = () => {
+            if (!released && !lost) {
+              lost = true;
+              onLost?.();
+            }
+          };
+          connection.on("error", fail);
+          connection.on("end", fail);
+          return async () => {
+            if (released) return;
+            released = true;
+            connection.off("error", fail);
+            connection.off("end", fail);
+            try {
+              if (!lost)
+                await connection.query("SELECT pg_advisory_unlock(hashtextextended($1, 0))", [
+                  name,
+                ]);
+            } finally {
+              connection.release(lost);
+            }
+          };
+        },
       };
     } catch (error) {
+      bootstrap?.release(true);
+      bootstrap = undefined;
       await pool.end();
       throw error;
+    } finally {
+      if (bootstrap) {
+        try {
+          await bootstrap.query("SELECT pg_advisory_unlock(714620061)");
+        } finally {
+          bootstrap.release();
+        }
+      }
     }
   }
   const client = new PGlite(options.dataDir ?? "memory://");
