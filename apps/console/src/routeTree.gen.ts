@@ -14,6 +14,7 @@ import { Route as AccessRouteImport } from './routes/access'
 import { Route as AgentsRouteImport } from './routes/agents'
 import { Route as DatabasesRouteImport } from './routes/databases'
 import { Route as InfrastructureRouteImport } from './routes/infrastructure'
+import { Route as JobsRouteImport } from './routes/jobs'
 import { Route as OperationsRouteImport } from './routes/operations'
 import { Route as PipelinesRouteImport } from './routes/pipelines'
 import { Route as SecurityRouteImport } from './routes/security'
@@ -44,6 +45,11 @@ const DatabasesRoute = DatabasesRouteImport.update({
 const InfrastructureRoute = InfrastructureRouteImport.update({
   id: '/infrastructure',
   path: '/infrastructure',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const JobsRoute = JobsRouteImport.update({
+  id: '/jobs',
+  path: '/jobs',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OperationsRoute = OperationsRouteImport.update({
@@ -83,6 +89,7 @@ export interface FileRoutesByFullPath {
   '/agents': typeof AgentsRoute
   '/databases': typeof DatabasesRoute
   '/infrastructure': typeof InfrastructureRoute
+  '/jobs': typeof JobsRoute
   '/operations': typeof OperationsRoute
   '/pipelines': typeof PipelinesRoute
   '/security': typeof SecurityRoute
@@ -96,6 +103,7 @@ export interface FileRoutesByTo {
   '/agents': typeof AgentsRoute
   '/databases': typeof DatabasesRoute
   '/infrastructure': typeof InfrastructureRoute
+  '/jobs': typeof JobsRoute
   '/operations': typeof OperationsRoute
   '/pipelines': typeof PipelinesRoute
   '/security': typeof SecurityRoute
@@ -110,6 +118,7 @@ export interface FileRoutesById {
   '/agents': typeof AgentsRoute
   '/databases': typeof DatabasesRoute
   '/infrastructure': typeof InfrastructureRoute
+  '/jobs': typeof JobsRoute
   '/operations': typeof OperationsRoute
   '/pipelines': typeof PipelinesRoute
   '/security': typeof SecurityRoute
@@ -125,6 +134,7 @@ export interface FileRouteTypes {
     | '/agents'
     | '/databases'
     | '/infrastructure'
+    | '/jobs'
     | '/operations'
     | '/pipelines'
     | '/security'
@@ -138,6 +148,7 @@ export interface FileRouteTypes {
     | '/agents'
     | '/databases'
     | '/infrastructure'
+    | '/jobs'
     | '/operations'
     | '/pipelines'
     | '/security'
@@ -151,6 +162,7 @@ export interface FileRouteTypes {
     | '/agents'
     | '/databases'
     | '/infrastructure'
+    | '/jobs'
     | '/operations'
     | '/pipelines'
     | '/security'
@@ -165,6 +177,7 @@ export interface RootRouteChildren {
   AgentsRoute: typeof AgentsRoute
   DatabasesRoute: typeof DatabasesRoute
   InfrastructureRoute: typeof InfrastructureRoute
+  JobsRoute: typeof JobsRoute
   OperationsRoute: typeof OperationsRoute
   PipelinesRoute: typeof PipelinesRoute
   SecurityRoute: typeof SecurityRoute
@@ -208,6 +221,13 @@ declare module '@tanstack/react-router' {
       path: '/infrastructure'
       fullPath: '/infrastructure'
       preLoaderRoute: typeof InfrastructureRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/jobs': {
+      id: '/jobs'
+      path: '/jobs'
+      fullPath: '/jobs'
+      preLoaderRoute: typeof JobsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/operations': {
@@ -261,6 +281,7 @@ const rootRouteChildren: RootRouteChildren = {
   AgentsRoute: AgentsRoute,
   DatabasesRoute: DatabasesRoute,
   InfrastructureRoute: InfrastructureRoute,
+  JobsRoute: JobsRoute,
   OperationsRoute: OperationsRoute,
   PipelinesRoute: PipelinesRoute,
   SecurityRoute: SecurityRoute,

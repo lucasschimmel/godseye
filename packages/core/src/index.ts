@@ -17,6 +17,9 @@ import { type GithubDelivery, receiveGithubDelivery } from "./github.js";
 import { listOperations, operationView, requestOperation } from "./operations.js";
 import { type Actor, assertOwner, assertProjectAccess } from "./policy.js";
 import { createEnvironment, updateEnvironment, updateProject } from "./project-management.js";
+
+export { ProjectLifecycleEngine } from "./project-lifecycle.js";
+
 import { configureRepository, createProject, getProject, listProjects } from "./projects.js";
 
 export * from "./access.js";
@@ -26,7 +29,9 @@ export * from "./delivery.js";
 export { DomainError } from "./errors.js";
 export * from "./foundations.js";
 export { verifyGithubSignature } from "./github.js";
+export * from "./incidents.js";
 export * from "./infrastructure.js";
+export * from "./jobs.js";
 export { appendAudit, existingRequest, fingerprint, verifyAudit, write } from "./journal.js";
 export { type Actor, assertProjectAccess, assertTransition } from "./policy.js";
 export * from "./recovery.js";

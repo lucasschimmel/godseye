@@ -56,6 +56,18 @@ const instances = [
     consolePort: Number(process.env.GODSEYE_E2E_BACKEND_CONSOLE_PORT ?? consolePort + 12),
     apiPort: Number(process.env.GODSEYE_E2E_BACKEND_API_PORT ?? apiPort + 12),
   },
+  {
+    name: "jobs",
+    testMatch: "jobs.spec.ts",
+    consolePort: Number(process.env.GODSEYE_E2E_JOBS_CONSOLE_PORT ?? consolePort + 14),
+    apiPort: Number(process.env.GODSEYE_E2E_JOBS_API_PORT ?? apiPort + 14),
+  },
+  {
+    name: "lifecycle",
+    testMatch: "lifecycle.spec.ts",
+    consolePort: Number(process.env.GODSEYE_E2E_LIFECYCLE_CONSOLE_PORT ?? consolePort + 16),
+    apiPort: Number(process.env.GODSEYE_E2E_LIFECYCLE_API_PORT ?? apiPort + 16),
+  },
 ].map((instance) => ({
   ...instance,
   baseURL: `http://localhost:${instance.consolePort}`,

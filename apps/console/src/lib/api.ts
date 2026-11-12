@@ -41,9 +41,27 @@ const messages: Record<string, string> = {
     "La pull request est actuellement ouverte. Son arrêt automatique n’est pas autorisé.",
   PREVIEW_LIMIT:
     "La limite de previews conserve aussi les cellules dont l’arrêt n’est pas confirmé.",
+  MIGRATION_APPROVAL_REQUIRED:
+    "Une migration destructive exige l’approbation exacte et récente du propriétaire.",
+  MIGRATION_LOCKED:
+    "Une migration de cet environnement est tenue ou incertaine. Réconciliez-la d’abord.",
+  MIGRATION_NOT_BACKWARD_COMPATIBLE:
+    "Retour d’image exclu : une migration ultérieure n’est pas rétrocompatible.",
+  SCAN_GATE_FAILED: "L’analyse de sécurité dépasse le seuil de gravité de la politique.",
   ARTIFACT_REJECTED:
     "L’artefact ne satisfait pas les contrôles, la provenance ou la configuration actuels.",
+  DEFINITION_PAUSED: "Ce job est en pause. Reprenez-le avant de le déclencher.",
+  INVALID_CRON: "L’expression cron n’est pas un calendrier UTC valide.",
+  INVALID_TRANSITION: "Cette exécution n’est plus modifiable dans son état actuel.",
+  PROJECT_SUSPENDED: "Ce projet est suspendu. Aucun job ne peut y être enregistré ou démarré.",
   ROLLBACK_REJECTED: "Ce déploiement précédent n’est pas éligible à un retour d’image.",
+  INVALID_LIFECYCLE: "L’état actuel du projet ne permet pas cette action.",
+  EXPORT_REQUIRED: "Exportez d’abord la révision actuelle du projet avant la quarantaine.",
+  LIFECYCLE_BLOCKED: "Des opérations non résolues bloquent cette étape. Réconciliez-les d’abord.",
+  PROJECT_QUARANTINED: "Ce projet est en quarantaine ou purgé : ses réglages sont figés.",
+  PURGE_BLOCKED:
+    "La purge est refusée : délai de quarantaine en cours ou ressources physiques restantes.",
+  SLUG_MISMATCH: "L’identifiant saisi ne correspond pas à ce projet.",
 };
 
 export async function api<T>(path: string, init?: RequestInit): Promise<T> {

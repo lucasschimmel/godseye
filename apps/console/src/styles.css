@@ -13,5 +13,8 @@
 @import "./styles/responsive-desktop.css";
 @import "./styles/responsive-mobile.css";
 @import "./styles/infrastructure.css";
+@import "./styles/infra-headroom.css";
 @import "./styles/delivery.css";
+@import "./styles/jobs.css";
+@import "./styles/protection.css";
 @import "./styles/backend.css";

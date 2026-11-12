@@ -29,6 +29,8 @@ const stateLabels: Record<string, string> = {
   draft: "Brouillon",
   validated: "Configuration validée",
   suspended: "Suspendu",
+  active: "Actif",
+  purged: "Purgé",
   planned: "Prévu",
   local: "Local",
   unconfigured: "À connecter",
