@@ -1,0 +1,100 @@
+{
+  "run": "godseye-local-database",
+  "generatedAt": "2026-11-11T20:14:31.783Z",
+  "status": "passed",
+  "coverage": {
+    "line": null,
+    "branch": null
+  },
+  "mutation": {
+    "score": null,
+    "survivors": []
+  },
+  "flaky": [],
+  "layers_run": [
+    "actual-native-postgresql-18-integration"
+  ],
+  "checks": [
+    "production-policy-and-independent-system-identities",
+    "development-production-and-cross-project-authentication-denied",
+    "tls-required-verify-full-and-private-unix-admin",
+    "runtime-dml-without-ddl-role-escalation-or-program-authority",
+    "auth-reader-workflow-least-privilege",
+    "actual-role-connection-ceiling",
+    "actual-restart-persistence-with-cross-cell-data-isolation"
+  ],
+  "qualification": {
+    "independentClusters": true,
+    "productionContainment": false,
+    "dockerNetwork": false,
+    "vmIsolation": false,
+    "cpuMemoryDiskHardQuotas": false,
+    "backupPitr": false
+  },
+  "provenance": {
+    "version": "postgres (PostgreSQL) 18.6 (Ubuntu 18.6-0ubuntu0.26.04.1)",
+    "containment": "native-process-lab-only",
+    "sources": [
+      {
+        "suite": "resolute",
+        "source": "https://archive.ubuntu.com/ubuntu/dists/resolute/InRelease",
+        "verification": "gpgv Ubuntu archive keyring + signed index SHA256",
+        "indexSha256": "ed9ac41cb263efaecc5a06a0742dc56570e2fb5ff94c4f2e4b2fbdcddd73cf24"
+      },
+      {
+        "suite": "resolute-updates",
+        "source": "https://archive.ubuntu.com/ubuntu/dists/resolute-updates/InRelease",
+        "verification": "gpgv Ubuntu archive keyring + signed index SHA256",
+        "indexSha256": "cf7d2b557fdb86f8f2218b710054f668ac10943f8c24e29121b96886776425e0"
+      }
+    ],
+    "packages": [
+      {
+        "package": "postgresql-18",
+        "version": "18.6-0ubuntu0.26.04.1",
+        "source": "https://archive.ubuntu.com/ubuntu/pool/main/p/postgresql-18/postgresql-18_18.6-0ubuntu0.26.04.1_amd64.deb",
+        "sha256": "0536716204dee9152dee758c252936ba41c93b7330395f8abb0c5b86558aa658"
+      },
+      {
+        "package": "postgresql-client-18",
+        "version": "18.6-0ubuntu0.26.04.1",
+        "source": "https://archive.ubuntu.com/ubuntu/pool/main/p/postgresql-18/postgresql-client-18_18.6-0ubuntu0.26.04.1_amd64.deb",
+        "sha256": "c46d1ace8f7d84a9648c63b566fff799b7ee3281db46ef6e7b99baf0fd7bd2e4"
+      },
+      {
+        "package": "libpq5",
+        "version": "18.6-0ubuntu0.26.04.1",
+        "source": "https://archive.ubuntu.com/ubuntu/pool/main/p/postgresql-18/libpq5_18.6-0ubuntu0.26.04.1_amd64.deb",
+        "sha256": "7e9199f54290b04a28e9f136207624ca30b0988d613159977fd84e8b4467e0a4"
+      },
+      {
+        "package": "libicu78",
+        "version": "78.2-2ubuntu1",
+        "source": "https://archive.ubuntu.com/ubuntu/pool/main/i/icu/libicu78_78.2-2ubuntu1_amd64.deb",
+        "sha256": "c8b97930f9e365d6d00978144b468ac8397ef07d2fb2c453869f05fc3a98c4ca"
+      },
+      {
+        "package": "libnuma1",
+        "version": "2.0.19-1build1",
+        "source": "https://archive.ubuntu.com/ubuntu/pool/main/n/numactl/libnuma1_2.0.19-1build1_amd64.deb",
+        "sha256": "af7bc28b60948609a36719c249a89aef834812833909774538c19f9d984bef31"
+      },
+      {
+        "package": "liburing2",
+        "version": "2.14-1",
+        "source": "https://archive.ubuntu.com/ubuntu/pool/main/libu/liburing/liburing2_2.14-1_amd64.deb",
+        "sha256": "c0f1ed55d2eaa6e5d1224513b787c71348c6ab983e9c4178a417a7ffac3a8a00"
+      },
+      {
+        "package": "libxslt1.1",
+        "version": "1.1.45-0.1",
+        "source": "https://archive.ubuntu.com/ubuntu/pool/main/libx/libxslt/libxslt1.1_1.1.45-0.1_amd64.deb",
+        "sha256": "d2ad5edf215939cc0fe74ca6cb9910060915233032a7c7074d4f206702c802a1"
+      }
+    ]
+  },
+  "gaps": [
+    "Native processes share the WSL host and UID; Docker/VM firewall, hard resource quotas, physical backup/PITR and credential rotation remain unqualified.",
+    "Coverage and mutation metrics are not measured by this native qualification run."
+  ]
+}
