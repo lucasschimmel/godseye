@@ -217,6 +217,9 @@ describe("private stdin/file access administration against real OpenBao", () => 
         GODSEYE_DATA_DIR: dataDir,
         GODSEYE_STATE_DIR: stateDir,
         GODSEYE_BAO_ADDRESS: lab.url,
+        // I13: staging/issuing private authority must survive unrelated broken job configuration.
+        GODSEYE_INNGEST_CELLS: "malformed-unrelated-jobs-config",
+        GODSEYE_JOBS_LOCAL_FIXTURES: "enabled",
       };
       const value = randomUUID();
       expect(await cli(env, ["provider-auth"], controllerProof, [controllerProof, value])).toEqual({
