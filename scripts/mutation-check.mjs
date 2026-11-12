@@ -15,25 +15,36 @@ import {
 import { tmpdir } from "node:os";
 import { basename, isAbsolute, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { auditMutations } from "./mutation-audit-cases.mjs";
+import { autonomousMutations } from "./mutation-autonomous-cases.mjs";
 import { backendMutations } from "./mutation-backend-cases.mjs";
 import { mutations as historicalMutations } from "./mutation-cases.mjs";
 import { deliveryMutations } from "./mutation-delivery-cases.mjs";
+import { inngestMutations } from "./mutation-inngest-cases.mjs";
 import { jobsMutations } from "./mutation-jobs-cases.mjs";
 
 const suite = process.env.GODSEYE_MUTATION_SUITE ?? "historical";
-if (!["historical", "delivery", "backend", "jobs"].includes(suite))
+if (
+  !["historical", "delivery", "backend", "jobs", "audit", "inngest", "autonomous"].includes(suite)
+)
   throw new Error("Unknown curated mutation suite");
 // M07 is the only historical exact target changed by delivery's push/PR parser integration.
 const affectedIntake = historicalMutations.find(({ id }) => id === "M07");
 if (!affectedIntake) throw new Error("Affected GitHub intake mutation is missing");
 const allMutations =
-  suite === "backend"
-    ? backendMutations
-    : suite === "jobs"
-      ? jobsMutations
-      : suite === "delivery"
-        ? [affectedIntake, ...deliveryMutations]
-        : historicalMutations;
+  suite === "autonomous"
+    ? autonomousMutations
+    : suite === "inngest"
+      ? inngestMutations
+      : suite === "audit"
+        ? auditMutations
+        : suite === "backend"
+          ? backendMutations
+          : suite === "jobs"
+            ? jobsMutations
+            : suite === "delivery"
+              ? [affectedIntake, ...deliveryMutations]
+              : historicalMutations;
 
 const requestedIds = (process.env.GODSEYE_MUTATION_IDS ?? "").split(",").filter(Boolean);
 if (requestedIds.some((id) => !allMutations.some((mutation) => mutation.id === id)))
@@ -59,7 +70,8 @@ async function prepareSandbox(sandbox, junctions) {
     "packages/store",
     "packages/core",
     "apps/control-api",
-    ...(suite === "backend"
+    ...(suite === "autonomous" ? ["apps/jobs-runtime"] : []),
+    ...(suite === "backend" || suite === "inngest"
       ? ["packages/app-backend", "packages/sdk", "packages/control-client"]
       : []),
   ]) {
@@ -139,7 +151,7 @@ async function prepareSandbox(sandbox, junctions) {
   ]) {
     await cp(join(root, "tests", name), join(sandbox, "tests", name));
   }
-  if (suite === "backend") {
+  if (suite === "backend" || suite === "inngest") {
     for (const name of (await readdir(join(root, "tests"))).filter((name) =>
       /^(backend|sdk)[a-z0-9.-]*\.ts$/.test(name),
     ))
@@ -148,6 +160,27 @@ async function prepareSandbox(sandbox, junctions) {
       join(root, "tests/owner-auth-fixture.ts"),
       join(sandbox, "tests/owner-auth-fixture.ts"),
     );
+  }
+  if (suite === "audit") {
+    for (const name of [
+      "jobs-definition-regression.test.ts",
+      "jobs-outbox-deadline.test.ts",
+      "infra-approval-capacity.test.ts",
+      "jenkins-artifacts.test.ts",
+    ])
+      await cp(join(root, "tests", name), join(sandbox, "tests", name));
+    for (const name of ["Jenkinsfile", "playwright.config.ts"])
+      await cp(join(root, name), join(sandbox, name));
+  }
+  if (suite === "autonomous") {
+    for (const name of [
+      "jobs-consumer-partition.test.ts",
+      "jobs-runtime-ipc.test.ts",
+      "jobs-runtime-config.test.ts",
+      "jobs-runtime-broker.test.ts",
+      "inngest-runtime-fixture.ts",
+    ])
+      await cp(join(root, "tests", name), join(sandbox, "tests", name));
   }
   for (const name of ["package.json", "tsconfig.json"])
     await cp(join(root, name), join(sandbox, name));
@@ -159,21 +192,23 @@ async function prepareSandbox(sandbox, junctions) {
   await symlink(join(root, "artifacts", "tools"), labToolLink, "junction");
   junctions.push(labToolLink);
   const aliases = Object.fromEntries([
-    ...(suite === "backend"
+    ...(suite === "backend" || suite === "inngest"
       ? [["@godseye/app-backend/contracts", join(sandbox, "packages/app-backend/src/contracts.ts")]]
       : []),
     ...[
       "contracts",
       "store",
       "core",
-      ...(suite === "backend" ? ["app-backend", "sdk", "control-client"] : []),
+      ...(suite === "backend" || suite === "inngest"
+        ? ["app-backend", "sdk", "control-client"]
+        : []),
     ].map((name) => [`@godseye/${name}`, join(sandbox, "packages", name, "src/index.ts")]),
   ]);
   await writeFile(
     join(sandbox, "vitest.config.mjs"),
     `import { defineConfig } from 'vitest/config';
-export default defineConfig({ root: ${JSON.stringify(sandbox)}, resolve: { alias: ${JSON.stringify(aliases)} },
-test: { include: ['tests/**/*.test.ts'], maxWorkers: 1, testTimeout: 30000, hookTimeout: 60000 } });\n`,
+export default defineConfig({ root: ${JSON.stringify(sandbox)}, cacheDir: ${JSON.stringify(join(sandbox, ".vite"))}, resolve: { alias: ${JSON.stringify(aliases)} },
+test: { include: ['tests/**/*.test.ts'], fsModuleCachePath: ${JSON.stringify(join(sandbox, ".vitest-module-cache"))}, maxWorkers: 1, testTimeout: 30000, hookTimeout: 60000 } });\n`,
   );
 }
 
