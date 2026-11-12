@@ -1,4 +1,8 @@
-import type { EffectOutcomeInput, ExecutionContext } from "@godseye/contracts";
+import {
+  ApplicationJobEnvelope,
+  type EffectOutcomeInput,
+  type ExecutionContext,
+} from "@godseye/contracts";
 import { schema } from "@godseye/store";
 import { eq } from "drizzle-orm";
 import { DomainError } from "./errors.js";
@@ -14,7 +18,7 @@ import {
   outboxView,
   runView,
 } from "./jobs-state.js";
-import { write } from "./journal.js";
+import { fingerprint, write } from "./journal.js";
 
 export const HANDLER_UNAVAILABLE_EVIDENCE = "job:handler-unavailable";
 export const TIMEOUT_EVIDENCE = "job:timeout";
@@ -53,7 +57,19 @@ async function loadExecution(state: JobState, context: ExecutionContext, start: 
         .set({ state: "running", startedAt: job.startedAt ?? state.now(), updatedAt: state.now() })
         .where(eq(schema.jobRuns.id, job.id));
     }
-    return { job, definition };
+    const [applicationEvent] = job.payloadRef
+      ? await tx
+          .select()
+          .from(schema.applicationJobEvents)
+          .where(eq(schema.applicationJobEvents.id, job.payloadRef))
+      : [];
+    if (
+      applicationEvent &&
+      (applicationEvent.projectId !== job.projectId ||
+        applicationEvent.environmentId !== job.environmentId)
+    )
+      throw new DomainError("FENCED", "Application event does not match job scope", 409);
+    return { job, definition, applicationEvent };
   });
 }
 function handlerContext(
@@ -61,6 +77,7 @@ function handlerContext(
   context: ExecutionContext,
   loaded: Awaited<ReturnType<typeof loadExecution>>,
   signal: AbortSignal,
+  readOnlyReconciliation: boolean,
 ): JobHandlerContext {
   const { job, definition } = loaded;
   return {
@@ -71,10 +88,34 @@ function handlerContext(
     effectKey: `job:${job.id}`,
     attemptKey: context.effectKey,
     signal,
+    assertReconciliation: () =>
+      write(state.store, async (tx) => {
+        if (!readOnlyReconciliation || signal.aborted)
+          throw new DomainError("FENCED", "No active read-only reconciliation lease", 409);
+        await validateLease(state.request, tx, context, true);
+        await activeCell(state, tx, jobsActor(job.projectId), job.projectId, job.environmentId);
+      }),
+    assertActive: () =>
+      write(state.store, async (tx) => {
+        await validateLease(state.request, tx, context);
+        await activeCell(state, tx, jobsActor(job.projectId), job.projectId, job.environmentId);
+        const [current] = await tx
+          .select()
+          .from(schema.jobDefinitions)
+          .where(eq(schema.jobDefinitions.id, definition.id));
+        if (signal.aborted || !current || current.paused || current.hash !== definition.hash)
+          throw new DomainError(
+            "FENCED",
+            "Job execution authority changed before physical dispatch",
+            409,
+          );
+      }),
     outbox: (intent) =>
       write(state.store, async (tx) => {
         // A fenced or expired worker lease cannot create new external intent.
         await validateLease(state.request, tx, context);
+        if (signal.aborted)
+          throw new DomainError("FENCED", "Job execution deadline or cancellation has passed", 409);
         const row = await enqueueOutbox(state, tx, {
           ...intent,
           projectId: job.projectId,
@@ -110,9 +151,48 @@ export async function executeJob(
     }, state.timeoutMs(loaded.definition.limits.timeoutSeconds));
   });
   try {
-    const hc = handlerContext(state, context, loaded, controller.signal);
-    const run = reconcile && handler.reconcile ? handler.reconcile(hc) : handler.execute(hc);
-    const result = await Promise.race([run, timeout]);
+    const work = async () => {
+      const hc = handlerContext(state, context, loaded, controller.signal, reconcile);
+      if (loaded.applicationEvent) {
+        const receipt = loaded.applicationEvent;
+        if (
+          state.applicationPayloadLoads.has(receipt.environmentId) ||
+          state.applicationPayloadLoads.size >= 50
+        )
+          throw new DomainError(
+            "CAPACITY_EXHAUSTED",
+            "Cell payload acquisition is still active",
+            429,
+          );
+        const actual = Promise.resolve().then(() =>
+          state.applicationEventLoader?.(
+            {
+              projectId: receipt.projectId,
+              environmentId: receipt.environmentId,
+              producerId: receipt.producerId,
+            },
+            receipt.id,
+          ),
+        );
+        state.applicationPayloadLoads.set(receipt.environmentId, actual);
+        void actual
+          .finally(() => {
+            if (state.applicationPayloadLoads.get(receipt.environmentId) === actual)
+              state.applicationPayloadLoads.delete(receipt.environmentId);
+          })
+          .catch(() => undefined);
+        const event = ApplicationJobEnvelope.parse(await actual);
+        if (fingerprint(event) !== receipt.hash)
+          throw new DomainError("FENCED", "Cell payload no longer matches its accepted event", 409);
+        hc.event = structuredClone(event);
+      }
+      // A read-only probe has its own fenced reconciliation lease, never a renewed mutation grant.
+      await write(state.store, (tx) => validateLease(state.request, tx, context, reconcile));
+      if (controller.signal.aborted)
+        throw new DomainError("FENCED", "Job deadline or cancellation has passed", 409);
+      return reconcile && handler.reconcile ? handler.reconcile(hc) : handler.execute(hc);
+    };
+    const result = await Promise.race([work(), timeout]);
     if (result === "timeout")
       return loaded.definition.effectPolicy === "protected"
         ? { status: "unknown", costMicros: 0 }
