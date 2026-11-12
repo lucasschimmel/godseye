@@ -1,0 +1,739 @@
+{
+  "method": "Scoped exported-symbol adjacency delta on reviewed source",
+  "fullGraphFresh": false,
+  "reason": "Legacy grep graph remains stale; no private-file walk",
+  "sourcePaths": [
+    "packages/core/src/foundation-effects.ts",
+    "packages/store/src/jobs-schema.ts",
+    "apps/control-api/src/private-json.ts",
+    "packages/core/src/infrastructure.ts",
+    "apps/jobs-runtime/src/storage.ts",
+    "packages/core/src/foundation-queue.ts",
+    "apps/jobs-runtime/src/config.ts",
+    "packages/core/src/jobs-state.ts",
+    "packages/core/src/foundation-data.ts",
+    "packages/core/src/jobs-runs.ts",
+    "apps/jobs-runtime/src/child.ts",
+    "packages/core/src/jobs-retention.ts",
+    "apps/control-api/src/inngest-native.ts",
+    "apps/control-api/src/server.ts",
+    "apps/control-api/src/config.ts",
+    "packages/core/src/jobs.ts",
+    "packages/core/src/jobs-execution.ts",
+    "apps/jobs-runtime/src/platform.ts",
+    "packages/core/src/jobs-reconcile-queue.ts",
+    "apps/jobs-runtime/src/senders.ts",
+    "packages/core/src/jobs-reconcile.ts",
+    "packages/store/src/index.ts",
+    "packages/core/src/jobs-scheduler.ts",
+    "packages/core/src/jobs-sync.ts",
+    "apps/jobs-runtime/src/server.ts",
+    "apps/jobs-runtime/src/worker.ts",
+    "apps/jobs-runtime/src/catalog.ts",
+    "packages/core/src/inngest.ts",
+    "apps/jobs-runtime/src/broker.ts",
+    "packages/core/src/jobs-outbox.ts",
+    "apps/jobs-runtime/src/runtime.ts",
+    "apps/jobs-runtime/src/worker-module.ts",
+    "apps/jobs-runtime/src/ipc.ts",
+    "packages/core/src/jobs-application.ts",
+    "apps/control-api/src/identity/runtime.ts"
+  ],
+  "exports": [
+    {
+      "path": "packages/core/src/foundation-effects.ts",
+      "name": "revokeGrants",
+      "line": 23
+    },
+    {
+      "path": "packages/core/src/foundation-effects.ts",
+      "name": "markUnknown",
+      "line": 29
+    },
+    {
+      "path": "packages/core/src/foundation-effects.ts",
+      "name": "settle",
+      "line": 58
+    },
+    {
+      "path": "packages/core/src/foundation-effects.ts",
+      "name": "finish",
+      "line": 128
+    },
+    {
+      "path": "packages/core/src/foundation-effects.ts",
+      "name": "reconcileExpired",
+      "line": 138
+    },
+    {
+      "path": "packages/core/src/foundation-effects.ts",
+      "name": "reconcile",
+      "line": 168
+    },
+    {
+      "path": "packages/core/src/foundation-effects.ts",
+      "name": "cancel",
+      "line": 246
+    },
+    {
+      "path": "packages/core/src/foundation-effects.ts",
+      "name": "advanceEpoch",
+      "line": 290
+    },
+    {
+      "path": "packages/store/src/jobs-schema.ts",
+      "name": "applicationJobEvents",
+      "line": 15
+    },
+    {
+      "path": "packages/store/src/jobs-schema.ts",
+      "name": "jobDefinitions",
+      "line": 25
+    },
+    {
+      "path": "packages/store/src/jobs-schema.ts",
+      "name": "jobRuns",
+      "line": 47
+    },
+    {
+      "path": "packages/store/src/jobs-schema.ts",
+      "name": "jobWorkerBindings",
+      "line": 83
+    },
+    {
+      "path": "packages/store/src/jobs-schema.ts",
+      "name": "jobReconcileRequests",
+      "line": 89
+    },
+    {
+      "path": "packages/store/src/jobs-schema.ts",
+      "name": "jobOutbox",
+      "line": 101
+    },
+    {
+      "path": "apps/control-api/src/private-json.ts",
+      "name": "readPrivateJson",
+      "line": 14
+    },
+    {
+      "path": "packages/core/src/infrastructure.ts",
+      "name": "InfrastructureOptions",
+      "line": 44
+    },
+    {
+      "path": "packages/core/src/infrastructure.ts",
+      "name": "InfrastructureEngine",
+      "line": 64
+    },
+    {
+      "path": "apps/jobs-runtime/src/storage.ts",
+      "name": "inspectWorkflowStorage",
+      "line": 6
+    },
+    {
+      "path": "packages/core/src/foundation-queue.ts",
+      "name": "viewRun",
+      "line": 21
+    },
+    {
+      "path": "packages/core/src/foundation-queue.ts",
+      "name": "getRun",
+      "line": 31
+    },
+    {
+      "path": "packages/core/src/foundation-queue.ts",
+      "name": "listRuns",
+      "line": 36
+    },
+    {
+      "path": "packages/core/src/foundation-queue.ts",
+      "name": "assertPlanIntegrity",
+      "line": 44
+    },
+    {
+      "path": "packages/core/src/foundation-queue.ts",
+      "name": "validApproval",
+      "line": 75
+    },
+    {
+      "path": "packages/core/src/foundation-queue.ts",
+      "name": "enqueue",
+      "line": 95
+    },
+    {
+      "path": "packages/core/src/foundation-queue.ts",
+      "name": "contextFor",
+      "line": 192
+    },
+    {
+      "path": "packages/core/src/foundation-queue.ts",
+      "name": "claim",
+      "line": 253
+    },
+    {
+      "path": "packages/core/src/foundation-queue.ts",
+      "name": "terminalRequests",
+      "line": 361
+    },
+    {
+      "path": "apps/jobs-runtime/src/config.ts",
+      "name": "ExternalStorage",
+      "line": 4
+    },
+    {
+      "path": "apps/jobs-runtime/src/config.ts",
+      "name": "ExternalStorage",
+      "line": 12
+    },
+    {
+      "path": "apps/jobs-runtime/src/config.ts",
+      "name": "validateExternalStorage",
+      "line": 13
+    },
+    {
+      "path": "apps/jobs-runtime/src/config.ts",
+      "name": "localStorageUri",
+      "line": 51
+    },
+    {
+      "path": "apps/jobs-runtime/src/config.ts",
+      "name": "autonomousCells",
+      "line": 72
+    },
+    {
+      "path": "apps/jobs-runtime/src/config.ts",
+      "name": "WorkerSettings",
+      "line": 75
+    },
+    {
+      "path": "apps/jobs-runtime/src/config.ts",
+      "name": "WorkerSettings",
+      "line": 95
+    },
+    {
+      "path": "apps/jobs-runtime/src/config.ts",
+      "name": "workerEnvironment",
+      "line": 98
+    },
+    {
+      "path": "packages/core/src/jobs-state.ts",
+      "name": "JOBS_ADAPTER_ID",
+      "line": 18
+    },
+    {
+      "path": "packages/core/src/jobs-state.ts",
+      "name": "JOBS_DESTINATION",
+      "line": 19
+    },
+    {
+      "path": "packages/core/src/jobs-state.ts",
+      "name": "JOBS_TOOL",
+      "line": 20
+    },
+    {
+      "path": "packages/core/src/jobs-state.ts",
+      "name": "JOBS_SCHEDULER_ID",
+      "line": 21
+    },
+    {
+      "path": "packages/core/src/jobs-state.ts",
+      "name": "JOB_TERMINAL_STATES",
+      "line": 22
+    },
+    {
+      "path": "packages/core/src/jobs-state.ts",
+      "name": "JobHandlerContext",
+      "line": 25
+    },
+    {
+      "path": "packages/core/src/jobs-state.ts",
+      "name": "JobHandlerResult",
+      "line": 44
+    },
+    {
+      "path": "packages/core/src/jobs-state.ts",
+      "name": "JobHandler",
+      "line": 45
+    },
+    {
+      "path": "packages/core/src/jobs-state.ts",
+      "name": "OutboxIntentInput",
+      "line": 50
+    },
+    {
+      "path": "packages/core/src/jobs-state.ts",
+      "name": "OutboxDelivery",
+      "line": 55
+    },
+    {
+      "path": "packages/core/src/jobs-state.ts",
+      "name": "OutboxSendResult",
+      "line": 63
+    },
+    {
+      "path": "packages/core/src/jobs-state.ts",
+      "name": "OutboxSender",
+      "line": 67
+    },
+    {
+      "path": "packages/core/src/jobs-state.ts",
+      "name": "JobState",
+      "line": 77
+    },
+    {
+      "path": "packages/core/src/jobs-state.ts",
+      "name": "jobsActor",
+      "line": 95
+    },
+    {
+      "path": "packages/core/src/jobs-state.ts",
+      "name": "jobsConfigured",
+      "line": 100
+    },
+    {
+      "path": "packages/core/src/jobs-state.ts",
+      "name": "assertJobsConfigured",
+      "line": 102
+    },
+    {
+      "path": "packages/core/src/jobs-state.ts",
+      "name": "definitionView",
+      "line": 110
+    },
+    {
+      "path": "packages/core/src/jobs-state.ts",
+      "name": "runView",
+      "line": 126
+    },
+    {
+      "path": "packages/core/src/jobs-state.ts",
+      "name": "outboxView",
+      "line": 143
+    },
+    {
+      "path": "packages/core/src/jobs-state.ts",
+      "name": "definitionFor",
+      "line": 158
+    },
+    {
+      "path": "packages/core/src/jobs-state.ts",
+      "name": "jobRunFor",
+      "line": 167
+    },
+    {
+      "path": "packages/core/src/jobs-state.ts",
+      "name": "outboxFor",
+      "line": 173
+    },
+    {
+      "path": "packages/core/src/jobs-state.ts",
+      "name": "heldEnvironmentIds",
+      "line": 180
+    },
+    {
+      "path": "packages/core/src/jobs-state.ts",
+      "name": "activeCell",
+      "line": 211
+    },
+    {
+      "path": "packages/core/src/jobs-state.ts",
+      "name": "jobEnvironmentFilter",
+      "line": 240
+    },
+    {
+      "path": "packages/core/src/jobs-state.ts",
+      "name": "activeRunsFilter",
+      "line": 244
+    },
+    {
+      "path": "packages/core/src/jobs-state.ts",
+      "name": "dueDefinitions",
+      "line": 255
+    },
+    {
+      "path": "packages/core/src/jobs-state.ts",
+      "name": "futureOnly",
+      "line": 257
+    },
+    {
+      "path": "packages/core/src/foundation-data.ts",
+      "name": "FoundationOptions",
+      "line": 14
+    },
+    {
+      "path": "packages/core/src/foundation-data.ts",
+      "name": "FoundationState",
+      "line": 58
+    },
+    {
+      "path": "packages/core/src/foundation-data.ts",
+      "name": "foundationState",
+      "line": 75
+    },
+    {
+      "path": "packages/core/src/foundation-data.ts",
+      "name": "adapterFor",
+      "line": 107
+    },
+    {
+      "path": "packages/core/src/foundation-data.ts",
+      "name": "assertFresh",
+      "line": 117
+    },
+    {
+      "path": "packages/core/src/foundation-data.ts",
+      "name": "environmentFor",
+      "line": 128
+    },
+    {
+      "path": "packages/core/src/foundation-data.ts",
+      "name": "planFor",
+      "line": 172
+    },
+    {
+      "path": "packages/core/src/foundation-data.ts",
+      "name": "runFor",
+      "line": 181
+    },
+    {
+      "path": "packages/core/src/foundation-data.ts",
+      "name": "currentEpoch",
+      "line": 190
+    },
+    {
+      "path": "packages/core/src/foundation-data.ts",
+      "name": "validateLease",
+      "line": 197
+    },
+    {
+      "path": "packages/core/src/foundation-data.ts",
+      "name": "requestFor",
+      "line": 248
+    },
+    {
+      "path": "packages/core/src/foundation-data.ts",
+      "name": "recordRequest",
+      "line": 266
+    },
+    {
+      "path": "packages/core/src/foundation-data.ts",
+      "name": "needsApproval",
+      "line": 284
+    },
+    {
+      "path": "packages/core/src/foundation-data.ts",
+      "name": "newId",
+      "line": 300
+    },
+    {
+      "path": "packages/core/src/foundation-data.ts",
+      "name": "consumesAdapter",
+      "line": 302
+    },
+    {
+      "path": "packages/core/src/jobs-runs.ts",
+      "name": "NewRun",
+      "line": 25
+    },
+    {
+      "path": "packages/core/src/jobs-runs.ts",
+      "name": "createRun",
+      "line": 33
+    },
+    {
+      "path": "packages/core/src/jobs-runs.ts",
+      "name": "triggerJob",
+      "line": 98
+    },
+    {
+      "path": "packages/core/src/jobs-runs.ts",
+      "name": "JobEventInput",
+      "line": 145
+    },
+    {
+      "path": "packages/core/src/jobs-runs.ts",
+      "name": "ingestJobEvent",
+      "line": 147
+    },
+    {
+      "path": "packages/core/src/jobs-runs.ts",
+      "name": "cancelJobRun",
+      "line": 184
+    },
+    {
+      "path": "apps/jobs-runtime/src/child.ts",
+      "name": "WorkerChild",
+      "line": 8
+    },
+    {
+      "path": "apps/jobs-runtime/src/child.ts",
+      "name": "startWorkerChild",
+      "line": 29
+    },
+    {
+      "path": "packages/core/src/jobs-retention.ts",
+      "name": "RetentionResult",
+      "line": 10
+    },
+    {
+      "path": "packages/core/src/jobs-retention.ts",
+      "name": "pruneJobs",
+      "line": 89
+    },
+    {
+      "path": "apps/control-api/src/inngest-native.ts",
+      "name": "openLocalInngestMaterial",
+      "line": 19
+    },
+    {
+      "path": "apps/control-api/src/inngest-native.ts",
+      "name": "startNativeInngest",
+      "line": 43
+    },
+    {
+      "path": "apps/control-api/src/config.ts",
+      "name": "loadConfiguration",
+      "line": 15
+    },
+    {
+      "path": "apps/control-api/src/config.ts",
+      "name": "Configuration",
+      "line": 76
+    },
+    {
+      "path": "packages/core/src/jobs.ts",
+      "name": "JobOptions",
+      "line": 54
+    },
+    {
+      "path": "packages/core/src/jobs.ts",
+      "name": "JobEngine",
+      "line": 82
+    },
+    {
+      "path": "packages/core/src/jobs.ts",
+      "name": "runJobScheduler",
+      "line": 243
+    },
+    {
+      "path": "packages/core/src/jobs-execution.ts",
+      "name": "HANDLER_UNAVAILABLE_EVIDENCE",
+      "line": 23
+    },
+    {
+      "path": "packages/core/src/jobs-execution.ts",
+      "name": "TIMEOUT_EVIDENCE",
+      "line": 24
+    },
+    {
+      "path": "packages/core/src/jobs-execution.ts",
+      "name": "executeJob",
+      "line": 134
+    },
+    {
+      "path": "packages/core/src/jobs-execution.ts",
+      "name": "fenceJob",
+      "line": 208
+    },
+    {
+      "path": "packages/core/src/jobs-reconcile-queue.ts",
+      "name": "consumeJobReconciliations",
+      "line": 8
+    },
+    {
+      "path": "apps/jobs-runtime/src/senders.ts",
+      "name": "registerWorkerSenders",
+      "line": 13
+    },
+    {
+      "path": "packages/core/src/jobs-reconcile.ts",
+      "name": "reconcileJobRun",
+      "line": 15
+    },
+    {
+      "path": "packages/store/src/index.ts",
+      "name": "ControlDatabase",
+      "line": 8
+    },
+    {
+      "path": "packages/store/src/index.ts",
+      "name": "DatabaseAccess",
+      "line": 9
+    },
+    {
+      "path": "packages/store/src/index.ts",
+      "name": "Store",
+      "line": 13
+    },
+    {
+      "path": "packages/store/src/index.ts",
+      "name": "openStore",
+      "line": 23
+    },
+    {
+      "path": "packages/core/src/jobs-scheduler.ts",
+      "name": "JobsTickResult",
+      "line": 24
+    },
+    {
+      "path": "packages/core/src/jobs-scheduler.ts",
+      "name": "jobsTick",
+      "line": 166
+    },
+    {
+      "path": "packages/core/src/jobs-sync.ts",
+      "name": "syncJobRuns",
+      "line": 100
+    },
+    {
+      "path": "apps/jobs-runtime/src/catalog.ts",
+      "name": "readCellDefinitions",
+      "line": 9
+    },
+    {
+      "path": "apps/jobs-runtime/src/catalog.ts",
+      "name": "reconcileCellCatalog",
+      "line": 29
+    },
+    {
+      "path": "packages/core/src/inngest.ts",
+      "name": "InngestCellOptions",
+      "line": 16
+    },
+    {
+      "path": "packages/core/src/inngest.ts",
+      "name": "createInngestCell",
+      "line": 59
+    },
+    {
+      "path": "apps/jobs-runtime/src/broker.ts",
+      "name": "createCellBroker",
+      "line": 30
+    },
+    {
+      "path": "packages/core/src/jobs-outbox.ts",
+      "name": "OutboxWrite",
+      "line": 44
+    },
+    {
+      "path": "packages/core/src/jobs-outbox.ts",
+      "name": "OutboxTickResult",
+      "line": 49
+    },
+    {
+      "path": "packages/core/src/jobs-outbox.ts",
+      "name": "enqueueOutbox",
+      "line": 57
+    },
+    {
+      "path": "packages/core/src/jobs-outbox.ts",
+      "name": "dispatchOutbox",
+      "line": 321
+    },
+    {
+      "path": "packages/core/src/jobs-outbox.ts",
+      "name": "reconcileOutbox",
+      "line": 338
+    },
+    {
+      "path": "apps/jobs-runtime/src/runtime.ts",
+      "name": "prepareAutonomousJobs",
+      "line": 28
+    },
+    {
+      "path": "apps/jobs-runtime/src/worker-module.ts",
+      "name": "ApplicationWorkerModule",
+      "line": 4
+    },
+    {
+      "path": "apps/jobs-runtime/src/worker-module.ts",
+      "name": "CreateApplicationWorker",
+      "line": 10
+    },
+    {
+      "path": "apps/jobs-runtime/src/worker-module.ts",
+      "name": "builtinWorker",
+      "line": 14
+    },
+    {
+      "path": "apps/jobs-runtime/src/ipc.ts",
+      "name": "RpcTransport",
+      "line": 4
+    },
+    {
+      "path": "apps/jobs-runtime/src/ipc.ts",
+      "name": "RpcError",
+      "line": 31
+    },
+    {
+      "path": "apps/jobs-runtime/src/ipc.ts",
+      "name": "createRpcPeer",
+      "line": 42
+    },
+    {
+      "path": "apps/jobs-runtime/src/ipc.ts",
+      "name": "processRpcTransport",
+      "line": 155
+    },
+    {
+      "path": "packages/core/src/jobs-application.ts",
+      "name": "ApplicationEventAuthority",
+      "line": 20
+    },
+    {
+      "path": "packages/core/src/jobs-application.ts",
+      "name": "applicationCellLifecycle",
+      "line": 34
+    },
+    {
+      "path": "packages/core/src/jobs-application.ts",
+      "name": "triggerInngestCron",
+      "line": 41
+    },
+    {
+      "path": "packages/core/src/jobs-application.ts",
+      "name": "ingestApplicationEvent",
+      "line": 101
+    },
+    {
+      "path": "packages/core/src/jobs-application.ts",
+      "name": "applicationEventAccepted",
+      "line": 179
+    },
+    {
+      "path": "packages/core/src/jobs-application.ts",
+      "name": "applicationEventSettled",
+      "line": 207
+    },
+    {
+      "path": "packages/core/src/jobs-application.ts",
+      "name": "applicationEventRuns",
+      "line": 274
+    },
+    {
+      "path": "apps/control-api/src/identity/runtime.ts",
+      "name": "assertPrivateTarget",
+      "line": 21
+    },
+    {
+      "path": "apps/control-api/src/identity/runtime.ts",
+      "name": "privateDirectory",
+      "line": 57
+    },
+    {
+      "path": "apps/control-api/src/identity/runtime.ts",
+      "name": "loadIdentityMaterial",
+      "line": 112
+    },
+    {
+      "path": "apps/control-api/src/identity/runtime.ts",
+      "name": "acquireInstance",
+      "line": 131
+    },
+    {
+      "path": "apps/control-api/src/identity/runtime.ts",
+      "name": "identityPaths",
+      "line": 166
+    }
+  ]
+}
