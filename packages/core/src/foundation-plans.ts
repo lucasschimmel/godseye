@@ -6,7 +6,7 @@ import {
   type RegisterResourceInput,
 } from "@godseye/contracts";
 import { type DatabaseAccess, schema } from "@godseye/store";
-import { and, eq, sql } from "drizzle-orm";
+import { and, eq, isNull, sql } from "drizzle-orm";
 import { z } from "zod";
 import { DomainError, parseInput } from "./errors.js";
 import {
@@ -249,10 +249,18 @@ export async function approve(
       .values(approval)
       .onConflictDoUpdate({ target: schema.approvals.planId, set: approval });
     const waiting = await tx
-      .select()
+      .select({ id: schema.executionRuns.id })
       .from(schema.executionRuns)
-      .where(eq(schema.executionRuns.planId, planId));
-    for (const run of waiting)
+      .innerJoin(schema.operations, eq(schema.operations.id, schema.executionRuns.id))
+      .where(
+        and(
+          eq(schema.executionRuns.planId, planId),
+          isNull(schema.executionRuns.terminalAt),
+          eq(schema.operations.status, "awaiting_approval"),
+        ),
+      );
+    for (const run of waiting) {
+      await state.requeueAdmission?.(tx, plan, run.id, actor);
       await tx
         .update(schema.operations)
         .set({
@@ -263,6 +271,7 @@ export async function approve(
         .where(
           and(eq(schema.operations.id, run.id), eq(schema.operations.status, "awaiting_approval")),
         );
+    }
     await recordRequest(tx, state, key, receipt.digest, planId, "plan.approve");
     await appendAudit(
       tx,
