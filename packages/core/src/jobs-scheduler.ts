@@ -3,6 +3,7 @@ import { and, asc, count, eq } from "drizzle-orm";
 import { DomainError } from "./errors.js";
 import { nextCronFire } from "./jobs-cron.js";
 import { dispatchOutbox, type OutboxTickResult } from "./jobs-outbox.js";
+import { consumeJobReconciliations } from "./jobs-reconcile-queue.js";
 import { pruneJobs, type RetentionResult } from "./jobs-retention.js";
 import { createRun } from "./jobs-runs.js";
 import {
@@ -13,6 +14,7 @@ import {
   JOBS_DESTINATION,
   JOBS_TOOL,
   type JobState,
+  jobEnvironmentFilter,
   jobsActor,
   jobsConfigured,
 } from "./jobs-state.js";
@@ -35,11 +37,17 @@ async function scheduleCron(state: JobState, held: Set<string>) {
   const due = await state.store.db
     .select()
     .from(schema.jobDefinitions)
-    .where(dueDefinitions(state.now()));
+    .where(
+      and(
+        dueDefinitions(state.now()),
+        jobEnvironmentFilter(state, schema.jobDefinitions.environmentId),
+      ),
+    );
   let created = 0;
   for (const definition of due) {
     if (
       definition.trigger.kind !== "cron" ||
+      state.inngestEnvironmentIds.has(definition.environmentId) ||
       !definition.nextFireAt ||
       held.has(definition.environmentId) ||
       !state.handlers?.has(definition.handler)
@@ -125,7 +133,12 @@ async function dispatchRuns(state: JobState, held: Set<string>) {
   const queued = await state.store.db
     .select()
     .from(schema.jobRuns)
-    .where(eq(schema.jobRuns.state, "queued"))
+    .where(
+      and(
+        eq(schema.jobRuns.state, "queued"),
+        jobEnvironmentFilter(state, schema.jobRuns.environmentId),
+      ),
+    )
     .orderBy(asc(schema.jobRuns.createdAt));
   let dispatched = 0;
   for (const run of queued) {
@@ -150,14 +163,15 @@ async function dispatchRuns(state: JobState, held: Set<string>) {
   return dispatched;
 }
 /** One scheduler iteration. An unconfigured engine performs no work and reports none. */
-export async function jobsTick(state: JobState): Promise<JobsTickResult> {
-  if (!jobsConfigured(state))
+export async function jobsTick(state: JobState, signal?: AbortSignal): Promise<JobsTickResult> {
+  if (!jobsConfigured(state) || state.detached)
     return { scheduled: 0, dispatched: 0, settled: 0, outbox: NO_OUTBOX, pruned: NO_PRUNE };
   const held = new Set(await heldEnvironmentIds(state.store.db, state.now()));
+  await consumeJobReconciliations(state);
   const scheduled = state.handlers ? await scheduleCron(state, held) : 0;
   const dispatched = state.handlers ? await dispatchRuns(state, held) : 0;
   const settled = await syncJobRuns(state);
-  const outbox = await dispatchOutbox(state);
+  const outbox = await dispatchOutbox(state, signal);
   const pruned = await pruneJobs(state);
   return { scheduled, dispatched, settled, outbox, pruned };
 }

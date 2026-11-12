@@ -74,8 +74,20 @@ export async function createRun(state: JobState, tx: DatabaseAccess, input: NewR
     );
   return { row: existing, created: false };
 }
-function assertHandler(state: JobState, handler: string) {
+async function assertHandler(
+  state: JobState,
+  tx: DatabaseAccess,
+  handler: string,
+  environmentId: string,
+) {
   assertJobsConfigured(state);
+  if (state.detached) {
+    const [binding] = await tx
+      .select()
+      .from(schema.jobWorkerBindings)
+      .where(eq(schema.jobWorkerBindings.environmentId, environmentId));
+    if (binding?.handlers.includes(handler)) return;
+  }
   if (!state.handlers?.has(handler))
     throw new DomainError(
       "CAPABILITY_UNAVAILABLE",
@@ -100,7 +112,7 @@ export async function triggerJob(
       throw new DomainError("REVISION_CONFLICT", "Job definition changed", 409);
     if (definition.paused)
       throw new DomainError("DEFINITION_PAUSED", "Paused jobs cannot be triggered", 409);
-    assertHandler(state, definition.handler);
+    await assertHandler(state, tx, definition.handler, definition.environmentId);
     await activeCell(state, tx, actor, definition.projectId, definition.environmentId);
     const { row, created } = await createRun(state, tx, {
       definition,
@@ -125,7 +137,7 @@ const EventInput = z
   .object({
     projectId: z.string().uuid(),
     environmentId: z.string().uuid(),
-    eventType: z.string().regex(/^[a-z][a-z0-9.-]{0,63}$/),
+    eventType: z.string().regex(/^[a-z][a-z0-9_.-]{0,63}$/),
     eventId: z.string().min(8).max(120),
     payloadRef: z.string().uuid().optional(),
   })
