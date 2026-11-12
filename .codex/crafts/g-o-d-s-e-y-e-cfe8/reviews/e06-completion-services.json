@@ -1,0 +1,61 @@
+{
+  "status": "native-smoke-rechecked-after-two-review-fixes",
+  "scope": "Supported persistent local service helper",
+  "files": [
+    {
+      "sha256": "ccefe11bbdd6b6ae973421432b23f2760f4309beaf5bedae7679b8ab1f9f4815",
+      "path": "scripts/jobs-services.mjs"
+    },
+    {
+      "sha256": "534e77810527ba07cf2ddeeb6522a4a4c7594f225df5804ca837250ee939b9aa",
+      "path": "scripts/jobs-services.py"
+    }
+  ],
+  "commands": [
+    "node scripts/jobs-services.mjs --help",
+    "node scripts/jobs-services.mjs start --directory .local/jobs-services-smoke --cells artifacts/jobs-services-smoke-cells.json --platform artifacts/jobs-services-smoke-platform.json",
+    "node scripts/jobs-services.mjs stop --directory .local/jobs-services-smoke",
+    "node --check scripts/jobs-services.mjs",
+    "node_modules/.bin/biome check scripts/jobs-services.mjs",
+    "Python AST parse"
+  ],
+  "actual": {
+    "nativePostgresClusters": 3,
+    "nativeRedisProcesses": 2,
+    "startStopRestartCycles": 2,
+    "ownerSentinelRetained": true,
+    "bothRedisSentinelsRetained": true,
+    "appendfsyncAlwaysVerified": true,
+    "noevictionVerified": true,
+    "finalProcesses": "All helper-owned smoke services stopped",
+    "sourceData": "Retained; no deletes",
+    "toolVersions": [
+      "PostgreSQL18.6",
+      "Redis8.0.5 Ubuntu5:8.0.5-1ubuntu0.1"
+    ],
+    "material": "Never emitted to terminal; private program-internal reads/writes only"
+  },
+  "static": {
+    "nodeSyntax": "passed",
+    "biome": "1 file passed",
+    "pythonAst": "passed"
+  },
+  "historicalFailure": {
+    "cause": "Redis daemonization returned before pid/listener ready",
+    "finalRecheck": "passed",
+    "fix": "Bounded authenticated readiness polling",
+    "phase": "Initial smoke"
+  },
+  "limits": [
+    "No independent final source/security review yet",
+    "Nativeprocess only; no Docker/VM/gVisor/networkquota qualification",
+    "No owner enrollment/project creation",
+    "No system/global/dedicatedserver/Git mutations"
+  ],
+  "remediation": {
+    "E06_SERVICES_02": "Exclusive owned sibling staging, flush/fsync, atomic replacement, checked temp cleanup; original file preserved before commit and postcommit directory sync failure attempts atomic rollback",
+    "E06_SERVICES_01": "Independent per-resource ownership checks/cleanup; safe error aggregation after every Redis/PostgreSQL resource visited",
+    "nativeRecheck": "Start -> stop -> start -> prior PostgreSQL/Redis sentinels verified -> stop; all own services stopped, data preserved",
+    "regressions": "GAUNTLET satellite owns tests/test_jobs_services.py; independent reviewer recheck pending"
+  }
+}
