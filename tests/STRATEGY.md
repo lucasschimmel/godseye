@@ -1,6 +1,22 @@
 # G.O.D.S.E.Y.E V1 verification strategy
 
-Generated: 2026-11-11. Criticity: production intent. Current state: local control foundations, owner-access and service-broker suites exist, including real PGlite, native OpenBao and browser WebAuthn cases. Final continuation evidence is recorded per run; no case count certifies complete V1 or infrastructure qualification. Coverage and mutation percentages are not inferred from a test count.
+Latest local Inngest continuation gate (2026-11-12): **1,191 default cases passed**, with two
+opt-in native cases disabled there; **both native cases passed separately**, alongside **41 browser
+journeys**, six selected mutation kills, static checks, independent review and canonical build/smoke.
+The [final frozen evidence](#final-frozen-local-evidence) records exact counts/timings, scope,
+initial failures and corrections. E03/E05/E06 remain partial and no dedicated server is changed.
+
+Preceding local audit-remediation gate (2026-11-12): 1,146/1,146 unit/integration cases across
+93 files passed in 1,033.11 seconds (Vitest); 41/41 browser journeys passed in 315.46236
+seconds (JUnit). This includes sixteen R1–R4 regressions. Five selected mutations were
+killed with baseline/restored passes and unchanged source; independent source review,
+lint/types/contracts/build/smoke passed. Reports: `artifacts/test-results/audit-remediation-unit.xml`,
+`artifacts/test-results/audit-remediation-e2e.xml`, and the current
+[audit/remediation record](../docs/reviews/2026-11-12-e01-e06-audit.md).
+Historical checkpoints below retain their own scope. Earlier infrastructure/PostgreSQL/recovery
+laboratory evidence remains historical; the Inngest native checks are reported separately here.
+
+Created: 2026-11-11; updated 2026-11-12. Criticity: production intent. Local control, owner/broker, infrastructure/data/delivery, application and job suites include real PGlite, native OpenBao/Inngest, Windows permissions and browser WebAuthn cases. Final continuation evidence is recorded per run; no case count certifies complete V1 or infrastructure qualification. Coverage and mutation percentages are not inferred from a test count.
 
 This is a Gauntlet strategy for the target contracts, not a suite mirroring implementation. It traces [F01-F46](../docs/spec/v1.md), [I01-I16/D01-D10](../docs/spec/isolation.md) and [epics E00-E12](../docs/plan/v1-development.md). The local subset is mapped separately below; future provider modules in the plan remain proposed ownership boundaries.
 
@@ -331,3 +347,287 @@ The full unit/integration run ended with 1128 passing cases and two child-proces
 (`access-cli`, `owner-runtime`); both files passed when rerun alone (10/10). Mutation,
 coverage and source review were not run for this stage. Physical suspension, application data
 export and purge of provisioned allocations remain unqualified (ADR-012).
+
+## E01–E06 audit remediation — 2026-11-12
+
+The pre-remediation source audit passed 1,130/1,130 unit/integration cases across 89 files
+(1,004.04 seconds) and 41/41 browser journeys (294.89689 seconds). These are the audit
+baseline, not proof of the subsequent fixes. The default Vitest configuration excludes the
+three explicit infrastructure/database/recovery native laboratory files.
+
+Regression acceptance is frozen in [Audit-R1–R4](../docs/spec/v1.md#current-implementation-boundary--2026-11-12):
+mutable live-job definitions must not relax unknown effects; outbox sends/probes must have
+finite central waits and reject stale completion; approval renewal must preserve bounded
+heavy admission atomically; and prepared CI must retain actual browser artifacts. Tests
+must demonstrate the relevant old failure before the correction, then pass with the fixed
+source. Run the affected behavioral files first, followed by static/contracts/types and the
+appropriate integrated build/regression checks. Any mutation results are selected experiments,
+not exhaustive coverage percentages. The [remediation record](../docs/reviews/2026-11-12-e01-e06-audit.md#remediation-tranche--2026-11-12)
+contains the final scenario bindings, fresh counts and explicitly unexecuted qualification.
+
+The focused correction gate passed 16/16 scenarios across four files in 17.73 seconds:
+`jobs-definition-regression.test.ts` (six), `jobs-outbox-deadline.test.ts` (six),
+`infra-approval-capacity.test.ts` (three) and `jenkins-artifacts.test.ts` (one). Each regression
+file first reproduced its old failure. Static/contracts/types, canonical build and built-API
+smoke passed separately. Final post-fix verification passed **1,146/1,146 cases across 93
+files in 1,033.11 seconds** (Vitest) and **41/41 browser journeys in 315.46236 seconds**
+(Playwright JUnit). Five selected mutations were killed in 60.542 seconds, with five
+baseline/restored passes and unchanged original sources; replay with
+`node scripts/mutation-audit-check.mjs`. Independent review passed and all fourteen reviewed
+source/test hashes were rechecked. Final lint checked 471 files; TypeScript, generated
+OpenAPI `1.8.0`, canonical build and built-API smoke passed. The expanded seventeen-file
+redacted Gitleaks snapshot had zero findings. Bun audit found no vulnerabilities across 325
+checked packages. Native laboratories, comprehensive Semgrep/SBOM and external qualification
+were not rerun or claimed; the remediation record retains the exact scoped evidence.
+
+## Application events and per-cell Inngest continuation — 2026-11-12
+
+This tranche extends F18/F20/F21 and T17–T20/T24/T37. The preceding 1,146-case/41-browser
+audit checkpoint remains historical evidence; its success is not reused as proof of new source.
+The [local continuation criteria](../docs/spec/v1.md#application-events-and-per-cell-engine-continuation)
+require the actual application-to-engine-to-Foundation chain rather than separate green mocks.
+
+| Test source | Required observable proof |
+| --- | --- |
+| `backend-jobs-bridge.test.ts` | Application publication/intent atomicity, idempotent replay/conflict, SSE pruning versus intent retention, actual store reopen, captured epoch/HOLD denial, bounded capacity and actual send lifetime, lost acknowledgements, and custom transaction rollback |
+| `backend-jobs-ingress.test.ts` | Exact project/environment/producer/epoch, metadata-only control receipts, stable replay after history pruning, prolonged HOLD, source payload hash/availability, bounded loader deadline, protected effects and cancelled uncertainty |
+| `inngest-cell.test.ts` | Signed SDK refusal paths, wrong producer/host/port denial, Foundation-receipt acknowledgement rather than engine acceptance, and sole-calendar exclusion |
+| `inngest-compose.test.ts` | Prepared-only independent cell profiles, pinned image requirements, minimum functional queue capacity, distinct authority/network/listeners and unsafe worker/path refusal |
+| `inngest-config.test.ts` | Explicit finite main-server configuration, strict metadata, distinct/reserved ports and conflicting-mode refusal |
+| `inngest-runtime.test.ts` | Existing owner-store scope/settings checks, preparation/startup/cleanup, no owner/project/definition creation, and an opt-in native main-process business-route path |
+| `inngest-native.test.ts` | Two real authenticated native servers and signed SDK endpoints: trusted app publication reaches only its cell's terminal Foundation job; another cell's event key and unsigned worker invocation are rejected |
+
+The native lab must be explicitly enabled and supplied the checksum-pinned project-local Inngest
+1.52.0 tool. It must not start the cloud service, use the owner's application state, or silently
+substitute a fake engine when the executable is missing. Generate fixture keys privately and drain
+upstream diagnostics without publishing authority. Use independent temporary state directories and
+unique HTTP, Connect WebSocket, gateway gRPC, executor gRPC and worker ports; stop all child
+processes/listeners in cleanup. Pin the SDK to the separately versioned 4.26.2 API.
+
+Native diagnostic runs exposed two integration faults before a successful full-chain execution:
+Inngest 1.52.0 silently skips scanning with fewer than five free queue workers, and its callback
+normalizes `127.0.0.1` to `localhost` at the same port. The launcher/profile uses ten workers and
+rejects profile values under five; the SDK wrapper permits only loopback aliases at the configured
+port while preserving mandatory signature checks. The actual OSS v2 sync route returned 501;
+explicit SDK `PUT` performed registration. None of these corrections enables unsigned/dev-mode
+execution. Failed diagnostic runs remain history and are not represented as successful evidence.
+
+Negative cases must bind project, environment, producer and epoch, preserve immutable event identity,
+and distinguish engine acceptance from correlated business completion. Inngest-backed cron cells
+must not also be scheduled by fixture cron. Unknown/protected business effects retain the existing
+Foundation reconciliation policy; retrying a transport cannot constitute approval to repeat them.
+
+Native embedded Redis-compatible state/SQLite and shared development-process privileges do not
+qualify external Redis/PostgreSQL durability, Docker/gVisor containment, quotas, private deployed
+networking, off-host recovery, complete producer fencing or a 72-hour soak. Selected mutation
+experiments are reported with baseline/restored/source-integrity evidence, never as an exhaustive
+mutation or line/branch coverage score. The final frozen evidence is recorded below.
+
+The explicit native command (`GODSEYE_INNGEST_LAB=enabled` in the process environment, then
+`bunx vitest run tests/inngest-native.test.ts`) passed **1/1 case in 59.695 seconds test time,
+70.82 seconds command wall time**. It traversed two actual independent engine processes and
+signed workers to their own terminal Foundation jobs with real scoped payloads, and rejected a
+foreign event key and unsigned invocation. JUnit is retained as
+`artifacts/test-results/inngest-native.xml`. This opt-in case is not counted again as a default-suite
+pass when disabled.
+
+`node scripts/mutation-inngest-check.mjs` killed **six selected mutants in 232.656 seconds**, with
+six baseline/six restored checks and unchanged original sources. The selected set probes publication
+atomicity, exact producer scope, immutable receipt identity, epoch fencing, false timeout acknowledgement
+and missing retained history; its result is recorded in `reviews/mutations-inngest.json` in the CRAFTS
+state directory. It is not a full mutation score. The test owner's `reviews/inngest-tests.json`
+retains earlier focused-run results, additional review regressions and the overwritten focused-artifact
+limitation rather than presenting a later invalid concurrent-cache run as valid evidence.
+
+The full existing browser regression passed **41/41 journeys in 502.140759 seconds** (JUnit;
+`artifacts/test-results/inngest-e2e.xml`, zero failures/errors/skips). These journeys cover the
+dashboard's existing owner flows; they do not substitute for the native engine path or claim a new
+browser test of every managed-cell startup option.
+
+### Verification history and Windows startup correction
+
+The initial combined Inngest batch was **not green**: it recorded 1,170 passing, two failing and four
+skipped cases, plus an OpenBao `beforeAll` failure. The two 45-second CLI child-process timeouts also
+recurred serially; they were not dismissed as ordinary concurrent-load failures. Phase profiling of
+1,301 PostgreSQL files measured 44.736 seconds in private-directory preparation versus 0.416 seconds
+opening the store: repeated per-file Windows ACL reset processes dominated startup.
+
+The correction batches read-only ACL inspection, skipping a reset only for an exact canonical
+inherited current-operator FullControl rule. Drifted entries still use the guarded repair path;
+link/hard-link/containment checks and failure refusal remain in place. A repeat diagnostic measured
+2.993 seconds for private-directory preparation on the same file population. These are local
+diagnostic timings, not qualified performance or relaxed test deadlines. Three additional Windows
+ACL regressions exercise this boundary; the final serialized and full-suite results below supersede,
+without concealing, the initial failures.
+
+A separate actual compiled-backend failure revealed the new workspace-contract dependency was left
+unresolved in the built artifact. `scripts/build-backend.mjs` now bundles that workspace boundary;
+the actual compiled-template restart and independent SDK consumer checks passed **2/2** serially
+after the correction. A successful source test or bundling invocation alone was insufficient proof.
+
+### Final frozen local evidence
+
+| Gate | Actual result | Retained evidence |
+| --- | --- | --- |
+| Fresh complete default Vitest run | **1,191 passed, two opt-in native cases skipped**; 1,193 total cases, 99 passing files plus one native-only skipped file, **945.55 seconds Vitest wall time** | `artifacts/test-results/inngest-unit-final.xml` |
+| Final serialized focused gate | **55 passed**, one native case disabled, eight files, **242.23 seconds**; this preceded the last administrative-config assertions, which passed in the later complete run | `artifacts/test-results/inngest-final-focused.xml` |
+| Explicit final Inngest native gate | **Two passed**, four ordinary cases filtered by the native selection, **28.62 seconds** | `artifacts/test-results/inngest-final-native.xml` |
+| Full existing browser regression | **41/41 passed**, **502.140759 seconds JUnit** | `artifacts/test-results/inngest-e2e.xml` |
+| Selected mutations | **Six killed**, six baseline/six restored checks, unchanged original source, **232.656 seconds** | `reviews/mutations-inngest.json` in CRAFTS state |
+| Static/contracts | Biome **494 files**, TypeScript and generated owner OpenAPI **1.9.0** passed; application API stays **1.0.0** | Root verification ledger |
+| Canonical artifacts | Full console/API/standalone SDK/declarations/backend build passed; actual built-API smoke passed in **8.67 seconds**, with remote server disconnected | Root build/smoke ledger |
+| Dependency audit | **Zero vulnerabilities across 495 checked packages** | Root dependency report |
+| Independent source/security review | Passed; **58 frozen file hashes** (45 production paths and thirteen test/tool paths) rechecked without mismatch | `reviews/inngest-code-review.json` in CRAFTS state |
+
+The fresh default run includes all **45 added ordinary scenarios**: 42 Inngest/application/runtime
+cases and three Windows ACL regressions. Their counts overlap the focused run and are not added
+together. The two explicit Inngest native cases are deliberately disabled in the default run and
+were executed separately. The final native gate proves both independent two-cell event delivery and
+the main-process composition against the existing owner's store, including actual scoped payload
+loading and post-start backend disable returning 423 without firing controller failure handling.
+It does not certify a separate Inngest REST `COMPLETED` observation or external Redis/PostgreSQL.
+
+Offline owner recovery and access administration select `purpose: "administration"` configuration,
+which neither parses unrelated job-runtime JSON nor starts cell engines. Actual offline child-process
+recovery with malformed `GODSEYE_INNGEST_CELLS` passed in the fresh full suite. Ordinary runtime
+configuration still rejects it; explicit local mode and exclusive process guards remain enforced.
+`inngest-config.test.ts` and `owner-runtime.test.ts` bind this local I13/T01 independence case.
+
+The final redacted Gitleaks snapshot covered 58 paths (approximately 556 KB) and produced one raw
+match: a known bootstrap placeholder, independently inspected and classified as a false positive.
+There were zero actual findings and no suppression. Raw evidence remains
+`artifacts/security/inngest-gitleaks-frozen.json`. Semgrep, Syft and cdxgen were unavailable; the
+scoped manifest/lock inventory is not a complete SBOM or exhaustive transitive source review.
+No line/branch/full mutation percentage, deployed containment, external persistence, off-host recovery
+or full E06/V1 qualification is inferred from these passing local gates. No commit, push or
+dedicated-server change was performed.
+
+## Autonomous workers and external persistence — final local evidence
+
+The preceding frozen local evidence describes the application-event/Inngest tranche only. The
+current E06 completion slice now has scoped source/native proof against its independent-process
+topology. The full default regression, selected mutations and canonical build/smoke gates now pass:
+
+| Contract | Required behavior | Evidence status |
+| --- | --- | --- |
+| `T-E06-W01`/`W03` | Explicit cell child environment/config, no owner/foreign material, strict bounded scoped IPC and active callback authority | Passed; final full gates passed |
+| `T-E06-W02`/`W04` | Real execution with owner HTTP absent; PostgreSQL journal concurrency and designated adapter consumption | Passed; final full gates passed |
+| `T-E06-W05`/`W06` | Worker death/deadline and lost result preserve protected uncertainty, lifecycle/epoch fencing and bounded physical calls | Passed; final full gates passed |
+| `T-E06-C01` | Live catalog add/change/pause/resume/removal reconciles without restart and obsolete authority cannot admit | Passed; final full gates passed |
+| `T-E06-P01`/`P03`/`P04` | External dependencies are mandatory, independent and fail closed; startup/shutdown touches only owned resources | Passed; final full gates passed |
+| `T-E06-P02` | Real pending workflow and history survive Inngest/PostgreSQL/Redis process restart with exactly one completion | Passed; final full gates passed |
+
+The real-service lab uses existing signed PostgreSQL18.6 tools and signed/extracted Redis8.0.5
+patched Ubuntu packages, with distinct authenticated cell services and retained private data/AOF
+for restart. A mock, embedded Redis-compatible server, PGlite or configuration-only Compose check
+cannot satisfy the external durability criterion. The initial Inngest event stream is in-memory:
+source-domain outbox redrive must preserve identity until Foundation receipt even when engine
+acceptance precedes a crash.
+
+Native process results must be recorded separately from default-suite skips and from historical
+browser checks. They do not prove Docker/gVisor isolation, enforced quotas, private deployed
+networking, host-power-loss RPO, off-host recovery, coordinated restore activation or a full V1 soak.
+The final counts, commands, timing, selected mutations, source/security review and canonical build
+results are recorded below. Historical failed runs remain visible.
+
+
+### Canonical completion criteria and executable aliases
+
+GAUNTLET's W/C/P IDs are canonical. Earlier D01–D05 names remain in executable cases as aliases:
+
+| Canonical criteria | Executable aliases and concrete files |
+| --- | --- |
+| W04 | D01: `tests/jobs-consumer-partition.test.ts` |
+| W01/W03 | D02: `tests/jobs-runtime-config.test.ts`, `tests/jobs-runtime-ipc.test.ts`, `tests/jobs-runtime-broker.test.ts` |
+| W02 | D03: `tests/jobs-autonomous-native.test.ts`, `tests/jobs-autonomous-crash-native.test.ts` |
+| W05/W06 | D04: broker/IPC cases plus the native worker-death, protected-effect and read-only reconciliation cases |
+| C01 | D05: real live-cron case in `tests/jobs-autonomous-native.test.ts` |
+| P01/P02/P03 | `tests/inngest-persistence-native.test.ts`, runtime config cases, native platform case |
+| P04 | D03/D04: hard-kill/owned-listener/same-source restart in `tests/jobs-autonomous-crash-native.test.ts` |
+
+Helper failure regressions are `tests/test_jobs_services.py`: per-resource cleanup must continue
+after an ownership refusal; failed state writes/replacement cannot truncate restart authority.
+Final aggregate gates, scoped source review and all native cases pass.
+A previous native cron failure is retained
+as a real regression: pinned Inngest emits RFC3339 timestamp IDs, which the prior opaque-ID-only
+Foundation validator rejected. Live SDK registration itself is supported by the pinned server;
+registration acceptance alone is not proof that the cron reached a Foundation job.
+
+
+### Current autonomous-runtime evidence checkpoint
+
+The following are completed checks against the frozen local source. They are distinct from the
+preceding embedded-engine checkpoint; reruns and focused selections overlap and are not summed.
+
+| Gate | Actual result | Evidence |
+| --- | --- | --- |
+| Real external PostgreSQL/Redis | Two native cases passed, **43.343 seconds wall**: waiting step survives engine/PG/AOF restart; independent AUTH and unavailable dependency are checked | `artifacts/test-results/e06-persistence-native.xml` |
+| Compiled owner HTTP absence/restart | Passed, **87.804 seconds**; application publication/handler reaches the same Foundation journal with owner HTTP stopped | `artifacts/test-results/e06-autonomous-built-initial.xml` |
+| Compiled cell worker hard kill | Passed, **55.373 seconds**; protected started effect stays unknown and is not replayed after reopen | Same compiled-native checkpoint |
+| Independent platform engine | Final strengthened case passed, **20.063 seconds test time / 22.84 seconds wall**; trusted maintenance uses its own stores and rejects tenant-envelope dispatch | `artifacts/test-results/e06-platform-final.xml` (the preceding 17.208-second run is historical) |
+| Compiled supervisor hard kill | Passed, **96.016 seconds**; eleven owned listeners released, unrelated listener retained, same source producer/journal reopened | `artifacts/test-results/e06-supervisor-crash.xml` |
+| Compiled read-only protected probe | Passed, **52.524 seconds**; scoped payload is loaded for the authorized probe without replaying the mutation or enabling outbox writes | `artifacts/test-results/e06-native-authority-catalog-final.xml` |
+| Actual live cron catalog | Passed, **77.002 seconds**; new cron fires, current pause/change/resume works without worker restart | Same latest native checkpoint |
+| PostgreSQL singleton/session loss | Passed, **15.153 seconds**; second supervisor using another local directory is refused and loss of the actual advisory-lock session stops admission | Same latest native checkpoint |
+| Latest native selection aggregate | Three native cases plus two ordinary RFC3339 regressions passed, **155.90 seconds wall**; component times above are not wall-time sums | Same latest native checkpoint |
+| Persistent operator helper | Actual native stop/restart retained owner-PG and both Redis sentinels; eight Python regressions and eleven independent failure probes passed | `reviews/e06-completion-services.json` and `reviews/e06-completion-services-review.json` in CRAFTS state |
+| Static/contracts | Biome **527 files**, TypeScript, control OpenAPI **1.9.0** and application API **1.0.0** consistency passed | Root final-gate ledger |
+| Dependencies | **Zero vulnerabilities across 495 packages** | Root Bun audit |
+| Frozen source/security | Runtime review passed for **42 paths**; helper/installer reviews complete a **47-unique-production-path** union, with root SHA256 recheck showing zero drift | `reviews/e06-completion-code-review.json`, installer/services reviews and source-freeze manifest in CRAFTS state |
+| Scoped secrets scanner | Gitleaks8.30.1: **47 explicitly selected paths, zero raw findings** | `artifacts/security/e06-gitleaks.json` |
+
+There are **nine distinct new native cases** across persistence, compiled autonomous and hard-kill
+files. They are opt-in through `GODSEYE_INNGEST_PERSISTENCE_LAB=enabled`; ordinary default-suite
+skips are not native passes. A reproducible full selection, run serially after building the jobs
+artifacts and installing the three local tools, is:
+
+```powershell
+$env:GODSEYE_INNGEST_PERSISTENCE_LAB='enabled'
+bun run build:jobs
+bunx vitest run tests/inngest-persistence-native.test.ts tests/jobs-autonomous-native.test.ts tests/jobs-autonomous-crash-native.test.ts --maxWorkers=1
+Remove-Item Env:GODSEYE_INNGEST_PERSISTENCE_LAB
+```
+
+The fixtures create only disposable private native services; the supported operator helper uses
+persistent owned directories and stops services without deleting data. Python regressions run with
+`python3 -m unittest discover -s tests -p test_jobs_services.py` on Linux/WSL, not inside default
+Vitest. Neither command uses an actual owner account or connects to the dedicated server.
+
+The source review resolved distinct defects found during implementation: lease/admission rechecks
+after awaited I/O, safe read-only reconciliation authority, completed worker ownership/cleanup,
+shared PostgreSQL supervisor exclusion, helper cleanup continuation and atomic state writes. The
+actual cron failure revealed RFC3339 event IDs rejected by the old opaque-only validator; canonical
+RFC3339 and legacy opaque identities are now bounded and invalid/control-character forms refused.
+The passing actual-fire test supersedes the failed earlier cron run; the failure is retained as history.
+
+The final full default-suite, canonical full build/built smoke, both previous embedded native
+regressions, selected mutations and strengthened platform observation pass. Exact results follow. The scoped dependency/manifest inventory covers twelve manifests;
+Semgrep and Syft were unavailable, so this is not exhaustive SAST or a complete SBOM. Browser journeys
+from the previous checkpoint are historical, not newly executed proof of these process changes.
+
+### Final aggregate gates for local E06 completion
+
+| Gate | Final actual result | Retained evidence |
+| --- | --- | --- |
+| Fresh complete default suite | **1,225 passed, eleven opt-in native cases skipped**, 1,236 total; 104 passing files plus four native-only skipped files, 108 collected files; **950.24 seconds Vitest wall time**, exit0 | `artifacts/test-results/e06-unit-final.xml` |
+| New external/autonomous native cases | **Nine distinct cases passed** across the explicit case-level selections listed above; the final strengthened platform case passed in **20.063 seconds test time / 22.84 seconds wall** | GAUNTLET `reviews/e06-completion-tests.json`; `artifacts/test-results/e06-platform-final.xml` |
+| Previous embedded native regression | **Two passed**, four unrelated ordinary cases filtered, **30.74 seconds wall** | `artifacts/test-results/e06-legacy-native-final.xml` |
+| Selected mutations | **Seven killed**, seven baseline/seven restored passes, unchanged original source, **43.039 seconds**, zero survivors/invalid experiments | `reviews/mutations-autonomous.json` in CRAFTS state |
+| Python/operator helper | **Eight Python regressions** plus **eleven independent failure probes** passed; actual persistent native PostgreSQL/Redis stop/restart preserved sentinels and ended with helper-owned services stopped | Helper tests and `reviews/e06-completion-services*.json` in CRAFTS state |
+| Static/contracts/dependencies | Biome **527 files**, TypeScript, control OpenAPI **1.9.0** / application API **1.0.0** consistency passed; Bun audit **zero findings across 495 packages** | Root final verification ledger |
+| Canonical full artifacts | Console, control API, standalone SDK/declarations, backend and autonomous supervisor/application worker/platform/guardian build passed; actual built-API smoke passed | Root final build/smoke ledger |
+| Source/security/trace | Runtime review **42 paths**, **47 unique reviewed production paths** with zero root hash drift; Gitleaks **47 selected paths / zero raw findings**; canonical **11/11** trace bindings rechecked with no missing tests | Frozen review/scan manifests and `reviews/e06-completion-trace.json` |
+| Local Git hygiene | `develop` and HEAD unchanged; empty index, previous edits retained, 69 new-source whitespace checks passed; no commit/push/remote mutation | Read-only gitsmith report |
+
+All eleven opt-in native cases skipped by the default run were executed successfully outside it:
+nine new cases and two prior embedded regressions. The nine new cases passed across explicit
+selections, not a fictitious single fresh all-nine run. Focused/legacy/native/mutation counts overlap
+and are never added to the ordinary 1,225 count. The 34 new ordinary scenarios are included there.
+
+The browser suite was **not rerun for this request**, which changes no UI source. The previous
+41-journey result is historical evidence only. Coverage percentages, exhaustive mutation scores,
+full SAST/SBOM, deployed containment and disaster-recovery qualification were not measured.
+The requested local E06 software scope is complete and verified. E00 dedicated-host work,
+untrusted-code Docker/gVisor containment, network/IPv6/quota/capacity enforcement, off-host custody
+and coordinated E03/E12 recovery/activation retain their mandatory release gates. No server setup,
+owner-data migration, account enrollment, commit or push was performed.
