@@ -3,7 +3,16 @@ import type {
   DeliveryArtifactView,
   RepositoryConfigurationInput,
 } from "@godseye/contracts";
-import { integer, jsonb, pgTable, text, timestamp, uniqueIndex, uuid } from "drizzle-orm/pg-core";
+import {
+  bigint,
+  integer,
+  jsonb,
+  pgTable,
+  text,
+  timestamp,
+  uniqueIndex,
+  uuid,
+} from "drizzle-orm/pg-core";
 
 export const deliveryPolicies = pgTable("delivery_policies", {
   id: uuid("id").primaryKey(),
@@ -102,4 +111,35 @@ export const deliveryPreviews = pgTable("delivery_previews", {
   url: text("url"),
   expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull(),
+});
+/** One current migration lane per environment; `released` rows retain the last holder for audit. */
+export const deliveryMigrationLocks = pgTable("delivery_migration_locks", {
+  environmentId: uuid("environment_id").primaryKey(),
+  runId: uuid("run_id").notNull(),
+  preparationId: uuid("preparation_id").notNull(),
+  migrationClass: text("migration_class")
+    .$type<"compatible" | "reversible" | "destructive">()
+    .notNull(),
+  migrationHash: text("migration_hash").notNull(),
+  fence: integer("fence").notNull(),
+  state: text("state").$type<"held" | "uncertain" | "released">().notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull(),
+});
+/** Exact owner approval of one destructive migration hash for one admitted plan. */
+export const deliveryMigrationApprovals = pgTable("delivery_migration_approvals", {
+  planId: uuid("plan_id").primaryKey(),
+  preparationId: uuid("preparation_id").notNull(),
+  migrationHash: text("migration_hash").notNull(),
+  approvedAt: timestamp("approved_at", { withTimezone: true }).notNull(),
+});
+export const deliveryUsage = pgTable("delivery_usage", {
+  runId: uuid("run_id").primaryKey(),
+  projectId: uuid("project_id").notNull(),
+  environmentId: uuid("environment_id").notNull(),
+  intent: text("intent").$type<"build" | "release" | "rollback" | "cleanup">().notNull(),
+  cpuMilliSeconds: bigint("cpu_milli_seconds", { mode: "number" }).notNull(),
+  peakMemoryMiB: integer("peak_memory_mib").notNull(),
+  diskMiB: bigint("disk_mib", { mode: "number" }).notNull(),
+  durationMs: bigint("duration_ms", { mode: "number" }).notNull(),
+  recordedAt: timestamp("recorded_at", { withTimezone: true }).notNull(),
 });
