@@ -12,6 +12,12 @@ import { fingerprint } from "./journal.js";
 import { type Actor, assertOwner, assertProjectAccess } from "./policy.js";
 
 export interface FoundationOptions {
+  /** Server-owned consumer partition, applied before validation or lease reconciliation. */
+  consumer?: {
+    adapterIds?: ReadonlySet<string>;
+    excludedAdapterIds?: ReadonlySet<string>;
+    environmentIds?: ReadonlySet<string>;
+  };
   /** Server-owned delegation; HTTP actor fields cannot select or broaden this authority. */
   delegatedAuthority?: (
     tx: DatabaseAccess,
@@ -21,6 +27,13 @@ export interface FoundationOptions {
   ) => Promise<boolean>;
   /** Trusted server-side admission participates in the existing enqueue transaction. */
   admission?: (
+    tx: DatabaseAccess,
+    plan: typeof schema.executionPlans.$inferSelect,
+    runId: string,
+    actor: Actor,
+  ) => Promise<void>;
+  /** Rechecks queue admission without repeating the physical reservations of an existing run. */
+  requeueAdmission?: (
     tx: DatabaseAccess,
     plan: typeof schema.executionPlans.$inferSelect,
     runId: string,
@@ -43,8 +56,10 @@ export interface FoundationOptions {
   restoreWindowMs?: number;
 }
 export interface FoundationState {
+  consumer?: FoundationOptions["consumer"];
   delegatedAuthority?: FoundationOptions["delegatedAuthority"];
   admission?: FoundationOptions["admission"];
+  requeueAdmission?: FoundationOptions["requeueAdmission"];
   approvalPolicy?: FoundationOptions["approvalPolicy"];
   claimGate?: FoundationOptions["claimGate"];
   releaseQueued?: FoundationOptions["releaseQueued"];
@@ -64,8 +79,10 @@ export function foundationState(store: Store, options: FoundationOptions): Found
     adapters.set(adapter.id, adapter);
   }
   const state = {
+    consumer: options.consumer,
     delegatedAuthority: options.delegatedAuthority,
     admission: options.admission,
+    requeueAdmission: options.requeueAdmission,
     approvalPolicy: options.approvalPolicy,
     claimGate: options.claimGate,
     releaseQueued: options.releaseQueued,
@@ -181,10 +198,11 @@ export async function validateLease(
   state: FoundationState,
   tx: DatabaseAccess,
   context: ExecutionContext,
+  readOnlyReconciliation = false,
 ) {
   const row = await runFor(tx, context.runId);
   if (
-    row.operation.status !== "running" ||
+    row.operation.status !== (readOnlyReconciliation ? "reconciling" : "running") ||
     row.run.workerId !== context.workerId ||
     row.run.fence !== context.fence ||
     row.run.epoch !== context.epoch ||
@@ -194,7 +212,7 @@ export async function validateLease(
     row.run.environmentId !== context.environmentId ||
     !row.run.leaseExpiresAt ||
     row.run.leaseExpiresAt.getTime() <= state.now().getTime() ||
-    (await currentEpoch(tx, row.run.environmentId)) !== context.epoch
+    (!readOnlyReconciliation && (await currentEpoch(tx, row.run.environmentId)) !== context.epoch)
   )
     throw new DomainError("FENCED", "Execution lease is expired or fenced", 409);
   const [effect] = await tx
@@ -280,3 +298,12 @@ export function needsApproval(input: CreateExecutionPlanInput, production: boole
   );
 }
 export const newId = randomUUID;
+
+export function consumesAdapter(state: FoundationState, adapterId: string, environmentId?: string) {
+  return (
+    (!state.consumer?.adapterIds || state.consumer.adapterIds.has(adapterId)) &&
+    (!state.consumer?.environmentIds ||
+      (!!environmentId && state.consumer.environmentIds.has(environmentId))) &&
+    !state.consumer?.excludedAdapterIds?.has(adapterId)
+  );
+}

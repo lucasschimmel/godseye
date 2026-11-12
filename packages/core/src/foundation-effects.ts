@@ -5,6 +5,7 @@ import { DomainError, parseInput } from "./errors.js";
 import {
   adapterFor,
   assertFresh,
+  consumesAdapter,
   currentEpoch,
   environmentFor,
   type FoundationState,
@@ -143,6 +144,12 @@ export async function reconcileExpired(state: FoundationState) {
       .where(inArray(schema.operations.status, ["running", "reconciling"]));
     let count = 0;
     for (const { run } of rows) {
+      const plan = await planFor(
+        tx,
+        { id: "lease-reconciler", kind: "service", projectIds: [run.projectId] },
+        run.planId,
+      );
+      if (!consumesAdapter(state, plan.adapterId, run.environmentId)) continue;
       if (run.leaseExpiresAt && run.leaseExpiresAt.getTime() <= state.now().getTime()) {
         await markUnknown(tx, state, run.id, "LEASE_EXPIRED");
         await appendAudit(

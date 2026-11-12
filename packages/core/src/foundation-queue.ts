@@ -4,6 +4,7 @@ import { and, asc, eq, inArray, sql } from "drizzle-orm";
 import { DomainError } from "./errors.js";
 import {
   adapterFor,
+  consumesAdapter,
   currentEpoch,
   environmentFor,
   type FoundationState,
@@ -268,6 +269,7 @@ export async function claim(
         { id: "executor", kind: "service", projectIds: [run.projectId] },
         run.planId,
       );
+      if (!consumesAdapter(state, plan.adapterId, run.environmentId)) continue;
       try {
         assertPlanIntegrity(plan);
         adapterFor(state, plan.adapterId);
