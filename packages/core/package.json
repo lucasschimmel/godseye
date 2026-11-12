@@ -10,6 +10,8 @@
     "@godseye/contracts": "workspace:*",
     "@godseye/store": "workspace:*",
     "drizzle-orm": "0.45.4",
+    "inngest": "4.26.2",
+    "hono": "4.13.18",
     "zod": "4.6.7"
   }
 }

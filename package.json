@@ -17,12 +17,19 @@
     "runsc:install": "node scripts/install-runsc.mjs",
     "test:infra:lab": "vitest run --config vitest.infra-lab.config.ts",
     "bao:install": "node scripts/install-openbao.mjs",
+    "inngest:install": "node scripts/install-inngest.mjs",
+    "inngest:compose": "node scripts/inngest-compose.mjs",
+    "jobs:local": "node --import tsx apps/jobs-local/src/server.ts",
+    "jobs:start": "node --import tsx apps/jobs-runtime/src/server.ts",
+    "jobs:services": "node scripts/jobs-services.mjs",
+    "redis:install": "node scripts/install-redis.mjs",
+    "build:jobs": "node scripts/build-jobs.mjs",
     "access:policy": "node --import tsx apps/control-api/src/access-cli.ts policy",
     "access:provider-auth": "node --import tsx apps/control-api/src/access-cli.ts provider-auth",
     "access:stage": "node --import tsx apps/control-api/src/access-cli.ts stage",
     "access:issue": "node --import tsx apps/control-api/src/access-cli.ts issue",
     "dev": "node scripts/dev.mjs",
-    "build": "bun run --filter @godseye/console build && node scripts/build-api.mjs && bun run build:sdk && bun run build:backend",
+    "build": "bun run --filter @godseye/console build && node scripts/build-api.mjs && bun run build:sdk && bun run build:backend && bun run build:jobs",
     "typecheck": "tsc --noEmit",
     "lint": "biome check .",
     "format": "biome check --write .",
@@ -65,15 +72,16 @@
     "vite": "8.3.8"
   },
   "dependencies": {
+    "@better-auth/drizzle-adapter": "1.7.20",
+    "@better-auth/passkey": "1.7.20",
     "@electric-sql/pglite": "0.5.16",
     "@hono/node-server": "2.1.7",
+    "better-auth": "1.7.20",
     "drizzle-orm": "0.45.4",
     "hono": "4.13.18",
+    "inngest": "4.26.2",
     "pg": "8.23.1",
-    "zod": "4.6.7",
-    "better-auth": "1.7.20",
-    "@better-auth/passkey": "1.7.20",
-    "@better-auth/drizzle-adapter": "1.7.20"
+    "zod": "4.6.7"
   },
   "workspaces": [
     "apps/*",
@@ -84,6 +92,9 @@
     "esbuild"
   ],
   "overrides": {
+    "inngest>zod": "4.6.7",
+    "rimraf>glob": "14.0.6",
+    "glob>minimatch": "11.0.8",
     "@esbuild-kit/core-utils>esbuild": "0.28.2"
   }
 }

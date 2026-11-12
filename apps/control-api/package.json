@@ -7,6 +7,8 @@
     "dev": "tsx watch src/server.ts"
   },
   "dependencies": {
+    "@godseye/app-backend": "workspace:*",
+    "drizzle-orm": "0.45.4",
     "@godseye/contracts": "workspace:*",
     "@godseye/core": "workspace:*",
     "@godseye/store": "workspace:*",

@@ -1,0 +1,13 @@
+{
+  "name": "@godseye/jobs-local",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@godseye/app-backend": "workspace:*",
+    "@godseye/core": "workspace:*",
+    "@godseye/store": "workspace:*",
+    "@hono/node-server": "2.1.7",
+    "zod": "4.6.7"
+  }
+}

@@ -8,6 +8,7 @@
     "./contracts": "./src/contracts.ts"
   },
   "dependencies": {
+    "@godseye/contracts": "workspace:*",
     "@electric-sql/pglite": "0.5.16",
     "@better-auth/drizzle-adapter": "1.7.20",
     "better-auth": "1.7.20",
