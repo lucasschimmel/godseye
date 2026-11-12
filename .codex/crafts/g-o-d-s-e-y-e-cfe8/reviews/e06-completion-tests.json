@@ -1,0 +1,232 @@
+{
+  "run": "godseye-e06-completion",
+  "status": "targeted-verification-complete-root-final-gates-pending",
+  "generatedAt": "2026-11-12T21:24:13.244Z",
+  "ownership": "GAUNTLET satellite: tests and test tooling only; test lane released after platform session9233; no test/build process remains active here",
+  "baseline": {
+    "ordinary": 1191,
+    "previousNative": 2,
+    "note": "Previous task evidence, not completion proof for this topology"
+  },
+  "ordinary": {
+    "newDelta": 34,
+    "expectedTotal": 1225,
+    "authoritativeTotal": "Root final full suite pending",
+    "files": {
+      "tests/jobs-consumer-partition.test.ts": 8,
+      "tests/jobs-runtime-ipc.test.ts": 9,
+      "tests/jobs-runtime-config.test.ts": 5,
+      "tests/jobs-runtime-broker.test.ts": 9,
+      "tests/jobs-cron-event-identity.test.ts": 2,
+      "tests/inngest-compose.test.ts": {
+        "total": 5,
+        "new": 1
+      }
+    },
+    "artifacts": [
+      "artifacts/test-results/e06-ipc-config-initial.xml",
+      "artifacts/test-results/e06-persistence-partition-initial.xml",
+      "artifacts/test-results/e06-authority-cron-focused.xml",
+      "artifacts/test-results/e06-supervisor-crash.xml",
+      "artifacts/test-results/e06-native-authority-catalog-final.xml"
+    ],
+    "note": "Every new ordinary scenario passed; several historical combined reports retain unrelated failures, detailed below. Root's fresh full suite is the final ordinary aggregate."
+  },
+  "native": {
+    "distinctPassed": 9,
+    "flag": "GODSEYE_INNGEST_PERSISTENCE_LAB=enabled",
+    "compiled": "Application supervisor/runtime, application child, platform child and guardian use dist/jobs-runtime. Actual owner HTTP child uses existing source server. Native stores use project-local signed PG18.6/Redis8.0.5 under non-root WSL; actual pinned Inngest1.52.0 and signed SDK4.26.2.",
+    "cases": [
+      {
+        "id": "owner-http-offline",
+        "test": "T-E06-D02 T-E06-D03 finishes application work with the owner HTTP process stopped and preserves the same journal after runtime restart",
+        "artifact": "artifacts/test-results/e06-autonomous-built-initial.xml",
+        "seconds": 87.804,
+        "status": "passed"
+      },
+      {
+        "id": "physical-worker-kill",
+        "test": "T-E06-D04 a killed physical worker leaves its protected effect unknown and cannot replay it after reopening",
+        "artifact": "artifacts/test-results/e06-autonomous-built-initial.xml",
+        "seconds": 55.373,
+        "status": "passed"
+      },
+      {
+        "id": "supervisor-kill",
+        "test": "T-E06-D03 T-E06-D04 releases owned child and engine listeners after supervisor SIGKILL and resumes the same source without touching an unrelated listener",
+        "artifact": "artifacts/test-results/e06-supervisor-crash.xml",
+        "seconds": 96.016,
+        "artifactNote": "Combined run retained a different broker assertion failure (expected safe FENCED rejection); this native scenario passed. Corrected broker subsequently passed all nine cases.",
+        "status": "passed"
+      },
+      {
+        "id": "readonly-probe",
+        "test": "T-E06-D04 performs a detached owner-requested read-only payload probe without replaying its protected effect or granting outbox writes",
+        "artifact": "artifacts/test-results/e06-native-authority-catalog-final.xml",
+        "seconds": 52.524,
+        "status": "passed"
+      },
+      {
+        "id": "live-cron",
+        "test": "T-E06-D05 updates the real cron catalog without restarting workers and admits only the current active hash",
+        "artifact": "artifacts/test-results/e06-native-authority-catalog-final.xml",
+        "seconds": 77.002,
+        "status": "passed"
+      },
+      {
+        "id": "postgres-runtime-ownership",
+        "test": "T-E06-D01 refuses a second supervisor under a different local directory and stops admission after losing its actual PostgreSQL ownership session",
+        "artifact": "artifacts/test-results/e06-native-authority-catalog-final.xml",
+        "seconds": 15.153,
+        "status": "passed"
+      },
+      {
+        "id": "platform-isolation",
+        "test": "T-E06-P03 executes only trusted platform maintenance through its independent real engine",
+        "artifact": "artifacts/test-results/e06-platform-final.xml",
+        "seconds": 20.063,
+        "status": "passed"
+      },
+      {
+        "id": "external-persistence-restart",
+        "test": "T-E06-P02 resumes a persisted sleep once after the engine, PostgreSQL and authenticated AOF Redis restart",
+        "artifact": "artifacts/test-results/e06-native-completion.xml",
+        "seconds": 38.199,
+        "artifactNote": "Combined run had two different native scenarios fail; both were corrected and passed in e06-native-authority-catalog-final.xml.",
+        "status": "passed"
+      },
+      {
+        "id": "external-auth-and-outage",
+        "test": "T-E06-P01 T-E06-P03 authenticates independent workflow stores and refuses foreign authority or an unavailable dependency",
+        "artifact": "artifacts/test-results/e06-native-completion.xml",
+        "seconds": 5.142,
+        "artifactNote": "Per-case success in a historical combined failed run; unrelated failures corrected and reverified.",
+        "status": "passed"
+      }
+    ],
+    "lastRun": {
+      "artifact": "artifacts/test-results/e06-platform-final.xml",
+      "passed": 1,
+      "filtered": 4,
+      "vitestWallSeconds": 22.84
+    }
+  },
+  "helper": {
+    "path": "tests/test_jobs_services.py",
+    "passed": 8,
+    "seconds": 0.007,
+    "command": "wsl -d Ubuntu --exec python3 /mnt/d/Developer/Projects/G.O.D.S.E.Y.E/tests/test_jobs_services.py",
+    "kind": "Python standard-library failure-injection tests; not default Vitest count",
+    "coverage": [
+      "failed staging fsync",
+      "failed atomic replacement",
+      "postcommit directory sync rollback",
+      "successful private complete replacement",
+      "hardlinked state refused",
+      "refused Redis identity still cleans all independently owned PG/later Redis",
+      "failed Redis shutdown does not skip remaining resources",
+      "foreign PG refused while later owned PG is stopped"
+    ]
+  },
+  "coverage": {
+    "line": null,
+    "branch": null
+  },
+  "mutation": {
+    "report": "reviews/mutations-autonomous.json",
+    "kind": "Curated isolated-copy experiment; no exhaustive score",
+    "selected": 7,
+    "killed": 7,
+    "survived": 0,
+    "invalid": 0,
+    "baseline": 7,
+    "restored": 7,
+    "sourceUnchanged": true,
+    "seconds": 43.039
+  },
+  "layers_run": [
+    "strict-input-and-message-corpora",
+    "real-foundation-journal-integration",
+    "actual-compiled-independent-processes",
+    "native-postgresql-redis-restart",
+    "python-helper-failure-injection",
+    "curated-boundary-mutation"
+  ],
+  "trace": "reviews/e06-completion-trace.json",
+  "historicalFailures": [
+    {
+      "artifact": "e06-broker-initial.xml",
+      "cause": "Test setup invalid allowedOrigins empty; corrected to accepted owner backend configuration; no product regression claimed."
+    },
+    {
+      "artifact": "e06-broker-recheck.xml",
+      "cause": "Valid RED: manual and cron epochs revoked after context loading still caused physical child dispatch. Fixed actual final authority checks; later nine broker scenarios passed."
+    },
+    {
+      "artifacts": [
+        "e06-persistence-native-initial.xml",
+        "e06-persistence-partition-initial.xml"
+      ],
+      "causes": [
+        "Test mixed user-supplied event UUID with engine internal acknowledgement ULID; corrected event correlation.",
+        "WSL loopback forwarding was not ready when process-local CLI probes already passed. Helper now actively validates actual Windows-side PG/Redis TCP readiness, including after restart. Production deadlines unchanged."
+      ]
+    },
+    {
+      "artifacts": [
+        "e06-autonomous-native-initial.xml",
+        "e06-autonomous-native-recheck.xml"
+      ],
+      "causes": [
+        "Windows injects six account-location environment entries during process creation; exact OS-injected names distinguished from forbidden inherited authority in presence-only probe.",
+        "Pinned engine function_finishes output is empty even for completed functions. Final platform proof verifies actual completed status and successful signed supervisor IPC, not invented output."
+      ]
+    },
+    {
+      "artifact": "e06-native-completion.xml",
+      "causes": [
+        "Read-only fixture incorrectly requested mutation-only assertActive; fixed to assertReconciliation and require assertActive/outbox both refused.",
+        "Real cron failed because native event.id is canonical RFC3339 containing colons, which old opaque-only parser rejected. Canonical parser fixed from official pinned source, exact replay/malformed regressions and actual calendar fire now pass."
+      ]
+    },
+    {
+      "artifact": "e06-supervisor-crash.xml",
+      "cause": "Read-only epoch regression observed the correct caller FENCED rejection; test now asserts that rejection plus no physical invocation and unchanged unknown state."
+    }
+  ],
+  "flaky": [],
+  "flakinessNote": "Initial WSL readiness races retained above and fixed with bounded actual-protocol probes. No broad repeated-run or quarantine claim.",
+  "limits": [
+    "Root full suite/build/browser/security/trace gates are separate and pending at satellite handoff.",
+    "Native same-UID Windows/WSL processes prove local software behavior, not hostile-code containment, Docker/gVisor, network/quota/IPv6 or dedicated-server acceptance.",
+    "Nine native cases passed across explicit targeted runs; this is not one fresh all-nine single run.",
+    "Coverage percentages, exhaustive property/fuzz and exhaustive mutation score were not measured."
+  ],
+  "rootFinalRegression": {
+    "status": "passed",
+    "exitCode": 0,
+    "ordinaryPassed": 1225,
+    "nativeSkippedButSeparatelyVerified": 11,
+    "total": 1236,
+    "passedFiles": 104,
+    "nativeOnlySkippedFiles": 4,
+    "totalFiles": 108,
+    "vitestWallSeconds": 950.24,
+    "artifact": "artifacts/test-results/e06-unit-final.xml",
+    "junitFailures": 0,
+    "junitErrors": 0
+  },
+  "rootLegacyNativeFinal": {
+    "status": "passed",
+    "cases": 2,
+    "filteredOut": 4,
+    "wallSeconds": 30.74,
+    "artifact": "artifacts/test-results/e06-legacy-native-final.xml"
+  },
+  "rootAggregateNative": {
+    "distinctPassed": 11,
+    "newCases": 9,
+    "legacyCases": 2,
+    "note": "Case-level positive evidence across scoped runs; not one combined all-native run"
+  }
+}
