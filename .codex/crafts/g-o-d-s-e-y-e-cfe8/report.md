@@ -2,7 +2,7 @@
 
 ## Outcome
 
-The requested E04 local implementation is complete: independent per-cell application identity, private files, durable domain events, TypeScript SDK and runnable backend template. All current local verification gates passed. The owner additionally authorized a private GitHub repository with README-only release main and a granular develop history; gitsmith is finalizing that publication.
+The requested E04 local implementation is complete: independent per-cell application identity, private files, durable domain events, TypeScript SDK and runnable backend template. All current local verification gates passed. The owner additionally authorized a private GitHub repository with README-only release main and a granular develop history; the verified source import is published and the final handoff is recorded.
 
 - Application authentication is independent of owner passkeys/control tables. Exact project/environment scope binds the application store, cookie namespace and filesystem. Actual Better Auth email/password and configured local OAuth2/PKCE are tested.
 - Uploads reserve whole-file quota before physical effects. Durable chunk intents retain uncertain offset/hash; exact partial-prefix retries and short-I/O loops resume safely. Completion hashes actual bytes. Deletion persists tombstones/revocation before unlink and retains unknown cleanup capacity.
@@ -26,7 +26,7 @@ The requested E04 local implementation is complete: independent per-cell applica
 | Selected mutations | M74–M86:13baseline/13killed/13restored;zero survivors/invalids;original sources unchanged;257.091s wall; historical suites not rerun |
 | Independent source review | Code PASS78hashes; UIcoherence PASS12hashes; coordinator reread hashes and actually viewed updated desktop/mobile screenshots |
 | Dependencies | Frozen Bun install unchanged; advisory audit empty; zero untrusted scripts; no new third-party runtime dependency |
-| Scanning | Preliminary414-file allowlisted source and original history zero findings; one structured-staged inactive validation-placeholder false positive is exactly hash/path/rule bound, not a waiver; raw evidence retained; final publication scans delegated |
+| Scanning | Final543-file source snapshot and complete staged import each have one exact inactive synthetic-placeholder false positive; reconstructed109-commit history has two occurrences of the same hashed source. Effective credential findings0, waivers0; raw redact100 reports and exact classifications retained |
 
 Full XML: artifacts/test-results/backend-unit-full.xml and backend-e2e-full.xml. Supporting reviews: backend-test-results.json, backend-test-strategy.md, mutations-backend.json, backend-code-review.json, backend-ui-review.json, backend-freeze-check.json, backend-aegis.json.
 
@@ -49,7 +49,7 @@ Focused failures and repaired assertions are preserved; the final combined suite
 
 https://github.com/lucasschimmel/godseye is private. Main is verified README-only at b0a3300cdb5c6474e612276f1daf9058c36550fb, PR/admin protected with zero mandatory reviews for solo use, force/deletion blocked and no fictional CI checks. An initial erroneous historical-main push was corrected using an exact lease after owner/ref checks; original seven local checkpoints and old main remain in local backup refs. No collaborator history was overwritten.
 
-Develop is prepared as a granular responsibility-based import. Final tree equality, actual commit count, reachable graph anchor, privacy/protection readback and push verification belong to gitsmith, recorded in reviews/backend-git-export.json. No V1 release/tag/deployment is implied. Intermediate import commits are review units; only the final combined tree is claimed tested.
+Develop is published as100 responsibility-based import commits plus one final handoff metadata commit. The543-file source import at fabcd58f3dc17cbf9b1820f2968400e1ceaa8ff3 exactly matched the final staged tree 6ae1ab33d24ee740a213531a5d2cc2efd1cfef3d; raw working source bytes remained unchanged. The grep graph anchor cfad4f7971ff2df35bf995eb2defadf972411245 is reachable in the new history and includes the complete source. Develop blocks force pushes/deletion while allowing normal fast-forward development; main requires a release PR. Privacy, remote commit/tree and protections were independently read back. Original checkpoint history and the final local E04 tree remain on local backup refs. The handoff SHA resolves through origin/develop and is reported separately; details are recorded in reviews/backend-git-export.json. No V1 release/tag/deployment is implied. Intermediate import commits are review units; only the final combined tree is claimed tested.
 
 ## Memory and provenance
 

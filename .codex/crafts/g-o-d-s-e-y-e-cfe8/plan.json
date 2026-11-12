@@ -529,11 +529,18 @@
     }
   ],
   "github_publication": {
-    "legacyHistory": "preserved in local backup refs",
-    "sourceCheckout": "unchanged while final tests run",
-    "develop": "final verified source/docs ready for granular publication; gitsmith final export pending",
+    "repository": "lucasschimmel/godseye",
+    "url": "https://github.com/lucasschimmel/godseye",
     "visibility": "private",
-    "main": "README-only presentation; release PR required; owner-only review count zero",
-    "repository": "lucasschimmel/godseye"
+    "status": "published",
+    "main": "README-only presentation; PR/admin protected; zero mandatory approving reviews; force push and deletion blocked",
+    "develop": "100 granular responsibility import commits plus one final handoff metadata commit; complete local source, no V1 release",
+    "sourceImportCommit": "fabcd58f3dc17cbf9b1820f2968400e1ceaa8ff3",
+    "sourceImportTree": "6ae1ab33d24ee740a213531a5d2cc2efd1cfef3d",
+    "developmentCommitCountAfterHandoff": 101,
+    "sourceCheckout": "develop tracking origin/develop; source bytes preserved",
+    "legacyHistory": "Original seven checkpoints and the final E04 tree retained on local backup refs",
+    "graphAnchor": "cfad4f7971ff2df35bf995eb2defadf972411245",
+    "protection": "Develop force/deletion blocked; ordinary fast-forward pushes allowed. Main release PR required. No fictional CI checks."
   }
 }

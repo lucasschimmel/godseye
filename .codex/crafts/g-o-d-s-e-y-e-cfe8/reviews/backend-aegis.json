@@ -10,11 +10,12 @@
     "PGlite/filesystem/loopback fixtures do not qualify deployed PostgreSQL multiprocess, hard quotas, Docker/VM isolation or off-host recovery",
     "No external OAuth account or dedicated-server changes"
   ],
-  "history_staged_scan": "Original history scan0; raw staged1 inactive validation-placeholder false positive, exact path/line/rule/source/literal hash classification effective0, waiver0; final publication scans in backend-git-export.json",
+  "history_staged_scan": "Completed original-history, final source/staged import and reconstructed all-ref history scanning; exact known synthetic classification only, no vulnerability waiver or source modification. Canonical evidence: backend-git-export.json.",
   "scanners_run": [
     "Bun audit --json: exit0 empty advisory result",
     "Bun pm untrusted: zero untrusted lifecycle scripts",
-    "Gitleaks8.30.1 preliminary414-file allowlisted first-party source snapshot: exit0 zero findings, redact100"
+    "Gitleaks8.30.1 preliminary414-file allowlisted first-party source snapshot: exit0 zero findings, redact100",
+    "Gitleaks8.30.1 final543-file snapshot / structured complete staged import / reconstructed all109-commit history: exact synthetic findings classified against frozen path/rule/line/literal/source hashes; zero effective credential findings, redact100, no vulnerability waiver"
   ],
   "findings": [],
   "at": "2026-11-12T07:46:50.8917522Z",
@@ -22,6 +23,6 @@
   "waivers": 0,
   "logic_review": "Independent defensive read-only code PASS78 hashes and UI coherence PASS12; all confirmed findings resolved. Coordinator verified source hashes and actual refreshed desktop/mobile screenshots. Final docs115links52commands frozen separately. No active pentest/external testing.",
   "dependency_hygiene": "Existing pinned runtime libraries reused; new first-party workspaces, no new third-party runtime dependency",
-  "final_source_scan": "Final exact-source scan/classification delegated to gitsmith; canonical result in reviews/backend-git-export.json",
+  "final_source_scan": "Final543-file source snapshot and complete staged import each yielded one exact inactive synthetic-placeholder false positive, effective credential findings0 and waivers0. All109 local refs/commits before handoff yielded two occurrences of the same exact hashed source blob, effective0. Raw redact100 reports/classifications remain retained; post-handoff rechecks are recorded separately under artifacts/security/backend-handoff-*.",
   "verification": "972/972unit72files751.83sVitest/752.705scommandwall;31/31browser181.393319s;13/13selectedmutations257.091s baseline/restored13/sourceunchanged;static381/types/OpenAPI1.6/build/smokePASS;62/62localtrace"
 }
