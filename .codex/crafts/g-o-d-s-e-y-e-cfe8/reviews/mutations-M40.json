@@ -1,0 +1,38 @@
+{
+  "kind": "curated behavioral mutation experiment",
+  "runnerTimeoutMs": 180000,
+  "startedAt": "2026-11-11T20:45:28.486Z",
+  "finishedAt": "2026-11-11T20:45:49.887Z",
+  "scope": "1 selected mutations; not an exhaustive mutation score or coverage claim",
+  "isolation": "Temporary source copies with explicit Vitest workspace aliases; original source never mutated",
+  "baseline": {
+    "status": "passed",
+    "passed": 1
+  },
+  "restored": {
+    "status": "passed",
+    "passed": 1
+  },
+  "sourceUnchanged": true,
+  "selected": 1,
+  "killed": 1,
+  "survived": 0,
+  "invalid": 0,
+  "results": [
+    {
+      "id": "M40",
+      "file": "packages/core/src/database-preparation.ts",
+      "behavior": "Admit a second independent PostgreSQL allocation for an already reserved environment",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "exact database admission through one Foundation queue T-AC-29 atomically admits only one database cell for an environment under contention",
+            "message": "AssertionError: expected { status: 'rejected', …(1) } to match object { status: 'rejected', …(1) }"
+          }
+        ]
+      }
+    }
+  ]
+}
