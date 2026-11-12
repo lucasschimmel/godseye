@@ -1,8 +1,16 @@
 # CI preparation and GitHub delivery
 
-Status: local configuration and event intake, 2026-11-11. Jenkins has not been started or qualified in this checkpoint. No GitHub App, remote repository, Jenkins agent, image registry or deployment provider is connected by these files.
+Status: local CI preparation and source-intake implementation, updated 2026-11-12. Jenkins has not been started or qualified. The private repository exists, but these files do not configure a live GitHub App, Jenkins agent, image registry or deployment provider. The current control API is `1.9.0`; older versioned verification below describes its original checkpoint.
 
 ## Available artifacts
+
+The Jenkins post-build archive must retain `artifacts/playwright-results/**`, the actual Playwright
+trace/screenshot directory, before workspace cleanup. JUnit statuses and CI metadata do not replace
+those diagnostic files. The local regression verifies path compatibility; a real Jenkins artifact
+upload and runner execution remain qualification work. The prepared job follows release `main`;
+while that branch contains only the presentation README, it cannot run the development Jenkinsfile.
+An approved release or a separately configured trusted development-validation job is required before
+claiming automatic CI for `develop`.
 
 | Artifact | Purpose |
 | --- | --- |
@@ -54,6 +62,46 @@ The local API accepts `POST /hooks/github` with `Content-Type: application/json`
 Non-deleted branch pushes and same-repository PR `opened`, `synchronize`, `reopened` and `closed` events whose repository ID, installation ID, full repository name and tracked branch match a recorded project binding create CI intentions. Forks are not admitted. A shared repository may match several projects; all matching projects receive their own run inside one transaction. Retried identical deliveries create no duplicate runs. Reusing a delivery ID with different authenticated contents returns 409. Accepted events begin at `pending_verification`.
 
 The local E05 DeliveryEngine now composes the existing Foundation worker with independent source verification, build/artifact evidence, serialized readiness/promotion, rollback and bounded preview cleanup. Its source adapter checks current installation/repository/ref/PR state, and its private managed-provider seam can support a qualified build/deployment integration. Default startup configures neither provider. No live GitHub App token exchange, Jenkins build dispatch, registry/scanner or Coolify execution has been qualified. Receiving a webhook remains distinct from a verified source or an up-to-date serving release. See [application delivery](application-delivery.md) and T41–T43 release qualification.
+
+## Compiled application contract checks
+
+Local artifact validation executes the compiled backend, not only TypeScript source. The backend
+bundle resolves both `@godseye/app-backend` and its new `@godseye/contracts` workspace dependency
+into the Node.js 24 artifact; external runtime dependencies remain explicit. The independent
+compiled-template restart and built-SDK consumer checks catch unresolved workspace imports that
+a source-only test or successful bundling command could miss. Their current run is recorded in
+the [verification strategy](../../tests/STRATEGY.md).
+
+The final canonical console/API/standalone SDK/declarations/backend build passed, followed by an
+actual built-API smoke check in 8.67 seconds with the dedicated server disconnected. This is local
+artifact evidence; it does not qualify Jenkins, an isolated build agent or a deployment provider.
+
+## Autonomous jobs and external-persistence checks
+
+The E06 completion slice adds a separate process-level qualification target: owner HTTP must be
+absent while a trusted supervisor and per-cell workers execute against the same PostgreSQL control
+journal. External workflow PostgreSQL and Redis must be real services with private independent
+authority/state; PGlite and embedded Inngest storage cannot satisfy this check. A health endpoint
+or generated Compose document is insufficient proof of waiting-workflow restart.
+
+The local tools are installed into ignored project artifacts:
+
+```sh
+bun run postgres:install
+bun run redis:install
+bun run inngest:install
+```
+
+The PostgreSQL and Redis installers extract signed Ubuntu packages as an unprivileged user,
+using the existing Ubuntu WSL distribution on Windows. They do not use `apt install`, `sudo`,
+system services or a Docker daemon. Redis is pinned to the patched Ubuntu package
+`5:8.0.5-1ubuntu0.1` (Redis8.0.5); acquisition verifies archive signatures, index and package
+SHA256/size. Native-process evidence remains separate from a Linux Jenkins/VM/container run.
+
+The supported operator provisioning command is `bun run jobs:services start --directory .local/jobs-services --cells path/to/cells.json --platform path/to/platform.json`; it writes private bindings without printing material. `bun run jobs:start` starts the separate supervisor and `bun run build:jobs` builds its independent artifacts. See the [runtime guide](application-jobs.md#start-and-stop-persistent-local-services) for explicit configuration and the PGlite migration boundary. Final local gates pass: 1,225 default cases, eleven separately executed opt-in native cases, seven selected mutation kills, canonical build/built smoke and frozen source/security review. No UI changed, so the previous browser results are historical; no new browser run is claimed. The earlier
+Inngest suite and its 1,191-case checkpoint remain historical evidence for the previous source.
+Do not enable an automated deployment or claim this stage runs in Jenkins until the corresponding
+agent, actual services, retained JUnit and failure cleanup have been qualified.
 
 ## Required delivery policy
 
