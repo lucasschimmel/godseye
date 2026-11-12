@@ -318,3 +318,16 @@ CRAFTS state directory. No exhaustive mutation score, line/branch coverage,
 remote containment, live OAuth enrollment, off-host recovery or full V1 completion
 is inferred. Native app stores on a shared host do not prove production cell
 isolation; recovery activation and remote providers remain separately qualified.
+
+## Local E03.S01 project lifecycle continuation
+
+`tests/lifecycle-http.test.ts` (15 cases) covers suspension gating, idempotent replay, stale
+revisions, resume, deterministic export digests with no data claims, quarantine preconditions
+(current-revision export, unresolved operations/jobs/rotations, passkey step-up), immutability of
+quarantined projects, release, refused early purge with audit, residual-resource blocking and
+the retention-expired purge tombstone. `tests/e2e/lifecycle.spec.ts` (3 browser journeys) covers
+the French panel, the disabled purge until the slug is typed, and a 390px mobile layout.
+The full unit/integration run ended with 1128 passing cases and two child-process timeouts
+(`access-cli`, `owner-runtime`); both files passed when rerun alone (10/10). Mutation,
+coverage and source review were not run for this stage. Physical suspension, application data
+export and purge of provisioned allocations remain unqualified (ADR-012).
