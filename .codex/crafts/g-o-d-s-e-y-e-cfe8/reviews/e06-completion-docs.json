@@ -1,0 +1,100 @@
+{
+  "status": "pass-final-documents-frozen",
+  "skill": "scribe",
+  "mode": "CRAFTS final closure",
+  "audience": "maintainer/operator",
+  "written": [
+    "docs/spec/v1.md",
+    "docs/plan/v1-development.md",
+    "docs/development/application-jobs.md",
+    "docs/development/ci.md",
+    "docs/adr/ADR-011-durable-jobs-and-outbox.md",
+    "CHANGELOG.md",
+    "tests/STRATEGY.md"
+  ],
+  "verified": {
+    "documents": 7,
+    "relativeLinks": 109,
+    "anchors": 25,
+    "findings": [],
+    "whitespace": [],
+    "source": "Runtime42 paths + helper/installer47unique reviewed production paths; root0hashdrift; no production edits by SCRIBE",
+    "contracts": "Control1.9.0/application1.0.0 preserved; F/I/D/N release requirements unchanged",
+    "defaultSuite": {
+      "passed": 1225,
+      "skippedNative": 11,
+      "total": 1236,
+      "passingFiles": 104,
+      "skippedFiles": 4,
+      "collectedFiles": 108,
+      "vitestWallSeconds": 950.24,
+      "artifact": "artifacts/test-results/e06-unit-final.xml"
+    },
+    "native": {
+      "newDistinctPassed": 9,
+      "priorPassed": 2,
+      "allDefaultSkipsSeparatelyVerified": true,
+      "note": "Case-level explicit selections, not a fictitious all-nine single run",
+      "platformFinal": {
+        "passed": 1,
+        "testSeconds": 20.063,
+        "wallSeconds": 22.84
+      },
+      "legacyFinal": {
+        "passed": 2,
+        "filtered": 4,
+        "wallSeconds": 30.74
+      }
+    },
+    "pythonHelperPassed": 8,
+    "independentHelperProbesPassed": 11,
+    "mutation": {
+      "killed": 7,
+      "baseline": 7,
+      "restored": 7,
+      "sourceUnchanged": true,
+      "seconds": 43.039,
+      "exhaustive": false
+    },
+    "static": "527lint/types/contracts/deps0/495 passed",
+    "artifacts": "Full canonical console/API/SDKdeclarations/backend/jobs/workers/platform/guardian build and builtAPI smoke passed",
+    "scanner": "Gitleaks47explicitpaths/raw0;12manifestinventorydegraded; no Semgrep/Syft or fullSBOM claim",
+    "trace": "11/11canonical criteria root checked0missing",
+    "browser": "Not rerun this request; noUIchanges; prior41journeys retained as historical only",
+    "commands": "jobs:start --help and jobs:services --help passed earlier stable-source draft",
+    "git": "Read-only hygiene develop/HEADunchanged/indexempty69newsourcewhitespace; no mutation"
+  },
+  "documentHashes": {
+    "docs/spec/v1.md": "800264567047a01712cd770ddad8deefbd3a1e36e6c0c244faa838d235bfaca3",
+    "docs/plan/v1-development.md": "8983ee0ae1251d7021d9d4b405f8e8d47972c9fb923873d91b55c0f5bac13867",
+    "docs/development/application-jobs.md": "cb516fb6512d99bd1b1e4cdc0607fc48726bfb298cac645451f75b7b39017f1c",
+    "docs/development/ci.md": "f20e04cc47483d9bb87cf0cb59e29c67d003cc3ddb8f3251e37438a286002fe1",
+    "docs/adr/ADR-011-durable-jobs-and-outbox.md": "3a4e15b3ad512947f05d9625c711c29afc47b32d6ed970b1d7c01fb9ace3d8ab",
+    "CHANGELOG.md": "dab4728638cf10784523d413e62283cc62feddda9d60e9233b270a0e22665051",
+    "tests/STRATEGY.md": "c4fe28dbd75c47a9c7d38b9c7da652e82a98b75f5d118752c9eae0b848e56375"
+  },
+  "pending": [],
+  "preserved": [
+    "Prior accepted ADR decisions and historical failed/successful checkpoints",
+    "No implicit PGlite migration, owner enrollment, dedicatedserver action, Gitcommit/push",
+    "Explicit mandatory E00host/gVisor/untrustedcode/networkIPv6/quota/capacity/offhost and E03/E12coordinatedrecovery gates"
+  ],
+  "skipped": [
+    {
+      "what": "Global document crawler",
+      "why": "Scoped allowlist respects sensitive-path policy"
+    },
+    {
+      "what": "New browser execution",
+      "why": "No UI source changes; no new browser result claimed"
+    }
+  ],
+  "postFreezeFormatting": {
+    "date": "2026-11-12T22:22:30.014Z",
+    "file": "CHANGELOG.md",
+    "oldSha256": "20d852366c9ad87da08c2a7dbb3fdfb945ba28ca18592cde05835180450d20a2",
+    "newSha256": "dab4728638cf10784523d413e62283cc62feddda9d60e9233b270a0e22665051",
+    "reason": "Repository pre-commit formatter removed one extra blank line; headings, links and behavior unchanged",
+    "hookBypassed": false
+  }
+}
