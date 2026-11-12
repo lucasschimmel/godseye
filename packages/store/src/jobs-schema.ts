@@ -12,6 +12,16 @@ import {
 } from "drizzle-orm/pg-core";
 
 const moment = (name: string) => timestamp(name, { withTimezone: true });
+export const applicationJobEvents = pgTable("application_job_events", {
+  id: uuid("id").primaryKey(),
+  projectId: uuid("project_id").notNull(),
+  environmentId: uuid("environment_id").notNull(),
+  producerId: uuid("producer_id").notNull(),
+  epoch: integer("epoch").notNull(),
+  hash: text("hash").notNull(),
+  runIds: jsonb("run_ids").$type<string[]>().notNull(),
+  createdAt: moment("created_at").notNull(),
+});
 export const jobDefinitions = pgTable(
   "job_definitions",
   {
@@ -70,6 +80,24 @@ export const jobRuns = pgTable(
     index("job_runs_state_idx").on(table.state, table.createdAt),
   ],
 );
+export const jobWorkerBindings = pgTable("job_worker_bindings", {
+  environmentId: uuid("environment_id").primaryKey(),
+  projectId: uuid("project_id").notNull(),
+  handlers: jsonb("handlers").$type<string[]>().notNull(),
+  updatedAt: moment("updated_at").notNull(),
+});
+export const jobReconcileRequests = pgTable("job_reconcile_requests", {
+  key: text("key").primaryKey(),
+  jobRunId: uuid("job_run_id").notNull(),
+  foundationRunId: uuid("foundation_run_id").notNull(),
+  projectId: uuid("project_id").notNull(),
+  environmentId: uuid("environment_id").notNull(),
+  actorId: text("actor_id").notNull(),
+  fingerprint: text("fingerprint").notNull(),
+  state: text("state").$type<"pending" | "processing" | "complete">().notNull(),
+  createdAt: moment("created_at").notNull(),
+  completedAt: moment("completed_at"),
+});
 export const jobOutbox = pgTable(
   "job_outbox",
   {
