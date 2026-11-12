@@ -1,0 +1,38 @@
+{
+  "status": "ok-with-declared-coverage-gaps",
+  "scope": "Local E03.S03 first-party PostgreSQL backup and held recovery",
+  "at": "2026-11-11T22:04:56.8448721Z",
+  "findings": [],
+  "diff": {
+    "waived": 0,
+    "resolvedBackend": 3,
+    "resolvedUi": 1,
+    "new": 0
+  },
+  "scanners_run": [
+    "bun audit --json all JavaScript scopes: empty advisory result",
+    "Gitleaks8.30.1 history: exit0 zero findings, redaction100",
+    "Gitleaks8.30.1 allowlisted327-file first-party source snapshot: exit0 zero findings",
+    "Gitleaks8.30.1 final staged gate: exit 0, zero findings; redact100; report artifacts/security/recovery-staged.json"
+  ],
+  "scanners_missing": [
+    "Semgrep comprehensive SAST",
+    "complete SBOM generator",
+    "comprehensive native OS/package vulnerability audit"
+  ],
+  "toolchain": "Signed PGDG2.60.0 package with pinned official fingerprint, signed InRelease/index/package hashes; PostgreSQL18.6 and dependency libraries from signed Ubuntu metadata; project-local extraction only",
+  "logic_review": "Fresh backend126-hash PASS,3 confirmed findings independently fixed; narrow one-file lease-order refutation13 cases passed. UI8-hash PASS after1 grouped held-environment labeling/eligibility finding. Generic reconciliation exploit and retained-key fresh-authority failure were independently refuted, not counted as confirmed.",
+  "dependency_hygiene": "Frozen246 installs/362 packages unchanged; zero untrusted lifecycle scripts. npm advisory scanning does not cover native binaries.",
+  "exclusions": [
+    "Actual .env/private material/runtime data not scanned/read",
+    "Native process/storage proof is not off-host/Docker/VM/hardquota/RPO/RTO qualification",
+    "No all-service activation/ancillary recovery/material custody/lost-controller qualification",
+    "61 curated mutations with affected2 replay are not a full mutation or coverage percentage; no waiver introduced"
+  ],
+  "final_staged_gate": {
+    "at": "2026-11-11T22:08:31.8352063Z",
+    "exit_code": 0,
+    "findings": 0,
+    "report": "artifacts/security/recovery-staged.json"
+  }
+}

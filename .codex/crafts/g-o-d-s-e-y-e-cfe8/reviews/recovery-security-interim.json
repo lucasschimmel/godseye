@@ -1,0 +1,261 @@
+{
+  "verdict": "pass-with-findings",
+  "review_state": "interim-awaiting-producer-fixes-and-explicit-backend-freeze",
+  "kind": "code",
+  "scope": "E03.S03 backend recovery and shared HOLD boundaries; requested UI review not started",
+  "freshness": "Independent reviewer did not author implementation; minimal artifact/constitution context only",
+  "frozen": false,
+  "reviewed_snapshot": [
+    {
+      "path": "apps/control-api/src/app.ts",
+      "sha256": "66b53edcd8de658008922910e2de8042e8007296e8f7a35fe859028591257cd8"
+    },
+    {
+      "path": "apps/control-api/src/recovery-routes.ts",
+      "sha256": "0bc235f68d3cc5b4bd4ae99b500c80d316481e671f345c5626071a8b9883b8eb"
+    },
+    {
+      "path": "packages/contracts/src/foundations.ts",
+      "sha256": "23383eef25400cd98c3decd0ff34cffd71d5d4abec0b1b4fce7a98c91cef48d1"
+    },
+    {
+      "path": "packages/contracts/src/recovery-endpoints.ts",
+      "sha256": "5791eaa99d66ea049b105ed97ca6bf8fb4c342cd158e27b7aa17bfd1f65e31f8"
+    },
+    {
+      "path": "packages/contracts/src/recovery.ts",
+      "sha256": "ea497787fb142bbc5d153788cfdef8edcad52a025338ec51b884ccddd16a785d"
+    },
+    {
+      "path": "packages/control-client/src/index.ts",
+      "sha256": "aa1b5b015699a9155e6f667de5bffd8c972d3ed26339f02880e5ab02376582b4"
+    },
+    {
+      "path": "packages/core/src/access-redemption.ts",
+      "sha256": "3326c6c5f8df7d587e9d4eefb78f4a204b8909216765060aa619927397dc98f3"
+    },
+    {
+      "path": "packages/core/src/access-registry.ts",
+      "sha256": "2949c1b9f8cd4400098600ad926243d25f6e66b77919eda6a8ec290101fa364a"
+    },
+    {
+      "path": "packages/core/src/access-state.ts",
+      "sha256": "b8140b6fc785e5e4f9b1c71938d3060e42f31c7acca2bf11432da7ac572894e1"
+    },
+    {
+      "path": "packages/core/src/database-execution.ts",
+      "sha256": "07398c4d7692d083ea5c5971594c2030002a6f4689f376db64237f3f405588b3"
+    },
+    {
+      "path": "packages/core/src/database-preparation.ts",
+      "sha256": "dfa031e02f05956d2543a40470fbe8c6d6f9149480e91ab974112dfdb821a71d"
+    },
+    {
+      "path": "packages/core/src/database-state.ts",
+      "sha256": "1d15121dae3f4841e1c8d719a419bbf86b530f28ea9b0e67e44168d242970f3a"
+    },
+    {
+      "path": "packages/core/src/database.ts",
+      "sha256": "5f2676491abe29e5c4c62feaf83ae15683e2b80726a46fda7e65c4af8548563d"
+    },
+    {
+      "path": "packages/core/src/foundation-data.ts",
+      "sha256": "9b75465244c94751443a084346a8dc160460241bd5be363fb0b6abe41edc7468"
+    },
+    {
+      "path": "packages/core/src/foundation-effects.ts",
+      "sha256": "2db5a15b4df7278c13b0edbbaa8e93fdb4310b7abcdbda4f72945b237452ac0f"
+    },
+    {
+      "path": "packages/core/src/foundation-grants.ts",
+      "sha256": "0948894ac530992d6cfc5862506250ef7d203dd77cfc60757c168f933ea6d8fc"
+    },
+    {
+      "path": "packages/core/src/foundation-outcome.ts",
+      "sha256": "1d616c9b64dec9019df8bebb169704a72c0869e2c083af42e3e89acc592510fa"
+    },
+    {
+      "path": "packages/core/src/foundation-plans.ts",
+      "sha256": "3ab96daf75c02b64d4986efe22095a707b05d33d7524ef5a351b2658632ee190"
+    },
+    {
+      "path": "packages/core/src/foundation-queue.ts",
+      "sha256": "3ab8e7188aa55f551e70a4f95f7c880ee17f907c22bba8a36d4c8743c920bdcf"
+    },
+    {
+      "path": "packages/core/src/foundation-retention.ts",
+      "sha256": "d19b5e57ca44c904ca873f1952f2e432cb1da890deea867902291f1ffa72e825"
+    },
+    {
+      "path": "packages/core/src/foundations.ts",
+      "sha256": "b00a6e52b8f622294e9b1d82df4c3f289bd3d21b6a0f4556f46c1321fc1904e3"
+    },
+    {
+      "path": "packages/core/src/infra-execution.ts",
+      "sha256": "5cf6cf25f830db631dd05cba1b556a72d9b753037e83ccf337232ed562114a3d"
+    },
+    {
+      "path": "packages/core/src/infra-preparation.ts",
+      "sha256": "2620f10a8300a5f8c1f9c3c8142813e1c4fa678de6f78afa3c1fb866e5fcbb34"
+    },
+    {
+      "path": "packages/core/src/infra-state.ts",
+      "sha256": "7fdcad91b8fb237538794eb14e5af5d2a5aa236d2065beeaeed12ba2f743169a"
+    },
+    {
+      "path": "packages/core/src/infra-steps.ts",
+      "sha256": "a5157b5b248546005bd47691f0d08379c39cd8521b227dfe78523cd32c3a7f27"
+    },
+    {
+      "path": "packages/core/src/infrastructure.ts",
+      "sha256": "fbb6ab3c8a6b4e945d105e4ab05379e461bb6cfcc19fc48746dee6e9129ca9c0"
+    },
+    {
+      "path": "packages/core/src/project-management.ts",
+      "sha256": "e213756ac20f3bc55e62c0ca8dbedd8e0a68bf01f85b8c885d5629e77b2a5774"
+    },
+    {
+      "path": "packages/core/src/projects.ts",
+      "sha256": "bc16a3594a2d134bd68a8bd7f1c67e1cdd437f6bcaa7b3f5a2cb8df274c22b32"
+    },
+    {
+      "path": "packages/core/src/recovery-admission.ts",
+      "sha256": "24bfccabb1b457816d4b45bcc3690e409b2e035c06e228eeb7cd3a700ca76fbf"
+    },
+    {
+      "path": "packages/core/src/recovery-capacity.ts",
+      "sha256": "3258814abd105e7a6501b222fa382634baa282fb9e1f6c1052d754bbdffe16fe"
+    },
+    {
+      "path": "packages/core/src/recovery-execution.ts",
+      "sha256": "42cf8aec48aa2488e5ba0cf2b8898014cefe36dd15aa345f3ba10babe312cc9d"
+    },
+    {
+      "path": "packages/core/src/recovery-material.ts",
+      "sha256": "241ea7f72cf5cee236cc9b62b3f66d016423806d282980b54a4bf12972585f5b"
+    },
+    {
+      "path": "packages/core/src/recovery-pgbackrest-info.ts",
+      "sha256": "bf28e38a5c0d103f54f421200159947a2c962337eb32afe8466b284c24a6aa06"
+    },
+    {
+      "path": "packages/core/src/recovery-pgbackrest-policy.ts",
+      "sha256": "a20b897045094a088cf0804830b65c6fb080b3d771db6e6dfb12dea68e1a78ff"
+    },
+    {
+      "path": "packages/core/src/recovery-pgbackrest-provider.ts",
+      "sha256": "265bb39c439b2dcc02e7130a934df5fec606584db8d2dc2fdff5aebe579ed9b4"
+    },
+    {
+      "path": "packages/core/src/recovery-postgres-policy.ts",
+      "sha256": "fdac458315780106c9eeb25df29c1b4c847a507b7151bd9a4a22873221081d1c"
+    },
+    {
+      "path": "packages/core/src/recovery-preparation.ts",
+      "sha256": "5ac018a3f1916aaac65fbbebb89d7cb6c6028ebe71822fca1f55367a72badf22"
+    },
+    {
+      "path": "packages/core/src/recovery-provider.ts",
+      "sha256": "548102eb859bdaa13432ad2270403578847c8c7f6b3a5358e8135373e0415621"
+    },
+    {
+      "path": "packages/core/src/recovery-state.ts",
+      "sha256": "c6d5b0d3e10f8fc920e389b28d1b005d47362a679924f07cc2845c7d3d3f54bb"
+    },
+    {
+      "path": "packages/core/src/recovery.ts",
+      "sha256": "a24dcc3a13cc3ec1e07882d5b330a670c60c3ef89a0b2bcfdf2fdf210297c429"
+    },
+    {
+      "path": "packages/store/migrations/0006_recovery.sql",
+      "sha256": "589f65c4c8dc8268db95b7b5d258658d1f812f930fc5c502888095b307fbb78b"
+    },
+    {
+      "path": "packages/store/src/recovery-schema.ts",
+      "sha256": "226a81d20ea11ea1050855357c9f5dca305d0944c44b6ded1cb5156a54bee4aa"
+    }
+  ],
+  "findings": [
+    {
+      "id": "REC-SEC-001",
+      "criterion": "COR-03",
+      "status": "CONFIRMED",
+      "severity": "major",
+      "category": "CWE-706: Use of Incorrectly-Resolved Name or Reference",
+      "evidence": "packages/core/src/recovery-provider.ts:167-172 compares destination data only against source data and destination WAL only against source WAL. artifacts/recovery-security-probe.mts passed an inspection with destination.dataVolume=sourceCatalog.walVolume and destination.walVolume=sourceCatalog.dataVolume; accepted=true.",
+      "refutation": "A properly qualified transport should reserve an empty independent target and inspect actual mappings, so this probe does not demonstrate actual source overwrite. Nevertheless the shared evidence validator explicitly claims independent source preservation while accepting a contradictory source-volume alias, which defeats the same malformed-proof checks tested for ordinary same-field aliases.",
+      "refutation_survived": true,
+      "suggestion": "Reject either destination volume matching either source volume, before declaring the physical clone verified; keep exact mapping/empty-target checks in the trusted transport."
+    },
+    {
+      "id": "REC-SEC-002",
+      "criterion": "SAF-recovery-window-within-evidence-retention",
+      "status": "CONFIRMED",
+      "severity": "major",
+      "category": "CWE-664: Improper Control of a Resource Through its Lifetime",
+      "evidence": "packages/core/src/recovery-provider.ts:115-127 checks archive-check freshness and chronological ordering without limiting the advertised interval/restore target to the supported history window. packages/core/src/foundation-retention.ts:15 prunes terminal effect evidence using the configured restore window plus idempotency retention; contracts/src/foundations.ts:148 defaults that window to 30 days. Probe accepted recoverableFrom=2026-08-01 and recoverableTo=2026-11-11 with a fresh archiveCheckedAt. tests/recovery-policy.test.ts:70 multiplies full-retention COUNT by seven without an executing weekly consumer.",
+      "refutation": "Full retention is limited to four and the prepared policy says weekly full, which would usually span at most 28 days. However schedules explicitly do not execute, count retention does not bound elapsed time between successful backups, and no automatic expire occurs. The actual advertised recovery interval can therefore exceed the surviving effect horizon. Default activation remains blocked, so this is not evidence of enabled duplicate external effects.",
+      "refutation_survived": true,
+      "suggestion": "Bound accepted/advertised recovery intervals and targets to the actual shared effect-history support window (or preserve longer complete evidence); reject stale-history restore admission independently of full-generation count."
+    },
+    {
+      "id": "REC-SEC-003",
+      "criterion": "COR-01",
+      "status": "CONFIRMED",
+      "severity": "major",
+      "category": "CWE-863: Incorrect Authorization",
+      "evidence": "packages/core/src/recovery-material.ts:52-59 always redeems material through AccessBroker.consumeTask. access-redemption.ts:119 calls authorizeGrant, which reaches foundation-data.ts:159 requiring operation.status=running and matching live grant/fence. foundation-effects.ts:54 revokes grants for uncertain runs; reconcile advances fence and changes status to reconciling. artifacts/recovery-material-security-probe.mts used an actual disposable AccessBroker: initial material handoff=true, reconciliation handoff=false, denial=FENCED.",
+      "refutation": "The synthetic RecoveryProviderFixture can reconcile a lost ACK because it does not redeem repository encryption material. A private material implementation independent of task grants might also support inspection. The new exported BrokerRecoveryRepositoryMaterial specifically cannot compose with ManagedPgBackRestProvider.inspect on the advertised read-only reconciliation path; restoring a mutating grant would violate the intended uncertainty boundary.",
+      "refutation_survived": true,
+      "suggestion": "Provide a separately bounded qualified read-only reconciliation material authority, or explicitly expose this bridge as unavailable for reconciliation; never revive the old mutation grant."
+    }
+  ],
+  "criteria_run": 22,
+  "criteria_passed": 19,
+  "resolved_plan_findings": [
+    "REC-PLAN-001: two-full minimum now enforced in BackupPolicy/compiler; journal horizon test added but elapsed-time metadata gap remains REC-SEC-002.",
+    "Reported pgBackRest pin advanced to 2.60.0; old 2.58 crypto/checksum gap is not repeated as an open finding. Installer pins complete PGDG primary fingerprint and verifies signed index/package hashes; native run/provenance remains separately owned."
+  ],
+  "observations": [
+    {
+      "id": "OBS-RECONCILE-HOLD",
+      "status": "REFUTED-AS-A-CONFIRMED-ACTIVATION-BYPASS",
+      "evidence": "Disposable generic Foundation reconciliation under recovery HOLD invokes the qualified adapter and can settle succeeded.",
+      "refutation": "Existing managed reconciliations are read-only, all adapters are server-owned, and neither HOLD clearance nor usable runtime grants occur. A shared HOLD gate/explicit read-only capability could make this contract clearer, but no actual replay or activation consequence was established."
+    },
+    {
+      "id": "OBS-ARCHIVE-REFRESH",
+      "status": "SCOPE-CLARIFICATION",
+      "evidence": "recordInspection inserts backup metadata only once; overview reads stored archiveCheckedAt/recoverableTo; no read-only continuous archive refresh route/consumer found.",
+      "implication": "Healthy later WAL does not automatically update the advertised point or freshness. Preserve this as an explicit local limitation unless a qualified refresh path is added; do not claim continuous monitored archive progress."
+    }
+  ],
+  "satisfied_constraints": [
+    "Strict owner HTTP inputs accept registered IDs, bounded policy, revisions, hash and target time; browser supplies no paths/SQL/stanzas/CLI/material.",
+    "Recovery prepares/admissions use exact source identity, source catalog/system lineage, private repository mapping, current qualification, owner freshness, source epoch and shared atomic pool reservations.",
+    "Target logical environment is server-owned and permanently held; no activation action exists. Missing file/auth/config/non-rewound business-effect/producer-fence adapters remain explicit blockers.",
+    "Normal create-plan, enqueue, claim, lease/heartbeat/grant and static/task broker material handoffs observe recovery HOLD; ordinary metadata updates cannot clear it.",
+    "Restore commands select exact repository/backup/time/timeline with pause and no delta/force; inherited archive hooks, replication hooks, HBA and runtime ingress are replaced before startup.",
+    "Restored catalogs and system_identifier preserve source lineage; target must report paused recovery and source-retained evidence.",
+    "Unknown effects and lost acknowledgments retain target/source obligations and never retry destructive mutation; queued release only succeeds before any recovery intention.",
+    "No material is placed in subprocess argv, owner DTOs, audit entries or generic provider error text; native process uses shell=false and bounded stdout/time."
+  ],
+  "executables": [
+    {
+      "command": "node --import tsx artifacts/recovery-security-probe.mts",
+      "result": "source-volume-cross-alias accepted=true; >30d advertised-window accepted=true; generic reconcile under HOLD invoked once and settled succeeded (consequence refuted)"
+    },
+    {
+      "command": "node --import tsx artifacts/recovery-material-security-probe.mts",
+      "result": "running handoff=true; reconciling handoff=false; denial=FENCED"
+    }
+  ],
+  "not_reviewed": [
+    "Backend is not frozen: producer is hardening files and must send an explicit freeze/hash manifest for final recheck. Findings refer to the reviewed snapshot and may be fixed after this report.",
+    "UI/Playwright/browser review: separate requested pass after UI freeze.",
+    "Actual runtime .env, private keys, private material, PGDATA, real cell data or external/server state: never read or operated. All probes used disposable in-memory fixture stores and synthetic material.",
+    "Full suite/typecheck/build/native lab execution owned by coordinator/lab; reported 140 recovery cases and pgBackRest2.60 native results are not independent reviewer-run checks.",
+    "Off-host repository, Docker/VM/firewall, hard quotas, real-load RPO/RTO and all-service activation remain unqualified.",
+    "No production certification or permission to enable a real recovery transport."
+  ]
+}

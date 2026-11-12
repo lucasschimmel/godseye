@@ -1,0 +1,75 @@
+{
+  "verdict": "pass-with-findings",
+  "kind": "plan",
+  "scope": "Local E03.S03 design and GAUNTLET strategy only; no implementation audit",
+  "freshness": "Fresh sub-agent invocation with the artifact and constitution; producing conversation not supplied",
+  "artifacts": [
+    ".Codex/crafts/g-o-d-s-e-y-e-cfe8/recovery-design.md",
+    ".Codex/crafts/g-o-d-s-e-y-e-cfe8/reviews/recovery-test-strategy.md",
+    "docs/spec/isolation.md"
+  ],
+  "findings": [
+    {
+      "id": "REC-PLAN-001",
+      "criterion": "PLN-07",
+      "status": "CONFIRMED",
+      "severity": "major",
+      "category": "CWE-664: Improper Control of a Resource Through its Lifetime",
+      "evidence": "docs/spec/isolation.md:126 requires effect records for longest advertised restore window plus 7 days and unresolved intents never expire; docs/spec/isolation.md:132 requires at least two completed full generations with dependent archives. recovery-design.md:16 says retain dependent chains, and reviews/recovery-test-strategy.md:13-14 tests bounded retention and missing base/WAL, but neither the recovery acceptance contract nor strategy names the two-full minimum or journal-retention versus advertised-window oracle.",
+      "refutation": "The V1 constitution remains binding and chain/journal checks appear elsewhere in the strategy, so this is not evidence that implementation accepts unsafe policy. However, a positive finite one-full policy or a journal TTL shorter than an otherwise valid advertised restore window can pass all explicitly named matrix oracles. Both safety floors need explicit acceptance cases before test authoring completes.",
+      "refutation_survived": true,
+      "suggestion": "Add T-AC-35/T-AC-36 rejection of fewer than two retained completed full generations and dependent-WAL loss, and T-AC-40 denial of an advertised window exceeding durable effect evidence retention (plus 7 days); unresolved intents must remain retained. No destructive expiry is required."
+    }
+  ],
+  "criteria_run": 14,
+  "criteria_passed": 13,
+  "criteria": [
+    "PLN-01",
+    "PLN-02",
+    "PLN-03",
+    "PLN-04",
+    "PLN-05",
+    "PLN-06",
+    "PLN-07",
+    "PLN-09",
+    "SAF-native-clone-lineage",
+    "SAF-recovery-hold-all-paths",
+    "SAF-default-activation-unavailable",
+    "SAF-independent-authority-and-capacity",
+    "SAF-uncertainty-preservation",
+    "SAF-tool-freshness-gate"
+  ],
+  "satisfied_constraints": [
+    "Physical clone retains source system_identifier and catalog/role names; new allocation, PGDATA/WAL and private mappings remain distinct.",
+    "Recovery hold is durable and enforced below routes across normal resume, grants, generic enqueue and broker/task proofs.",
+    "Default real activation stays unavailable; run-specific effect keys and Foundation epoch revocation cannot stand in for business-effect coverage or all-producer fencing.",
+    "Missing, truncated or empty synthetic journal evidence cannot establish complete non-rewound coverage.",
+    "Lost ACK/cancellation/provider drift preserve held target and reservations until definitive exact-scope read-only reconciliation.",
+    "Source is retained; nonempty/same/foreign targets and delta/force overwrite are forbidden; capacity covers both source and recovery obligations.",
+    "Actual target must be observed in paused recovery with explicit target/action and exact backup/repository.",
+    "Local lab success cannot qualify off-host repository, Docker/VM/firewall, hard quotas or complete production recovery."
+  ],
+  "qualification_gates": [
+    {
+      "name": "Tool pin",
+      "status": "OPEN, not a plan violation",
+      "evidence": "recovery-design.md:38 explicitly requires relevant current fixes. Coordinator reports signed Ubuntu pgBackRest 2.58; installed tool/backport provenance was not inspected in this pass. https://pgbackrest.org/release.html v2.59.3 notes RNG-error weak encryption salts/subkeys and encrypted metadata fixes; v2.60.0 adds restore/expire page-checksum failure behavior.",
+      "requirement": "Do not treat repository package signature or 2.58 version string as current security qualification. Native lab must record selected artifact/source verification and relevant fixes, or report this limitation and keep execution unqualified. No global install authorized."
+    }
+  ],
+  "not_reviewed": [
+    "Production code, provider implementation, tests and implementation coverage: this was the requested quick plan pass before frozen-backend review.",
+    "PLN-08 inactive: one sequential production implementer, disjoint satellites; no parallel epic implementation swarm.",
+    "Actual installed pgBackRest binary, package backports and source verification: native lab owner is checking updates.",
+    "Native probes, actual PostgreSQL data, runtime state, secret-bearing configuration, private keys and credentials: explicitly out of scope and not read.",
+    "Off-host reachability, repository permissions, Docker/VM isolation, firewall, hard quotas, RPO/RTO and all-service activation: not qualified by plan review.",
+    "No full production certification."
+  ],
+  "source_checks": [
+    {
+      "url": "https://pgbackrest.org/release.html",
+      "consulted": "2026-11-11",
+      "purpose": "Current primary release notes for relevant 2.59.3 and 2.60.0 fixes"
+    }
+  ]
+}

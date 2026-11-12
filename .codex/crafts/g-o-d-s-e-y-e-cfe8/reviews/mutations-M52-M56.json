@@ -1,0 +1,53 @@
+{
+  "kind": "curated behavioral mutation experiment",
+  "runnerTimeoutMs": 180000,
+  "startedAt": "2026-11-11T21:54:51.753Z",
+  "finishedAt": "2026-11-11T21:55:14.483Z",
+  "scope": "2 selected mutations; not an exhaustive mutation score or coverage claim",
+  "isolation": "Temporary source copies with explicit Vitest workspace aliases; original source never mutated",
+  "baseline": {
+    "status": "passed",
+    "passed": 2
+  },
+  "restored": {
+    "status": "passed",
+    "passed": 2
+  },
+  "sourceUnchanged": true,
+  "selected": 2,
+  "killed": 2,
+  "survived": 0,
+  "invalid": 0,
+  "results": [
+    {
+      "id": "M52",
+      "file": "packages/core/src/foundation-data.ts",
+      "behavior": "Bypass the shared durable recovery HOLD before ordinary generic adapter execution",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "durable recovery hold across existing service proofs and Foundation grants T-AC-40 blocks generic queued execution when recovery hold appears after enqueue",
+            "message": "AssertionError: expected true to be false // Object.is equality"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M56",
+      "file": "packages/core/src/foundation-data.ts",
+      "behavior": "Replay a different backup request under the original idempotency key",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "exact recovery source, fresh authority and atomic physical reservations T-AC-38 replays one exact backup preparation and rejects changed request identity",
+            "message": "Error: promise resolved \"{ …(16) }\" instead of rejecting"
+          }
+        ]
+      }
+    }
+  ]
+}
