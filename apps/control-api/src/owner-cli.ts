@@ -8,7 +8,10 @@ import { LOCAL_COMMAND_PATH, localProof } from "./identity/local-admin.js";
 import { acquireInstance, loadIdentityMaterial, privateDirectory } from "./identity/runtime.js";
 
 async function run() {
-  const config = loadConfiguration({ ...process.env, GODSEYE_MODE: "local" });
+  const config = loadConfiguration(
+    { ...process.env, GODSEYE_MODE: "local" },
+    { purpose: "administration" },
+  );
   const intent = process.argv.includes("recover") ? "recover" : "setup";
   let enrollment: { ticket: string; expiresAt: string };
   if (process.argv.includes("--offline")) {

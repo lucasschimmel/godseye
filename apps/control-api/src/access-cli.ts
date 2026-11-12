@@ -78,7 +78,10 @@ async function replaceControllerProof(path: string, value: string) {
 }
 /** The offline owner boundary is filesystem authority, never a caller-selected browser Actor. */
 async function run() {
-  const config = loadConfiguration({ ...process.env, GODSEYE_MODE: "local" });
+  const config = loadConfiguration(
+    { ...process.env, GODSEYE_MODE: "local" },
+    { purpose: "administration" },
+  );
   const command = process.argv[2];
   if (command === "policy") {
     console.info(compileBrokerPolicy(config.baoMount));
