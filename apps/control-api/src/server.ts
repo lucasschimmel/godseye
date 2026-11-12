@@ -1,6 +1,7 @@
 import {
   ControlPlane,
   InfrastructureEngine,
+  JOBS_ADAPTER_ID,
   runDeliveryScheduler,
   runFoundationWorker,
   runJobScheduler,
@@ -12,6 +13,7 @@ import { createApp } from "./app.js";
 import { loadConfiguration } from "./config.js";
 import { createOwnerIdentity } from "./identity/index.js";
 import { acquireInstance, loadIdentityMaterial, privateDirectory } from "./identity/runtime.js";
+import { prepareLocalInngest } from "./inngest-runtime.js";
 import { jobsOptions } from "./jobs-fixtures.js";
 
 async function start() {
@@ -26,10 +28,16 @@ async function start() {
   let deliveryWorker: Promise<void> | undefined;
   let jobsWorker: Promise<void> | undefined;
   let stopping: Promise<void> | undefined;
+  let inngest: Awaited<ReturnType<typeof prepareLocalInngest>> | undefined;
   function stop() {
     stopping ??= (async () => {
       abort.abort();
       let failed = false;
+      try {
+        await inngest?.close();
+      } catch {
+        failed = true;
+      }
       if (server) await new Promise<void>((done) => server?.close(() => done()));
       if (worker)
         await worker.catch(() => {
@@ -71,9 +79,38 @@ async function start() {
       origin: `http://localhost:${config.consolePort}`,
       signingKey,
     });
-    const infrastructure = new InfrastructureEngine(store, {
-      jobs: jobsOptions(config.jobsLocalFixtures),
+    inngest = await prepareLocalInngest({
+      store,
+      rootDirectory: config.rootDir,
+      stateDirectory: config.stateDir,
+      cells: config.jobsDetached ? [] : config.inngestCells,
     });
+    const fixtures = jobsOptions(config.jobsLocalFixtures);
+    const infrastructure = new InfrastructureEngine(store, {
+      ...(config.jobsDetached
+        ? { foundationConsumer: { excludedAdapterIds: new Set([JOBS_ADAPTER_ID]) } }
+        : {}),
+      jobs: {
+        ...fixtures,
+        ...inngest.jobs,
+        handlers: inngest.jobs.handlers
+          ? new Map([...(fixtures?.handlers ?? []), ...inngest.jobs.handlers])
+          : fixtures?.handlers,
+        ...(config.jobsDetached
+          ? {
+              detached: true,
+              managedEnvironmentIds: new Set(config.inngestCells.map((cell) => cell.environmentId)),
+              inngestEnvironmentIds: new Set(config.inngestCells.map((cell) => cell.environmentId)),
+            }
+          : {}),
+      },
+    });
+    inngest.bind(infrastructure);
+    await inngest.start({
+      signal: abort.signal,
+      onFailure: () => fail("Local Inngest cell failed; stopping local admission"),
+    });
+    if (abort.signal.aborted) throw new Error("Local startup was cancelled");
     const engine = infrastructure.foundation;
     const broker = createRuntimeAccess(store, engine, config, signingKey);
     worker = runFoundationWorker(engine, {
@@ -83,7 +120,7 @@ async function start() {
     deliveryWorker = runDeliveryScheduler(infrastructure.delivery, { signal: abort.signal });
     // The Foundation worker above also consumes the local.jobs adapter; the pump only schedules,
     // dispatches, settles and prunes, and starts solely when the engine is explicitly configured.
-    if (config.jobsLocalFixtures)
+    if (!config.jobsDetached && (config.jobsLocalFixtures || config.inngestCells.length))
       jobsWorker = runJobScheduler(infrastructure.jobs, { signal: abort.signal });
     const app = createApp(
       new ControlPlane(store),
