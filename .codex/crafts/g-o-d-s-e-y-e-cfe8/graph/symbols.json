@@ -1,0 +1,965 @@
+{"file":"apps/console/src/components/access-labels.ts","line":1,"sig":"const providerLabels: Record<string, string> = {"}
+{"file":"apps/console/src/components/access-labels.ts","line":10,"sig":"const purposeLabels: Record<string, string> = {"}
+{"file":"apps/console/src/components/access-labels.ts","line":16,"sig":"const states: Record<string, string> = {"}
+{"file":"apps/console/src/components/database-profile-form.tsx","line":15,"sig":"function DatabaseProfileForm({"}
+{"file":"apps/console/src/components/infra-inventory-form.tsx","line":74,"sig":"function InfrastructureInventoryForm({"}
+{"file":"apps/console/src/components/infra-workload-form.tsx","line":14,"sig":"function InfrastructureWorkloadForm({"}
+{"file":"apps/console/src/components/owner-gate.tsx","line":21,"sig":"function useOwner() {"}
+{"file":"apps/console/src/components/owner-gate.tsx","line":27,"sig":"function OwnerGate({ children }: { children: ReactNode }) {"}
+{"file":"apps/console/src/components/project-management.tsx","line":39,"sig":"function ProjectMetadataForm({ project }: { project: ProjectView }) {"}
+{"file":"apps/console/src/components/project-management.tsx","line":88,"sig":"function PreviewEnvironmentForm({ project }: { project: ProjectView }) {"}
+{"file":"apps/console/src/components/project-management.tsx","line":171,"sig":"function EnvironmentMetadataForm({"}
+{"file":"apps/console/src/components/project-table.tsx","line":8,"sig":"function ProjectTable({"}
+{"file":"apps/console/src/components/recovery-panel.tsx","line":24,"sig":"function RecoveryPanel({"}
+{"file":"apps/console/src/components/shared.tsx","line":6,"sig":"function PageHeading({"}
+{"file":"apps/console/src/components/shared.tsx","line":57,"sig":"function Status({ value }: { value: string }) {"}
+{"file":"apps/console/src/components/shared.tsx","line":65,"sig":"function EmptyState({"}
+{"file":"apps/console/src/components/shared.tsx","line":85,"sig":"function Loading() {"}
+{"file":"apps/console/src/components/shared.tsx","line":92,"sig":"function Failure({ error, retry }: { error: Error; retry?: () => void }) {"}
+{"file":"apps/console/src/components/shared.tsx","line":105,"sig":"function SectionTitle({ children, count }: { children: ReactNode; count?: number }) {"}
+{"file":"apps/console/src/components/shared.tsx","line":113,"sig":"function Step({"}
+{"file":"apps/console/src/components/shell.tsx","line":33,"sig":"function Shell({ children }: { children: ReactNode }) {"}
+{"file":"apps/console/src/components/ui/badge.tsx","line":27,"sig":"interface BadgeProps"}
+{"file":"apps/console/src/components/ui/button.tsx","line":36,"sig":"interface ButtonProps"}
+{"file":"apps/console/src/lib/infra-labels.ts","line":4,"sig":"const infrastructureStates = labelMap({"}
+{"file":"apps/console/src/lib/infra-labels.ts","line":34,"sig":"function infrastructureReason(reason: string): string {"}
+{"file":"apps/console/src/lib/infra-labels.ts","line":44,"sig":"function infrastructureFilesystem(label: string): string {"}
+{"file":"apps/console/src/lib/owner.ts","line":10,"sig":"const ownerAuth = createAuthClient({ basePath: \"/api/auth\", plugins: [passkeyClient()] });"}
+{"file":"apps/console/src/lib/owner.ts","line":11,"sig":"function forgetOwnerData(cache: QueryClient, status: OwnerStatusView) {"}
+{"file":"apps/console/src/lib/owner.ts","line":19,"sig":"function ownerAuthenticationRequired() {"}
+{"file":"apps/console/src/lib/utils.ts","line":4,"sig":"function cn(...inputs: ClassValue[]) {"}
+{"file":"apps/console/src/routeTree.gen.ts","line":80,"sig":"interface FileRoutesByFullPath {"}
+{"file":"apps/console/src/routeTree.gen.ts","line":93,"sig":"interface FileRoutesByTo {"}
+{"file":"apps/console/src/routeTree.gen.ts","line":106,"sig":"interface FileRoutesById {"}
+{"file":"apps/console/src/routeTree.gen.ts","line":120,"sig":"interface FileRouteTypes {"}
+{"file":"apps/console/src/routeTree.gen.ts","line":162,"sig":"interface RootRouteChildren {"}
+{"file":"apps/console/src/routeTree.gen.ts","line":271,"sig":"const routeTree = rootRouteImport"}
+{"file":"apps/console/src/router.tsx","line":5,"sig":"function getRouter() {"}
+{"file":"apps/console/src/routes/__root.tsx","line":7,"sig":"const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({"}
+{"file":"apps/console/src/routes/access.tsx","line":15,"sig":"const Route = createFileRoute(\"/access\")({ component: AccessManagement });"}
+{"file":"apps/console/src/routes/agents.tsx","line":5,"sig":"const Route = createFileRoute(\"/agents\")({ component: Agents });"}
+{"file":"apps/console/src/routes/databases.tsx","line":24,"sig":"const Route = createFileRoute(\"/databases\")({ component: Databases });"}
+{"file":"apps/console/src/routes/index.tsx","line":19,"sig":"const Route = createFileRoute(\"/\")({ component: Dashboard });"}
+{"file":"apps/console/src/routes/infrastructure.tsx","line":19,"sig":"const Route = createFileRoute(\"/infrastructure\")({ component: Infrastructure });"}
+{"file":"apps/console/src/routes/operations.tsx","line":22,"sig":"const Route = createFileRoute(\"/operations\")({ component: Operations });"}
+{"file":"apps/console/src/routes/projects.index.tsx","line":12,"sig":"const Route = createFileRoute(\"/projects/\")({ component: Projects });"}
+{"file":"apps/console/src/routes/projects.new.tsx","line":12,"sig":"const Route = createFileRoute(\"/projects/new\")({ component: NewProject });"}
+{"file":"apps/console/src/routes/security.tsx","line":12,"sig":"const Route = createFileRoute(\"/security\")({ component: OwnerSecurity });"}
+{"file":"apps/control-api/src/access-routes.ts","line":13,"sig":"function registerAccessRoutes(app: Hono<ControlEnvironment>, broker?: AccessBroker) {"}
+{"file":"apps/control-api/src/access-runtime.ts","line":21,"sig":"function createRuntimeAccess("}
+{"file":"apps/control-api/src/api-types.ts","line":10,"sig":"type ControlEnvironment = { Variables: { requestId: string; actor: Actor } };"}
+{"file":"apps/control-api/src/api-types.ts","line":13,"sig":"function registerControlResponseValidation(app: Hono<ControlEnvironment>) {"}
+{"file":"apps/control-api/src/config.ts","line":12,"sig":"function loadConfiguration(env: NodeJS.ProcessEnv = process.env) {"}
+{"file":"apps/control-api/src/config.ts","line":38,"sig":"type Configuration = ReturnType<typeof loadConfiguration>;"}
+{"file":"apps/control-api/src/database-routes.ts","line":13,"sig":"function registerDatabaseRoutes("}
+{"file":"apps/control-api/src/foundation-routes.ts","line":16,"sig":"function registerFoundationRoutes(app: Hono<ControlEnvironment>, engine?: FoundationEngine) {"}
+{"file":"apps/control-api/src/identity/auth-config.ts","line":10,"sig":"function buildOwnerAuth(state: IdentityState) {"}
+{"file":"apps/control-api/src/identity/auth-config.ts","line":135,"sig":"type OwnerAuth = ReturnType<typeof buildOwnerAuth>;"}
+{"file":"apps/control-api/src/identity/enrollment.ts","line":7,"sig":"function reserveOwner(store: IdentityState[\"store\"]) {"}
+{"file":"apps/control-api/src/identity/enrollment.ts","line":27,"sig":"function prepareEnrollment(state: IdentityState, intent: \"setup\" | \"recover\") {"}
+{"file":"apps/control-api/src/identity/enrollment.ts","line":67,"sig":"function flushIdentityEvents(state: IdentityState) {"}
+{"file":"apps/control-api/src/identity/index.ts","line":34,"sig":"function createOwnerIdentity(store: Store, options: IdentityOptions) {"}
+{"file":"apps/control-api/src/identity/index.ts","line":150,"sig":"type OwnerIdentity = Awaited<ReturnType<typeof createOwnerIdentity>>;"}
+{"file":"apps/control-api/src/identity/local-admin.ts","line":7,"sig":"const LOCAL_COMMAND_PATH = \"/api/v1/owner/local-command\";"}
+{"file":"apps/control-api/src/identity/local-admin.ts","line":8,"sig":"function localProof(signingKey: string, body: string, timestamp: string, nonce: string) {"}
+{"file":"apps/control-api/src/identity/local-admin.ts","line":18,"sig":"function consumeLocalProof("}
+{"file":"apps/control-api/src/identity/runtime.ts","line":20,"sig":"function assertPrivateTarget(directory: string) {"}
+{"file":"apps/control-api/src/identity/runtime.ts","line":56,"sig":"function privateDirectory(directory: string) {"}
+{"file":"apps/control-api/src/identity/runtime.ts","line":106,"sig":"function loadIdentityMaterial(identityDir: string) {"}
+{"file":"apps/control-api/src/identity/runtime.ts","line":125,"sig":"function acquireInstance(stateDir: string) {"}
+{"file":"apps/control-api/src/identity/runtime.ts","line":160,"sig":"function identityPaths(dataDir: string, stateOverride?: string) {"}
+{"file":"apps/control-api/src/identity/security.ts","line":7,"sig":"function ownerSession(auth: OwnerAuth, state: IdentityState, headers: Headers) {"}
+{"file":"apps/control-api/src/identity/security.ts","line":13,"sig":"function ownerActor(auth: OwnerAuth, state: IdentityState, headers: Headers) {"}
+{"file":"apps/control-api/src/identity/security.ts","line":26,"sig":"function securityOverview(auth: OwnerAuth, state: IdentityState, headers: Headers) {"}
+{"file":"apps/control-api/src/identity/security.ts","line":59,"sig":"function revokeIdentityObject("}
+{"file":"apps/control-api/src/identity/shared.ts","line":6,"sig":"const OWNER_DEFAULTS = {"}
+{"file":"apps/control-api/src/identity/shared.ts","line":15,"sig":"const ticketIdentifier = (ticket: string) =>"}
+{"file":"apps/control-api/src/identity/shared.ts","line":17,"sig":"interface IdentityOptions {"}
+{"file":"apps/control-api/src/identity/shared.ts","line":22,"sig":"interface OwnerStatus {"}
+{"file":"apps/control-api/src/identity/shared.ts","line":29,"sig":"interface IdentityState {"}
+{"file":"apps/control-api/src/identity/shared.ts","line":36,"sig":"function requireFresh(actor: Actor | null, now: Date) {"}
+{"file":"apps/control-api/src/identity/shared.ts","line":47,"sig":"function serialLane() {"}
+{"file":"apps/control-api/src/infra-routes.ts","line":12,"sig":"function registerInfrastructureRoutes("}
+{"file":"apps/control-api/src/openapi.ts","line":5,"sig":"function registerOpenApi(app: Hono<ControlEnvironment>) {"}
+{"file":"apps/control-api/src/recovery-routes.ts","line":12,"sig":"function registerRecoveryRoutes("}
+{"file":"packages/contracts/src/access-endpoints.ts","line":14,"sig":"const ACCESS_HTTP_ENDPOINTS = ["}
+{"file":"packages/contracts/src/access.ts","line":3,"sig":"const ACCESS_PURPOSES = [\"runtime\", \"migration\", \"deploy\", \"backup\"] as const;"}
+{"file":"packages/contracts/src/access.ts","line":4,"sig":"const AccessPurpose = z.enum(ACCESS_PURPOSES);"}
+{"file":"packages/contracts/src/access.ts","line":14,"sig":"const CreateServiceIdentity = z.discriminatedUnion(\"purpose\", ["}
+{"file":"packages/contracts/src/access.ts","line":22,"sig":"type CreateServiceIdentityInput = z.infer<typeof CreateServiceIdentity>;"}
+{"file":"packages/contracts/src/access.ts","line":23,"sig":"const CreateAccessSlot = z.object({ identityId: Id, name: Name }).strict();"}
+{"file":"packages/contracts/src/access.ts","line":24,"sig":"type CreateAccessSlotInput = z.infer<typeof CreateAccessSlot>;"}
+{"file":"packages/contracts/src/access.ts","line":25,"sig":"const AccessRevision = z.object({ expectedRevision: z.number().int().positive() }).strict();"}
+{"file":"packages/contracts/src/access.ts","line":26,"sig":"const ActivateAccessSlot = AccessRevision.extend({"}
+{"file":"packages/contracts/src/access.ts","line":29,"sig":"const ServiceIdentityView = z"}
+{"file":"packages/contracts/src/access.ts","line":46,"sig":"type ServiceIdentity = z.infer<typeof ServiceIdentityView>;"}
+{"file":"packages/contracts/src/access.ts","line":47,"sig":"const AccessSlotView = z"}
+{"file":"packages/contracts/src/access.ts","line":58,"sig":"type AccessSlot = z.infer<typeof AccessSlotView>;"}
+{"file":"packages/contracts/src/access.ts","line":59,"sig":"const AccessOperationView = z"}
+{"file":"packages/contracts/src/access.ts","line":71,"sig":"type AccessOperation = z.infer<typeof AccessOperationView>;"}
+{"file":"packages/contracts/src/access.ts","line":72,"sig":"const AccessHealth = z"}
+{"file":"packages/contracts/src/access.ts","line":85,"sig":"type AccessHealthView = z.infer<typeof AccessHealth>;"}
+{"file":"packages/contracts/src/access.ts","line":86,"sig":"const AccessOverview = z"}
+{"file":"packages/contracts/src/access.ts","line":95,"sig":"type AccessOverviewView = z.infer<typeof AccessOverview>;"}
+{"file":"packages/contracts/src/config.ts","line":1,"sig":"const LOCAL_DEFAULTS = {"}
+{"file":"packages/contracts/src/database-endpoints.ts","line":13,"sig":"const DATABASE_HTTP_ENDPOINTS = ["}
+{"file":"packages/contracts/src/database.ts","line":6,"sig":"const DATABASE_POLICY_VERSION = \"independent-postgres-18-v1\" as const;"}
+{"file":"packages/contracts/src/database.ts","line":7,"sig":"const DATABASE_ROLES = ["}
+{"file":"packages/contracts/src/database.ts","line":17,"sig":"type DatabaseRole = (typeof DATABASE_ROLES)[number];"}
+{"file":"packages/contracts/src/database.ts","line":18,"sig":"const DatabaseProfile = z"}
+{"file":"packages/contracts/src/database.ts","line":30,"sig":"type DatabaseProfileInput = z.infer<typeof DatabaseProfile>;"}
+{"file":"packages/contracts/src/database.ts","line":31,"sig":"const PrepareDatabase = z"}
+{"file":"packages/contracts/src/database.ts","line":40,"sig":"type PrepareDatabaseInput = z.infer<typeof PrepareDatabase>;"}
+{"file":"packages/contracts/src/database.ts","line":41,"sig":"const AdmitDatabase = z"}
+{"file":"packages/contracts/src/database.ts","line":48,"sig":"type AdmitDatabaseInput = z.infer<typeof AdmitDatabase>;"}
+{"file":"packages/contracts/src/database.ts","line":49,"sig":"const DatabasePreparation = z"}
+{"file":"packages/contracts/src/database.ts","line":63,"sig":"type DatabasePreparationView = z.infer<typeof DatabasePreparation>;"}
+{"file":"packages/contracts/src/database.ts","line":64,"sig":"const DatabaseAllocation = z"}
+{"file":"packages/contracts/src/database.ts","line":78,"sig":"type DatabaseAllocationView = z.infer<typeof DatabaseAllocation>;"}
+{"file":"packages/contracts/src/database.ts","line":79,"sig":"const DatabaseOverview = z"}
+{"file":"packages/contracts/src/database.ts","line":89,"sig":"type DatabaseOverviewView = z.infer<typeof DatabaseOverview>;"}
+{"file":"packages/contracts/src/database.ts","line":91,"sig":"const UpdateProject = z"}
+{"file":"packages/contracts/src/database.ts","line":98,"sig":"type UpdateProjectInput = z.infer<typeof UpdateProject>;"}
+{"file":"packages/contracts/src/database.ts","line":99,"sig":"const CreateEnvironment = z"}
+{"file":"packages/contracts/src/database.ts","line":110,"sig":"type CreateEnvironmentInput = z.infer<typeof CreateEnvironment>;"}
+{"file":"packages/contracts/src/database.ts","line":111,"sig":"const UpdateEnvironment = CreateEnvironment.omit({"}
+{"file":"packages/contracts/src/database.ts","line":121,"sig":"type UpdateEnvironmentInput = z.infer<typeof UpdateEnvironment>;"}
+{"file":"packages/contracts/src/http-openapi.ts","line":157,"sig":"function createControlOpenApi() {"}
+{"file":"packages/contracts/src/http-openapi.ts","line":235,"sig":"type ControlOpenApiDocument = ReturnType<typeof createControlOpenApi>;"}
+{"file":"packages/contracts/src/http-openapi.ts","line":247,"sig":"function isControlOpenApiDocument(value: unknown): value is ControlOpenApiDocument {"}
+{"file":"packages/contracts/src/http.ts","line":9,"sig":"class ControlContractError extends Error {"}
+{"file":"packages/contracts/src/http.ts","line":23,"sig":"function assertControlVersion(version: string, method = \"GET\", path = \"/\") {"}
+{"file":"packages/contracts/src/http.ts","line":28,"sig":"function parseControlResponse<T = unknown>("}
+{"file":"packages/contracts/src/http.ts","line":51,"sig":"function parseControlRequest<T = unknown>("}
+{"file":"packages/contracts/src/infra-endpoints.ts","line":12,"sig":"const INFRASTRUCTURE_HTTP_ENDPOINTS = ["}
+{"file":"packages/contracts/src/infrastructure.ts","line":5,"sig":"const InfrastructureCapacity = z"}
+{"file":"packages/contracts/src/infrastructure.ts","line":8,"sig":"type InfrastructureCapacityInput = z.infer<typeof InfrastructureCapacity>;"}
+{"file":"packages/contracts/src/infrastructure.ts","line":12,"sig":"const DeclareInventory = z"}
+{"file":"packages/contracts/src/infrastructure.ts","line":35,"sig":"type DeclareInventoryInput = z.infer<typeof DeclareInventory>;"}
+{"file":"packages/contracts/src/infrastructure.ts","line":36,"sig":"const InfrastructureRevision = z"}
+{"file":"packages/contracts/src/infrastructure.ts","line":39,"sig":"const ApplicationWorkload = z"}
+{"file":"packages/contracts/src/infrastructure.ts","line":53,"sig":"type ApplicationWorkloadInput = z.infer<typeof ApplicationWorkload>;"}
+{"file":"packages/contracts/src/infrastructure.ts","line":54,"sig":"const PrepareInfrastructure = z"}
+{"file":"packages/contracts/src/infrastructure.ts","line":62,"sig":"type PrepareInfrastructureInput = z.infer<typeof PrepareInfrastructure>;"}
+{"file":"packages/contracts/src/infrastructure.ts","line":63,"sig":"const AdmitInfrastructure = z"}
+{"file":"packages/contracts/src/infrastructure.ts","line":66,"sig":"type AdmitInfrastructureInput = z.infer<typeof AdmitInfrastructure>;"}
+{"file":"packages/contracts/src/infrastructure.ts","line":67,"sig":"const InfrastructureProviderBinding = z"}
+{"file":"packages/contracts/src/infrastructure.ts","line":76,"sig":"const InfrastructureObservation = z"}
+{"file":"packages/contracts/src/infrastructure.ts","line":115,"sig":"type InfrastructureObservationInput = z.infer<typeof InfrastructureObservation>;"}
+{"file":"packages/contracts/src/infrastructure.ts","line":116,"sig":"const CompiledApplicationManifest = z"}
+{"file":"packages/contracts/src/infrastructure.ts","line":169,"sig":"type CompiledApplicationInput = z.infer<typeof CompiledApplicationManifest>;"}
+{"file":"packages/contracts/src/infrastructure.ts","line":170,"sig":"const InfrastructurePreparation = z"}
+{"file":"packages/contracts/src/infrastructure.ts","line":184,"sig":"type InfrastructurePreparationView = z.infer<typeof InfrastructurePreparation>;"}
+{"file":"packages/contracts/src/infrastructure.ts","line":185,"sig":"const InfrastructureAllocation = z"}
+{"file":"packages/contracts/src/infrastructure.ts","line":200,"sig":"const InfrastructureOverview = z"}
+{"file":"packages/contracts/src/infrastructure.ts","line":213,"sig":"type InfrastructureOverviewView = z.infer<typeof InfrastructureOverview>;"}
+{"file":"packages/contracts/src/manifest.ts","line":9,"sig":"const validateManifest = ajv.compile(manifestSchema);"}
+{"file":"packages/contracts/src/manifest.ts","line":10,"sig":"const validateAction = ajv.compile(actionSchema);"}
+{"file":"packages/contracts/src/manifest.ts","line":11,"sig":"const validateOperation = ajv.compile(operationSchema);"}
+{"file":"packages/contracts/src/owner.ts","line":5,"sig":"const OwnerStatusResponse = z.discriminatedUnion(\"authenticated\", ["}
+{"file":"packages/contracts/src/owner.ts","line":22,"sig":"type OwnerStatusView = z.infer<typeof OwnerStatusResponse>;"}
+{"file":"packages/contracts/src/owner.ts","line":23,"sig":"type OwnerAuthenticatedView = Extract<OwnerStatusView, { authenticated: true }>;"}
+{"file":"packages/contracts/src/owner.ts","line":24,"sig":"const OwnerSecurityResponse = z"}
+{"file":"packages/contracts/src/owner.ts","line":52,"sig":"type OwnerSecurityView = z.infer<typeof OwnerSecurityResponse>;"}
+{"file":"packages/contracts/src/owner.ts","line":53,"sig":"const OWNER_SESSION_QUERY = \"owner-session\";"}
+{"file":"packages/contracts/src/owner.ts","line":54,"sig":"const OWNER_AUTH_REQUIRED_EVENT = \"godseye-owner-auth-required\";"}
+{"file":"packages/contracts/src/owner.ts","line":55,"sig":"const OWNER_POLL_MS = 30_000;"}
+{"file":"packages/contracts/src/recovery-endpoints.ts","line":12,"sig":"const RECOVERY_HTTP_ENDPOINTS = ["}
+{"file":"packages/contracts/src/recovery.ts","line":7,"sig":"const RECOVERY_POLICY_VERSION = \"pgbackrest-held-recovery-v1\" as const;"}
+{"file":"packages/contracts/src/recovery.ts","line":8,"sig":"const BackupPolicy = z"}
+{"file":"packages/contracts/src/recovery.ts","line":18,"sig":"type BackupPolicyInput = z.infer<typeof BackupPolicy>;"}
+{"file":"packages/contracts/src/recovery.ts","line":19,"sig":"const PrepareBackup = z"}
+{"file":"packages/contracts/src/recovery.ts","line":30,"sig":"type PrepareBackupInput = z.infer<typeof PrepareBackup>;"}
+{"file":"packages/contracts/src/recovery.ts","line":31,"sig":"const PrepareRestore = z"}
+{"file":"packages/contracts/src/recovery.ts","line":42,"sig":"type PrepareRestoreInput = z.infer<typeof PrepareRestore>;"}
+{"file":"packages/contracts/src/recovery.ts","line":43,"sig":"const PrepareArchiveCheck = PrepareRestore.omit({ targetTime: true, name: true }).strict();"}
+{"file":"packages/contracts/src/recovery.ts","line":44,"sig":"type PrepareArchiveCheckInput = z.infer<typeof PrepareArchiveCheck>;"}
+{"file":"packages/contracts/src/recovery.ts","line":45,"sig":"const AdmitRecovery = z.object({ preparationId: Id, expectedHash: Hash }).strict();"}
+{"file":"packages/contracts/src/recovery.ts","line":46,"sig":"type AdmitRecoveryInput = z.infer<typeof AdmitRecovery>;"}
+{"file":"packages/contracts/src/recovery.ts","line":47,"sig":"const RecoveryPreparation = z"}
+{"file":"packages/contracts/src/recovery.ts","line":67,"sig":"type RecoveryPreparationView = z.infer<typeof RecoveryPreparation>;"}
+{"file":"packages/contracts/src/recovery.ts","line":68,"sig":"const RecoveryCoverage = z"}
+{"file":"packages/contracts/src/recovery.ts","line":79,"sig":"const RecoveryBackup = z"}
+{"file":"packages/contracts/src/recovery.ts","line":104,"sig":"type RecoveryBackupView = z.infer<typeof RecoveryBackup>;"}
+{"file":"packages/contracts/src/recovery.ts","line":105,"sig":"const RecoveryRun = z"}
+{"file":"packages/contracts/src/recovery.ts","line":127,"sig":"type RecoveryRunView = z.infer<typeof RecoveryRun>;"}
+{"file":"packages/contracts/src/recovery.ts","line":128,"sig":"const ActivationAssessment = z"}
+{"file":"packages/contracts/src/recovery.ts","line":136,"sig":"const RecoveryOverview = z"}
+{"file":"packages/contracts/src/recovery.ts","line":146,"sig":"type RecoveryOverviewView = z.infer<typeof RecoveryOverview>;"}
+{"file":"packages/control-client/src/transport.ts","line":14,"sig":"interface ControlClientOptions {"}
+{"file":"packages/control-client/src/transport.ts","line":21,"sig":"class ControlHttpError extends Error {"}
+{"file":"packages/control-client/src/transport.ts","line":57,"sig":"function controlTransport(options: ControlClientOptions) {"}
+{"file":"packages/core/src/access-operations.ts","line":94,"sig":"function stage("}
+{"file":"packages/core/src/access-operations.ts","line":233,"sig":"function activate("}
+{"file":"packages/core/src/access-operations.ts","line":353,"sig":"function reconcile(state: AccessState, actor: Actor, id: string, key: string) {"}
+{"file":"packages/core/src/access-provider.ts","line":3,"sig":"type AccessScope = Pick<"}
+{"file":"packages/core/src/access-provider.ts","line":7,"sig":"interface AccessEnvelope {"}
+{"file":"packages/core/src/access-provider.ts","line":12,"sig":"interface AccessVersion extends AccessEnvelope {"}
+{"file":"packages/core/src/access-provider.ts","line":16,"sig":"interface AccessProvider {"}
+{"file":"packages/core/src/access-provider.ts","line":21,"sig":"interface StaticTransitionContext {"}
+{"file":"packages/core/src/access-provider.ts","line":27,"sig":"type StaticTransitionResult ="}
+{"file":"packages/core/src/access-provider.ts","line":46,"sig":"interface StaticTransitionAdapter {"}
+{"file":"packages/core/src/access-recovery-inspection.ts","line":19,"sig":"function validateRecoveryInspectionMaterial("}
+{"file":"packages/core/src/access-redemption.ts","line":19,"sig":"interface AccessTaskUse {"}
+{"file":"packages/core/src/access-redemption.ts","line":52,"sig":"type PrivateMaterialHandoff = (material: string) => void;"}
+{"file":"packages/core/src/access-redemption.ts","line":94,"sig":"function consume("}
+{"file":"packages/core/src/access-registry.ts","line":30,"sig":"function overview(state: AccessState, actor: Actor) {"}
+{"file":"packages/core/src/access-registry.ts","line":54,"sig":"function createIdentity("}
+{"file":"packages/core/src/access-registry.ts","line":97,"sig":"function createSlot("}
+{"file":"packages/core/src/access-registry.ts","line":149,"sig":"function revokeIdentity("}
+{"file":"packages/core/src/access-registry.ts","line":188,"sig":"function issueProof("}
+{"file":"packages/core/src/access-state.ts","line":18,"sig":"interface AccessBrokerOptions {"}
+{"file":"packages/core/src/access-state.ts","line":25,"sig":"function accessState(store: Store, options: AccessBrokerOptions) {"}
+{"file":"packages/core/src/access-state.ts","line":36,"sig":"type AccessState = ReturnType<typeof accessState>;"}
+{"file":"packages/core/src/access-state.ts","line":37,"sig":"const fresh = (state: AccessState, actor: Actor) =>"}
+{"file":"packages/core/src/access-state.ts","line":39,"sig":"function materialDigest(state: AccessState, value: string) {"}
+{"file":"packages/core/src/access-state.ts","line":45,"sig":"function derivedProof(state: AccessState, id: string, revision: number) {"}
+{"file":"packages/core/src/access-state.ts","line":50,"sig":"const proofDigest = (proof: string) => createHash(\"sha256\").update(proof).digest(\"hex\");"}
+{"file":"packages/core/src/access-state.ts","line":51,"sig":"function identityFor(tx: DatabaseAccess, id: string) {"}
+{"file":"packages/core/src/access-state.ts","line":59,"sig":"function slotFor(tx: DatabaseAccess, id: string) {"}
+{"file":"packages/core/src/access-state.ts","line":64,"sig":"function operationFor(tx: DatabaseAccess, id: string) {"}
+{"file":"packages/core/src/access-state.ts","line":72,"sig":"const scopeFor = ("}
+{"file":"packages/core/src/access-state.ts","line":82,"sig":"function slotView(slot: typeof schema.accessSlots.$inferSelect) {"}
+{"file":"packages/core/src/access-state.ts","line":85,"sig":"function operationView(row: typeof schema.accessOperations.$inferSelect) {"}
+{"file":"packages/core/src/access-state.ts","line":97,"sig":"function identityView("}
+{"file":"packages/core/src/access-state.ts","line":124,"sig":"function checkRevision(current: number, expected: number) {"}
+{"file":"packages/core/src/access-state.ts","line":128,"sig":"function currentIdentity("}
+{"file":"packages/core/src/access-state.ts","line":140,"sig":"function verifiedVersion("}
+{"file":"packages/core/src/access-state.ts","line":163,"sig":"function liveIdentity(state: AccessState, tx: DatabaseAccess, proof: string) {"}
+{"file":"packages/core/src/access-state.ts","line":188,"sig":"function safeProviderRead("}
+{"file":"packages/core/src/access-state.ts","line":209,"sig":"function receipt("}
+{"file":"packages/core/src/access-state.ts","line":219,"sig":"function record("}
+{"file":"packages/core/src/access-state.ts","line":239,"sig":"function providerFor(state: AccessState) {"}
+{"file":"packages/core/src/access-state.ts","line":244,"sig":"function readyProvider(state: AccessState) {"}
+{"file":"packages/core/src/access.ts","line":26,"sig":"class AccessBroker {"}
+{"file":"packages/core/src/audit-export.ts","line":9,"sig":"function exportAudit("}
+{"file":"packages/core/src/audit-export.ts","line":52,"sig":"function verifyAuditExport(pages: AuditExportPage[], trustedAnchor: AuditAnchor): boolean {"}
+{"file":"packages/core/src/bao-policy.ts","line":4,"sig":"const BAO_BROKER_POLICY = \"godseye-broker-v1\";"}
+{"file":"packages/core/src/bao-policy.ts","line":5,"sig":"function baoMount(mount = \"godseye\") {"}
+{"file":"packages/core/src/bao-policy.ts","line":11,"sig":"function baoPath(scope: AccessScope, mount = \"godseye\") {"}
+{"file":"packages/core/src/bao-policy.ts","line":17,"sig":"function compileBrokerPolicy(mount = \"godseye\") {"}
+{"file":"packages/core/src/bao-policy.ts","line":22,"sig":"function compileCellPolicy(scopes: AccessScope[], mount = \"godseye\") {"}
+{"file":"packages/core/src/bao-provider.ts","line":19,"sig":"interface BaoProviderOptions {"}
+{"file":"packages/core/src/bao-provider.ts","line":27,"sig":"class BaoAccessProvider implements AccessProvider {"}
+{"file":"packages/core/src/database-acl-inspection.ts","line":104,"sig":"function inspectDatabaseAcls("}
+{"file":"packages/core/src/database-execution.ts","line":25,"sig":"function databaseExecutionGate("}
+{"file":"packages/core/src/database-execution.ts","line":215,"sig":"function executeDatabase("}
+{"file":"packages/core/src/database-execution.ts","line":290,"sig":"function reconcileDatabase("}
+{"file":"packages/core/src/database-hba-inspection.ts","line":41,"sig":"function assertDatabaseHba("}
+{"file":"packages/core/src/database-inspection.ts","line":12,"sig":"interface PostgresInspection {"}
+{"file":"packages/core/src/database-inspection.ts","line":192,"sig":"function inspectPostgres("}
+{"file":"packages/core/src/database-material.ts","line":8,"sig":"interface DatabaseBrokerReferences {"}
+{"file":"packages/core/src/database-material.ts","line":13,"sig":"class BrokerDatabaseMaterialDelivery implements DatabaseMaterialDelivery {"}
+{"file":"packages/core/src/database-policy.ts","line":13,"sig":"interface DatabaseProfileScope {"}
+{"file":"packages/core/src/database-policy.ts","line":18,"sig":"interface CompiledDatabaseProfile extends DatabaseProfileScope {"}
+{"file":"packages/core/src/database-policy.ts","line":29,"sig":"function compileDatabaseProfile("}
+{"file":"packages/core/src/database-policy.ts","line":65,"sig":"function assertDatabaseProfile(profile: CompiledDatabaseProfile) {"}
+{"file":"packages/core/src/database-policy.ts","line":78,"sig":"function renderDatabaseSettings(profile: CompiledDatabaseProfile): Record<string, string> {"}
+{"file":"packages/core/src/database-policy.ts","line":108,"sig":"interface DatabaseHbaBinding {"}
+{"file":"packages/core/src/database-policy.ts","line":114,"sig":"function renderDatabaseHba("}
+{"file":"packages/core/src/database-postgres.ts","line":9,"sig":"type DatabaseMaterial = Record<DatabaseRole, string>;"}
+{"file":"packages/core/src/database-postgres.ts","line":10,"sig":"interface PostgresConnection {"}
+{"file":"packages/core/src/database-postgres.ts","line":14,"sig":"type PostgresConnectionFactory = (database: string) => Promise<PostgresConnection>;"}
+{"file":"packages/core/src/database-postgres.ts","line":15,"sig":"function createDatabaseMaterial(): DatabaseMaterial {"}
+{"file":"packages/core/src/database-postgres.ts","line":21,"sig":"function postgresConnectionFactory(config: {"}
+{"file":"packages/core/src/database-postgres.ts","line":57,"sig":"function bootstrapPostgres("}
+{"file":"packages/core/src/database-preparation.ts","line":36,"sig":"function prepareDatabase("}
+{"file":"packages/core/src/database-preparation.ts","line":117,"sig":"function admitDatabase("}
+{"file":"packages/core/src/database-preparation.ts","line":199,"sig":"function reserveDatabase("}
+{"file":"packages/core/src/database-provider.ts","line":12,"sig":"interface DatabaseProviderBinding {"}
+{"file":"packages/core/src/database-provider.ts","line":18,"sig":"interface DatabaseQualification extends DatabaseProviderBinding {"}
+{"file":"packages/core/src/database-provider.ts","line":27,"sig":"interface DatabaseProviderScope {"}
+{"file":"packages/core/src/database-provider.ts","line":35,"sig":"interface DatabasePhysicalInspection {"}
+{"file":"packages/core/src/database-provider.ts","line":50,"sig":"interface DatabaseProvider {"}
+{"file":"packages/core/src/database-provider.ts","line":75,"sig":"interface DatabaseMaterialDelivery {"}
+{"file":"packages/core/src/database-provider.ts","line":83,"sig":"interface PostgresInstanceTransport {"}
+{"file":"packages/core/src/database-provider.ts","line":94,"sig":"class ManagedPostgresProvider implements DatabaseProvider {"}
+{"file":"packages/core/src/database-sql.ts","line":4,"sig":"interface DatabaseStatement {"}
+{"file":"packages/core/src/database-sql.ts","line":8,"sig":"function databaseIdentifier(value: string) {"}
+{"file":"packages/core/src/database-sql.ts","line":62,"sig":"function compileDatabaseBootstrap(profile: CompiledDatabaseProfile): DatabaseStatement[] {"}
+{"file":"packages/core/src/database-state.ts","line":23,"sig":"const DATABASE_ADAPTER_ID = \"local.database\";"}
+{"file":"packages/core/src/database-state.ts","line":24,"sig":"const DATABASE_DESTINATION = \"database.private\";"}
+{"file":"packages/core/src/database-state.ts","line":25,"sig":"interface DatabaseState {"}
+{"file":"packages/core/src/database-state.ts","line":32,"sig":"const freshDatabaseOwner = (state: DatabaseState, actor: Actor) =>"}
+{"file":"packages/core/src/database-state.ts","line":34,"sig":"const databasePreparationView = ("}
+{"file":"packages/core/src/database-state.ts","line":49,"sig":"const databaseAllocationView = (row: typeof schema.databaseAllocations.$inferSelect) =>"}
+{"file":"packages/core/src/database-state.ts","line":62,"sig":"const compiledDatabase = (row: typeof schema.databasePreparations.$inferSelect) =>"}
+{"file":"packages/core/src/database-state.ts","line":68,"sig":"function databasePreparationHash("}
+{"file":"packages/core/src/database-state.ts","line":80,"sig":"function databasePreparationFor(tx: DatabaseAccess, id: string) {"}
+{"file":"packages/core/src/database-state.ts","line":90,"sig":"function assertDatabaseQualification("}
+{"file":"packages/core/src/database-state.ts","line":123,"sig":"function qualifyDatabase(state: DatabaseState) {"}
+{"file":"packages/core/src/database-state.ts","line":129,"sig":"function validateDatabasePreparation("}
+{"file":"packages/core/src/database.ts","line":30,"sig":"class DatabaseEngine {"}
+{"file":"packages/core/src/errors.ts","line":1,"sig":"class DomainError extends Error {"}
+{"file":"packages/core/src/errors.ts","line":14,"sig":"function parseInput<T>(schema: z.ZodType<T>, input: unknown): T {"}
+{"file":"packages/core/src/foundation-grants.ts","line":18,"sig":"function heartbeat(state: FoundationState, context: ExecutionContext) {"}
+{"file":"packages/core/src/foundation-grants.ts","line":32,"sig":"function getGrant(state: FoundationState, actor: Actor, grantId: string) {"}
+{"file":"packages/core/src/foundation-grants.ts","line":46,"sig":"function authorizeGrant("}
+{"file":"packages/core/src/foundation-grants.ts","line":61,"sig":"function validateGrant("}
+{"file":"packages/core/src/foundation-outcome.ts","line":4,"sig":"function normalizeOutcome(input: unknown): EffectOutcomeInput {"}
+{"file":"packages/core/src/foundation-retention.ts","line":8,"sig":"function prune(state: FoundationState, actor: Actor) {"}
+{"file":"packages/core/src/infra-collector.ts","line":7,"sig":"class LocalSystemCollector implements InfrastructureCollector {"}
+{"file":"packages/core/src/infra-docker-inspection.ts","line":25,"sig":"function verifyDockerConfiguration("}
+{"file":"packages/core/src/infra-docker-policy.ts","line":4,"sig":"function dockerOwnershipLabels(scope: ProviderScope) {"}
+{"file":"packages/core/src/infra-docker-policy.ts","line":14,"sig":"function renderDockerNetwork(scope: ProviderScope, manifest: CompiledApplication) {"}
+{"file":"packages/core/src/infra-docker-policy.ts","line":30,"sig":"function renderDockerSandbox("}
+{"file":"packages/core/src/infra-docker-provider.ts","line":19,"sig":"interface EnforcementQualification {"}
+{"file":"packages/core/src/infra-docker-provider.ts","line":27,"sig":"interface PersistentQuotaManager {"}
+{"file":"packages/core/src/infra-docker-provider.ts","line":52,"sig":"interface DualStackFirewallManager {"}
+{"file":"packages/core/src/infra-docker-provider.ts","line":74,"sig":"interface ImmutableArtifactVerifier {"}
+{"file":"packages/core/src/infra-docker-provider.ts","line":80,"sig":"interface RuntimeConfigurationVerifier {"}
+{"file":"packages/core/src/infra-docker-provider.ts","line":90,"sig":"interface DockerProviderDependencies {"}
+{"file":"packages/core/src/infra-docker-provider.ts","line":117,"sig":"class DockerInfrastructureProvider implements InfrastructureProvider {"}
+{"file":"packages/core/src/infra-docker-transport.ts","line":8,"sig":"const DockerNetworkInspection = z.object({"}
+{"file":"packages/core/src/infra-docker-transport.ts","line":20,"sig":"const DockerSandboxInspection = z.object({"}
+{"file":"packages/core/src/infra-docker-transport.ts","line":74,"sig":"type DockerSandboxInspectionInput = z.infer<typeof DockerSandboxInspection>;"}
+{"file":"packages/core/src/infra-docker-transport.ts","line":75,"sig":"interface DockerTransportOptions {"}
+{"file":"packages/core/src/infra-docker-transport.ts","line":81,"sig":"class DockerEngineTransport {"}
+{"file":"packages/core/src/infra-execution.ts","line":23,"sig":"function executeInfrastructure("}
+{"file":"packages/core/src/infra-execution.ts","line":155,"sig":"function reconcileInfrastructure("}
+{"file":"packages/core/src/infra-inventory.ts","line":24,"sig":"function infrastructureOverview("}
+{"file":"packages/core/src/infra-inventory.ts","line":85,"sig":"function declareInfrastructure("}
+{"file":"packages/core/src/infra-inventory.ts","line":116,"sig":"function refreshInfrastructure("}
+{"file":"packages/core/src/infra-network.ts","line":4,"sig":"interface PrivateSubnet {"}
+{"file":"packages/core/src/infra-network.ts","line":38,"sig":"function parsePrivateSubnet(input: string): PrivateSubnet {"}
+{"file":"packages/core/src/infra-network.ts","line":72,"sig":"function subnetsOverlap(a: string, b: string) {"}
+{"file":"packages/core/src/infra-network.ts","line":77,"sig":"function subnetContains(pool: string, ip: string) {"}
+{"file":"packages/core/src/infra-network.ts","line":84,"sig":"function allocatePrivateSubnet(pool: string, occupied: readonly string[]): string {"}
+{"file":"packages/core/src/infra-policy.ts","line":11,"sig":"const INFRASTRUCTURE_POLICY_VERSION = \"application-runsc-systrap-v1\";"}
+{"file":"packages/core/src/infra-policy.ts","line":12,"sig":"interface ApplicationScope {"}
+{"file":"packages/core/src/infra-policy.ts","line":20,"sig":"type CompiledApplication = CompiledApplicationInput;"}
+{"file":"packages/core/src/infra-policy.ts","line":21,"sig":"function immutableSnapshot<T>(input: T): T {"}
+{"file":"packages/core/src/infra-policy.ts","line":32,"sig":"function compileApplication("}
+{"file":"packages/core/src/infra-preparation.ts","line":35,"sig":"const preparationView = (row: typeof schema.infrastructurePreparations.$inferSelect) => {"}
+{"file":"packages/core/src/infra-preparation.ts","line":39,"sig":"const allocationView = (row: typeof schema.infrastructureAllocations.$inferSelect) =>"}
+{"file":"packages/core/src/infra-preparation.ts","line":41,"sig":"function prepareInfrastructure("}
+{"file":"packages/core/src/infra-preparation.ts","line":126,"sig":"function validatePreparation("}
+{"file":"packages/core/src/infra-preparation.ts","line":200,"sig":"function reserveInfrastructure("}
+{"file":"packages/core/src/infra-preparation.ts","line":267,"sig":"function admitInfrastructure("}
+{"file":"packages/core/src/infra-preparation.ts","line":329,"sig":"function releaseQueuedInfrastructure("}
+{"file":"packages/core/src/infra-provider.ts","line":5,"sig":"interface InfrastructureCollector {"}
+{"file":"packages/core/src/infra-provider.ts","line":8,"sig":"interface ProviderScope {"}
+{"file":"packages/core/src/infra-provider.ts","line":16,"sig":"interface ProviderResource {"}
+{"file":"packages/core/src/infra-provider.ts","line":21,"sig":"interface ProviderInspection {"}
+{"file":"packages/core/src/infra-provider.ts","line":34,"sig":"interface InfrastructureProvider {"}
+{"file":"packages/core/src/infra-quarantine.ts","line":12,"sig":"function protectiveQuarantine(state: InfrastructureState, input: ExecutionContext) {"}
+{"file":"packages/core/src/infra-quarantine.ts","line":97,"sig":"function fenceInfrastructure(state: InfrastructureState, input: ExecutionContext) {"}
+{"file":"packages/core/src/infra-settlement.ts","line":12,"sig":"function settleInfrastructure("}
+{"file":"packages/core/src/infra-settlement.ts","line":59,"sig":"function markInfrastructureUncertain("}
+{"file":"packages/core/src/infra-steps.ts","line":14,"sig":"type InfraStepKind = \"network\" | \"firewall\" | \"data\" | \"sandbox\" | \"start\";"}
+{"file":"packages/core/src/infra-steps.ts","line":15,"sig":"const executionActor = (context: ExecutionContext) => ({"}
+{"file":"packages/core/src/infra-steps.ts","line":20,"sig":"function allocationFor(tx: DatabaseAccess, context: ExecutionContext) {"}
+{"file":"packages/core/src/infra-steps.ts","line":36,"sig":"function dispatchGate("}
+{"file":"packages/core/src/infra-steps.ts","line":65,"sig":"function gate(state: InfrastructureState, context: ExecutionContext, action: string) {"}
+{"file":"packages/core/src/infra-steps.ts","line":78,"sig":"function assertResource(resource: ProviderResource, scope: ProviderScope) {"}
+{"file":"packages/core/src/infra-steps.ts","line":91,"sig":"function assertInspection("}
+{"file":"packages/core/src/infra-steps.ts","line":121,"sig":"function intendStep("}
+{"file":"packages/core/src/infra-steps.ts","line":167,"sig":"function recordResource("}
+{"file":"packages/core/src/infra-steps.ts","line":186,"sig":"function resourcesFor(tx: DatabaseAccess, allocationId: string) {"}
+{"file":"packages/core/src/infra-steps.ts","line":201,"sig":"function markAllocation("}
+{"file":"packages/core/src/journal.ts","line":8,"sig":"function fingerprint(value: unknown): string {"}
+{"file":"packages/core/src/journal.ts","line":24,"sig":"function write<T>(store: Store, work: (tx: DatabaseAccess) => Promise<T>): Promise<T> {"}
+{"file":"packages/core/src/journal.ts","line":31,"sig":"function existingRequest(tx: DatabaseAccess, key: string, digest: string) {"}
+{"file":"packages/core/src/journal.ts","line":42,"sig":"function appendAudit("}
+{"file":"packages/core/src/journal.ts","line":63,"sig":"function verifyAudit(store: Store): Promise<boolean> {"}
+{"file":"packages/core/src/operations.ts","line":11,"sig":"const operationView = (row: typeof schema.operations.$inferSelect): OperationView => ({"}
+{"file":"packages/core/src/operations.ts","line":17,"sig":"function listOperations(store: Store, actor: Actor): Promise<OperationView[]> {"}
+{"file":"packages/core/src/operations.ts","line":25,"sig":"function requestOperation("}
+{"file":"packages/core/src/policy.ts","line":18,"sig":"function assertTransition(from: OperationState, to: OperationState): void {"}
+{"file":"packages/core/src/policy.ts","line":24,"sig":"interface Actor {"}
+{"file":"packages/core/src/policy.ts","line":31,"sig":"function assertProjectAccess(actor: Actor, projectId: string): void {"}
+{"file":"packages/core/src/policy.ts","line":37,"sig":"function assertOwner(actor: Actor): void {"}
+{"file":"packages/core/src/project-management.ts","line":33,"sig":"function updateProject("}
+{"file":"packages/core/src/project-management.ts","line":67,"sig":"function createEnvironment("}
+{"file":"packages/core/src/project-management.ts","line":122,"sig":"function updateEnvironment("}
+{"file":"packages/core/src/recovery-admission.ts","line":22,"sig":"function admitRecovery("}
+{"file":"packages/core/src/recovery-admission.ts","line":86,"sig":"function reserveRecovery("}
+{"file":"packages/core/src/recovery-capacity.ts","line":7,"sig":"function recoveryCommitments("}
+{"file":"packages/core/src/recovery-capacity.ts","line":56,"sig":"function recoveryAdditionalCapacity("}
+{"file":"packages/core/src/recovery-execution.ts","line":26,"sig":"function recoveryExecutionGate("}
+{"file":"packages/core/src/recovery-execution.ts","line":159,"sig":"function executeRecovery("}
+{"file":"packages/core/src/recovery-material.ts","line":9,"sig":"interface RecoveryBrokerReferences {"}
+{"file":"packages/core/src/recovery-material.ts","line":17,"sig":"class BrokerRecoveryRepositoryMaterial implements RecoveryRepositoryMaterial {"}
+{"file":"packages/core/src/recovery-pgbackrest-info.ts","line":38,"sig":"function inspectPgBackRestInfo("}
+{"file":"packages/core/src/recovery-pgbackrest-policy.ts","line":7,"sig":"interface PgBackRestBinding {"}
+{"file":"packages/core/src/recovery-pgbackrest-policy.ts","line":30,"sig":"function compilePgBackRest(bindingInput: PgBackRestBinding) {"}
+{"file":"packages/core/src/recovery-pgbackrest-policy.ts","line":104,"sig":"type CompiledPgBackRest = ReturnType<typeof compilePgBackRest>;"}
+{"file":"packages/core/src/recovery-pgbackrest-policy.ts","line":105,"sig":"type PgBackRestOperation = \"stanza-create\" | \"check\" | \"info\" | \"full\" | \"diff\";"}
+{"file":"packages/core/src/recovery-pgbackrest-policy.ts","line":106,"sig":"function pgBackRestArguments("}
+{"file":"packages/core/src/recovery-pgbackrest-policy.ts","line":119,"sig":"interface PgBackRestRestoreTarget {"}
+{"file":"packages/core/src/recovery-pgbackrest-policy.ts","line":127,"sig":"function pgBackRestRestoreArguments("}
+{"file":"packages/core/src/recovery-pgbackrest-policy.ts","line":168,"sig":"function pgBackRestArchiveCommand(compiled: CompiledPgBackRest, executable: string) {"}
+{"file":"packages/core/src/recovery-pgbackrest-provider.ts","line":21,"sig":"interface RecoveryDestinationBinding {"}
+{"file":"packages/core/src/recovery-pgbackrest-provider.ts","line":33,"sig":"interface RecoveryRepositoryMaterial {"}
+{"file":"packages/core/src/recovery-pgbackrest-provider.ts","line":45,"sig":"interface PgBackRestTransport {"}
+{"file":"packages/core/src/recovery-pgbackrest-provider.ts","line":64,"sig":"class ManagedPgBackRestProvider implements RecoveryProvider {"}
+{"file":"packages/core/src/recovery-pgbackrest-provider.ts","line":231,"sig":"class PgBackRestProcess {"}
+{"file":"packages/core/src/recovery-postgres-policy.ts","line":9,"sig":"interface HeldRecoveryPostgresBinding {"}
+{"file":"packages/core/src/recovery-postgres-policy.ts","line":22,"sig":"function renderHeldRecoveryPostgres("}
+{"file":"packages/core/src/recovery-preparation.ts","line":30,"sig":"function prepareBackup("}
+{"file":"packages/core/src/recovery-preparation.ts","line":89,"sig":"function prepareRestore("}
+{"file":"packages/core/src/recovery-preparation.ts","line":205,"sig":"function prepareArchiveCheck("}
+{"file":"packages/core/src/recovery-provider.ts","line":7,"sig":"interface RecoveryScope {"}
+{"file":"packages/core/src/recovery-provider.ts","line":25,"sig":"interface RecoveryQualification extends DatabaseProviderBinding {"}
+{"file":"packages/core/src/recovery-provider.ts","line":36,"sig":"interface RecoveryMetadata {"}
+{"file":"packages/core/src/recovery-provider.ts","line":58,"sig":"interface RecoveryInspection {"}
+{"file":"packages/core/src/recovery-provider.ts","line":83,"sig":"interface RecoveryProvider {"}
+{"file":"packages/core/src/recovery-provider.ts","line":91,"sig":"const recoveryScopeHash = (scope: RecoveryScope) => fingerprint(scope);"}
+{"file":"packages/core/src/recovery-provider.ts","line":92,"sig":"function assertRecoveryInspection("}
+{"file":"packages/core/src/recovery-state.ts","line":20,"sig":"const RECOVERY_ADAPTER_ID = \"local.recovery\";"}
+{"file":"packages/core/src/recovery-state.ts","line":21,"sig":"const RECOVERY_DESTINATION = \"recovery.private\";"}
+{"file":"packages/core/src/recovery-state.ts","line":22,"sig":"interface RecoveryState {"}
+{"file":"packages/core/src/recovery-state.ts","line":29,"sig":"const recoveryFresh = (state: RecoveryState, actor: Actor) =>"}
+{"file":"packages/core/src/recovery-state.ts","line":31,"sig":"type RecoveryPreparationRow = typeof schema.recoveryPreparations.$inferSelect;"}
+{"file":"packages/core/src/recovery-state.ts","line":32,"sig":"const recoveryPreparationView = (row: RecoveryPreparationRow) =>"}
+{"file":"packages/core/src/recovery-state.ts","line":51,"sig":"const recoveryRunView = (row: typeof schema.recoveryRuns.$inferSelect) =>"}
+{"file":"packages/core/src/recovery-state.ts","line":65,"sig":"const recoveryPreparationHash = ("}
+{"file":"packages/core/src/recovery-state.ts","line":71,"sig":"function recoveryPreparationFor(tx: DatabaseAccess, id: string) {"}
+{"file":"packages/core/src/recovery-state.ts","line":82,"sig":"function recoverySource("}
+{"file":"packages/core/src/recovery-state.ts","line":127,"sig":"function recoveryScope("}
+{"file":"packages/core/src/recovery-state.ts","line":177,"sig":"function assertRecoveryQualification("}
+{"file":"packages/core/src/recovery-state.ts","line":212,"sig":"function qualifyRecovery(state: RecoveryState, scope: RecoveryScope) {"}
+{"file":"packages/core/src/recovery-state.ts","line":227,"sig":"function validateRecovery("}
+{"file":"packages/core/src/recovery.ts","line":36,"sig":"class RecoveryEngine {"}
+{"file":"packages/store/src/access-schema.ts","line":4,"sig":"const serviceIdentities = pgTable(\"service_identities\", {"}
+{"file":"packages/store/src/access-schema.ts","line":19,"sig":"const accessSlots = pgTable(\"access_slots\", {"}
+{"file":"packages/store/src/access-schema.ts","line":28,"sig":"const accessOperations = pgTable(\"access_operations\", {"}
+{"file":"packages/store/src/database-schema.ts","line":5,"sig":"const databasePreparations = pgTable(\"database_preparations\", {"}
+{"file":"packages/store/src/database-schema.ts","line":20,"sig":"const databaseAllocations = pgTable(\"database_allocations\", {"}
+{"file":"packages/store/src/database-schema.ts","line":36,"sig":"const databaseSteps = pgTable(\"database_steps\", {"}
+{"file":"packages/store/src/database-schema.ts","line":47,"sig":"const databaseCommands = pgTable(\"database_commands\", {"}
+{"file":"packages/store/src/foundation-schema.ts","line":15,"sig":"const resources = pgTable(\"control_resources\", {"}
+{"file":"packages/store/src/foundation-schema.ts","line":23,"sig":"const executionPlans = pgTable(\"execution_plans\", {"}
+{"file":"packages/store/src/foundation-schema.ts","line":38,"sig":"const approvals = pgTable(\"control_approvals\", {"}
+{"file":"packages/store/src/foundation-schema.ts","line":48,"sig":"const activationEpochs = pgTable(\"activation_epochs\", {"}
+{"file":"packages/store/src/foundation-schema.ts","line":52,"sig":"const budgetAccounts = pgTable(\"budget_accounts\", {"}
+{"file":"packages/store/src/foundation-schema.ts","line":59,"sig":"const executionRuns = pgTable(\"execution_runs\", {"}
+{"file":"packages/store/src/foundation-schema.ts","line":77,"sig":"const effects = pgTable(\"effect_journal\", {"}
+{"file":"packages/store/src/foundation-schema.ts","line":87,"sig":"const taskGrants = pgTable(\"task_grants\", {"}
+{"file":"packages/store/src/foundation-schema.ts","line":101,"sig":"const foundationRequests = pgTable(\"foundation_requests\", {"}
+{"file":"packages/store/src/index.ts","line":8,"sig":"type ControlDatabase = PgliteDatabase<typeof schema> | NodePgDatabase<typeof schema>;"}
+{"file":"packages/store/src/index.ts","line":9,"sig":"type DatabaseAccess = Pick<"}
+{"file":"packages/store/src/index.ts","line":13,"sig":"interface Store {"}
+{"file":"packages/store/src/index.ts","line":21,"sig":"function openStore("}
+{"file":"packages/store/src/infra-schema.ts","line":5,"sig":"const infrastructureReceipts = pgTable(\"infrastructure_receipts\", {"}
+{"file":"packages/store/src/infra-schema.ts","line":9,"sig":"const infrastructureInventory = pgTable(\"infrastructure_inventory\", {"}
+{"file":"packages/store/src/infra-schema.ts","line":16,"sig":"const infrastructurePreparations = pgTable(\"infrastructure_preparations\", {"}
+{"file":"packages/store/src/infra-schema.ts","line":29,"sig":"const infrastructureAllocations = pgTable(\"infrastructure_allocations\", {"}
+{"file":"packages/store/src/infra-schema.ts","line":42,"sig":"const infrastructureSteps = pgTable(\"infrastructure_steps\", {"}
+{"file":"packages/store/src/migrations.ts","line":8,"sig":"type MigrationTransaction = ("}
+{"file":"packages/store/src/migrations.ts","line":13,"sig":"function migrate("}
+{"file":"packages/store/src/owner-schema.ts","line":3,"sig":"const ownerUser = pgTable(\"owner_user\", {"}
+{"file":"packages/store/src/owner-schema.ts","line":12,"sig":"const ownerSession = pgTable(\"owner_session\", {"}
+{"file":"packages/store/src/owner-schema.ts","line":24,"sig":"const ownerAccount = pgTable(\"owner_account\", {"}
+{"file":"packages/store/src/owner-schema.ts","line":41,"sig":"const ownerVerification = pgTable(\"owner_verification\", {"}
+{"file":"packages/store/src/owner-schema.ts","line":49,"sig":"const ownerPasskey = pgTable(\"owner_passkey\", {"}
+{"file":"packages/store/src/owner-schema.ts","line":64,"sig":"const ownerIdentity = pgTable(\"owner_identity\", {"}
+{"file":"packages/store/src/owner-schema.ts","line":71,"sig":"const ownerEvents = pgTable(\"owner_events\", {"}
+{"file":"packages/store/src/owner-schema.ts","line":78,"sig":"const ownerReceipts = pgTable(\"owner_receipts\", {"}
+{"file":"packages/store/src/owner-schema.ts","line":83,"sig":"const ownerThrottle = pgTable(\"owner_throttle\", {"}
+{"file":"packages/store/src/owner-schema.ts","line":88,"sig":"const ownerAuthSchema = {"}
+{"file":"packages/store/src/recovery-schema.ts","line":5,"sig":"const recoveryPreparations = pgTable(\"recovery_preparations\", {"}
+{"file":"packages/store/src/recovery-schema.ts","line":29,"sig":"const recoveryRuns = pgTable(\"recovery_runs\", {"}
+{"file":"packages/store/src/recovery-schema.ts","line":43,"sig":"const recoveryBackups = pgTable(\"recovery_backups\", {"}
+{"file":"packages/store/src/recovery-schema.ts","line":55,"sig":"const recoveryCommands = pgTable(\"recovery_commands\", {"}
+{"file":"packages/store/src/recovery-schema.ts","line":60,"sig":"const recoverySteps = pgTable(\"recovery_steps\", {"}
+{"file":"scripts/install-pgbackrest.py","line":20,"sig":"def main() -> None"}
+{"file":"scripts/install-postgres.py","line":22,"sig":"def download(url: str, path: Path) -> bytes:"}
+{"file":"scripts/install-postgres.py","line":32,"sig":"def digest(content: bytes) -> str:"}
+{"file":"scripts/install-postgres.py","line":36,"sig":"def signed_index(cache: Path, suite: str) -> tuple[list[dict[str, str]], dict[str, str]]:"}
+{"file":"scripts/install-postgres.py","line":59,"sig":"def main() -> None"}
+{"file":"tests/access-helpers.ts","line":19,"sig":"class MemoryAccessProvider implements AccessProvider {"}
+{"file":"tests/access-helpers.ts","line":48,"sig":"function transitionFixture() {"}
+{"file":"tests/access-helpers.ts","line":78,"sig":"function accessFixture("}
+{"file":"tests/access-helpers.ts","line":100,"sig":"type AccessFixture = Awaited<ReturnType<typeof accessFixture>>;"}
+{"file":"tests/access-helpers.ts","line":102,"sig":"function currentSlot(fixture: AccessFixture, id: string): Promise<AccessSlot> {"}
+{"file":"tests/access-helpers.ts","line":110,"sig":"function prepareAccess("}
+{"file":"tests/e2e/owner-fixture.ts","line":15,"sig":"function ownerBrowserServer() {"}
+{"file":"tests/e2e/owner-fixture.ts","line":56,"sig":"type OwnerBrowserServer = Awaited<ReturnType<typeof ownerBrowserServer>>;"}
+{"file":"tests/e2e/owner-fixture.ts","line":59,"sig":"function enrollConsoleOwner("}
+{"file":"tests/e2e/owner-fixture.ts","line":102,"sig":"function virtualOwnerAuthenticator("}
+{"file":"tests/e2e/owner-fixture.ts","line":121,"sig":"function overrideUserVerification("}
+{"file":"tests/e2e/owner-fixture.ts","line":132,"sig":"function registerOwnerPasskey(page: Page, ticket?: string, alteredOrigin?: string) {"}
+{"file":"tests/e2e/owner-fixture.ts","line":169,"sig":"function authenticateOwnerPasskey(page: Page) {"}
+{"file":"tests/e2e/owner-fixture.ts","line":191,"sig":"function browserOwnerRequest(page: Page, path: string, method = \"GET\") {"}
+{"file":"tests/foundations-helpers.ts","line":13,"sig":"class FoundationClock {"}
+{"file":"tests/foundations-helpers.ts","line":21,"sig":"function fixtureAdapter() {"}
+{"file":"tests/foundations-helpers.ts","line":59,"sig":"function foundationFixture("}
+{"file":"tests/foundations-helpers.ts","line":137,"sig":"type FoundationFixture = Awaited<ReturnType<typeof foundationFixture>>;"}
+{"file":"tests/foundations-helpers.ts","line":139,"sig":"function fixturePlan("}
+{"file":"tests/foundations-helpers.ts","line":146,"sig":"function deferred<T>() {"}
+{"file":"tests/foundations-helpers.ts","line":156,"sig":"function closeFixture(fixture: { store: Store } | undefined) {"}
+{"file":"tests/helpers.ts","line":5,"sig":"const owner = { id: \"local-owner\", kind: \"owner\" as const, projectIds: [] };"}
+{"file":"tests/helpers.ts","line":6,"sig":"const projectInput: CreateProjectInput = {"}
+{"file":"tests/helpers.ts","line":12,"sig":"const repository: RepositoryConfigurationInput = {"}
+{"file":"tests/helpers.ts","line":19,"sig":"const webhookKey = \"test-only-webhook-key-not-a-credential\";"}
+{"file":"tests/helpers.ts","line":21,"sig":"function githubPush(overrides: Record<string, unknown> = {}): Record<string, unknown> {"}
+{"file":"tests/helpers.ts","line":32,"sig":"function signedDelivery("}
+{"file":"tests/infra-docker-helpers.ts","line":14,"sig":"const dockerFixtureNow = () => new Date(\"2026-11-11T12:00:00Z\");"}
+{"file":"tests/infra-docker-helpers.ts","line":15,"sig":"function dockerEvidenceFixture() {"}
+{"file":"tests/infra-docker-helpers.ts","line":176,"sig":"class DockerTransportFixture extends DockerEngineTransport {"}
+{"file":"tests/infra-helpers.ts","line":16,"sig":"const fixtureWorkload: ApplicationWorkloadInput = {"}
+{"file":"tests/infra-helpers.ts","line":25,"sig":"function desiredInventory(): DeclareInventoryInput {"}
+{"file":"tests/infra-helpers.ts","line":52,"sig":"class InfrastructureCollectorFixture implements InfrastructureCollector {"}
+{"file":"tests/infra-helpers.ts","line":92,"sig":"function infrastructureFixture("}
+{"file":"tests/infra-helpers.ts","line":180,"sig":"type InfrastructureFixture = Awaited<ReturnType<typeof infrastructureFixture>>;"}
+{"file":"tests/infra-helpers.ts","line":181,"sig":"function allocationState(fixture: InfrastructureFixture, id: string) {"}
+{"file":"tests/infra-provider-fixture.ts","line":10,"sig":"type ProviderAction ="}
+{"file":"tests/infra-provider-fixture.ts","line":29,"sig":"class InfrastructureProviderFixture implements InfrastructureProvider {"}
+{"file":"tests/openbao-fixture.ts","line":12,"sig":"const OPENBAO_LAB = {"}
+{"file":"tests/openbao-fixture.ts","line":26,"sig":"interface LabReply {"}
+{"file":"tests/openbao-fixture.ts","line":134,"sig":"function openBaoFixture() {"}
+{"file":"tests/openbao-fixture.ts","line":256,"sig":"type OpenBaoFixture = Awaited<ReturnType<typeof openBaoFixture>>;"}
+{"file":"tests/owner-auth-fixture.ts","line":12,"sig":"const ownerOrigin = \"http://localhost:4300\";"}
+{"file":"tests/owner-auth-fixture.ts","line":13,"sig":"const authPath = \"/api/auth\";"}
+{"file":"tests/owner-auth-fixture.ts","line":16,"sig":"function ownerAuthFixture(origin = ownerOrigin) {"}
+{"file":"tests/owner-auth-fixture.ts","line":106,"sig":"type OwnerAuthFixture = Awaited<ReturnType<typeof ownerAuthFixture>>;"}
+{"file":"tests/owner-auth-fixture.ts","line":108,"sig":"function challengeCookie(response: Response): string {"}
+{"file":"tests/pg-helpers.ts","line":19,"sig":"const fixtureProfile: DatabaseProfileInput = {"}
+{"file":"tests/pg-helpers.ts","line":31,"sig":"class DatabaseProviderFixture implements DatabaseProvider {"}
+{"file":"tests/pg-helpers.ts","line":130,"sig":"function databaseFixture(options: { dataDir?: string; noProvider?: boolean } = {}) {"}
+{"file":"tests/pg-helpers.ts","line":214,"sig":"type DatabaseFixture = Awaited<ReturnType<typeof databaseFixture>>;"}
+{"file":"tests/pg-helpers.ts","line":215,"sig":"function databaseState(fixture: DatabaseFixture, id: string) {"}
+{"file":"tests/pg-lab-fixture.ts","line":35,"sig":"interface PgLabCell {"}
+{"file":"tests/pg-lab-fixture.ts","line":51,"sig":"interface PgLaboratory {"}
+{"file":"tests/pg-lab-fixture.ts","line":61,"sig":"function createPgLaboratory(): Promise<PgLaboratory> {"}
+{"file":"tests/pg-lab-fixture.ts","line":201,"sig":"function withRuntime<T>("}
+{"file":"tests/pg-lab-host.ts","line":7,"sig":"const pythonHost = String.raw`"}
+{"file":"tests/pg-lab-host.ts","line":63,"sig":"function toolPath(): Promise<string> {"}
+{"file":"tests/pg-lab-host.ts","line":88,"sig":"function hostCommand<T>(input: Record<string, unknown>): Promise<T> {"}
+{"file":"tests/pg-lab-host.ts","line":134,"sig":"class PgLabUnixStream extends Duplex {"}
+{"file":"tests/recovery-helpers.ts","line":18,"sig":"const recoveryPolicy: BackupPolicyInput = {"}
+{"file":"tests/recovery-helpers.ts","line":26,"sig":"function requireRecoveryFixture<T>(value: T | null | undefined): T {"}
+{"file":"tests/recovery-helpers.ts","line":34,"sig":"class RecoveryProviderFixture implements RecoveryProvider {"}
+{"file":"tests/recovery-helpers.ts","line":165,"sig":"function recoveryFixture(options: { noProvider?: boolean } = {}) {"}
+{"file":"tests/recovery-helpers.ts","line":256,"sig":"type RecoveryFixture = Awaited<ReturnType<typeof recoveryFixture>>;"}
+{"file":"tests/recovery-lab-bridge.ts","line":6,"sig":"type CellName ="}
+{"file":"tests/recovery-lab-bridge.ts","line":14,"sig":"interface Target {"}
+{"file":"tests/recovery-lab-bridge.ts","line":22,"sig":"interface BackupInfo {"}
+{"file":"tests/recovery-lab-bridge.ts","line":35,"sig":"interface RecoveryLabProvenance {"}
+{"file":"tests/recovery-lab-bridge.ts","line":41,"sig":"interface PrivateHostBinding {"}
+{"file":"tests/recovery-lab-bridge.ts","line":51,"sig":"function describeInfo(value: unknown): unknown {"}
+{"file":"tests/recovery-lab-bridge.ts","line":60,"sig":"function pathsDisjoint("}
+{"file":"tests/recovery-lab-bridge.ts","line":71,"sig":"function linuxPath(value: string): Promise<string> {"}
+{"file":"tests/recovery-lab-bridge.ts","line":87,"sig":"function recoveryLabHost<T>("}
+{"file":"tests/recovery-lab-fixture.ts","line":38,"sig":"class RecoveryLaboratory {"}
+{"file":"tests/recovery-lab-host.py","line":23,"sig":"def run(args: list[str | Path], *, required: bool = True, timeout: int = 120) -> subprocess.CompletedProcess:"}
+{"file":"tests/recovery-lab-host.py","line":36,"sig":"def owned(value: str) -> Path:"}
+{"file":"tests/recovery-lab-host.py","line":44,"sig":"def port() -> int"}
+{"file":"tests/recovery-lab-host.py","line":50,"sig":"def settings(directory: Path, number: int, archive: str = \"\") -> str:"}
+{"file":"tests/recovery-lab-host.py","line":56,"sig":"def start(cell: Path) -> bool:"}
+{"file":"tests/recovery-lab-host.py","line":61,"sig":"def stop(cell: Path) -> None:"}
+{"file":"tests/recovery-lab-host.py","line":66,"sig":"def configure_destination(cell: Path) -> int:"}
+{"file":"tests/recovery-lab-host.py","line":74,"sig":"def cell_name(name: str) -> str:"}
+{"file":"tests/recovery-lab-host.py","line":80,"sig":"def main() -> dict"}
+{"file":"tests/recovery-lab-managed.ts","line":15,"sig":"function nativeBackupMetadata("}
+{"file":"tests/recovery-lab-managed.ts","line":50,"sig":"interface ManagedLabHost {"}
+{"file":"tests/recovery-lab-managed.ts","line":64,"sig":"function createManagedLabDispatch("}
+{"file":"tests/recovery-lab-managed.ts","line":105,"sig":"function nativeRecoveryScope("}
+{"file":"tests/runsc-fixture.ts","line":6,"sig":"interface RunscLabResult {"}
+{"file":"tests/runsc-fixture.ts","line":30,"sig":"function runscLaboratory(): Promise<RunscLabResult> {"}
+{"file":"tests/runsc-lab.py","line":22,"sig":"def checked_archive(workspace: pathlib.Path, key: str) -> pathlib.Path:"}
+{"file":"tests/runsc-lab.py","line":32,"sig":"def extract_members(archive: pathlib.Path, target: pathlib.Path, selected: set[str] | None = None) -> None:"}
+{"file":"tests/runsc-lab.py","line":54,"sig":"def command(args: list[str], timeout: int = 30) -> subprocess.CompletedProcess[str]:"}
+{"file":"tests/runsc-lab.py","line":58,"sig":"def safe_remove(root: pathlib.Path) -> None:"}
+{"file":"tests/runsc-lab.py","line":65,"sig":"def positive_control(listener: socket.socket) -> bool:"}
+{"file":"tests/runsc-lab.py","line":78,"sig":"def no_connection(listener: socket.socket) -> bool:"}
+{"file":"tests/runsc-lab.py","line":88,"sig":"def main() -> dict"}
+{"file":"apps/backend-template/src/application.ts","line":5,"sig":"function createTemplateApplication(options: LocalApplicationOptions) {"}
+{"file":"apps/console/src/components/backend-panel.tsx","line":19,"sig":"function BackendPanel({ project }: { project: ProjectView }) {"}
+{"file":"apps/console/src/components/delivery-history.tsx","line":30,"sig":"function DeliveryHistory({"}
+{"file":"apps/console/src/components/delivery-panel.tsx","line":17,"sig":"function DeliveryPanel() {"}
+{"file":"apps/console/src/components/delivery-policy-form.tsx","line":32,"sig":"function DeliveryPolicyForm({"}
+{"file":"apps/console/src/components/repository-form.tsx","line":10,"sig":"function RepositoryForm({ project }: { project: ProjectView }) {"}
+{"file":"apps/console/src/lib/api.ts","line":49,"sig":"function api<T>(path: string, init?: RequestInit): Promise<T> {"}
+{"file":"apps/console/src/lib/api.ts","line":69,"sig":"function resource<T>(key: string, path: string) {"}
+{"file":"apps/console/src/lib/api.ts","line":78,"sig":"function timestamp(value: string) {"}
+{"file":"apps/console/src/lib/environment-labels.ts","line":3,"sig":"function environmentLabel(environment: Pick<EnvironmentView, \"kind\" | \"name\">) {"}
+{"file":"apps/console/src/lib/environment-labels.ts","line":11,"sig":"function ordinaryEnvironment("}
+{"file":"apps/console/src/routes/pipelines.tsx","line":25,"sig":"const Route = createFileRoute(\"/pipelines\")({ component: Pipelines });"}
+{"file":"apps/console/src/routes/projects.$projectId.tsx","line":17,"sig":"const Route = createFileRoute(\"/projects/$projectId\")({ component: ProjectDetail });"}
+{"file":"apps/control-api/src/app.ts","line":42,"sig":"function createApp("}
+{"file":"apps/control-api/src/backend-routes.ts","line":6,"sig":"function registerBackendRoutes(app: Hono<ControlEnvironment>, core: ControlPlane) {"}
+{"file":"apps/control-api/src/delivery-routes.ts","line":13,"sig":"function registerDeliveryRoutes("}
+{"file":"packages/app-backend/src/auth.ts","line":9,"sig":"function applicationAuth(state: ApplicationState) {"}
+{"file":"packages/app-backend/src/auth.ts","line":70,"sig":"type ApplicationAuth = ReturnType<typeof applicationAuth>;"}
+{"file":"packages/app-backend/src/auth.ts","line":82,"sig":"function assertApplicationAuthRoute(state: ApplicationState, path: string, method: string) {"}
+{"file":"packages/app-backend/src/auth.ts","line":92,"sig":"function handleApplicationAuth("}
+{"file":"packages/app-backend/src/auth.ts","line":128,"sig":"function requireApplicationSession("}
+{"file":"packages/app-backend/src/contracts.ts","line":3,"sig":"const APP_API_VERSION = \"1.0.0\";"}
+{"file":"packages/app-backend/src/contracts.ts","line":4,"sig":"const APP_API_HEADER = \"X-Godseye-App-Version\";"}
+{"file":"packages/app-backend/src/contracts.ts","line":5,"sig":"const APP_PROJECT_HEADER = \"X-Godseye-Project\";"}
+{"file":"packages/app-backend/src/contracts.ts","line":6,"sig":"const APP_ENVIRONMENT_HEADER = \"X-Godseye-Environment\";"}
+{"file":"packages/app-backend/src/contracts.ts","line":7,"sig":"const APP_BASE = \"/api/app/v1\";"}
+{"file":"packages/app-backend/src/contracts.ts","line":8,"sig":"const ApplicationScope = z.object({ projectId: z.uuid(), environmentId: z.uuid() }).strict();"}
+{"file":"packages/app-backend/src/contracts.ts","line":9,"sig":"type ApplicationScopeInput = z.infer<typeof ApplicationScope>;"}
+{"file":"packages/app-backend/src/contracts.ts","line":10,"sig":"const ApplicationLimits = z"}
+{"file":"packages/app-backend/src/contracts.ts","line":43,"sig":"type ApplicationLimitsInput = z.input<typeof ApplicationLimits>;"}
+{"file":"packages/app-backend/src/contracts.ts","line":44,"sig":"const InitiateFile = z"}
+{"file":"packages/app-backend/src/contracts.ts","line":71,"sig":"type InitiateFileInput = z.infer<typeof InitiateFile>;"}
+{"file":"packages/app-backend/src/contracts.ts","line":72,"sig":"const FileView = z"}
+{"file":"packages/app-backend/src/contracts.ts","line":86,"sig":"type ApplicationFileView = z.infer<typeof FileView>;"}
+{"file":"packages/app-backend/src/contracts.ts","line":87,"sig":"const EventView = z"}
+{"file":"packages/app-backend/src/contracts.ts","line":95,"sig":"type ApplicationEventView = z.infer<typeof EventView>;"}
+{"file":"packages/app-backend/src/contracts.ts","line":96,"sig":"interface ApplicationUser {"}
+{"file":"packages/app-backend/src/contracts.ts","line":102,"sig":"interface ApplicationSession {"}
+{"file":"packages/app-backend/src/contracts.ts","line":107,"sig":"class ApplicationError extends Error {"}
+{"file":"packages/app-backend/src/custom.ts","line":12,"sig":"interface ApplicationRouteContext<Input = undefined> {"}
+{"file":"packages/app-backend/src/custom.ts","line":17,"sig":"interface ApplicationRouteRegistry {"}
+{"file":"packages/app-backend/src/custom.ts","line":30,"sig":"function applicationRouteRegistry("}
+{"file":"packages/app-backend/src/events.ts","line":17,"sig":"type PublishApplicationEvent = Omit<z.infer<typeof Publish>, \"payload\"> & {"}
+{"file":"packages/app-backend/src/events.ts","line":52,"sig":"function publishApplicationEvent(state: ApplicationState, raw: PublishApplicationEvent) {"}
+{"file":"packages/app-backend/src/events.ts","line":119,"sig":"function applicationEventStream("}
+{"file":"packages/app-backend/src/file-read.ts","line":11,"sig":"function createDownloadGrant("}
+{"file":"packages/app-backend/src/file-read.ts","line":48,"sig":"function revokeDownloadGrant("}
+{"file":"packages/app-backend/src/file-read.ts","line":66,"sig":"function downloadFile("}
+{"file":"packages/app-backend/src/file-routes.ts","line":30,"sig":"function registerFileRoutes(app: Hono, state: ApplicationState, auth: ApplicationAuth) {"}
+{"file":"packages/app-backend/src/file-state.ts","line":9,"sig":"type FileRow = typeof files.$inferSelect;"}
+{"file":"packages/app-backend/src/file-state.ts","line":10,"sig":"const fileView = (row: FileRow): ApplicationFileView => ({"}
+{"file":"packages/app-backend/src/file-state.ts","line":22,"sig":"function ownedFile(tx: ApplicationAccess, userId: string, id: string) {"}
+{"file":"packages/app-backend/src/file-state.ts","line":31,"sig":"function expectFileRevision(row: FileRow, revision: number) {"}
+{"file":"packages/app-backend/src/file-state.ts","line":35,"sig":"function fileMutation<T>("}
+{"file":"packages/app-backend/src/file-write.ts","line":16,"sig":"function initiateFile("}
+{"file":"packages/app-backend/src/file-write.ts","line":76,"sig":"function appendFile("}
+{"file":"packages/app-backend/src/file-write.ts","line":149,"sig":"function completeFile("}
+{"file":"packages/app-backend/src/file-write.ts","line":192,"sig":"function deleteFile("}
+{"file":"packages/app-backend/src/instance.ts","line":8,"sig":"function acquireApplicationInstance(directory: string) {"}
+{"file":"packages/app-backend/src/io.ts","line":4,"sig":"function writeAll(handle: FileHandle, bytes: Uint8Array, position: number) {"}
+{"file":"packages/app-backend/src/io.ts","line":22,"sig":"function readAll(handle: FileHandle, length: number, position: number) {"}
+{"file":"packages/app-backend/src/local.ts","line":11,"sig":"interface LocalApplicationOptions"}
+{"file":"packages/app-backend/src/local.ts","line":17,"sig":"function openLocalApplication(options: LocalApplicationOptions) {"}
+{"file":"packages/app-backend/src/migration.ts","line":2,"sig":"const APPLICATION_MIGRATION = `"}
+{"file":"packages/app-backend/src/private-files.ts","line":9,"sig":"function protectApplicationDirectory(directory: string) {"}
+{"file":"packages/app-backend/src/private-files.ts","line":88,"sig":"function prepareApplicationFiles(state: ApplicationState) {"}
+{"file":"packages/app-backend/src/private-files.ts","line":113,"sig":"function isMissing(error: unknown) {"}
+{"file":"packages/app-backend/src/private-files.ts","line":116,"sig":"function assertApplicationRoot(state: ApplicationState) {"}
+{"file":"packages/app-backend/src/private-files.ts","line":125,"sig":"function applicationFilePath(state: ApplicationState, id: string) {"}
+{"file":"packages/app-backend/src/private-files.ts","line":130,"sig":"function openApplicationFile(state: ApplicationState, id: string, writable = false) {"}
+{"file":"packages/app-backend/src/recovery-contract.ts","line":7,"sig":"const ApplicationRecoveryEnvelope = z"}
+{"file":"packages/app-backend/src/recovery-contract.ts","line":10,"sig":"const ApplicationRecoveryArchive = z"}
+{"file":"packages/app-backend/src/recovery-contract.ts","line":96,"sig":"const RECOVERY_METADATA_BYTES = 32 * 1024 * 1024;"}
+{"file":"packages/app-backend/src/recovery-snapshot.ts","line":7,"sig":"function applicationSnapshot("}
+{"file":"packages/app-backend/src/recovery.ts","line":80,"sig":"function exportApplicationRecovery(state: ApplicationState, input: { directory: string }) {"}
+{"file":"packages/app-backend/src/recovery.ts","line":144,"sig":"function importApplicationRecovery("}
+{"file":"packages/app-backend/src/runtime.ts","line":38,"sig":"function createApplicationBackend(options: ApplicationBackendOptions) {"}
+{"file":"packages/app-backend/src/runtime.ts","line":268,"sig":"function boundedBody(request: Request, maximum: number) {"}
+{"file":"packages/app-backend/src/schema.ts","line":4,"sig":"const appScope = pgTable(\"app_scope\", {"}
+{"file":"packages/app-backend/src/schema.ts","line":13,"sig":"const user = pgTable(\"app_user\", {"}
+{"file":"packages/app-backend/src/schema.ts","line":22,"sig":"const session = pgTable(\"app_session\", {"}
+{"file":"packages/app-backend/src/schema.ts","line":34,"sig":"const account = pgTable(\"app_account\", {"}
+{"file":"packages/app-backend/src/schema.ts","line":51,"sig":"const verification = pgTable(\"app_verification\", {"}
+{"file":"packages/app-backend/src/schema.ts","line":59,"sig":"const files = pgTable(\"app_files\", {"}
+{"file":"packages/app-backend/src/schema.ts","line":78,"sig":"const grants = pgTable(\"app_download_grants\", {"}
+{"file":"packages/app-backend/src/schema.ts","line":87,"sig":"const events = pgTable(\"app_events\", {"}
+{"file":"packages/app-backend/src/schema.ts","line":98,"sig":"const authSchema = { user, session, account, verification };"}
+{"file":"packages/app-backend/src/schema.ts","line":99,"sig":"const receipts = pgTable(\"app_receipts\", {"}
+{"file":"packages/app-backend/src/state.ts","line":8,"sig":"interface ApplicationLifecycle {"}
+{"file":"packages/app-backend/src/state.ts","line":28,"sig":"type ApplicationOAuthProvider = z.infer<typeof OAuthProvider>;"}
+{"file":"packages/app-backend/src/state.ts","line":29,"sig":"interface ApplicationBackendOptions {"}
+{"file":"packages/app-backend/src/state.ts","line":43,"sig":"function applicationState(input: ApplicationBackendOptions) {"}
+{"file":"packages/app-backend/src/state.ts","line":146,"sig":"type ApplicationState = ReturnType<typeof applicationState>;"}
+{"file":"packages/app-backend/src/state.ts","line":147,"sig":"function guardApplication(state: ApplicationState, expectedEpoch?: number) {"}
+{"file":"packages/app-backend/src/store.ts","line":13,"sig":"type ApplicationDatabase = PgliteDatabase<typeof schema> | NodePgDatabase<typeof schema>;"}
+{"file":"packages/app-backend/src/store.ts","line":14,"sig":"type ApplicationAccess = Pick<"}
+{"file":"packages/app-backend/src/store.ts","line":18,"sig":"interface ApplicationStore {"}
+{"file":"packages/app-backend/src/store.ts","line":29,"sig":"function serialApplicationLane() {"}
+{"file":"packages/app-backend/src/store.ts","line":37,"sig":"function openApplicationStore(options: {"}
+{"file":"packages/contracts/src/backend-configuration.ts","line":16,"sig":"const BackendConfiguration = z"}
+{"file":"packages/contracts/src/backend-configuration.ts","line":32,"sig":"const ConfigureBackend = z"}
+{"file":"packages/contracts/src/backend-configuration.ts","line":40,"sig":"const BackendConfigurationView = z"}
+{"file":"packages/contracts/src/backend-configuration.ts","line":52,"sig":"type BackendConfigurationInput = z.infer<typeof BackendConfiguration>;"}
+{"file":"packages/contracts/src/backend-configuration.ts","line":53,"sig":"type ConfigureBackendInput = z.infer<typeof ConfigureBackend>;"}
+{"file":"packages/contracts/src/backend-configuration.ts","line":54,"sig":"type BackendConfigurationDTO = z.infer<typeof BackendConfigurationView>;"}
+{"file":"packages/contracts/src/backend-endpoints.ts","line":3,"sig":"const BACKEND_HTTP_ENDPOINTS = ["}
+{"file":"packages/contracts/src/delivery-endpoints.ts","line":15,"sig":"const DELIVERY_HTTP_ENDPOINTS = ["}
+{"file":"packages/contracts/src/delivery.ts","line":8,"sig":"const DELIVERY_POLICY_VERSION = \"delivery-v1\" as const;"}
+{"file":"packages/contracts/src/delivery.ts","line":9,"sig":"const DELIVERY_INTENTS = [\"build\", \"release\", \"rollback\", \"cleanup\"] as const;"}
+{"file":"packages/contracts/src/delivery.ts","line":10,"sig":"const DeliveryLimits = z"}
+{"file":"packages/contracts/src/delivery.ts","line":18,"sig":"const DeliveryRecipe = z"}
+{"file":"packages/contracts/src/delivery.ts","line":27,"sig":"const CreateDeliveryPolicy = z"}
+{"file":"packages/contracts/src/delivery.ts","line":46,"sig":"type CreateDeliveryPolicyInput = z.infer<typeof CreateDeliveryPolicy>;"}
+{"file":"packages/contracts/src/delivery.ts","line":47,"sig":"const DeliveryPolicy = CreateDeliveryPolicy.extend({"}
+{"file":"packages/contracts/src/delivery.ts","line":55,"sig":"type DeliveryPolicyView = z.infer<typeof DeliveryPolicy>;"}
+{"file":"packages/contracts/src/delivery.ts","line":56,"sig":"const PrepareDelivery = z"}
+{"file":"packages/contracts/src/delivery.ts","line":65,"sig":"type PrepareDeliveryInput = z.infer<typeof PrepareDelivery>;"}
+{"file":"packages/contracts/src/delivery.ts","line":66,"sig":"const AdmitDelivery = z.object({ preparationId: Id, expectedHash: Hash }).strict();"}
+{"file":"packages/contracts/src/delivery.ts","line":67,"sig":"type AdmitDeliveryInput = z.infer<typeof AdmitDelivery>;"}
+{"file":"packages/contracts/src/delivery.ts","line":68,"sig":"const DeliveryPreparation = z"}
+{"file":"packages/contracts/src/delivery.ts","line":83,"sig":"type DeliveryPreparationView = z.infer<typeof DeliveryPreparation>;"}
+{"file":"packages/contracts/src/delivery.ts","line":84,"sig":"const DeliveryArtifact = z"}
+{"file":"packages/contracts/src/delivery.ts","line":101,"sig":"type DeliveryArtifactView = z.infer<typeof DeliveryArtifact>;"}
+{"file":"packages/contracts/src/delivery.ts","line":102,"sig":"const DeliveryRun = z"}
+{"file":"packages/contracts/src/delivery.ts","line":127,"sig":"type DeliveryRunView = z.infer<typeof DeliveryRun>;"}
+{"file":"packages/contracts/src/delivery.ts","line":128,"sig":"const DeliveryPreview = z"}
+{"file":"packages/contracts/src/delivery.ts","line":151,"sig":"type DeliveryPreviewView = z.infer<typeof DeliveryPreview>;"}
+{"file":"packages/contracts/src/delivery.ts","line":152,"sig":"const DeliveryOverview = z"}
+{"file":"packages/contracts/src/delivery.ts","line":164,"sig":"type DeliveryOverviewView = z.infer<typeof DeliveryOverview>;"}
+{"file":"packages/contracts/src/delivery.ts","line":165,"sig":"const SynchronizeDelivery = z.object({ policyId: Id }).strict();"}
+{"file":"packages/contracts/src/delivery.ts","line":166,"sig":"const SynchronizeDeliveryResult = z"}
+{"file":"packages/contracts/src/foundations.ts","line":6,"sig":"const ActionCommand = z.union(["}
+{"file":"packages/contracts/src/foundations.ts","line":104,"sig":"type ActionCommandInput = z.infer<typeof ActionCommand>;"}
+{"file":"packages/contracts/src/foundations.ts","line":105,"sig":"const RESOURCE_KINDS = ["}
+{"file":"packages/contracts/src/foundations.ts","line":119,"sig":"const RegisterResource = z"}
+{"file":"packages/contracts/src/foundations.ts","line":127,"sig":"type RegisterResourceInput = z.infer<typeof RegisterResource>;"}
+{"file":"packages/contracts/src/foundations.ts","line":128,"sig":"const CreateExecutionPlan = z"}
+{"file":"packages/contracts/src/foundations.ts","line":141,"sig":"type CreateExecutionPlanInput = z.infer<typeof CreateExecutionPlan>;"}
+{"file":"packages/contracts/src/foundations.ts","line":142,"sig":"const EffectOutcome = z"}
+{"file":"packages/contracts/src/foundations.ts","line":149,"sig":"type EffectOutcomeInput = z.infer<typeof EffectOutcome>;"}
+{"file":"packages/contracts/src/foundations.ts","line":150,"sig":"const FOUNDATION_DEFAULTS = {"}
+{"file":"packages/contracts/src/foundations.ts","line":159,"sig":"interface ExecutionContext {"}
+{"file":"packages/contracts/src/foundations.ts","line":171,"sig":"interface ExecutionAdapter {"}
+{"file":"packages/contracts/src/foundations.ts","line":178,"sig":"interface AuditAnchor {"}
+{"file":"packages/contracts/src/foundations.ts","line":182,"sig":"interface AuditExportEntry {"}
+{"file":"packages/contracts/src/foundations.ts","line":193,"sig":"interface AuditExportPage {"}
+{"file":"packages/contracts/src/http-domain.ts","line":3,"sig":"const PROJECT_KINDS = [\"web\", \"api\", \"worker\"] as const;"}
+{"file":"packages/contracts/src/http-domain.ts","line":4,"sig":"const ENVIRONMENT_KINDS = [\"development\", \"production\", \"preview\", \"recovery\"] as const;"}
+{"file":"packages/contracts/src/http-domain.ts","line":5,"sig":"const OPERATION_STATES = ["}
+{"file":"packages/contracts/src/http-domain.ts","line":18,"sig":"const CI_STATES = ["}
+{"file":"packages/contracts/src/http-domain.ts","line":28,"sig":"type OperationState = (typeof OPERATION_STATES)[number];"}
+{"file":"packages/contracts/src/http-domain.ts","line":29,"sig":"type CiState = (typeof CI_STATES)[number];"}
+{"file":"packages/contracts/src/http-domain.ts","line":31,"sig":"const CreateProject = z"}
+{"file":"packages/contracts/src/http-domain.ts","line":39,"sig":"type CreateProjectInput = z.input<typeof CreateProject>;"}
+{"file":"packages/contracts/src/http-domain.ts","line":41,"sig":"const RepositoryConfiguration = z"}
+{"file":"packages/contracts/src/http-domain.ts","line":50,"sig":"type RepositoryConfigurationInput = z.infer<typeof RepositoryConfiguration>;"}
+{"file":"packages/contracts/src/http-domain.ts","line":52,"sig":"const OperationRequest = z"}
+{"file":"packages/contracts/src/http-domain.ts","line":59,"sig":"interface ProjectView {"}
+{"file":"packages/contracts/src/http-domain.ts","line":73,"sig":"interface EnvironmentView {"}
+{"file":"packages/contracts/src/http-domain.ts","line":90,"sig":"interface OperationView {"}
+{"file":"packages/contracts/src/http-domain.ts","line":101,"sig":"interface CiRunView {"}
+{"file":"packages/contracts/src/http-domain.ts","line":116,"sig":"interface AuditView {"}
+{"file":"packages/contracts/src/http-domain.ts","line":126,"sig":"interface Capability {"}
+{"file":"packages/contracts/src/http-domain.ts","line":133,"sig":"interface Overview {"}
+{"file":"packages/contracts/src/http-domain.ts","line":144,"sig":"interface ApiErrorBody {"}
+{"file":"packages/contracts/src/http-endpoints.ts","line":36,"sig":"const CONTROL_API_VERSION = \"1.6.0\" as const;"}
+{"file":"packages/contracts/src/http-endpoints.ts","line":37,"sig":"const CONTROL_API_HEADER = \"x-godseye-api-version\" as const;"}
+{"file":"packages/contracts/src/http-endpoints.ts","line":38,"sig":"interface ControlEndpoint {"}
+{"file":"packages/contracts/src/http-endpoints.ts","line":51,"sig":"const CONTROL_HTTP_ENDPOINTS = ["}
+{"file":"packages/contracts/src/http-endpoints.ts","line":326,"sig":"const CONTROL_ENDPOINTS = CONTROL_HTTP_ENDPOINTS;"}
+{"file":"packages/contracts/src/http-endpoints.ts","line":327,"sig":"function controlPath(path: string) {"}
+{"file":"packages/contracts/src/http-endpoints.ts","line":333,"sig":"function findControlEndpoint(method: string, path: string): ControlEndpoint | undefined {"}
+{"file":"packages/contracts/src/http-endpoints.ts","line":341,"sig":"function endpointParameters(endpoint: ControlEndpoint) {"}
+{"file":"packages/contracts/src/http-schemas.ts","line":14,"sig":"const HttpId = z.string().uuid();"}
+{"file":"packages/contracts/src/http-schemas.ts","line":20,"sig":"const IdempotencyKey = z.string().regex(/^[A-Za-z0-9._:-]{16,128}$/);"}
+{"file":"packages/contracts/src/http-schemas.ts","line":21,"sig":"const EmptyRequest = z.object({}).strict();"}
+{"file":"packages/contracts/src/http-schemas.ts","line":22,"sig":"const RepositoryUpdateRequest = z"}
+{"file":"packages/contracts/src/http-schemas.ts","line":25,"sig":"const BudgetUpdateRequest = z"}
+{"file":"packages/contracts/src/http-schemas.ts","line":28,"sig":"const ApprovalRequest = z.object({ expectedHash: Hash }).strict();"}
+{"file":"packages/contracts/src/http-schemas.ts","line":29,"sig":"const OwnerLocalCommandRequest = z.object({ intent: z.enum([\"setup\", \"recover\"]) }).strict();"}
+{"file":"packages/contracts/src/http-schemas.ts","line":30,"sig":"const LocalCommandResponse = z"}
+{"file":"packages/contracts/src/http-schemas.ts","line":33,"sig":"const RevocationResponse = z.object({ revoked: z.literal(true) }).strict();"}
+{"file":"packages/contracts/src/http-schemas.ts","line":34,"sig":"const HealthResponse = z"}
+{"file":"packages/contracts/src/http-schemas.ts","line":37,"sig":"const EnvironmentResponse = z"}
+{"file":"packages/contracts/src/http-schemas.ts","line":66,"sig":"const ProjectResponse = z"}
+{"file":"packages/contracts/src/http-schemas.ts","line":81,"sig":"const OperationResponse = z"}
+{"file":"packages/contracts/src/http-schemas.ts","line":96,"sig":"const CiRunResponse = z"}
+{"file":"packages/contracts/src/http-schemas.ts","line":115,"sig":"const AuditResponse = z"}
+{"file":"packages/contracts/src/http-schemas.ts","line":126,"sig":"const CapabilityResponse = z"}
+{"file":"packages/contracts/src/http-schemas.ts","line":134,"sig":"const OverviewResponse = z"}
+{"file":"packages/contracts/src/http-schemas.ts","line":148,"sig":"const ResourceResponse = RegisterResource.extend({ id: HttpId, createdAt: Moment });"}
+{"file":"packages/contracts/src/http-schemas.ts","line":149,"sig":"const BudgetResponse = z"}
+{"file":"packages/contracts/src/http-schemas.ts","line":158,"sig":"const ExecutionPlanResponse = CreateExecutionPlan.extend({"}
+{"file":"packages/contracts/src/http-schemas.ts","line":164,"sig":"const ExecutionRunResponse = OperationResponse.extend({"}
+{"file":"packages/contracts/src/http-schemas.ts","line":177,"sig":"const AuditAnchorResponse = z"}
+{"file":"packages/contracts/src/http-schemas.ts","line":180,"sig":"const AuditExportResponse = z"}
+{"file":"packages/contracts/src/http-schemas.ts","line":196,"sig":"const AuditExportQuery = z"}
+{"file":"packages/contracts/src/http-schemas.ts","line":202,"sig":"const ControlErrorResponse = z"}
+{"file":"packages/contracts/src/http-schemas.ts","line":213,"sig":"const GithubDeliveryResponse = z"}
+{"file":"packages/contracts/src/http-schemas.ts","line":220,"sig":"const HttpSchemas = {"}
+{"file":"packages/contracts/src/http-schemas.ts","line":252,"sig":"type ProjectDTO = z.infer<typeof ProjectResponse>;"}
+{"file":"packages/contracts/src/http-schemas.ts","line":253,"sig":"type ExecutionRunDTO = z.infer<typeof ExecutionRunResponse>;"}
+{"file":"packages/control-client/src/index.ts","line":75,"sig":"function createControlClient(options: ControlClientOptions = {}) {"}
+{"file":"packages/control-client/src/index.ts","line":274,"sig":"type ControlClient = ReturnType<typeof createControlClient>;"}
+{"file":"packages/core/src/backend-configuration.ts","line":14,"sig":"function backendConfiguration("}
+{"file":"packages/core/src/backend-configuration.ts","line":66,"sig":"function configureBackend("}
+{"file":"packages/core/src/backend-configuration.ts","line":149,"sig":"function applicationLifecycleGuard("}
+{"file":"packages/core/src/delivery-admission.ts","line":39,"sig":"function validateDeliveryManifest("}
+{"file":"packages/core/src/delivery-admission.ts","line":119,"sig":"function admitDelivery("}
+{"file":"packages/core/src/delivery-admission.ts","line":192,"sig":"function reserveDelivery("}
+{"file":"packages/core/src/delivery-authority.ts","line":19,"sig":"function deliveryDelegatedAuthority("}
+{"file":"packages/core/src/delivery-capacity.ts","line":8,"sig":"function deliveryCommitments("}
+{"file":"packages/core/src/delivery-capacity.ts","line":54,"sig":"function deliveryTargetFor(tx: DatabaseAccess, environmentId: string) {"}
+{"file":"packages/core/src/delivery-evidence.ts","line":13,"sig":"const GithubSourceObservation = z"}
+{"file":"packages/core/src/delivery-evidence.ts","line":27,"sig":"const DeliveryScopeEvidence = z"}
+{"file":"packages/core/src/delivery-evidence.ts","line":39,"sig":"const BuildObservation = z"}
+{"file":"packages/core/src/delivery-evidence.ts","line":63,"sig":"const DeploymentObservation = z"}
+{"file":"packages/core/src/delivery-evidence.ts","line":79,"sig":"const DeliveryQualificationObservation = z"}
+{"file":"packages/core/src/delivery-evidence.ts","line":102,"sig":"const deliveryConfigurationHash = (manifest: DeliveryManifest) =>"}
+{"file":"packages/core/src/delivery-evidence.ts","line":104,"sig":"function deliveryProvenanceHash(result: Omit<BuildEvidence, \"provenanceHash\" | \"evidence\">) {"}
+{"file":"packages/core/src/delivery-evidence.ts","line":134,"sig":"function assertBuildEvidence("}
+{"file":"packages/core/src/delivery-evidence.ts","line":164,"sig":"function assertDeploymentInspection("}
+{"file":"packages/core/src/delivery-execution-gate.ts","line":21,"sig":"function deliveryExecutionGate("}
+{"file":"packages/core/src/delivery-execution-gate.ts","line":93,"sig":"function deliveryDispatchGuard(state: DeliveryState, context: ExecutionContext) {"}
+{"file":"packages/core/src/delivery-execution.ts","line":299,"sig":"function executeDelivery("}
+{"file":"packages/core/src/delivery-github.ts","line":11,"sig":"interface GithubAppTransport {"}
+{"file":"packages/core/src/delivery-github.ts","line":37,"sig":"class GithubAppSourceProvider implements GithubSourceProvider {"}
+{"file":"packages/core/src/delivery-github.ts","line":127,"sig":"class FetchGithubAppTransport implements GithubAppTransport {"}
+{"file":"packages/core/src/delivery-managed-provider.ts","line":21,"sig":"interface ManagedDeliveryTransport"}
+{"file":"packages/core/src/delivery-managed-provider.ts","line":23,"sig":"class ManagedDeliveryProvider implements DeliveryProvider {"}
+{"file":"packages/core/src/delivery-policy.ts","line":17,"sig":"function createDeliveryPolicy("}
+{"file":"packages/core/src/delivery-policy.ts","line":88,"sig":"function revokeDeliveryPolicy("}
+{"file":"packages/core/src/delivery-preparation.ts","line":27,"sig":"function prepareDelivery("}
+{"file":"packages/core/src/delivery-preview.ts","line":9,"sig":"function previewEnvironment("}
+{"file":"packages/core/src/delivery-preview.ts","line":94,"sig":"function previewFor(tx: DatabaseAccess, environmentId: string) {"}
+{"file":"packages/core/src/delivery-preview.ts","line":101,"sig":"function markPreviewClosing("}
+{"file":"packages/core/src/delivery-provider.ts","line":10,"sig":"interface GithubSourceQuery {"}
+{"file":"packages/core/src/delivery-provider.ts","line":14,"sig":"interface GithubSourceEvidence {"}
+{"file":"packages/core/src/delivery-provider.ts","line":26,"sig":"interface GithubSourceProvider {"}
+{"file":"packages/core/src/delivery-provider.ts","line":32,"sig":"interface DeliveryProviderBinding {"}
+{"file":"packages/core/src/delivery-provider.ts","line":39,"sig":"interface DeliveryQualification extends DeliveryProviderBinding {"}
+{"file":"packages/core/src/delivery-provider.ts","line":52,"sig":"interface DeliveryManifest {"}
+{"file":"packages/core/src/delivery-provider.ts","line":79,"sig":"interface DeliveryScope {"}
+{"file":"packages/core/src/delivery-provider.ts","line":89,"sig":"interface BuildEvidence {"}
+{"file":"packages/core/src/delivery-provider.ts","line":105,"sig":"interface DeploymentInspection {"}
+{"file":"packages/core/src/delivery-provider.ts","line":116,"sig":"interface DeliveryProvider {"}
+{"file":"packages/core/src/delivery-provider.ts","line":145,"sig":"type DeliveryPolicyRecord = DeliveryPolicyView;"}
+{"file":"packages/core/src/delivery-scheduler.ts","line":17,"sig":"function synchronizeDelivery("}
+{"file":"packages/core/src/delivery-scheduler.ts","line":69,"sig":"function cleanupExpiredDelivery("}
+{"file":"packages/core/src/delivery-scheduler.ts","line":118,"sig":"function deliverySchedulerTick(state: DeliveryState) {"}
+{"file":"packages/core/src/delivery-settlement.ts","line":11,"sig":"function settleDelivery("}
+{"file":"packages/core/src/delivery-settlement.ts","line":126,"sig":"function releaseQueuedDelivery("}
+{"file":"packages/core/src/delivery-settlement.ts","line":155,"sig":"function uncertainDelivery(state: DeliveryState, tx: DatabaseAccess, runId: string) {"}
+{"file":"packages/core/src/delivery-state.ts","line":25,"sig":"const DELIVERY_ADAPTER_ID = \"local.delivery\";"}
+{"file":"packages/core/src/delivery-state.ts","line":26,"sig":"const DELIVERY_DESTINATION = \"delivery.private\";"}
+{"file":"packages/core/src/delivery-state.ts","line":27,"sig":"const DELIVERY_SCHEDULER_ID = \"delivery-scheduler\";"}
+{"file":"packages/core/src/delivery-state.ts","line":28,"sig":"interface DeliveryState {"}
+{"file":"packages/core/src/delivery-state.ts","line":36,"sig":"const deliveryActor = (projectId: string): Actor => ({"}
+{"file":"packages/core/src/delivery-state.ts","line":41,"sig":"const freshDeliveryOwner = (state: DeliveryState, actor: Actor) =>"}
+{"file":"packages/core/src/delivery-state.ts","line":43,"sig":"const policyView = (row: typeof schema.deliveryPolicies.$inferSelect) =>"}
+{"file":"packages/core/src/delivery-state.ts","line":53,"sig":"const deliveryPreparationView = (row: typeof schema.deliveryPreparations.$inferSelect) =>"}
+{"file":"packages/core/src/delivery-state.ts","line":67,"sig":"const deliveryRunView = (row: typeof schema.deliveryRuns.$inferSelect) =>"}
+{"file":"packages/core/src/delivery-state.ts","line":81,"sig":"function deliveryPolicyFor(tx: DatabaseAccess, id: string) {"}
+{"file":"packages/core/src/delivery-state.ts","line":91,"sig":"function validateDeliveryPolicy("}
+{"file":"packages/core/src/delivery-state.ts","line":121,"sig":"function deliveryPreparationFor(tx: DatabaseAccess, id: string) {"}
+{"file":"packages/core/src/delivery-state.ts","line":144,"sig":"function qualifyDelivery(state: DeliveryState) {"}
+{"file":"packages/core/src/delivery-state.ts","line":183,"sig":"function validateSourceEvidence("}
+{"file":"packages/core/src/delivery-state.ts","line":218,"sig":"function verifyDeliverySource("}
+{"file":"packages/core/src/delivery-state.ts","line":234,"sig":"function deliveryScope("}
+{"file":"packages/core/src/delivery.ts","line":38,"sig":"interface DeliveryOptions {"}
+{"file":"packages/core/src/delivery.ts","line":44,"sig":"class DeliveryEngine {"}
+{"file":"packages/core/src/delivery.ts","line":148,"sig":"function runDeliveryScheduler("}
+{"file":"packages/core/src/foundation-data.ts","line":14,"sig":"interface FoundationOptions {"}
+{"file":"packages/core/src/foundation-data.ts","line":39,"sig":"interface FoundationState {"}
+{"file":"packages/core/src/foundation-data.ts","line":53,"sig":"function foundationState(store: Store, options: FoundationOptions): FoundationState {"}
+{"file":"packages/core/src/foundation-data.ts","line":82,"sig":"function adapterFor(state: FoundationState, id: string) {"}
+{"file":"packages/core/src/foundation-data.ts","line":92,"sig":"function assertFresh(actor: Actor, state: FoundationState) {"}
+{"file":"packages/core/src/foundation-data.ts","line":103,"sig":"function environmentFor("}
+{"file":"packages/core/src/foundation-data.ts","line":147,"sig":"function planFor(tx: DatabaseAccess, actor: Actor, id: string) {"}
+{"file":"packages/core/src/foundation-data.ts","line":156,"sig":"function runFor(tx: DatabaseAccess, id: string) {"}
+{"file":"packages/core/src/foundation-data.ts","line":165,"sig":"function currentEpoch(tx: DatabaseAccess, environmentId: string) {"}
+{"file":"packages/core/src/foundation-data.ts","line":172,"sig":"function validateLease("}
+{"file":"packages/core/src/foundation-data.ts","line":222,"sig":"function requestFor("}
+{"file":"packages/core/src/foundation-data.ts","line":240,"sig":"function recordRequest("}
+{"file":"packages/core/src/foundation-data.ts","line":258,"sig":"function needsApproval(input: CreateExecutionPlanInput, production: boolean) {"}
+{"file":"packages/core/src/foundation-data.ts","line":274,"sig":"const newId = randomUUID;"}
+{"file":"packages/core/src/foundation-effects.ts","line":22,"sig":"function revokeGrants(tx: DatabaseAccess, state: FoundationState, runId: string) {"}
+{"file":"packages/core/src/foundation-effects.ts","line":28,"sig":"function markUnknown("}
+{"file":"packages/core/src/foundation-effects.ts","line":57,"sig":"function settle("}
+{"file":"packages/core/src/foundation-effects.ts","line":127,"sig":"function finish("}
+{"file":"packages/core/src/foundation-effects.ts","line":137,"sig":"function reconcileExpired(state: FoundationState) {"}
+{"file":"packages/core/src/foundation-effects.ts","line":161,"sig":"function reconcile(state: FoundationState, actor: Actor, runId: string, key: string) {"}
+{"file":"packages/core/src/foundation-effects.ts","line":239,"sig":"function cancel(state: FoundationState, actor: Actor, runId: string, key: string) {"}
+{"file":"packages/core/src/foundation-effects.ts","line":283,"sig":"function advanceEpoch("}
+{"file":"packages/core/src/foundation-plans.ts","line":32,"sig":"function registerResource("}
+{"file":"packages/core/src/foundation-plans.ts","line":65,"sig":"function getBudget(state: FoundationState, actor: Actor, projectId: string) {"}
+{"file":"packages/core/src/foundation-plans.ts","line":73,"sig":"function configureBudget("}
+{"file":"packages/core/src/foundation-plans.ts","line":163,"sig":"function createPlan("}
+{"file":"packages/core/src/foundation-plans.ts","line":223,"sig":"function approve("}
+{"file":"packages/core/src/foundation-queue.ts","line":20,"sig":"function viewRun(tx: DatabaseAccess, id: string) {"}
+{"file":"packages/core/src/foundation-queue.ts","line":30,"sig":"function getRun(state: FoundationState, actor: Actor, id: string) {"}
+{"file":"packages/core/src/foundation-queue.ts","line":35,"sig":"function listRuns(state: FoundationState, actor: Actor) {"}
+{"file":"packages/core/src/foundation-queue.ts","line":43,"sig":"function assertPlanIntegrity(plan: typeof schema.executionPlans.$inferSelect) {"}
+{"file":"packages/core/src/foundation-queue.ts","line":74,"sig":"function validApproval("}
+{"file":"packages/core/src/foundation-queue.ts","line":94,"sig":"function enqueue(state: FoundationState, actor: Actor, planId: string, key: string) {"}
+{"file":"packages/core/src/foundation-queue.ts","line":191,"sig":"function contextFor(tx: DatabaseAccess, runId: string): Promise<ExecutionContext> {"}
+{"file":"packages/core/src/foundation-queue.ts","line":252,"sig":"function claim("}
+{"file":"packages/core/src/foundation-queue.ts","line":358,"sig":"function terminalRequests(tx: DatabaseAccess, state: FoundationState, runId: string) {"}
+{"file":"packages/core/src/foundations.ts","line":50,"sig":"type EffectOutcome = EffectOutcomeInput;"}
+{"file":"packages/core/src/foundations.ts","line":56,"sig":"class FoundationEngine {"}
+{"file":"packages/core/src/foundations.ts","line":209,"sig":"function runFoundationWorker("}
+{"file":"packages/core/src/github-events.ts","line":28,"sig":"interface GithubSourceEvent {"}
+{"file":"packages/core/src/github-events.ts","line":39,"sig":"function parseGithubEvent(event: string, rawBody: Uint8Array): GithubSourceEvent | null {"}
+{"file":"packages/core/src/github.ts","line":11,"sig":"interface GithubDelivery {"}
+{"file":"packages/core/src/github.ts","line":17,"sig":"interface DeliveryResult {"}
+{"file":"packages/core/src/github.ts","line":23,"sig":"function verifyGithubSignature("}
+{"file":"packages/core/src/github.ts","line":39,"sig":"function receiveGithubDelivery("}
+{"file":"packages/core/src/index.ts","line":35,"sig":"class ControlPlane {"}
+{"file":"packages/core/src/infra-state.ts","line":20,"sig":"const INFRA_ADAPTER_ID = \"local.infrastructure\";"}
+{"file":"packages/core/src/infra-state.ts","line":21,"sig":"const INFRA_DESTINATION = \"professional.local\";"}
+{"file":"packages/core/src/infra-state.ts","line":22,"sig":"interface InfrastructureState {"}
+{"file":"packages/core/src/infra-state.ts","line":29,"sig":"const assertInfrastructureFresh = (state: InfrastructureState, actor: Actor) =>"}
+{"file":"packages/core/src/infra-state.ts","line":31,"sig":"function inventoryFor(tx: DatabaseAccess) {"}
+{"file":"packages/core/src/infra-state.ts","line":40,"sig":"function preparationFor(tx: DatabaseAccess, id: string) {"}
+{"file":"packages/core/src/infra-state.ts","line":50,"sig":"const preparationManifest = (row: typeof schema.infrastructurePreparations.$inferSelect) =>"}
+{"file":"packages/core/src/infra-state.ts","line":52,"sig":"function observationReasons(observation: InfrastructureObservationInput | null, now: Date) {"}
+{"file":"packages/core/src/infra-state.ts","line":78,"sig":"function validateDesired(data: DeclareInventoryInput) {"}
+{"file":"packages/core/src/infra-state.ts","line":129,"sig":"function validateCapacity("}
+{"file":"packages/core/src/infra-state.ts","line":149,"sig":"function validatePoolCapacity("}
+{"file":"packages/core/src/infra-state.ts","line":208,"sig":"function databaseCapacity(profile: {"}
+{"file":"packages/core/src/infra-state.ts","line":227,"sig":"function validateEnvironmentCapacity("}
+{"file":"packages/core/src/infrastructure.ts","line":35,"sig":"interface InfrastructureOptions {"}
+{"file":"packages/core/src/infrastructure.ts","line":46,"sig":"class InfrastructureEngine {"}
+{"file":"packages/core/src/projects.ts","line":17,"sig":"function getProject("}
+{"file":"packages/core/src/projects.ts","line":63,"sig":"function listProjects(store: Store, actor: Actor): Promise<ProjectView[]> {"}
+{"file":"packages/core/src/projects.ts","line":72,"sig":"function createProject("}
+{"file":"packages/core/src/projects.ts","line":151,"sig":"function configureRepository("}
+{"file":"packages/sdk/src/events.ts","line":4,"sig":"type GodseyeEventMessage ="}
+{"file":"packages/sdk/src/events.ts","line":8,"sig":"interface EventSubscriptionOptions {"}
+{"file":"packages/sdk/src/events.ts","line":95,"sig":"function applicationEvents(transport: ApplicationTransport, reconnectMs = 1000) {"}
+{"file":"packages/sdk/src/files.ts","line":5,"sig":"interface MutationOptions {"}
+{"file":"packages/sdk/src/files.ts","line":9,"sig":"function applicationFiles(transport: ApplicationTransport, chunkBytes = 1024 * 1024) {"}
+{"file":"packages/sdk/src/index.ts","line":29,"sig":"function createGodseyeClient(options: GodseyeClientOptions) {"}
+{"file":"packages/sdk/src/transport.ts","line":12,"sig":"interface GodseyeClientOptions {"}
+{"file":"packages/sdk/src/transport.ts","line":20,"sig":"class GodseyeHttpError extends Error {"}
+{"file":"packages/sdk/src/transport.ts","line":30,"sig":"function boundedResponse(response: Response, maximum = 262144) {"}
+{"file":"packages/sdk/src/transport.ts","line":57,"sig":"function applicationTransport(options: GodseyeClientOptions) {"}
+{"file":"packages/sdk/src/transport.ts","line":127,"sig":"type ApplicationTransport = ReturnType<typeof applicationTransport>;"}
+{"file":"packages/sdk/src/transport.ts","line":128,"sig":"function jsonRequest("}
+{"file":"packages/store/src/backend-schema.ts","line":5,"sig":"const backendConfigurations = pgTable(\"backend_configurations\", {"}
+{"file":"packages/store/src/delivery-schema.ts","line":8,"sig":"const deliveryPolicies = pgTable(\"delivery_policies\", {"}
+{"file":"packages/store/src/delivery-schema.ts","line":19,"sig":"const deliveryPreparations = pgTable(\"delivery_preparations\", {"}
+{"file":"packages/store/src/delivery-schema.ts","line":33,"sig":"const deliveryCommands = pgTable(\"delivery_commands\", {"}
+{"file":"packages/store/src/delivery-schema.ts","line":39,"sig":"const deliveryRuns = pgTable(\"delivery_runs\", {"}
+{"file":"packages/store/src/delivery-schema.ts","line":66,"sig":"const deliveryArtifacts = pgTable(\"delivery_artifacts\", {"}
+{"file":"packages/store/src/delivery-schema.ts","line":74,"sig":"const deliveryTargets = pgTable(\"delivery_targets\", {"}
+{"file":"packages/store/src/delivery-schema.ts","line":80,"sig":"const deliverySteps = pgTable("}
+{"file":"packages/store/src/delivery-schema.ts","line":93,"sig":"const deliveryPreviews = pgTable(\"delivery_previews\", {"}
+{"file":"packages/store/src/schema.ts","line":20,"sig":"const controlLock = pgTable(\"control_lock\", { id: integer(\"id\").primaryKey() }, (table) => ["}
+{"file":"packages/store/src/schema.ts","line":24,"sig":"const projects = pgTable("}
+{"file":"packages/store/src/schema.ts","line":45,"sig":"const environments = pgTable("}
+{"file":"packages/store/src/schema.ts","line":73,"sig":"const operations = pgTable("}
+{"file":"packages/store/src/schema.ts","line":95,"sig":"const requests = pgTable("}
+{"file":"packages/store/src/schema.ts","line":109,"sig":"const audit = pgTable(\"audit\", {"}
+{"file":"packages/store/src/schema.ts","line":121,"sig":"const deliveries = pgTable(\"github_deliveries\", {"}
+{"file":"packages/store/src/schema.ts","line":128,"sig":"const ciRuns = pgTable("}
+{"file":"tests/backend-file-fixture.ts","line":6,"sig":"const fileDigest = (bytes: Uint8Array) => createHash(\"sha256\").update(bytes).digest(\"hex\");"}
+{"file":"tests/backend-file-fixture.ts","line":7,"sig":"function fileJson("}
+{"file":"tests/backend-file-fixture.ts","line":16,"sig":"function initiateFile("}
+{"file":"tests/backend-file-fixture.ts","line":40,"sig":"function appendFile("}
+{"file":"tests/backend-file-fixture.ts","line":60,"sig":"function committedFile("}
+{"file":"tests/backend-fixture.ts","line":11,"sig":"const APP_TEST_BASE = \"/api/app/v1\";"}
+{"file":"tests/backend-fixture.ts","line":12,"sig":"const appTestIdentity = {"}
+{"file":"tests/backend-fixture.ts","line":17,"sig":"type BackendConfiguration = Parameters<typeof createApplicationBackend>[0];"}
+{"file":"tests/backend-fixture.ts","line":20,"sig":"function backendFixture(overrides: Partial<BackendConfiguration> = {}) {"}
+{"file":"tests/backend-fixture.ts","line":114,"sig":"type BackendFixture = Awaited<ReturnType<typeof backendFixture>>;"}
+{"file":"tests/backend-fixture.ts","line":116,"sig":"function appCookie(response: Response): string {"}
+{"file":"tests/backend-stream-fixture.ts","line":4,"sig":"interface SseFrame {"}
+{"file":"tests/backend-stream-fixture.ts","line":9,"sig":"function readSseFrame("}
+{"file":"tests/backend-stream-fixture.ts","line":49,"sig":"function openEvents("}
+{"file":"tests/delivery-helpers.ts","line":16,"sig":"function requiredDeliveryFixture<T>(value: T | null | undefined): T {"}
+{"file":"tests/delivery-helpers.ts","line":21,"sig":"function deliveryFixture(options: { noSource?: boolean; noProvider?: boolean } = {}) {"}
+{"file":"tests/delivery-helpers.ts","line":158,"sig":"type DeliveryFixture = Awaited<ReturnType<typeof deliveryFixture>>;"}
+{"file":"tests/delivery-lab-fixture.ts","line":30,"sig":"const deliveryLabDigest = (bytes: Uint8Array) =>"}
+{"file":"tests/delivery-lab-fixture.ts","line":46,"sig":"class DeliveryLabTransport implements ManagedDeliveryTransport {"}
+{"file":"tests/delivery-lab-manifest.ts","line":11,"sig":"function deliveryLabManifest("}
+{"file":"tests/delivery-lab-manifest.ts","line":61,"sig":"function deliveryLabArtifact("}
+{"file":"tests/delivery-lab-manifest.ts","line":81,"sig":"function deliveryLabRelease("}
+{"file":"tests/delivery-lab-process.ts","line":7,"sig":"const DELIVERY_LAB_BOUNDS = {"}
+{"file":"tests/delivery-lab-process.ts","line":43,"sig":"function deliveryLabPath(root: string, ...parts: string[]) {"}
+{"file":"tests/delivery-lab-process.ts","line":51,"sig":"function createDeliveryLabRoot() {"}
+{"file":"tests/delivery-lab-process.ts","line":79,"sig":"function runDeliveryLabBuild(script: string, input: string) {"}
+{"file":"tests/delivery-lab-process.ts","line":98,"sig":"interface DeliveryLabRuntime {"}
+{"file":"tests/delivery-lab-process.ts","line":104,"sig":"function startDeliveryLabRuntime(script: string, input: string) {"}
+{"file":"tests/delivery-lab-process.ts","line":141,"sig":"function stopDeliveryLabRuntime(runtime: DeliveryLabRuntime) {"}
+{"file":"tests/delivery-lab-process.ts","line":162,"sig":"function removeDeliveryLabRoot(root: string) {"}
+{"file":"tests/delivery-provider-fixture.ts","line":28,"sig":"class DeliveryProviderFixture implements DeliveryProvider {"}
+{"file":"tests/delivery-provider-fixture.ts","line":194,"sig":"class GithubSourceFixture implements GithubSourceProvider {"}
