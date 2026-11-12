@@ -1,0 +1,68 @@
+{
+  "scope": "Local application events and authenticated per-project/environment Inngest orchestration",
+  "status": "production source frozen; parent owns final targeted/global verification and fresh review",
+  "runtime": {
+    "sdk": "inngest@4.26.2",
+    "server": "1.52.0",
+    "mode": "authenticated native start with private per-cell embedded workflow persistence; external Redis/PostgreSQL Compose is prepared only",
+    "controlApi": "1.9.0",
+    "applicationApi": "1.0.0"
+  },
+  "behavior": [
+    "Application publication and custom transaction emitEvent persist durable cell-owned intent, independent of SSE trimming",
+    "Sender resolves only after scoped durable domain admission receipt, not merely engine event acceptance; fresh engine delivery ids redrive the immutable deduplicated domain id",
+    "Global event receipts contain scope, producer, epoch, digest and job refs; full payload stays in the source application cell store",
+    "Job payload loader validates accepted digest and current Foundation lease after acquisition; acquisition and execution share a deadline, with one retained actual load per cell and fifty globally",
+    "Source payload retention requires safely terminal associated jobs, no unknown/intended attempt effects or unresolved outbox; unknown fenced cancellations remain retained",
+    "Rotating bounded settlement scans avoid starvation behind long-lived unknown events",
+    "Signed per-cell SDK functions observe Foundation jobs to terminal or reconciliation-required state; Foundation alone executes effects and owns retries/cancellation",
+    "Registered native cron functions exclude their cells from Foundation cron scheduling; definition hashes reject stale registration",
+    "Main owner server accepts explicit GODSEYE_INNGEST_CELLS, reuses its actual Store/InfrastructureEngine/jobs UI, and creates neither projects, owner accounts nor job definitions",
+    "Managed application lifecycle reuses the existing configuration-revision guard, settings, quotas and registration policy; source lifecycle holds park the producer without stopping the owner controller",
+    "Default remains unconfigured; fixture jobs and real configured cells cannot share the main runtime configuration"
+  ],
+  "interfaces": {
+    "application": "jobs:{transport,timeoutMs?,maxPending?,retentionDays?}, runtime.flushJobs, runtime.readJobEvent, POST route context.emitEvent",
+    "core": "JobOptions.applicationEventLoader and inngestEnvironmentIds; createInngestCell; ingestApplicationEvent/applicationEventAccepted/applicationEventSettled/applicationEventRuns",
+    "managed": "parseInngestCells(raw,reservedPorts); prepareLocalInngest({store,rootDirectory,stateDirectory,cells,applicationRoutes?}) -> jobs/bind/start/close",
+    "cellConfig": ["projectId", "environmentId", "enginePort", "workerPort", "applicationPort", "gatewayPort", "gatewayGrpcPort", "executorGrpcPort"],
+    "configConstraints": "At most twenty existing enabled/current owner backend cells; unique environment and all listener ports including controller API/console; no auth material in JSON"
+  },
+  "migrations": {
+    "control": "packages/store/migrations/0016_application_job_events.sql",
+    "application": "Additive jobs-migration.ts after verification of the unchanged original APPLICATION_MIGRATION hash and scope"
+  },
+  "verificationObservedByWorker": [
+    "Typecheck passed after shared core freeze and after initial managed runtime composition; latest parent test edits temporarily leave two unused test imports, not production errors",
+    "Production files formatted with Biome; OpenAPI generated at control1.9.0",
+    "Project-local checksum-pinned installer executed successfully with staging extraction and exact existing-binary hash comparison; no overwrite or system service",
+    "Standalone CLI help executed successfully",
+    "Standalone CLI actual startup reached its ready message at loopback ports4570..4575; Ctrl+C shut it down and a subsequent listener query found none of those ports open; native startup code was subsequently extracted into a shared helper reused by managed runtime and CLI",
+    "GAUNTLET reported real two-cell engine -> signed SDK -> Foundation terminal path green and six selected mutations killed; parent owns authoritative final counts"
+  ],
+  "tooling": {
+    "install": "bun run inngest:install",
+    "demo": "bun run jobs:local -- --demo --name sample",
+    "compose": "bun run inngest:compose -- input.json output-prefix",
+    "composeConstraints": "Caller supplies immutable image digests and four distinct absolute private hex64 material files per cell. Worker network is derived from full scoped hash; only worker[-suffix] service DNS and /api/inngest accepted. Cell/worker networks and persistence are separate. Only the engine HTTP listener is published to host loopback. External worker network must be created/connected independently; no deployment executed."
+  },
+  "upstreamRuntimeFindings": [
+    "OSS1.52.0 POST/v2/apps/.../syncs returns501; use actual SDK PUT registration",
+    "Pinned queue scanner reserves minWorkersFree5; queue-workers2 never scans. Runtime pins ten queue workers",
+    "Engine normalizes execution127.0.0.1 to localhost; exact loopback aliases with matching listener port are accepted while SDK signing remains mandatory"
+  ],
+  "remainingLimits": [
+    "No dedicated host, Docker/gVisor network/quota, external Redis/PostgreSQL, off-host recovery or production availability qualification",
+    "Inngest orchestrates and observes Foundation; this local controller composition does not prove jobs continue while the controller process is offline",
+    "Cron registration is a startup snapshot; changed or newly created cron definitions require registration refresh/restart, and stale hashes fail closed",
+    "Managed runtime includes the first-party application.archive handler; trusted application business routes/handlers are code integrations, not arbitrary browser or repository code execution on the controller",
+    "The hosted backend view retains its existing prepared/unqualified contract; local configured engine status is configuration, not a live health attestation",
+    "SDK/engine transient failures may fail an orchestration run; retained source intent and the domain journal preserve safe redrive and truthful job state"
+  ],
+  "administrationIndependence": {
+    "fix": "loadConfiguration(env,{purpose:'administration'}) bypasses only unrelated Inngest cell parsing/mix validation; owner-cli and access-cli select it explicitly, while the server keeps strict default runtime validation",
+    "retainedChecks": "Explicit local mode, production refusal, controller ports, private identity paths and broker configuration",
+    "verification": "Three production files formatted and full typecheck passed; GAUNTLET injects malformed cell JSON plus fixture mode into existing disposable owner/access CLI regression scenarios"
+  },
+  "gitAndServer": "No Git mutation, remote call to owner infrastructure, owner enrollment or dedicated-server change"
+}
