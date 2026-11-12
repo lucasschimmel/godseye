@@ -7,5 +7,8 @@ export * from "./foundations.js";
 export * from "./http.js";
 export * from "./http-domain.js";
 export * from "./infrastructure.js";
+export * from "./jobs.js";
+export * from "./lifecycle.js";
 export * from "./owner.js";
+export * from "./protection.js";
 export * from "./recovery.js";

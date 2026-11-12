@@ -211,3 +211,75 @@ export const InfrastructureOverview = z
   })
   .strict();
 export type InfrastructureOverviewView = z.infer<typeof InfrastructureOverview>;
+
+/** Utilization = (committed + protected reserve) / capacity; thresholds are inclusive lower bounds. */
+export const INFRASTRUCTURE_PRESSURE = { warnUtilization: 0.8, criticalUtilization: 0.95 } as const;
+/** One heavy task runs at a time; a short bounded wait line absorbs bursts, the rest is refused. */
+export const HEAVY_TASK_LIMITS = { maxConcurrent: 1, maxQueued: 4 } as const;
+export const HEADROOM_RESOURCES = ["cpu", "memory", "disk", "wal", "pids"] as const;
+export const PressureState = z.enum(["ok", "warn", "critical", "unknown"]);
+export const HeadroomResource = z
+  .object({
+    resource: z.enum(HEADROOM_RESOURCES),
+    unit: z.enum(["milliCores", "MiB", "GiB", "count"]),
+    state: z.enum(["known", "unknown"]),
+    capacity: z.number().nullable(),
+    committed: z.number(),
+    protectedReserve: z.number().nullable(),
+    free: z.number().nullable(),
+    utilization: z.number().nullable(),
+    pressure: PressureState,
+    reason: z.string().nullable(),
+  })
+  .strict();
+export const HeadroomScope = z
+  .object({
+    scope: z.enum(["host", "pool"]),
+    name: z.string(),
+    pressure: PressureState,
+    resources: z.array(HeadroomResource),
+  })
+  .strict();
+export const HeavyQueueStatus = z
+  .object({
+    maxConcurrent: z.number().int(),
+    maxQueued: z.number().int(),
+    running: z.number().int(),
+    queued: z.number().int(),
+    full: z.boolean(),
+    reason: z.string().nullable(),
+  })
+  .strict();
+export const AdmissionControl = z
+  .object({
+    state: z.enum(["open", "paused"]),
+    revision: z.number().int(),
+    reason: z.string().nullable(),
+    updatedAt: z.string().datetime().nullable(),
+  })
+  .strict();
+export type AdmissionControlView = z.infer<typeof AdmissionControl>;
+export const SetAdmission = z
+  .object({
+    expectedRevision: z.number().int().nonnegative(),
+    state: z.enum(["open", "paused"]),
+    reason: z.string().trim().min(3).max(300).optional(),
+  })
+  .strict()
+  .refine((value) => value.state === "open" || value.reason !== undefined, {
+    message: "A pause needs a recorded reason",
+    path: ["reason"],
+  });
+export type SetAdmissionInput = z.infer<typeof SetAdmission>;
+export const InfrastructureHeadroom = z
+  .object({
+    generatedAt: z.string().datetime(),
+    observationState: z.enum(["unknown", "observed", "stale"]),
+    pressure: PressureState,
+    thresholds: z.object({ warn: z.number(), critical: z.number() }).strict(),
+    scopes: z.array(HeadroomScope),
+    heavyQueue: HeavyQueueStatus,
+    admission: AdmissionControl,
+  })
+  .strict();
+export type InfrastructureHeadroomView = z.infer<typeof InfrastructureHeadroom>;

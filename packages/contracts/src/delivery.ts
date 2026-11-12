@@ -7,6 +7,32 @@ const Moment = z.string().datetime();
 const Revision = z.number().int().nonnegative();
 export const DELIVERY_POLICY_VERSION = "delivery-v1" as const;
 export const DELIVERY_INTENTS = ["build", "release", "rollback", "cleanup"] as const;
+const Digest = z.string().regex(/^sha256:[a-f0-9]{64}$/);
+/** `destructive` also covers any migration that the previous image cannot tolerate. */
+export const MIGRATION_CLASSES = ["none", "compatible", "reversible", "destructive"] as const;
+export const SCAN_SEVERITIES = ["critical", "high", "medium", "low"] as const;
+export const DEFAULT_SCAN_THRESHOLD = "high" as const;
+export const MigrationBinding = z.object({ class: z.enum(MIGRATION_CLASSES), hash: Hash }).strict();
+export type MigrationBindingView = z.infer<typeof MigrationBinding>;
+const FindingCount = z.number().int().min(0).max(1000000);
+export const ScannerEvidence = z
+  .object({
+    scannerId: z.string().regex(/^[a-z][a-z0-9._-]{1,63}$/),
+    version: z.string().trim().min(1).max(64),
+    databaseDigest: Digest,
+    artifactDigest: Digest,
+    findings: z
+      .object({
+        critical: FindingCount,
+        high: FindingCount,
+        medium: FindingCount,
+        low: FindingCount,
+        unknown: FindingCount,
+      })
+      .strict(),
+  })
+  .strict();
+export type ScannerEvidenceView = z.infer<typeof ScannerEvidence>;
 export const DeliveryLimits = z
   .object({
     cpuMilliCores: z.number().int().min(10).max(64000),
@@ -40,6 +66,7 @@ export const CreateDeliveryPolicy = z
     previewTtlHours: z.number().int().min(1).max(720),
     limits: DeliveryLimits,
     autoDeploy: z.boolean(),
+    scanThreshold: z.enum(SCAN_SEVERITIES).optional(),
     expiresAt: Moment,
   })
   .strict();
@@ -63,7 +90,9 @@ export const PrepareDelivery = z
   })
   .strict();
 export type PrepareDeliveryInput = z.infer<typeof PrepareDelivery>;
-export const AdmitDelivery = z.object({ preparationId: Id, expectedHash: Hash }).strict();
+export const AdmitDelivery = z
+  .object({ preparationId: Id, expectedHash: Hash, approveMigrationHash: Hash.optional() })
+  .strict();
 export type AdmitDeliveryInput = z.infer<typeof AdmitDelivery>;
 export const DeliveryPreparation = z
   .object({
@@ -76,6 +105,7 @@ export const DeliveryPreparation = z
     commitSha: z.string().regex(/^[a-f0-9]{40}$/),
     artifactId: Id.nullable(),
     deploymentId: Id.nullable(),
+    migration: MigrationBinding.nullable().default(null),
     hash: Hash,
     createdAt: Moment,
   })
@@ -94,6 +124,8 @@ export const DeliveryArtifact = z
     recipeHash: Hash,
     checks: z.array(z.object({ name: z.string().max(64), passed: z.boolean() }).strict()).max(32),
     scan: z.literal("passed"),
+    scanner: ScannerEvidence.nullable().default(null),
+    migration: MigrationBinding.nullable().default(null),
     provenanceHash: Hash,
     createdAt: Moment,
   })
@@ -125,6 +157,34 @@ export const DeliveryRun = z
   })
   .strict();
 export type DeliveryRunView = z.infer<typeof DeliveryRun>;
+export const DeliveryUsage = z
+  .object({
+    runId: Id,
+    projectId: Id,
+    environmentId: Id,
+    intent: z.enum(DELIVERY_INTENTS),
+    cpuMilliSeconds: z.number().int().min(0).max(Number.MAX_SAFE_INTEGER),
+    peakMemoryMiB: z.number().int().min(0).max(1048576),
+    diskMiB: z.number().int().min(0).max(Number.MAX_SAFE_INTEGER),
+    durationMs: z.number().int().min(0).max(Number.MAX_SAFE_INTEGER),
+    costMicros: z.literal(0),
+    billing: z.literal("local-unbilled"),
+    recordedAt: Moment,
+  })
+  .strict();
+export type DeliveryUsageView = z.infer<typeof DeliveryUsage>;
+export const DeliveryMigrationLock = z
+  .object({
+    environmentId: Id,
+    runId: Id,
+    preparationId: Id,
+    migration: MigrationBinding,
+    fence: z.number().int().positive(),
+    state: z.enum(["held", "uncertain", "released"]),
+    updatedAt: Moment,
+  })
+  .strict();
+export type DeliveryMigrationLockView = z.infer<typeof DeliveryMigrationLock>;
 export const DeliveryPreview = z
   .object({
     id: Id,
@@ -159,6 +219,9 @@ export const DeliveryOverview = z
     artifacts: z.array(DeliveryArtifact).max(10000),
     deployments: z.array(DeliveryRun).max(10000),
     previews: z.array(DeliveryPreview).max(10000),
+    usage: z.array(DeliveryUsage).max(10000),
+    migrationLocks: z.array(DeliveryMigrationLock).max(10000),
+    rollbackBlocked: z.array(Id).max(10000),
   })
   .strict();
 export type DeliveryOverviewView = z.infer<typeof DeliveryOverview>;

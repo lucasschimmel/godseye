@@ -1,12 +1,15 @@
 import type { ControlEndpoint } from "./http-endpoints.js";
 import {
+  AdmissionControl,
   AdmitInfrastructure,
   DeclareInventory,
   InfrastructureAllocation,
+  InfrastructureHeadroom,
   InfrastructureOverview,
   InfrastructurePreparation,
   InfrastructureRevision,
   PrepareInfrastructure,
+  SetAdmission,
 } from "./infrastructure.js";
 
 export const INFRASTRUCTURE_HTTP_ENDPOINTS = [
@@ -55,6 +58,24 @@ export const INFRASTRUCTURE_HTTP_ENDPOINTS = [
     request: AdmitInfrastructure,
     response: InfrastructureAllocation,
     success: 202,
+    access: "owner",
+    idempotent: true,
+  },
+  {
+    method: "GET",
+    path: "/infrastructure/headroom",
+    operationId: "infrastructureHeadroom",
+    response: InfrastructureHeadroom,
+    success: 200,
+    access: "owner",
+  },
+  {
+    method: "PUT",
+    path: "/infrastructure/admission",
+    operationId: "setInfrastructureAdmission",
+    request: SetAdmission,
+    response: AdmissionControl,
+    success: 200,
     access: "owner",
     idempotent: true,
   },

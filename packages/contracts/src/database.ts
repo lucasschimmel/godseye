@@ -76,12 +76,22 @@ export const DatabaseAllocation = z
   })
   .strict();
 export type DatabaseAllocationView = z.infer<typeof DatabaseAllocation>;
+/** Derived, never declared: unconfigured and unavailable are distinct from none, unknown and healthy. */
+export const ProtectionState = z.enum([
+  "unconfigured",
+  "unavailable",
+  "none",
+  "unknown",
+  "healthy",
+  "degraded",
+]);
+export type ProtectionStateView = z.infer<typeof ProtectionState>;
 export const DatabaseOverview = z
   .object({
     execution: z.enum(["unconfigured", "qualified"]),
-    backup: z.literal("unqualified"),
-    restore: z.literal("unqualified"),
-    rotation: z.literal("unqualified"),
+    backup: ProtectionState,
+    restore: ProtectionState,
+    rotation: ProtectionState,
     preparations: z.array(DatabasePreparation).max(10000),
     allocations: z.array(DatabaseAllocation).max(10000),
   })

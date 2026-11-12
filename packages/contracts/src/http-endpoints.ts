@@ -30,10 +30,13 @@ import {
   RevocationResponse,
 } from "./http-schemas.js";
 import { INFRASTRUCTURE_HTTP_ENDPOINTS } from "./infra-endpoints.js";
+import { JOBS_HTTP_ENDPOINTS } from "./jobs-endpoints.js";
+import { LIFECYCLE_HTTP_ENDPOINTS } from "./lifecycle-endpoints.js";
 import { OwnerSecurityResponse, OwnerStatusResponse } from "./owner.js";
+import { PROTECTION_HTTP_ENDPOINTS } from "./protection-endpoints.js";
 import { RECOVERY_HTTP_ENDPOINTS } from "./recovery-endpoints.js";
 
-export const CONTROL_API_VERSION = "1.6.0" as const;
+export const CONTROL_API_VERSION = "1.8.0" as const;
 export const CONTROL_API_HEADER = "x-godseye-api-version" as const;
 export interface ControlEndpoint {
   method: "GET" | "POST" | "PUT";
@@ -53,7 +56,10 @@ export const CONTROL_HTTP_ENDPOINTS = [
   ...BACKEND_HTTP_ENDPOINTS,
   ...DATABASE_HTTP_ENDPOINTS,
   ...DELIVERY_HTTP_ENDPOINTS,
+  ...JOBS_HTTP_ENDPOINTS,
+  ...LIFECYCLE_HTTP_ENDPOINTS,
   ...RECOVERY_HTTP_ENDPOINTS,
+  ...PROTECTION_HTTP_ENDPOINTS,
   ...INFRASTRUCTURE_HTTP_ENDPOINTS,
   {
     method: "GET",
