@@ -5,14 +5,21 @@ import {
   type ReconcileOutboxInput,
 } from "@godseye/contracts";
 import { type DatabaseAccess, schema } from "@godseye/store";
-import { and, asc, eq, inArray, lte, notInArray, sql } from "drizzle-orm";
+import { and, asc, eq, inArray, lte, not, notInArray, or, sql } from "drizzle-orm";
 import { z } from "zod";
 import { DomainError, parseInput } from "./errors.js";
 import { assertFresh, recordRequest, requestFor } from "./foundation-data.js";
 import {
+  boundedOutboxCall,
+  OUTBOX_CALL_CAPACITY,
+  outboxCallAvailable,
+  outboxCallKey,
+} from "./jobs-outbox-call.js";
+import {
   activeCell,
   heldEnvironmentIds,
   type JobState,
+  jobEnvironmentFilter,
   type OutboxIntentInput,
   type OutboxSender,
   type OutboxSendResult,
@@ -23,7 +30,7 @@ import { appendAudit, fingerprint, write } from "./journal.js";
 import type { Actor } from "./policy.js";
 
 const MAX_PAYLOAD_BYTES = 65_536;
-const BATCH = 50;
+const BATCH = OUTBOX_CALL_CAPACITY;
 const Intent = z
   .object({
     projectId: z.string().uuid(),
@@ -110,6 +117,18 @@ const delivery = (row: typeof schema.jobOutbox.$inferSelect) => ({
   payload: row.payload,
   attempt: row.attempts,
 });
+/** Filter before pagination so a blocked destination cannot hide unrelated work behind its backlog. */
+function activeOutboxScopes(state: JobState) {
+  return or(
+    ...[...state.outboxCalls].map((key) => {
+      const separator = key.indexOf(":");
+      return and(
+        eq(schema.jobOutbox.environmentId, key.slice(0, separator)),
+        eq(schema.jobOutbox.destination, key.slice(separator + 1)),
+      );
+    }),
+  );
+}
 /** Held cells never dispatch; pending intent is parked, not dropped or executed. */
 async function parkHeld(state: JobState, held: string[]) {
   if (held.length === 0) return 0;
@@ -118,7 +137,11 @@ async function parkHeld(state: JobState, held: string[]) {
       .update(schema.jobOutbox)
       .set({ state: "held", lastError: "CELL_HELD" })
       .where(
-        and(eq(schema.jobOutbox.state, "pending"), inArray(schema.jobOutbox.environmentId, held)),
+        and(
+          eq(schema.jobOutbox.state, "pending"),
+          inArray(schema.jobOutbox.environmentId, held),
+          jobEnvironmentFilter(state, schema.jobOutbox.environmentId),
+        ),
       )
       .returning(),
   );
@@ -132,7 +155,11 @@ async function recoverStale(state: JobState) {
       .select()
       .from(schema.jobOutbox)
       .where(
-        and(eq(schema.jobOutbox.state, "dispatching"), lte(schema.jobOutbox.claimedAt, cutoff)),
+        and(
+          eq(schema.jobOutbox.state, "dispatching"),
+          lte(schema.jobOutbox.claimedAt, cutoff),
+          jobEnvironmentFilter(state, schema.jobOutbox.environmentId),
+        ),
       );
     for (const row of stale) {
       const safe = state.senders?.get(row.destination)?.dedupesByEffectKey === true;
@@ -148,18 +175,34 @@ async function recoverStale(state: JobState) {
     return stale.length;
   });
 }
-async function inspectUnknown(state: JobState) {
+async function inspectUnknown(state: JobState, signal?: AbortSignal) {
+  const unavailable = activeOutboxScopes(state);
   const rows = await state.store.db
     .select()
     .from(schema.jobOutbox)
-    .where(eq(schema.jobOutbox.state, "unknown"))
+    .where(
+      and(
+        eq(schema.jobOutbox.state, "unknown"),
+        unavailable ? not(unavailable) : undefined,
+        jobEnvironmentFilter(state, schema.jobOutbox.environmentId),
+      ),
+    )
     .orderBy(asc(schema.jobOutbox.createdAt))
     .limit(BATCH);
   let count = 0;
   for (const row of rows) {
+    if (signal?.aborted) break;
     const sender = state.senders?.get(row.destination);
-    if (!sender?.inspect) continue;
-    const seen = await sender.inspect(delivery(row)).catch(() => "unknown" as const);
+    const inspect = sender?.inspect;
+    if (!sender || !inspect) continue;
+    const key = outboxCallKey(row.environmentId, row.destination);
+    if (!outboxCallAvailable(state, key)) continue;
+    const seen = await boundedOutboxCall(
+      state,
+      key,
+      (callSignal) => inspect.call(sender, delivery(row), callSignal),
+      signal,
+    );
     const delivered = seen === "delivered";
     count++;
     await write(state.store, async (tx) => {
@@ -218,11 +261,17 @@ async function sendClaimed(
   state: JobState,
   sender: OutboxSender,
   row: typeof schema.jobOutbox.$inferSelect,
+  signal?: AbortSignal,
 ) {
   let result: OutboxSendResult;
   try {
-    const sent = await sender.send(delivery(row));
-    result = KNOWN.has(sent?.status) ? sent : { status: "unknown" };
+    const sent = await boundedOutboxCall(
+      state,
+      outboxCallKey(row.environmentId, row.destination),
+      (callSignal) => sender.send(delivery(row), callSignal),
+      signal,
+    );
+    result = sent && KNOWN.has(sent.status) ? sent : { status: "unknown" };
   } catch {
     result = { status: "unknown" };
   }
@@ -243,37 +292,44 @@ async function claimOne(state: JobState, id: string) {
   });
 }
 /** Claims durable intent before sending; a crash after the claim leaves a recoverable, never silent, state. */
-export async function claimOutboxBatch(state: JobState, held: string[]) {
+export async function* claimOutboxBatch(state: JobState, held: string[], signal?: AbortSignal) {
   const destinations = [...(state.senders?.keys() ?? [])];
   if (destinations.length === 0) return [];
+  const unavailable = activeOutboxScopes(state);
   const candidates = await state.store.db
     .select()
     .from(schema.jobOutbox)
     .where(
       and(
         eq(schema.jobOutbox.state, "pending"),
+        jobEnvironmentFilter(state, schema.jobOutbox.environmentId),
         inArray(schema.jobOutbox.destination, destinations),
         held.length > 0 ? notInArray(schema.jobOutbox.environmentId, held) : undefined,
+        unavailable ? not(unavailable) : undefined,
       ),
     )
     .orderBy(asc(schema.jobOutbox.createdAt))
     .limit(BATCH);
-  const claimed = [];
   for (const candidate of candidates) {
+    if (signal?.aborted) break;
+    if (!outboxCallAvailable(state, outboxCallKey(candidate.environmentId, candidate.destination)))
+      continue;
     const row = await claimOne(state, candidate.id);
-    if (row) claimed.push(row);
+    if (row) yield row;
   }
-  return claimed;
 }
-export async function dispatchOutbox(state: JobState): Promise<OutboxTickResult> {
+export async function dispatchOutbox(
+  state: JobState,
+  signal?: AbortSignal,
+): Promise<OutboxTickResult> {
   const held = await heldEnvironmentIds(state.store.db, state.now());
   const result = { held: await parkHeld(state, held), recovered: 0, inspected: 0, dispatched: 0 };
   result.recovered = await recoverStale(state);
-  result.inspected = await inspectUnknown(state);
-  for (const row of await claimOutboxBatch(state, held)) {
+  result.inspected = await inspectUnknown(state, signal);
+  for await (const row of claimOutboxBatch(state, held, signal)) {
     const sender = state.senders?.get(row.destination);
     if (!sender) continue;
-    await sendClaimed(state, sender, row);
+    await sendClaimed(state, sender, row, signal);
     result.dispatched++;
   }
   return result;
