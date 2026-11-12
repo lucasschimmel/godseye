@@ -15,8 +15,8 @@ await build({
     {
       name: "application-workspaces",
       setup(builder) {
-        builder.onResolve({ filter: /^@godseye\/app-backend$/ }, () => ({
-          path: resolve("packages/app-backend/src/index.ts"),
+        builder.onResolve({ filter: /^@godseye\/(?:app-backend|contracts)$/ }, (args) => ({
+          path: resolve(`packages/${args.path.slice("@godseye/".length)}/src/index.ts`),
         }));
       },
     },
