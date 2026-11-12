@@ -1,6 +1,6 @@
 {
   "project_id": "g-o-d-s-e-y-e-cfe8",
-  "mode": "feat: local application backend / project auth / files / SSE / TypeScript SDK",
+  "mode": "feat: local E06 autonomous workers and external Inngest PostgreSQL/Redis",
   "criticity": "production",
   "runtime": "Node 24",
   "package_manager": "Bun1.4.4 (project-local verified tool; Node24 application/test runtime)",
@@ -17,5 +17,6 @@
     "Ubuntu 26.04 reported by owner, not verified; Proxmox target Debian-based Rescue install later",
     "Remote E00 deferred by explicit local-first request; no physical qualification implied"
   ],
-  "auth": "Better Auth 1.7.20 / UV-required resident WebAuthn passkeys / fixed local owner"
+  "auth": "Better Auth 1.7.20 / UV-required resident WebAuthn passkeys / fixed local owner",
+  "jobsRuntime": "Trusted independent PostgreSQL-journal supervisor; scoped first-party child workers; native Inngest1.52.0+workflow PostgreSQL18.6+Redis8.0.5; controller HTTP optional"
 }

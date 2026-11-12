@@ -1,6 +1,5 @@
 {
-  "scope": "Local E04 application backend, project authentication, private files, realtime and TypeScript SDK",
-  "phase": "local-application-backend-complete",
+  "scope": "Local E06 application event bridge, per-cell Inngest and existing owner dashboard integration",
   "remote_gate": "E00 pending; no dedicated-server changes performed",
   "local_acceptance": [
     {
@@ -542,5 +541,41 @@
     "legacyHistory": "Original seven checkpoints and the final E04 tree retained on local backup refs",
     "graphAnchor": "cfad4f7971ff2df35bf995eb2defadf972411245",
     "protection": "Develop force/deletion blocked; ordinary fast-forward pushes allowed. Main release PR required. No fictional CI checks."
+  },
+  "historical_checkpoint": "Existing local_acceptance/story/backend/delivery checkpoints retain their original scope and evidence; they do not certify complete E01–E06 acceptance or later integrations.",
+  "audit_remediation": {
+    "status": "verified",
+    "dedicated_server_changes": false,
+    "findings": "docs/reviews/2026-11-12-e01-e06-audit.md",
+    "state": "audit-remediation.json"
+  },
+  "current_epic_status": {
+    "E03": "partial; all-service lifecycle, automatic backups and coordinated safe recovery activation missing",
+    "E04": "local-auth-files-events-sdk-implemented; coordinated recovery and hosted qualification pending",
+    "E05": "partial; concrete Coolify/DNS/TLS/Jenkins and GitHub App authorization integration missing",
+    "E06": "Requested local runtime software complete and verified: independent supervisor/cell/platform workers, external workflow PostgreSQL/Redis provisioning/persistence, dynamic real Inngest cron, remote outbox and owner read-only reconciliation. Full1225ordinary/11separate native/8Python/7curatedmutants/build/smoke/source47hash/docs verified. Deployed containment/network/quota/capacity and E03/E12 coordinated recovery remain release obligations.",
+    "E01": "local-foundations-implemented; provider/CI/off-host qualification pending",
+    "E02": "local-access-inventory-headroom-implemented; reapproval capacity fix verified; host/providers pending"
+  },
+  "phase": "local-e06-request-complete",
+  "inngest_continuation": {
+    "remaining": "Distributed/controller-offline workers, automatic cron registration refresh, external Redis/workflow PostgreSQL/container qualification, platform engine and coordinated recovery remain explicit",
+    "gitMutations": false,
+    "contract": "inngest-continuation.json",
+    "source": "inngest-implementation.json",
+    "sourceReview": "reviews/inngest-code-review.json",
+    "testStrategy": "reviews/inngest-tests.json",
+    "scope": "E06 local authenticated durable application bridge and per-cell native Inngest, actual owner dashboard composition",
+    "localOnly": true,
+    "status": "Local requested tranche complete:1191ordinary/2native/41browser/6selectedmutations; static/build/smoke/source-review passed",
+    "serverChanges": false
+  },
+  "e06_completion": {
+    "contract": "e06-completion.json",
+    "status": "local-request-complete",
+    "completedAt": "2026-11-12T21:47:40.516Z",
+    "finalGates": "reviews/e06-completion-final-gates.json",
+    "outcome": "outcome-1794520013-c51e64b6",
+    "remote": "No dedicated-server or Git mutation"
   }
 }
