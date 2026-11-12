@@ -18,9 +18,10 @@ import { fileURLToPath } from "node:url";
 import { backendMutations } from "./mutation-backend-cases.mjs";
 import { mutations as historicalMutations } from "./mutation-cases.mjs";
 import { deliveryMutations } from "./mutation-delivery-cases.mjs";
+import { jobsMutations } from "./mutation-jobs-cases.mjs";
 
 const suite = process.env.GODSEYE_MUTATION_SUITE ?? "historical";
-if (!["historical", "delivery", "backend"].includes(suite))
+if (!["historical", "delivery", "backend", "jobs"].includes(suite))
   throw new Error("Unknown curated mutation suite");
 // M07 is the only historical exact target changed by delivery's push/PR parser integration.
 const affectedIntake = historicalMutations.find(({ id }) => id === "M07");
@@ -28,9 +29,11 @@ if (!affectedIntake) throw new Error("Affected GitHub intake mutation is missing
 const allMutations =
   suite === "backend"
     ? backendMutations
-    : suite === "delivery"
-      ? [affectedIntake, ...deliveryMutations]
-      : historicalMutations;
+    : suite === "jobs"
+      ? jobsMutations
+      : suite === "delivery"
+        ? [affectedIntake, ...deliveryMutations]
+        : historicalMutations;
 
 const requestedIds = (process.env.GODSEYE_MUTATION_IDS ?? "").split(",").filter(Boolean);
 if (requestedIds.some((id) => !allMutations.some((mutation) => mutation.id === id)))
@@ -124,6 +127,15 @@ async function prepareSandbox(sandbox, junctions) {
     "delivery-faults.test.ts",
     "delivery-preview-faults.test.ts",
     "delivery-rollback.test.ts",
+    "delivery-migration.test.ts",
+    "delivery-scan-usage.test.ts",
+    "jobs-helpers.ts",
+    "jobs-faults.test.ts",
+    "jobs-isolation.test.ts",
+    "jobs-outbox.test.ts",
+    "jobs-retention.test.ts",
+    "infra-helpers.ts",
+    "helpers.ts",
   ]) {
     await cp(join(root, "tests", name), join(sandbox, "tests", name));
   }
