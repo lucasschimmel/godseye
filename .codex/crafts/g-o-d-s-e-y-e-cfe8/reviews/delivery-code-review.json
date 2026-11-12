@@ -1,0 +1,426 @@
+{
+  "verdict": "pass",
+  "review_status": "final-source-freeze",
+  "scope": "Read-only defensive correctness review of frozen local delivery core, GitHub intake/source composition, typed HTTP contracts and shared Foundation lifecycle. Final source-review verdict only; coordinator owns full regression/build/browser and live-provider qualification.",
+  "findings": [],
+  "criteria_run": 10,
+  "criteria_passed": 10,
+  "not_reviewed": [
+    "Full regression, lint/typecheck/build, final mutation and browser gates are coordinator-owned; they are not independently certified by this report.",
+    "No active security audit, exploit, PoC, penetration automation, newly authored test or external service interaction was run. This is defensive source review plus existing tests.",
+    "Full secret/dependency/SAST scanning was not rerun by this reviewer; AEGIS scanner status is separate. No environment/private material was read.",
+    "Remote GitHub App enrollment/token exchange, Jenkins/guest isolation, Coolify, DNS/TLS, filesystem quotas, deployed containment and production data migration remain intentionally unqualified.",
+    "Exhaustive performance/scale, complete semantic stylesheet audit, all unrelated provider paths and every possible interrupted-stage cleanup interleaving were not covered."
+  ],
+  "verification": {
+    "existing_tests_command": "bunx vitest run tests/delivery-source.test.ts tests/delivery-managed.test.ts tests/delivery-preparation.test.ts tests/delivery-policy-authority.test.ts --maxWorkers=1 --reporter=default",
+    "existing_tests_result": "94 tests passed in four files, 46.30 seconds",
+    "new_tests_written": false,
+    "poc_code_created_or_run": false,
+    "implementation_modified": false,
+    "external_effects": false,
+    "snapshot_note": "Final reviewed on-disk source snapshot after scheduler key and ordinary unknown-preview reconciliation fixes; compare every file hash before treating subsequent edits as covered.",
+    "additional_existing_tests": [
+      "22/22 passed across delivery-execution, delivery-preview-faults and delivery-rollback; 43.68 seconds",
+      "15/15 strict delivery HTTP/client tests passed; 23.59 seconds"
+    ],
+    "final_targeted_existing_tests": [
+      "3 passed, 16 skipped in 10.34s: terminal policy revocation, definitive no-dispatch lane release, first-party strict-source standing scheduling.",
+      "3 passed, 5 skipped in 10.44s: TTL cleanup with source removed/revoked policy, retained original provider binding, first-party source owner build/release composition.",
+      "6 passed, 20 skipped in 13.89s: ordinary unknown preview lost promotion receipt, HOLD/policy/head/foreign-observation refusal, maximum-length synchronization key replay."
+    ]
+  },
+  "passed_observations": [
+    "Strict public policy/preparation/admission schemas reject extra execution fields and bound resources, recipe context, checks, preview count and lifetime.",
+    "Fresh owner policy creation captures the current numeric repository/installation/source and exact project/environment revisions; revocation/expiry and source drift are checked after awaited source selection.",
+    "Current GitHub branch/PR origin, open state and installation access are independently queried; webhook signatures alone do not authorize delivery.",
+    "Shared Foundation mappings bind exact manifest, plan, run, lease/fence/epoch, target generation and provider binding; default source/provider absence is unavailable.",
+    "Build and deployment evidence require strict booleans and canonical scope/digest/provenance; readiness precedes promotion.",
+    "Preview creation is server-owned and synthetic-only; cleanup is limited to preview runtime/ingress and does not implement PostgreSQL/persistent-data purge.",
+    "Unknown physical intentions retain the target lock and capacity; there is no blind retry from the normal execute path."
+  ],
+  "prior_findings_excluded": [
+    "DGT001 mutable GitHub binding already fixed",
+    "strict provider boolean validation already fixed"
+  ],
+  "file_hashes": [
+    {
+      "path": "packages/contracts/src/delivery.ts",
+      "sha256": "264f29e8e443e1722feeef2af5d55e3017b6127411b762f7e56a0ce729594675"
+    },
+    {
+      "path": "packages/contracts/src/foundations.ts",
+      "sha256": "ee9af3b53743f340ffca193df462ea80d6c917403ec6fc113e69fa0ebfeed87f"
+    },
+    {
+      "path": "packages/store/src/delivery-schema.ts",
+      "sha256": "22a8dc2848b95088cbf664c3d13a5fa59467ed76ecd2e347b5e20c74a38ba71b"
+    },
+    {
+      "path": "packages/core/src/delivery.ts",
+      "sha256": "462a8ef344200be67eb20db71df184f7bf5dd725b6814533b23a84c1ae5ebc2a"
+    },
+    {
+      "path": "packages/core/src/delivery-provider.ts",
+      "sha256": "597c423aed26431f23e79c9ec54eb543f479b2203e54f09532f074f770a3adfa"
+    },
+    {
+      "path": "packages/core/src/delivery-state.ts",
+      "sha256": "9728e759aaf4a9f9fd7f78f4cc66dd7cc01eb32b0b2d29a6f154a98d88fe75d5"
+    },
+    {
+      "path": "packages/core/src/delivery-authority.ts",
+      "sha256": "98b9d3fda4d6eafd4434e5b9b1d9f0d13ffd40f4dd615d79ca6ebfa1fa339f4b"
+    },
+    {
+      "path": "packages/core/src/delivery-policy.ts",
+      "sha256": "9e56bfb809def679e94b34a5fdee48f8bc88f928d94cd849fdeeadc8be2e9e1a"
+    },
+    {
+      "path": "packages/core/src/delivery-github.ts",
+      "sha256": "4d9a95c4ab4ae6a221ceeb08aa6d28135189286518a7e37a6fd940ca32127f62"
+    },
+    {
+      "path": "packages/core/src/delivery-admission.ts",
+      "sha256": "d7b04418feaa12daa63e791a79519b715456aac78ee1c2fdc121d2b840cbc273"
+    },
+    {
+      "path": "packages/core/src/delivery-preparation.ts",
+      "sha256": "a78c32a5646f4fad1f1e2ac5f5a33e25b44bfb5050ed87490631a46574652834"
+    },
+    {
+      "path": "packages/core/src/delivery-preview.ts",
+      "sha256": "df44e6a186a10a16acfa1e558041f1c84dbf35b2707e5ff6de27225668126760"
+    },
+    {
+      "path": "packages/core/src/delivery-execution.ts",
+      "sha256": "3414111b3ed63771cc962654b9dcfd6ffe14860c8a33c78717ae0640598cccd6"
+    },
+    {
+      "path": "packages/core/src/delivery-execution-gate.ts",
+      "sha256": "b44adc7e632199ef28a3cfd90f2a7765311ddd2a4c1ffcf19345de7cb7369595"
+    },
+    {
+      "path": "packages/core/src/delivery-evidence.ts",
+      "sha256": "5f0ebe16fe7539ec573b65f59d2c8fca3abcc4338cf59b43f8e3dbca75989749"
+    },
+    {
+      "path": "packages/core/src/delivery-managed-provider.ts",
+      "sha256": "72af0ed7d70848d84bf8c5602b671d87a0ab6f059e8ce4794bf954aa6376e064"
+    },
+    {
+      "path": "packages/core/src/delivery-settlement.ts",
+      "sha256": "c5f1535a0d194343b173d4337ab999e4112587f5f754f5f865e4b6f77cd48ea4"
+    },
+    {
+      "path": "packages/core/src/delivery-capacity.ts",
+      "sha256": "468cae1928233d9e3cb9f2da34aef4ce7ad6d3dc6bd87b7a1957813ce4ec037f"
+    },
+    {
+      "path": "packages/core/src/delivery-scheduler.ts",
+      "sha256": "e355ec60fcfee1b1ee8055e6bbb4e616ed7e571fc7e2795f6e928665f4a87652"
+    },
+    {
+      "path": "packages/core/src/github.ts",
+      "sha256": "105ff7f9d86c8e5e3e15eecab5a6871dd2f09f021a9b7363aaee6936f77eda79"
+    },
+    {
+      "path": "packages/core/src/github-events.ts",
+      "sha256": "d0b265d348314e9bc510bf2999a6f80d4e22f0e66aca02543fcce14f774cd527"
+    },
+    {
+      "path": "packages/core/src/foundation-data.ts",
+      "sha256": "1743d36b33381bf2856e77fbf4e25a3c6afef846e1eedad14731dd70d608cb95"
+    },
+    {
+      "path": "packages/core/src/foundation-effects.ts",
+      "sha256": "917d2d368f5c1db0c18f1ba7b111266870c4563dbf149e16e986c261ede019a0"
+    },
+    {
+      "path": "packages/core/src/foundation-queue.ts",
+      "sha256": "1b1bb1a70970b696dfb99af0d9d84fc58a4ac41990e15810716015b327e57c44"
+    },
+    {
+      "path": "packages/core/src/foundations.ts",
+      "sha256": "fbdae043faeb47f88ed656198a607511d54f981c1a7f5f96fb7d52ac3bd0145e"
+    },
+    {
+      "path": "packages/core/src/infrastructure.ts",
+      "sha256": "40bbbbff9887f3596dfb0c8d7a81119170dbcc01a03b6b63dbd817d1d68631e4"
+    },
+    {
+      "path": ".crafts/constitution.md",
+      "sha256": "7e3b779827607878589208f8291969c7bcb1fc1b32c519fbfbdce3250844e344"
+    },
+    {
+      "path": ".codex/crafts/g-o-d-s-e-y-e-cfe8/delivery-design.md",
+      "sha256": "e947fa194284bab534398f72f6cc9f296f3d49a47147575f8b14013d175fccaa"
+    },
+    {
+      "path": "tests/delivery-source.test.ts",
+      "sha256": "f8e7b432000c8712f2015a2e461a4c2c4aed787dec5bb163b2863a8f7ba15c52"
+    },
+    {
+      "path": "tests/delivery-managed.test.ts",
+      "sha256": "7b4c5b1b8101c906967a1f53947c3a8923a77ccad2eda54fc4b33b1cb3d4e6af"
+    },
+    {
+      "path": "tests/delivery-preparation.test.ts",
+      "sha256": "613eaa1eca5860e6b1f84509fa31a5529d58ef9f08226bc375020b6167a16ded"
+    },
+    {
+      "path": "tests/delivery-policy-authority.test.ts",
+      "sha256": "8b2f2646411d0f60a0815ff3c3d7291c143dcb40e72b481b2b10be77ee08dd42"
+    },
+    {
+      "path": "apps/control-api/src/delivery-routes.ts",
+      "sha256": "f18610fc384c6e4335e41c5571e1a48480a0c9a1f6db24280f8e92597fc964d1"
+    },
+    {
+      "path": "packages/contracts/src/delivery-endpoints.ts",
+      "sha256": "d110c6c0fcba9c81952fbd634507e9317d2904820333720dd41d2a4212e0b774"
+    },
+    {
+      "path": "tests/delivery-execution.test.ts",
+      "sha256": "746771190b6fac9bcb478da2b8e8d4bff7e3e12fc198254021c3e2003ae62862"
+    },
+    {
+      "path": "tests/delivery-preview-faults.test.ts",
+      "sha256": "bde65d96c029a54a2cd518b37a5a219c4abb0b64d3e0ad73aa2046b51dfd6f30"
+    },
+    {
+      "path": "tests/delivery-rollback.test.ts",
+      "sha256": "ac0d7b8ec060a77e6b571512524f4da2a8be7efe84207ea312561462a51c24f6"
+    },
+    {
+      "path": "tests/delivery-http.test.ts",
+      "sha256": "e0442a68caf63b43acfac3395c1fba92470c22df4bb6c5840b6b187a55256dc4"
+    },
+    {
+      "path": "packages/core/src/foundation-plans.ts",
+      "sha256": "6f28ae14a07cb43261a71578f12fc6d387e50f4bc04de437a64d2c98a26ba053"
+    },
+    {
+      "path": "packages/core/src/infra-state.ts",
+      "sha256": "3e065dd139f2a7e0391e1d108b4b6652a8f1f9892837d611e0a32685bf422bfb"
+    },
+    {
+      "path": "apps/control-api/src/app.ts",
+      "sha256": "38a8b73e1cc415bb60de1f17bc3562ff17869178ff6421eca43eb44c722f14b5"
+    },
+    {
+      "path": "tests/delivery-faults.test.ts",
+      "sha256": "51f0555f9383e60d55ce9eeb9504268bcd5707f288c60cd9c8503c4c691fa4c5"
+    },
+    {
+      "path": "tests/delivery-source-composition.test.ts",
+      "sha256": "46d157b9d6e4c22f60629cec79310001c27a1eb725a1b56657201e4a86320f8c"
+    },
+    {
+      "path": "tests/delivery-policy.test.ts",
+      "sha256": "83dbc1afaeda762a2cc316b1514182ab8d6678f180e99f7e881e4d0fd4fe3d64"
+    }
+  ],
+  "initial_file_hashes": [
+    {
+      "path": "packages/contracts/src/delivery.ts",
+      "sha256": "d074824849354d76c42c5b2dc27cebb740794999c41a547597d79f8e346750b0"
+    },
+    {
+      "path": "packages/contracts/src/foundations.ts",
+      "sha256": "ee9af3b53743f340ffca193df462ea80d6c917403ec6fc113e69fa0ebfeed87f"
+    },
+    {
+      "path": "packages/store/src/delivery-schema.ts",
+      "sha256": "22a8dc2848b95088cbf664c3d13a5fa59467ed76ecd2e347b5e20c74a38ba71b"
+    },
+    {
+      "path": "packages/core/src/delivery.ts",
+      "sha256": "92112b7e02ac03ce3e8bac761e3b9b7182a9a364f3c22849fe146cf83f291eab"
+    },
+    {
+      "path": "packages/core/src/delivery-provider.ts",
+      "sha256": "597c423aed26431f23e79c9ec54eb543f479b2203e54f09532f074f770a3adfa"
+    },
+    {
+      "path": "packages/core/src/delivery-state.ts",
+      "sha256": "0a706d620f055abf21e61d1a4a3fb17d0be5794cc69e25808664348014b7f83b"
+    },
+    {
+      "path": "packages/core/src/delivery-authority.ts",
+      "sha256": "98b9d3fda4d6eafd4434e5b9b1d9f0d13ffd40f4dd615d79ca6ebfa1fa339f4b"
+    },
+    {
+      "path": "packages/core/src/delivery-policy.ts",
+      "sha256": "9e56bfb809def679e94b34a5fdee48f8bc88f928d94cd849fdeeadc8be2e9e1a"
+    },
+    {
+      "path": "packages/core/src/delivery-github.ts",
+      "sha256": "4d9a95c4ab4ae6a221ceeb08aa6d28135189286518a7e37a6fd940ca32127f62"
+    },
+    {
+      "path": "packages/core/src/delivery-admission.ts",
+      "sha256": "b041513153f93a645bafeafeb37dd064c34e9bd0bebf1969abeccec285c54ef2"
+    },
+    {
+      "path": "packages/core/src/delivery-preparation.ts",
+      "sha256": "874e842253e30f775f99e9c1cd62d6acf6f63ba712cc6cd5376aec8e5680dfdd"
+    },
+    {
+      "path": "packages/core/src/delivery-preview.ts",
+      "sha256": "947847309638b580d20727502d831ec78dfac95bd33ddf14a528fe551b7f83ea"
+    },
+    {
+      "path": "packages/core/src/delivery-execution.ts",
+      "sha256": "ef284560c390ab57b4c5133d4ade9a6136a6dbe0915334f2ec95543386284cc4"
+    },
+    {
+      "path": "packages/core/src/delivery-execution-gate.ts",
+      "sha256": "b44adc7e632199ef28a3cfd90f2a7765311ddd2a4c1ffcf19345de7cb7369595"
+    },
+    {
+      "path": "packages/core/src/delivery-evidence.ts",
+      "sha256": "ebbdacfecc863dc3341cb5a42e175bbccaa248e726f75475748600d439f63cb3"
+    },
+    {
+      "path": "packages/core/src/delivery-managed-provider.ts",
+      "sha256": "72af0ed7d70848d84bf8c5602b671d87a0ab6f059e8ce4794bf954aa6376e064"
+    },
+    {
+      "path": "packages/core/src/delivery-settlement.ts",
+      "sha256": "c7c5c505ee8f7db370232bcece6781417cc20dc39a03c7b8d87aea93d9ba4be7"
+    },
+    {
+      "path": "packages/core/src/delivery-capacity.ts",
+      "sha256": "468cae1928233d9e3cb9f2da34aef4ce7ad6d3dc6bd87b7a1957813ce4ec037f"
+    },
+    {
+      "path": "packages/core/src/delivery-scheduler.ts",
+      "sha256": "8263cc6eb2f36c0babcc8bd3d749c65fdb97e3e66dde0a143ef23a68424e25fb"
+    },
+    {
+      "path": "packages/core/src/github.ts",
+      "sha256": "105ff7f9d86c8e5e3e15eecab5a6871dd2f09f021a9b7363aaee6936f77eda79"
+    },
+    {
+      "path": "packages/core/src/github-events.ts",
+      "sha256": "d0b265d348314e9bc510bf2999a6f80d4e22f0e66aca02543fcce14f774cd527"
+    },
+    {
+      "path": "packages/core/src/foundation-data.ts",
+      "sha256": "1743d36b33381bf2856e77fbf4e25a3c6afef846e1eedad14731dd70d608cb95"
+    },
+    {
+      "path": "packages/core/src/foundation-effects.ts",
+      "sha256": "917d2d368f5c1db0c18f1ba7b111266870c4563dbf149e16e986c261ede019a0"
+    },
+    {
+      "path": "packages/core/src/foundation-queue.ts",
+      "sha256": "1b1bb1a70970b696dfb99af0d9d84fc58a4ac41990e15810716015b327e57c44"
+    },
+    {
+      "path": "packages/core/src/foundations.ts",
+      "sha256": "b00a6e52b8f622294e9b1d82df4c3f289bd3d21b6a0f4556f46c1321fc1904e3"
+    },
+    {
+      "path": "packages/core/src/infrastructure.ts",
+      "sha256": "40bbbbff9887f3596dfb0c8d7a81119170dbcc01a03b6b63dbd817d1d68631e4"
+    },
+    {
+      "path": ".crafts/constitution.md",
+      "sha256": "7e3b779827607878589208f8291969c7bcb1fc1b32c519fbfbdce3250844e344"
+    },
+    {
+      "path": ".codex/crafts/g-o-d-s-e-y-e-cfe8/delivery-design.md",
+      "sha256": "e947fa194284bab534398f72f6cc9f296f3d49a47147575f8b14013d175fccaa"
+    },
+    {
+      "path": "tests/delivery-source.test.ts",
+      "sha256": "9a2620c82e0532317c7a136d32ebb5cb5f6a1499b6fd975ca5f0b6393c7b5718"
+    },
+    {
+      "path": "tests/delivery-managed.test.ts",
+      "sha256": "7b4c5b1b8101c906967a1f53947c3a8923a77ccad2eda54fc4b33b1cb3d4e6af"
+    },
+    {
+      "path": "tests/delivery-preparation.test.ts",
+      "sha256": "c5f5746f6051f5144bbd9b3a82c7c58c4c6bf8cb005ac691e67d1342ccc622c0"
+    },
+    {
+      "path": "tests/delivery-policy-authority.test.ts",
+      "sha256": "8b2f2646411d0f60a0815ff3c3d7291c143dcb40e72b481b2b10be77ee08dd42"
+    }
+  ],
+  "resolved_findings": [
+    {
+      "id": "DCR-001",
+      "criterion": "COR-01",
+      "status": "CONFIRMED",
+      "severity": "major",
+      "evidence": "packages/core/src/delivery-preparation.ts:71-76 accepts retained release/rollback artifacts by cell/recipe and release ciRunId; packages/core/src/delivery-execution.ts:38-46 validates artifact provider evidence against original.manifest. packages/core/src/delivery-evidence.ts:20-22 checks requiredChecks and configurationHash only against the supplied manifest, which here is the original build manifest rather than the current release policy.",
+      "expected": "Every release satisfies the required checks and compatible configuration of its current exact delivery policy, including when selecting retained artifacts.",
+      "observed": "Static data flow does not check the current policy's requiredChecks or current configurationHash when reusing an artifact. A retained artifact built for a policy requiring test can be selected under another same-cell/same-recipe policy requiring test plus an additional check; the original manifest still supplies the validation requirements. Original build limits similarly supply the configuration hash comparison.",
+      "verification": "Confirmed by reading both artifact selection and consumption paths; not reproduced by a new executable scenario. Existing managed tests validate evidence against one manifest and do not cover current-policy versus original-policy artifact reuse.",
+      "refutation": "Immutable prior provenance is necessary and allows eligible rollback, but it does not establish that the current policy's mandatory checks ran or current configuration compatibility was assessed. Same recipe and CI source do not imply the same required checks or configuration requirements.",
+      "refutation_survived": true,
+      "suggestion": "Retain original provenance validation and also validate reusable artifact eligibility against current release/rollback policy check and configuration requirements, with explicit compatibility semantics.",
+      "resolution": "Current-policy required checks/configuration are now checked at preparation and again before stage. Existing delivery-rollback.test.ts passes all four cases, including additional-check release/rollback refusal and configuration drift."
+    },
+    {
+      "id": "DCR-002",
+      "criterion": "COR-02",
+      "status": "CONFIRMED",
+      "severity": "major",
+      "evidence": "packages/core/src/foundation-effects.ts:166,194,202 calls environmentFor without a delivery-cleanup allowance during reconciliation. packages/core/src/foundation-data.ts:124-126 rejects expired and cleanup-required previews under that default. In contrast foundation-data.ts:193-200 explicitly permits the exact cleanup command during execution lease validation.",
+      "expected": "An unknown outcome from an exact owned preview cleanup can enter read-only reconciliation after TTL expiry or verified PR closure, while ordinary deployment and recovery activation remain blocked.",
+      "observed": "Static control flow rejects such a reconciliation before invoking its provider adapter. A cleanup lost receipt on a closing/expired preview therefore cannot be independently inspected through Foundation.reconcile, leaving its target lock and reservation unresolved.",
+      "verification": "Confirmed default arguments and unconditional guard path by source inspection. No new scenario executed. Existing local laboratory receipt checks inspect the provider directly and do not exercise Foundation.reconcile on an expired preview.",
+      "refutation": "The delivery cleanup manifest and execution paths deliberately allow expired preview cleanup, but that exception does not apply to the separate shared reconciliation entry and post-I/O guards. Ordinary preview admission restrictions should remain intact.",
+      "refutation_survived": true,
+      "suggestion": "Give only exact scoped read-only delivery cleanup reconciliation the required closing/expired-preview access; preserve recovery HOLD, ownership, fence and absence checks.",
+      "resolution": "Foundation reconciliation now allows retained delivery inspection for closing/expired previews while retaining recovery HOLD and exact adapter scope/fence checks. Existing delivery-preview-faults.test.ts passes four cases, including no-repeat reconciliation after expiry and HOLD denial."
+    },
+    {
+      "id": "DCR-003",
+      "criterion": "COR-02",
+      "status": "CONFIRMED",
+      "severity": "major",
+      "evidence": "packages/core/src/delivery-execution.ts:144-149 records released and returns failed without evidenceRef when no delivery step exists. packages/core/src/foundation-effects.ts:75-90 converts terminal outcomes missing evidenceRef to unknown. packages/core/src/delivery-settlement.ts:10-15 releases the lane only for failed plus released, but the shared settlement receives unknown instead.",
+      "expected": "A positively known denial before a durable physical intention is terminal without retaining an uncertain physical-resource reservation; failures after a physical intention remain unknown until reconciled.",
+      "observed": "Static outcome composition converts the explicitly no-step failure to EVIDENCE_MISSING/unknown, so the delivery settlement cannot clear its pending target. Source or policy rejection before the first intention therefore follows the same unresolved path as an ambiguous external effect.",
+      "verification": "Confirmed by following the adapter return through Foundation.settle and delivery settlement. No new executable scenario or proof code was written.",
+      "refutation": "Conservatively retaining truly uncertain effects is correct. Here the implementation itself establishes that no durable delivery step exists and records released; returning no durable no-effect evidence prevents the intended terminal branch from ever applying to this path.",
+      "refutation_survived": true,
+      "suggestion": "Return verifiable durable no-effect evidence for the known pre-intention denial, consistent with Foundation's existing terminal-outcome evidence rule.",
+      "resolution": "Known no-intention failure now returns a durable delivery-no-dispatch evidence reference. Static composition reaches failedWithoutEffect release; existing execution tests passed, though they do not explicitly assert the target-release branch for this exact denial."
+    },
+    {
+      "id": "DCR-004",
+      "criterion": "COR-01",
+      "status": "CONFIRMED",
+      "severity": "major",
+      "evidence": "delivery-state.ts passed manifest.source including commitSha into GithubAppSourceProvider strict two-field query parser.",
+      "resolution": "verifyDeliverySource now projects branch and pullRequestNumber explicitly; independently re-read. Existing direct source tests do not yet prove full first-party orchestration composition."
+    },
+    {
+      "id": "DCR-005",
+      "summary": "Evidence write to terminal settlement authority race",
+      "resolution": "delivery-settlement.ts:24-78 re-enters exact deliveryExecutionGate and checks all observed scope-bound steps inside shared settlement; domain refusal normalizes to FENCED, preserving uncertainty/lock/capacity. Existing terminal-policy-race regression passed."
+    },
+    {
+      "id": "DCR-006",
+      "summary": "Source-independent TTL cleanup and provider retarget retention",
+      "resolution": "delivery-scheduler.ts:119-125 prepares TTL cleanup before source/provider-dependent ordinary scheduling; preparation retains original active/runtime provider binding. Existing source-removed plus revoked-policy cleanup and replacement-provider refusal regressions passed."
+    },
+    {
+      "id": "DCR-007",
+      "summary": "Ordinary unknown preview reconciliation blocked by its own hold",
+      "resolution": "delivery-admission.ts:46-60 keeps current policy strict and grants only the read-only uncertain-preview environment exception; recovery HOLD remains denied. Exact receipt reconciliation and all four adverse-authority regressions passed."
+    },
+    {
+      "id": "DCR-008",
+      "summary": "Maximum-length public idempotency key overflow in internal scheduler keys",
+      "resolution": "delivery-scheduler.ts:49,106 hashes complete actor/key/policy/source-or-preview identity into bounded internal keys. Existing valid 128-character replay regression passed."
+    }
+  ]
+}

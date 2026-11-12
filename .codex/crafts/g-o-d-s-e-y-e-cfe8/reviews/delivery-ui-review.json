@@ -1,0 +1,144 @@
+{
+  "verdict": "pass",
+  "review_status": "final-source-freeze-post-layout",
+  "scope": "Read-only functional/coherence source review of frozen /pipelines UI, delivery components and repository preference copy, with narrow post-layout CSS/wrapper refresh. No independent browser run or screenshot certification.",
+  "findings": [],
+  "resolved_findings": [
+    {
+      "id": "DUI-001",
+      "summary": "Historical source was used for preparing a retained-image rollback.",
+      "resolution": "delivery-history.tsx now selects a non-revoked/unexpired matching policy and the newest matching non-close CI source, while keeping the retained deployment reference separate. Backend remains the final current-head authority.",
+      "verification": "Static re-read; existing delivery-rollback.test.ts confirms the backend current-source plus retained-artifact flow. UI/browser scenario not yet run."
+    },
+    {
+      "id": "DUI-002",
+      "summary": "Expired cached previews could retain the active-verified label and link.",
+      "resolution": "delivery-history.tsx now labels expired previews as awaiting physical-stop verification and hides their link. delivery-panel.tsx now polls overview and schedules a preview-expiry rerender.",
+      "verification": "Static re-read only; browser expiry behavior pending frozen UI tests."
+    },
+    {
+      "id": "DUI-003",
+      "criterion": "COR-01/COH-08",
+      "status": "CONFIRMED",
+      "severity": "minor",
+      "evidence": "apps/console/src/components/repository-form.tsx:103-106 labels legacy autoDeploy as preparation for automatic delivery and says activation follows service connection; apps/console/src/components/delivery-history.tsx:51-53 correctly says the association grants no deployment authority.",
+      "expected": "The legacy checkbox clearly describes a stored preference; fresh explicit bounded policy creation is required for actual standing delivery authority.",
+      "observed": "The legacy form only mentions tests, branch verification and connecting services. It omits the fresh owner standing policy requirement, so the two surfaces describe activation differently.",
+      "verification": "Static copy comparison; backend authority remains correctly denied for preference-only autoDeploy.",
+      "refutation_survived": true,
+      "suggestion": "Name it a preference and link/explain the separate policy creation action in CI/CD.",
+      "resolution": "repository-form.tsx:103-107 now explicitly says stored preference grants no deployment and requires a fresh bounded CI/CD policy plus qualified connected services."
+    },
+    {
+      "id": "DUI-004",
+      "criterion": "COR-03",
+      "status": "CONFIRMED",
+      "severity": "minor",
+      "evidence": "apps/console/src/components/delivery-panel.tsx:35-37 loads project/CI/security queries without periodic refresh, while :18-21 polls only the overview. :60-61 uses the cached security fresh boolean for both the identity label and action eligibility. apps/console/src/components/owner-gate.tsx:28-33 polls a separate owner-session key; apps/console/src/lib/api.ts:50-56 has no automatic periodic query refresh.",
+      "expected": "An open page ages recent owner confirmation and refreshes the current CI source used by rollback eligibility, rather than displaying indefinitely cached authority/source hints.",
+      "observed": "Without a mutation, focus/remount or explicit invalidation, fresh can remain true after its server freshness window and ciRuns can omit new head events while the overview itself updates every five seconds. Server gates remain authoritative and reject stale commands.",
+      "verification": "Static query/cache configuration review, not an executed browser-time scenario.",
+      "refutation": "Polling the overview rerenders the component but does not refetch queries under different keys. The existing owner-session poll also does not invalidate owner-security or ci-runs.",
+      "refutation_survived": true,
+      "suggestion": "Refresh authority/source dependencies at a bounded interval or derive explicit expiry and source freshness, and expose stale/error states without allowing stale hints to imply current eligibility.",
+      "resolution": "delivery-panel.tsx:36-43 now polls CI and owner-security independently every five seconds; :74-87 provides manual refresh of overview/source/security/projects. Server authority remains final."
+    },
+    {
+      "id": "DUI-005",
+      "summary": "Held-only first project could hide a healthy alternative",
+      "resolution": "delivery-policy-form.tsx:43-68 derives eligible projects from unheld standard environments before choosing the fallback; all-held and missing-repository cases have distinct explanations."
+    }
+  ],
+  "criteria_run": 8,
+  "criteria_passed": 8,
+  "passed_observations": [
+    "Missing execution/source provider states explicitly say unavailable/unconnected and local policies are not claimed as live deployment.",
+    "The page names remote Jenkins/runtime/domain/network qualification as pending; target pipeline cards are labeled planned.",
+    "Policy creation captures exact current project/environment revisions and uses strict typed payloads, finite controls and a recent-owner gate.",
+    "New delivery components reuse existing semantic classes, panels, Button/Input/EmptyState/Failure/Loading patterns and French operator-facing prose.",
+    "Owner mutation success says request recorded, rather than deployment completed; unknown runs offer reconciliation without relaunch.",
+    "Preview teardown copy preserves persistent data/history and excludes database purge."
+  ],
+  "not_reviewed": [
+    "Actual browser, keyboard/mobile layout and screenshots are coordinator-owned. tests/e2e/delivery.spec.ts was read but not executed by this reviewer; source review does not claim four browser journeys passed.",
+    "Provisional DESIGN.md was read; full stylesheet/design-token audit and unrelated routes were not covered.",
+    "Some stale/held backend states remain server-denied rather than exhaustively rendered as per-button explanatory UI labels. No current source-review defect was confirmed from this limitation.",
+    "No implementation edits, active audit/exploit code, new tests, private material or external services were used."
+  ],
+  "file_hashes": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "560d0bd9fe1829e599c9c2ece9fc2d627f0ef760c6d195b2a68d9f6838dc50ea"
+    },
+    {
+      "path": "apps/console/src/routes/pipelines.tsx",
+      "sha256": "5ffc4e03b147d572109f5348125a412d7d30aee38bcd0b77a71a84a46108d59f"
+    },
+    {
+      "path": "apps/console/src/components/delivery-panel.tsx",
+      "sha256": "0a8ce0f51f82607d5a17024507864cefb12a015d1bcc6fd069e1f3f75476bd50"
+    },
+    {
+      "path": "apps/console/src/components/delivery-history.tsx",
+      "sha256": "e853bd878eec4c0198ba4710f566fae9c3039bda123be307e4c1d30783e3e182"
+    },
+    {
+      "path": "apps/console/src/components/delivery-policy-form.tsx",
+      "sha256": "00fe3594964e86ae3ae89c89a3bb04655fcb9ebd2315edcbea2900e1bd100bce"
+    },
+    {
+      "path": "apps/console/src/components/repository-form.tsx",
+      "sha256": "37cfe7d31073d994a90375ff874ae00f67dbeb49efca5e17f3a7817ec559b12c"
+    },
+    {
+      "path": "apps/console/src/components/owner-gate.tsx",
+      "sha256": "58f26d452a49c8aa5a0dbab7b0e18893fe4bc1d0a140a949033afff14ea9dbb7"
+    },
+    {
+      "path": "apps/console/src/lib/api.ts",
+      "sha256": "2f07220f4e724b452cf70f3780347f52569a7fd7b404f2d54fc579852a303942"
+    },
+    {
+      "path": "apps/console/src/router.tsx",
+      "sha256": "1d21de4047d874112c8ee5d084e415b1f117d231c5e3afbd05824f26204496ef"
+    },
+    {
+      "path": "tests/e2e/delivery.spec.ts",
+      "sha256": "8405c0a2fbe822735bc89599591b3d8830b26f7fa2d36f5b8a5fbd1d4db8b272"
+    },
+    {
+      "path": "packages/contracts/src/delivery.ts",
+      "sha256": "264f29e8e443e1722feeef2af5d55e3017b6127411b762f7e56a0ce729594675"
+    },
+    {
+      "path": "apps/console/src/styles/delivery.css",
+      "sha256": "cfa2f241df69cf8d9c3d20ac46ca79c5aeec02dd1bfc639f9a6c2452801825cc"
+    },
+    {
+      "path": "apps/console/src/styles.css",
+      "sha256": "7be54e5c8c55a81fa2bcf44f9b2880d0f3f8dadc7f2a9a7dec933b8fd12e6dc4"
+    }
+  ],
+  "source_verification": [
+    "Rollback keeps retained deployment separate from newest matching accepted CI source and non-revoked/unexpired policy.",
+    "Overview polling plus exact preview-expiry timer hides expired links without waiting for cleanup; HTTPS/credential-free link guard complements server-owned host validation and strict response schemas.",
+    "Default disconnected providers remain explicit; request acceptance is not called physical deployment."
+  ],
+  "post_layout_review": {
+    "verdict": "pass",
+    "findings": [],
+    "scope": "Three delivery TSX class/wrapper changes, scoped styles/delivery.css, styles.css import and delivery browser test locator/bounds changes only.",
+    "observations": [
+      "Delivery-specific classes replace the shared owner-assurance/project-form flex constraints without changing visible authority labels, request payloads or server eligibility logic.",
+      "New CSS is scoped to delivery components, consumes existing semantic color/radius roles, wraps assurance actions and history buttons, constrains min-width and collapses form grids for mobile. No animation or new visual identity is introduced.",
+      "Existing visible focus on delivery selects remains explicit. Button text can wrap with auto height on mobile instead of clipping.",
+      "Browser test project and recipe selection now uses named semantic comboboxes; expectWholeAction checks viewport bounds, clipping ancestors and complete text rectangles for identity and cleanup actions."
+    ],
+    "coordinator_reported_evidence": [
+      "Post-layout delivery browser journeys 4/4 passed in 58.082768 seconds; screenshots were personally inspected by root, not this reviewer.",
+      "Earlier full browser 28/28 passed in 163.404282 seconds; full unit/integration 851 cases across 58 files passed in 569.99 seconds, as reported by root.",
+      "13 selected mutation kills plus 13 baseline and 13 restored cases reported by root; this reviewer did not execute that audit."
+    ],
+    "independent_execution": "No tests or browser task rerun in this narrow source/hash refresh."
+  }
+}

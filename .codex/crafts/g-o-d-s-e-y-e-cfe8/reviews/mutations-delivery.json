@@ -1,0 +1,219 @@
+{
+  "kind": "curated behavioral mutation experiment",
+  "suite": "delivery",
+  "runnerTimeoutMs": 180000,
+  "startedAt": "2026-11-11T23:39:26.978Z",
+  "finishedAt": "2026-11-11T23:41:39.609Z",
+  "scope": "13 selected mutations; not an exhaustive mutation score or coverage claim",
+  "isolation": "Temporary source copies with explicit Vitest workspace aliases; original source never mutated",
+  "baseline": {
+    "status": "passed",
+    "passed": 13
+  },
+  "restored": {
+    "status": "passed",
+    "passed": 13
+  },
+  "sourceUnchanged": true,
+  "selected": 13,
+  "killed": 13,
+  "survived": 0,
+  "invalid": 0,
+  "results": [
+    {
+      "id": "M07",
+      "file": "packages/core/src/github.ts",
+      "behavior": "Remove the bound GitHub installation check",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "signed GitHub intake T41 ignores another installation even when its payload is correctly signed",
+            "message": "AssertionError: expected 'queued' to be 'ignored' // Object.is equality"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M62",
+      "file": "packages/core/src/delivery-state.ts",
+      "behavior": "Accept a historical signed source after independently observing a newer current head",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "immutable delivery preparation from independently verified source T-AC-44 never uses a historic signed event to replace a newer live branch head",
+            "message": "Error: promise resolved \"{ …(11) }\" instead of rejecting"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M63",
+      "file": "packages/core/src/delivery-github.ts",
+      "behavior": "Accept a GitHub App source response from another numeric installation",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "independent exact GitHub App installation and current-head verification T-AC-44 denies installation source drift instead of trusting a signed event",
+            "message": "Error: promise resolved \"{ installationId: 999, …(9) }\" instead of rejecting"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M64",
+      "file": "packages/core/src/delivery-state.ts",
+      "behavior": "Continue ordinary standing delivery after explicit owner policy revocation",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "fresh exact-scope standing delivery policy authority T-AC-45 revokes policy by exact revision and preserves durable replay history",
+            "message": "Error: promise resolved \"{ …(9) }\" instead of rejecting"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M65",
+      "file": "packages/core/src/delivery-evidence.ts",
+      "behavior": "Accept a trusted artifact whose authenticated security scan failed",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "trusted immutable build and exact deployment evidence T-AC-46 rejects scan artifact evidence before storing a deployable result",
+            "message": "AssertionError: expected [Function] to throw an error"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M66",
+      "file": "packages/core/src/delivery-admission.ts",
+      "behavior": "Admit competing prepared builds over an already owned target lane",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "application delivery through the actual shared Foundation queue T-AC-47 serializes competing immutable preparations in one target lane atomically",
+            "message": "AssertionError: expected [ { status: 'fulfilled', …(1) }, …(1) ] to have a length of 1 but got 2"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M67",
+      "file": "packages/core/src/foundation-data.ts",
+      "behavior": "Execute delivery effects after a durable recovery HOLD appears on the queued target",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "application delivery through the actual shared Foundation queue T-AC-47 fences queued hold drift before provider dispatch",
+            "message": "AssertionError: expected [ Array(1) ] to deeply equal []"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M68",
+      "file": "packages/core/src/delivery-capacity.ts",
+      "behavior": "Release staged delivery capacity while an external outcome remains unknown",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "durable delivery receipts, reconstruction and late effects T-AC-47 T-AC-50 fences head after a staged side effect while retaining target capacity and previous traffic",
+            "message": "AssertionError: expected [ { pids: 32, memoryMiB: 128, …(2) } ] to have a length of 2 but got 1"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M69",
+      "file": "packages/core/src/delivery-settlement.ts",
+      "behavior": "Commit traffic activation without rechecking terminal owner/policy/evidence authority",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "durable delivery receipts, reconstruction and late effects T-AC-47 rechecks policy inside terminal Foundation settlement after runtime evidence was recorded",
+            "message": "AssertionError: expected 'active' to be 'unknown' // Object.is equality"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M70",
+      "file": "packages/core/src/delivery-preparation.ts",
+      "behavior": "Prepare a retained artifact that lacks an additional required current-policy check",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "current policy checks and eligible immutable rollback T-AC-46 T-AC-48 refuses retained release evidence that lacks the current policy's additional required check",
+            "message": "Error: promise resolved \"{ …(11) }\" instead of rejecting"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M71",
+      "file": "packages/core/src/delivery-admission.ts",
+      "behavior": "Treat ordinary read-only reconciliation as permission to ignore a revoked production policy",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "protective preview teardown and unknown receipts through actual Foundation T-AC-47 T-AC-50 cannot adopt ordinary unknown preview traffic after policy authority drift",
+            "message": "AssertionError: expected 'active' to be 'unknown' // Object.is equality"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M72",
+      "file": "packages/core/src/delivery-scheduler.ts",
+      "behavior": "Overflow valid public idempotency keys by appending raw nested execution suffixes",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "application delivery through the actual shared Foundation queue T-AC-45 T-AC-51 accepts and durably replays a valid 128-character synchronization key",
+            "message": "AssertionError: expected { prepared: [], blocked: 1 } to match object { blocked: +0 }"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M73",
+      "file": "packages/core/src/delivery-scheduler.ts",
+      "behavior": "Disable protective preview cleanup when source verification is unavailable",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "protective preview teardown and unknown receipts through actual Foundation T-AC-49 keeps protective TTL cleanup running after source configuration disappears and policy is revoked",
+            "message": "AssertionError: expected false to be true // Object.is equality"
+          }
+        ]
+      }
+    }
+  ]
+}
