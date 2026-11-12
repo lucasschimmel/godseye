@@ -31,6 +31,7 @@ export * from "./foundations.js";
 export { verifyGithubSignature } from "./github.js";
 export * from "./incidents.js";
 export * from "./infrastructure.js";
+export * from "./inngest.js";
 export * from "./jobs.js";
 export { appendAudit, existingRequest, fingerprint, verifyAudit, write } from "./journal.js";
 export { type Actor, assertProjectAccess, assertTransition } from "./policy.js";

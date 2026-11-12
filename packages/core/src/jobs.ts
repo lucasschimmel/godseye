@@ -1,4 +1,5 @@
 import { setTimeout as wait } from "node:timers/promises";
+import type { ApplicationJobEnvelopeInput } from "@godseye/contracts";
 import {
   type CreateExecutionPlanInput,
   type ExecutionContext,
@@ -13,6 +14,15 @@ import { type DatabaseAccess, type Store, schema } from "@godseye/store";
 import { desc } from "drizzle-orm";
 import { foundationState } from "./foundation-data.js";
 import type { FoundationEngine } from "./foundations.js";
+import {
+  type ApplicationEventAuthority,
+  applicationCellLifecycle,
+  applicationEventAccepted,
+  applicationEventRuns,
+  applicationEventSettled,
+  ingestApplicationEvent,
+  triggerInngestCron,
+} from "./jobs-application.js";
 import { jobsDelegatedAuthority } from "./jobs-authority.js";
 import { changeJobPause, registerJobDefinition } from "./jobs-definitions.js";
 import { executeJob, fenceJob } from "./jobs-execution.js";
@@ -34,13 +44,18 @@ import {
 import { write } from "./journal.js";
 import { type Actor, assertOwner } from "./policy.js";
 
+export type { ApplicationEventAuthority } from "./jobs-application.js";
 export { nextCronFire, parseCron } from "./jobs-cron.js";
 export type { OutboxWrite } from "./jobs-outbox.js";
 export type { JobEventInput } from "./jobs-runs.js";
 export type * from "./jobs-state.js";
-export { JOBS_ADAPTER_ID, JOBS_DESTINATION } from "./jobs-state.js";
+export { definitionView, JOBS_ADAPTER_ID, JOBS_DESTINATION } from "./jobs-state.js";
 
 export interface JobOptions {
+  /** Owner API metadata/admission only; the independent supervisor consumes and reconciles work. */
+  detached?: boolean;
+  /** Explicit supervisor partition. Missing preserves the legacy single-consumer behavior. */
+  managedEnvironmentIds?: ReadonlySet<string>;
   now: () => Date;
   /** Explicit local fixture handlers; absent means the engine is unconfigured. */
   handlers?: ReadonlyMap<string, JobHandler>;
@@ -49,30 +64,49 @@ export interface JobOptions {
   timeoutMs?: (seconds: number) => number;
   dispatchTimeoutMs?: number;
   maxOutboxAttempts?: number;
+  /** These cells have exactly one calendar: their registered Inngest cron functions. */
+  inngestEnvironmentIds?: ReadonlySet<string>;
+  /** Loads payload from the source cell's private store; never from the shared control database. */
+  applicationEventLoader?: (
+    authority: ApplicationEventAuthority,
+    eventId: string,
+  ) => Promise<ApplicationJobEnvelopeInput | undefined>;
 }
 const UNCONFIGURED =
   "Durable job engine is unconfigured: definitions are retained but nothing schedules, runs or dispatches";
 const FIXTURE =
   "Explicit local fixture handlers are injected; this is not a deployed Inngest, Redis or worker runtime";
+const MAX_TIMER_DELAY_MS = 2_147_483_647;
+const DEFAULT_DISPATCH_TIMEOUT_MS = 60_000;
 /** Per-cell durable jobs and transactional outbox composed on the existing Foundation queue. */
 export class JobEngine {
   private state!: JobState;
   constructor(
     private readonly store: Store,
     private readonly options: JobOptions,
-  ) {}
+  ) {
+    const timeout = options.dispatchTimeoutMs ?? DEFAULT_DISPATCH_TIMEOUT_MS;
+    if (!Number.isSafeInteger(timeout) || timeout <= 0 || timeout > MAX_TIMER_DELAY_MS)
+      throw new Error("Invalid outbox dispatch deadline");
+  }
   bind(foundation: FoundationEngine) {
     this.state = {
       store: this.store,
+      managedEnvironmentIds: this.options.managedEnvironmentIds,
+      detached: this.options.detached,
       now: this.options.now,
       foundation,
       request: foundationState(this.store, { now: this.options.now }),
       handlers: this.options.handlers,
       senders: this.options.senders,
       timeoutMs: this.options.timeoutMs ?? ((seconds) => seconds * 1000),
-      dispatchTimeoutMs: this.options.dispatchTimeoutMs ?? 60_000,
+      dispatchTimeoutMs: this.options.dispatchTimeoutMs ?? DEFAULT_DISPATCH_TIMEOUT_MS,
       maxOutboxAttempts: this.options.maxOutboxAttempts ?? 5,
       aborts: new Map(),
+      outboxCalls: new Set(),
+      inngestEnvironmentIds: new Set(this.options.inngestEnvironmentIds),
+      applicationEventLoader: this.options.applicationEventLoader,
+      applicationPayloadLoads: new Map(),
     };
   }
   get adapter() {
@@ -80,7 +114,7 @@ export class JobEngine {
     return {
       id: JOBS_ADAPTER_ID,
       get qualified() {
-        return !!self.options.handlers;
+        return !!self.options.handlers || !!self.options.detached;
       },
       execute: (context: ExecutionContext) => executeJob(self.state, context),
       reconcile: (context: ExecutionContext) => executeJob(self.state, context, true),
@@ -114,6 +148,35 @@ export class JobEngine {
   ingestEvent(actor: Actor, input: JobEventInput) {
     return ingestJobEvent(this.state, actor, input);
   }
+  ingestApplicationEvent(authority: ApplicationEventAuthority, input: ApplicationJobEnvelopeInput) {
+    return ingestApplicationEvent(this.state, authority, input);
+  }
+  applicationEventRuns(authority: ApplicationEventAuthority, input: ApplicationJobEnvelopeInput) {
+    return applicationEventRuns(this.state, authority, input);
+  }
+  applicationEventAccepted(
+    authority: ApplicationEventAuthority,
+    input: ApplicationJobEnvelopeInput,
+  ) {
+    return applicationEventAccepted(this.state, authority, input);
+  }
+  applicationEventSettled(
+    authority: ApplicationEventAuthority,
+    input: ApplicationJobEnvelopeInput,
+  ) {
+    return applicationEventSettled(this.state, authority, input);
+  }
+  triggerInngestCron(
+    authority: ApplicationEventAuthority,
+    definitionId: string,
+    hash: string,
+    eventId: string,
+  ) {
+    return triggerInngestCron(this.state, authority, definitionId, hash, eventId);
+  }
+  cellLifecycle(authority: ApplicationEventAuthority) {
+    return applicationCellLifecycle(this.state, authority);
+  }
   /** Writes an intent inside the caller's transaction so it commits with the business change. */
   enqueueOutbox(tx: DatabaseAccess, input: OutboxWrite) {
     return enqueueOutbox(this.state, tx, input);
@@ -133,8 +196,8 @@ export class JobEngine {
   ): Promise<JobRunView> {
     return reconcileJobRun(this.state, actor, id, input, key);
   }
-  tick() {
-    return jobsTick(this.state);
+  tick(signal?: AbortSignal) {
+    return jobsTick(this.state, signal);
   }
   async overview(actor: Actor) {
     assertOwner(actor);
@@ -159,8 +222,16 @@ export class JobEngine {
     const configured = jobsConfigured(this.state);
     return JobsOverview.parse({
       engine: {
-        state: configured ? "local_fixture" : "unconfigured",
-        reason: configured ? FIXTURE : UNCONFIGURED,
+        state: configured
+          ? this.state.inngestEnvironmentIds.size
+            ? "local_inngest"
+            : "local_fixture"
+          : "unconfigured",
+        reason: configured
+          ? this.state.inngestEnvironmentIds.size
+            ? "Local Inngest cells are configured; Foundation remains the execution authority. This is not a qualified hosted runtime or a live health attestation."
+            : FIXTURE
+          : UNCONFIGURED,
         heldEnvironmentIds: held,
       },
       definitions: definitions.map(definitionView),
@@ -174,7 +245,7 @@ export async function runJobScheduler(
   options: { signal: AbortSignal; intervalMs?: number },
 ) {
   while (!options.signal.aborted) {
-    await engine.tick();
+    await engine.tick(options.signal);
     try {
       await wait(options.intervalMs ?? 1000, undefined, { signal: options.signal });
     } catch (error) {

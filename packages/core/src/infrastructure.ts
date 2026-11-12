@@ -13,6 +13,7 @@ import {
   type DeliveryProvider,
   type GithubSourceProvider,
 } from "./delivery.js";
+import type { FoundationOptions } from "./foundation-data.js";
 import { FoundationEngine } from "./foundations.js";
 import { IncidentEngine, type IncidentNotifier } from "./incidents.js";
 import { gateAdmission, setAdmission } from "./infra-admission.js";
@@ -41,6 +42,7 @@ import { ProjectLifecycleEngine } from "./project-lifecycle.js";
 import { RECOVERY_ADAPTER_ID, RecoveryEngine, type RecoveryProvider } from "./recovery.js";
 
 export interface InfrastructureOptions {
+  foundationConsumer?: FoundationOptions["consumer"];
   now?: () => Date;
   collector?: InfrastructureCollector;
   provider?: InfrastructureProvider;
@@ -97,12 +99,14 @@ export class InfrastructureEngine {
     this.jobs = new JobEngine(store, { ...options.jobs, now });
     this.lifecycle = new ProjectLifecycleEngine(store, { now });
     this.foundation = new FoundationEngine(store, {
+      consumer: options.foundationConsumer,
       now,
       leaseMs: options.leaseMs,
       delegatedAuthority: async (tx, plan, phase, actor) =>
         (await this.delivery.delegatedAuthority(tx, plan, phase, actor)) ||
         this.jobs.delegatedAuthority(tx, plan, phase, actor),
       claimGate: (tx, plan, runId) => heavySlotFree(tx, this.heavy, plan.command, runId),
+      requeueAdmission: (tx, plan, runId) => gateAdmission(this.heavy, tx, plan.command, runId),
       admission: async (tx, plan, runId, actor) => {
         await gateAdmission(this.heavy, tx, plan.command, runId);
         await reserveInfrastructure(this.state, tx, plan, runId, actor);
