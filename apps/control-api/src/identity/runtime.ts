@@ -4,6 +4,7 @@ import { chmod, lstat, mkdir, open, readdir, readFile, realpath, unlink } from "
 import { homedir, tmpdir } from "node:os";
 import { dirname, isAbsolute, join, parse, relative, resolve } from "node:path";
 import { promisify } from "node:util";
+import { inheritedPrivateEntries } from "./permissions.js";
 
 const execute = promisify(execFile);
 
@@ -87,8 +88,12 @@ export async function privateDirectory(directory: string) {
     },
   );
   const acl = join(system, "icacls.exe");
+  const descendants = entries.slice(1);
+  // Reopening a database must not fork one Windows process for every already-private PG file.
+  // This batch is read-only; noncanonical entries still use the original individually guarded reset.
+  const inherited = await inheritedPrivateEntries(system, descendants);
   // Reset each verified descendant parent-first; never let a recursive OS command follow a link.
-  for (const entry of entries.slice(1)) {
+  for (const [index, entry] of descendants.entries()) {
     const current = await lstat(entry);
     const canonical = await realpath(entry);
     const inside = relative(absolute, canonical);
@@ -99,6 +104,7 @@ export async function privateDirectory(directory: string) {
       isAbsolute(inside)
     )
       throw new Error("Private state entry changed before permission reset");
+    if (inherited.has(index)) continue;
     await execute(acl, [canonical, "/reset", "/L", "/Q"]);
   }
 }
