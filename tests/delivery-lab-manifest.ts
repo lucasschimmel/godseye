@@ -74,6 +74,8 @@ export function deliveryLabArtifact(
     recipeHash: build.recipeHash,
     checks: build.checks,
     scan: "passed",
+    scanner: build.scanner,
+    migration: build.migration,
     provenanceHash: build.provenanceHash,
     createdAt: "2026-11-12T00:00:00.000Z",
   };

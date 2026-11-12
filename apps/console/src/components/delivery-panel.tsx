@@ -9,6 +9,7 @@ import { Fingerprint, RefreshCw } from "lucide-react";
 import { useEffect, useState } from "react";
 import { api, resource } from "@/lib/api";
 import { ownerAuth } from "@/lib/owner";
+import { DeliveryResources } from "./delivery-evidence";
 import { DeliveryHistory } from "./delivery-history";
 import { DeliveryPolicyForm } from "./delivery-policy-form";
 import { Failure, Loading, SectionTitle } from "./shared";
@@ -141,6 +142,7 @@ export function DeliveryPanel() {
         executionAvailable={overview.data.execution === "configured"}
         post={post}
       />
+      <DeliveryResources overview={overview.data} />
     </>
   );
 }

@@ -144,6 +144,14 @@ export class DeliveryLabTransport implements ManagedDeliveryTransport {
         ? ("failed" as const)
         : ("passed" as const),
       builderId: "trusted-node-fixture",
+      scanner: {
+        scannerId: "trusted-content-fixture",
+        version: "1.0.0",
+        databaseDigest: `sha256:${"d".repeat(64)}`,
+        artifactDigest: digest,
+        findings: { critical: 0, high: 0, medium: 0, low: 0, unknown: 0 },
+      },
+      migration: { class: "none" as const, hash: "0".repeat(64) },
     };
     const evidence: BuildEvidence = {
       ...result,

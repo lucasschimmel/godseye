@@ -61,6 +61,7 @@ export const deliveryPreparationView = (row: typeof schema.deliveryPreparations.
     commitSha: row.commitSha,
     artifactId: row.artifactId,
     deploymentId: row.deploymentId,
+    migration: (row.manifest as { migration?: unknown }).migration ?? null,
     hash: row.hash,
     createdAt: row.createdAt.toISOString(),
   });

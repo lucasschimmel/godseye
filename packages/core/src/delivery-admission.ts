@@ -4,6 +4,12 @@ import { type DatabaseAccess, schema } from "@godseye/store";
 import { eq } from "drizzle-orm";
 import { deliveryDelegatedAuthority } from "./delivery-authority.js";
 import { deliveryTargetFor } from "./delivery-capacity.js";
+import {
+  assertMigrationAdmission,
+  assertMigrationApproved,
+  assertMigrationLaneFree,
+  recordMigrationApproval,
+} from "./delivery-migration.js";
 import { previewFor } from "./delivery-preview.js";
 import type { DeliveryManifest } from "./delivery-provider.js";
 import {
@@ -129,6 +135,7 @@ export async function admitDelivery(
   const { row, manifest } = await deliveryPreparationFor(state.store.db, data.preparationId);
   if (row.hash !== data.expectedHash)
     throw new DomainError("PLAN_TAMPERED", "Exact delivery preparation hash is required", 409);
+  assertMigrationAdmission(manifest, data.approveMigrationHash, delegated);
   await qualifyDelivery(state);
   if (manifest.intent !== "cleanup") await verifyDeliverySource(state, manifest);
   else if (manifest.cleanupReason === "closed") {
@@ -167,6 +174,7 @@ export async function admitDelivery(
       epoch: await currentEpoch(tx, row.environmentId),
       authority: delegated ? "policy" : "owner",
     });
+    await recordMigrationApproval(tx, plan.id, row.id, manifest, state.now());
     await recordRequest(
       tx,
       foundationState(state.store, { now: state.now }),
@@ -235,6 +243,8 @@ export async function reserveDelivery(
   else if (!(await deliveryDelegatedAuthority(state, tx, plan, "enqueue", actor)))
     throw new DomainError("POLICY_REVOKED", "Standing authority is no longer valid", 409);
   await validateDeliveryManifest(state, tx, manifest, true);
+  await assertMigrationApproved(tx, plan.id, manifest);
+  await assertMigrationLaneFree(tx, manifest);
   const target = await deliveryTargetFor(tx, row.environmentId);
   if (target.pendingRunId || target.generation !== manifest.expectedTargetGeneration)
     throw new DomainError(

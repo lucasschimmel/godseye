@@ -2,6 +2,7 @@ import { type DatabaseAccess, schema } from "@godseye/store";
 import { eq } from "drizzle-orm";
 import { validateDeliveryManifest } from "./delivery-admission.js";
 import { deliveryExecutionGate } from "./delivery-execution-gate.js";
+import { markMigrationUncertain, releaseMigrationLock } from "./delivery-migration.js";
 import { type DeliveryState, deliveryPreparationFor } from "./delivery-state.js";
 import { DomainError } from "./errors.js";
 import { currentEpoch, runFor } from "./foundation-data.js";
@@ -91,6 +92,8 @@ export async function settleDelivery(
     .update(schema.deliveryRuns)
     .set({ state: next, updatedAt: state.now() })
     .where(eq(schema.deliveryRuns.id, row.id));
+  if (success || failedWithoutEffect) await releaseMigrationLock(tx, runId, state.now());
+  else await markMigrationUncertain(tx, runId, state.now());
   if (success || failedWithoutEffect) {
     await tx
       .update(schema.deliveryTargets)
@@ -147,6 +150,7 @@ export async function releaseQueuedDelivery(
     .update(schema.deliveryRuns)
     .set({ state: "released", updatedAt: state.now() })
     .where(eq(schema.deliveryRuns.id, row.id));
+  await releaseMigrationLock(tx, runId, state.now());
   await tx
     .update(schema.deliveryTargets)
     .set({ pendingRunId: null })
@@ -161,6 +165,7 @@ export async function uncertainDelivery(state: DeliveryState, tx: DatabaseAccess
     .update(schema.deliveryRuns)
     .set({ state: "unknown", reason: "RECONCILIATION_REQUIRED", updatedAt: state.now() })
     .where(eq(schema.deliveryRuns.runId, runId));
+  await markMigrationUncertain(tx, runId, state.now());
   if (row && row.intent !== "build")
     await tx
       .update(schema.deliveryPreviews)

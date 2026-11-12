@@ -13,6 +13,11 @@ import {
   deliveryConfigurationHash,
 } from "./delivery-evidence.js";
 import { deliveryDispatchGuard, deliveryExecutionGate } from "./delivery-execution-gate.js";
+import {
+  acquireMigrationLock,
+  assertMigrationLockHeld,
+  migrationNeedsLock,
+} from "./delivery-migration.js";
 import { previewFor } from "./delivery-preview.js";
 import type { BuildEvidence, DeploymentInspection } from "./delivery-provider.js";
 import {
@@ -21,6 +26,7 @@ import {
   deliveryPreparationFor,
   qualifyDelivery,
 } from "./delivery-state.js";
+import { recordDeliveryUsage } from "./delivery-usage.js";
 import { DomainError } from "./errors.js";
 import { currentEpoch } from "./foundation-data.js";
 import { immutableSnapshot } from "./infra-policy.js";
@@ -70,6 +76,7 @@ async function recordBuild(
   await write(state.store, async (tx) => {
     const gate = await deliveryExecutionGate(state, tx, context, readOnly);
     assertBuildEvidence(result, gate.scope, gate.manifest);
+    const { usage, ...retained } = result;
     const [existing] = await tx
       .select()
       .from(schema.deliveryArtifacts)
@@ -86,10 +93,12 @@ async function recordBuild(
       recipeHash: result.recipeHash,
       checks: result.checks,
       scan: result.scan,
+      scanner: result.scanner,
+      migration: result.migration,
       provenanceHash: result.provenanceHash,
       createdAt: existing?.metadata.createdAt ?? state.now().toISOString(),
     });
-    if (existing && fingerprint(existing.providerEvidence) !== fingerprint(result))
+    if (existing && fingerprint(existing.providerEvidence) !== fingerprint(retained))
       throw new DomainError(
         "ARTIFACT_REJECTED",
         "Retained immutable artifact evidence changed",
@@ -102,15 +111,16 @@ async function recordBuild(
         projectId: context.projectId,
         environmentId: context.environmentId,
         metadata,
-        providerEvidence: result as unknown as Record<string, unknown>,
+        providerEvidence: retained as unknown as Record<string, unknown>,
       });
     await tx
       .update(schema.deliveryRuns)
-      .set({ artifactId: metadata.id, evidence: fingerprint(result), updatedAt: state.now() })
+      .set({ artifactId: metadata.id, evidence: fingerprint(retained), updatedAt: state.now() })
       .where(eq(schema.deliveryRuns.id, gate.delivery.id));
+    await recordDeliveryUsage(tx, gate.delivery, usage, state.now());
     await tx
       .update(schema.deliverySteps)
-      .set({ state: "observed", evidence: fingerprint(result) })
+      .set({ state: "observed", evidence: fingerprint(retained) })
       .where(
         and(eq(schema.deliverySteps.runId, context.runId), eq(schema.deliverySteps.step, "build")),
       );
@@ -140,12 +150,24 @@ async function artifactFor(state: DeliveryState, gate: Gate) {
     );
   const original = await deliveryPreparationFor(state.store.db, artifact.preparationId);
   const evidence = immutableSnapshot(artifact.providerEvidence as unknown as BuildEvidence);
-  assertBuildEvidence(evidence, evidence.scope, original.manifest);
+  assertBuildEvidence(evidence, evidence.scope, {
+    ...original.manifest,
+    scanThreshold: gate.manifest.scanThreshold,
+  });
   if (
     evidence.provenanceHash !== artifact.metadata.provenanceHash ||
     evidence.digest !== artifact.metadata.digest
   )
     throw new DomainError("ARTIFACT_REJECTED", "Immutable artifact provenance changed", 409);
+  if (
+    gate.manifest.intent === "release" &&
+    fingerprint(evidence.migration) !== fingerprint(gate.manifest.migration)
+  )
+    throw new DomainError(
+      "ARTIFACT_REJECTED",
+      "Retained migration declaration differs from the prepared hash",
+      409,
+    );
   if (
     evidence.configurationHash !== deliveryConfigurationHash(gate.manifest) ||
     gate.manifest.requiredChecks.some(
@@ -209,6 +231,7 @@ async function recordRuntime(
       .update(schema.deliveryRuns)
       .set({ evidence: fingerprint(result), updatedAt: state.now() })
       .where(eq(schema.deliveryRuns.id, gate.delivery.id));
+    await recordDeliveryUsage(tx, gate.delivery, result.usage, state.now());
     const preview = await previewFor(tx, context.environmentId);
     if (preview)
       await tx
@@ -231,6 +254,26 @@ async function verifyPreviousAbsent(state: DeliveryState, gate: Gate) {
   const old = await deliveryPreparationFor(state.store.db, previous.preparationId);
   const observed = immutableSnapshot(await state.provider.inspect(previous, old.manifest));
   assertDeploymentInspection(observed, previous, old.manifest, { absent: true });
+}
+async function lockMigrationLane(state: DeliveryState, context: ExecutionContext) {
+  await write(state.store, async (tx) => {
+    const gate = await deliveryExecutionGate(state, tx, context);
+    if (!migrationNeedsLock(gate.manifest)) return;
+    await acquireMigrationLock(tx, gate.manifest, gate.delivery, state.now());
+    await appendAudit(
+      tx,
+      deliveryActor(context.projectId),
+      context.projectId,
+      "delivery.migration-locked",
+      `Held serialized migration lane at fence ${gate.delivery.generation}`,
+    );
+  });
+}
+async function requireMigrationLane(state: DeliveryState, context: ExecutionContext) {
+  await write(state.store, async (tx) => {
+    const gate = await deliveryExecutionGate(state, tx, context);
+    await assertMigrationLockHeld(tx, gate.manifest, gate.delivery);
+  });
 }
 async function executePhysical(state: DeliveryState, context: ExecutionContext) {
   const provider = state.provider;
@@ -258,6 +301,7 @@ async function executePhysical(state: DeliveryState, context: ExecutionContext) 
     return;
   }
   const artifact = await artifactFor(state, gate);
+  await lockMigrationLane(state, context);
   gate = await intention(state, context, "stage");
   await provider.stage(gate.scope, gate.manifest, artifact, guard);
   await guard();
@@ -265,6 +309,7 @@ async function executePhysical(state: DeliveryState, context: ExecutionContext) 
   const ready = immutableSnapshot(await provider.readiness(gate.scope, gate.manifest));
   await guard();
   assertDeploymentInspection(ready, gate.scope, gate.manifest);
+  await requireMigrationLane(state, context);
   await intention(state, context, "promote");
   await provider.promote(gate.scope, gate.manifest, gate.manifest.previousScope, guard);
   await guard();

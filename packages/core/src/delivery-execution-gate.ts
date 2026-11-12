@@ -4,6 +4,7 @@ import { eq } from "drizzle-orm";
 import { validateDeliveryManifest } from "./delivery-admission.js";
 import { deliveryDelegatedAuthority } from "./delivery-authority.js";
 import { deliveryTargetFor } from "./delivery-capacity.js";
+import { assertMigrationApproved } from "./delivery-migration.js";
 import {
   DELIVERY_DESTINATION,
   type DeliveryState,
@@ -66,6 +67,7 @@ export async function deliveryExecutionGate(
     throw new DomainError("FENCED", "Delivery command, provider or target generation changed", 409);
   if (!readOnly) {
     await validateDeliveryManifest(state, tx, manifest);
+    await assertMigrationApproved(tx, context.planId, manifest);
     await state.foundation.assertDispatch(tx, context, {
       actorId: context.workerId,
       tool: `delivery.${row.intent}`,

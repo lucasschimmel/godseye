@@ -1,3 +1,4 @@
+import { DEFAULT_SCAN_THRESHOLD, MigrationBinding, ScannerEvidence } from "@godseye/contracts";
 import { z } from "zod";
 import type {
   BuildEvidence,
@@ -5,6 +6,7 @@ import type {
   DeliveryScope,
   DeploymentInspection,
 } from "./delivery-provider.js";
+import { assertScanGate } from "./delivery-scan.js";
 import { DomainError } from "./errors.js";
 import { fingerprint } from "./journal.js";
 
@@ -36,6 +38,14 @@ export const DeliveryScopeEvidence = z
     ownership: Hash,
   })
   .strict();
+export const UsageObservation = z
+  .object({
+    cpuMilliSeconds: z.number().int().min(0).max(Number.MAX_SAFE_INTEGER),
+    peakMemoryMiB: z.number().int().min(0).max(1048576),
+    diskMiB: z.number().int().min(0).max(Number.MAX_SAFE_INTEGER),
+    durationMs: z.number().int().min(0).max(Number.MAX_SAFE_INTEGER),
+  })
+  .strict();
 export const BuildObservation = z
   .object({
     scope: DeliveryScopeEvidence,
@@ -57,6 +67,9 @@ export const BuildObservation = z
     provenanceHash: Hash,
     configurationHash: Hash,
     schemaCompatibility: z.enum(["compatible", "incompatible"]),
+    scanner: ScannerEvidence,
+    migration: MigrationBinding,
+    usage: UsageObservation.optional(),
     evidence: z.string().trim().min(1).max(256),
   })
   .strict();
@@ -73,6 +86,7 @@ export const DeploymentObservation = z
     privateRuntime: z.boolean(),
     syntheticDataOnly: z.boolean(),
     url: z.string().max(512).nullable().optional(),
+    usage: UsageObservation.optional(),
     evidence: z.string().trim().min(1).max(256),
   })
   .strict();
@@ -101,7 +115,9 @@ export const DeliveryQualificationObservation = z
   .strict();
 export const deliveryConfigurationHash = (manifest: DeliveryManifest) =>
   fingerprint({ recipe: manifest.recipe, limits: manifest.limits });
-export function deliveryProvenanceHash(result: Omit<BuildEvidence, "provenanceHash" | "evidence">) {
+export function deliveryProvenanceHash(
+  result: Omit<BuildEvidence, "provenanceHash" | "evidence" | "usage">,
+) {
   const {
     scope,
     digest,
@@ -115,6 +131,8 @@ export function deliveryProvenanceHash(result: Omit<BuildEvidence, "provenanceHa
     builderId,
     configurationHash,
     schemaCompatibility,
+    scanner,
+    migration,
   } = result;
   return fingerprint({
     scope,
@@ -129,6 +147,8 @@ export function deliveryProvenanceHash(result: Omit<BuildEvidence, "provenanceHa
     builderId,
     configurationHash,
     schemaCompatibility,
+    scanner,
+    migration,
   });
 }
 export function assertBuildEvidence(
@@ -146,7 +166,9 @@ export function assertBuildEvidence(
     result.installationId !== manifest.repository.installationId ||
     result.recipeHash !== fingerprint(manifest.recipe) ||
     result.configurationHash !== deliveryConfigurationHash(manifest) ||
-    result.schemaCompatibility !== "compatible" ||
+    (result.schemaCompatibility === "incompatible") !==
+      (result.migration.class === "destructive") ||
+    result.scanner.artifactDigest !== result.digest ||
     result.scan !== "passed" ||
     new Set(result.checks.map((check) => check.name)).size !== result.checks.length ||
     result.checks.some((check) => check.passed !== true) ||
@@ -160,6 +182,7 @@ export function assertBuildEvidence(
       "Trusted immutable artifact, checks and provenance are incomplete",
       409,
     );
+  assertScanGate(result.scanner, manifest.scanThreshold ?? DEFAULT_SCAN_THRESHOLD);
 }
 export function assertDeploymentInspection(
   result: DeploymentInspection | null,

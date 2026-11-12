@@ -105,6 +105,9 @@ describe("strict owner delivery HTTP and typed client", () => {
       artifacts: [],
       deployments: [],
       previews: [],
+      usage: [],
+      migrationLocks: [],
+      rollbackBlocked: [],
     });
   });
   it("T-AC-45 T-AC-51 creates and revokes one exact policy through the real typed client with durable replay", async () => {

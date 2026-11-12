@@ -2,21 +2,21 @@
   "kind": "curated behavioral mutation experiment",
   "suite": "delivery",
   "runnerTimeoutMs": 180000,
-  "startedAt": "2026-11-11T23:39:26.978Z",
-  "finishedAt": "2026-11-11T23:41:39.609Z",
-  "scope": "13 selected mutations; not an exhaustive mutation score or coverage claim",
+  "startedAt": "2026-11-12T15:40:55.671Z",
+  "finishedAt": "2026-11-12T15:46:56.245Z",
+  "scope": "16 selected mutations; not an exhaustive mutation score or coverage claim",
   "isolation": "Temporary source copies with explicit Vitest workspace aliases; original source never mutated",
   "baseline": {
     "status": "passed",
-    "passed": 13
+    "passed": 16
   },
   "restored": {
     "status": "passed",
-    "passed": 13
+    "passed": 16
   },
   "sourceUnchanged": true,
-  "selected": 13,
-  "killed": 13,
+  "selected": 16,
+  "killed": 16,
   "survived": 0,
   "invalid": 0,
   "results": [
@@ -45,7 +45,7 @@
         "failures": [
           {
             "name": "immutable delivery preparation from independently verified source T-AC-44 never uses a historic signed event to replace a newer live branch head",
-            "message": "Error: promise resolved \"{ …(11) }\" instead of rejecting"
+            "message": "Error: promise resolved \"{ …(12) }\" instead of rejecting"
           }
         ]
       }
@@ -165,7 +165,7 @@
         "failures": [
           {
             "name": "current policy checks and eligible immutable rollback T-AC-46 T-AC-48 refuses retained release evidence that lacks the current policy's additional required check",
-            "message": "Error: promise resolved \"{ …(11) }\" instead of rejecting"
+            "message": "Error: promise resolved \"{ …(12) }\" instead of rejecting"
           }
         ]
       }
@@ -211,6 +211,51 @@
           {
             "name": "protective preview teardown and unknown receipts through actual Foundation T-AC-49 keeps protective TTL cleanup running after source configuration disappears and policy is revoked",
             "message": "AssertionError: expected false to be true // Object.is equality"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M87",
+      "file": "packages/core/src/delivery-scan.ts",
+      "behavior": "Promote an artifact whose scanner reported only unclassified findings",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "E05.S01 structured scanner evidence and E05.S03 local usage T-AC-46 never treats unclassified findings as success even at the loosest threshold",
+            "message": "AssertionError: expected 'built' to be 'unknown' // Object.is equality"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M88",
+      "file": "packages/core/src/delivery-scan.ts",
+      "behavior": "Ignore findings exactly at the configured scanner threshold",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "E05.S01 structured scanner evidence and E05.S03 local usage T-AC-46 refuses a high finding under the default threshold and stores no artifact",
+            "message": "AssertionError: expected 'built' to be 'unknown' // Object.is equality"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M89",
+      "file": "packages/core/src/delivery-migration.ts",
+      "behavior": "Admit a destructive migration without fresh exact owner approval of its hash",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "E05.S04 migration lock, promotion gate and rollback eligibility T-AC-48 refuses a destructive migration without the exact owner approval hash",
+            "message": "Error: promise resolved \"{ …(11) }\" instead of rejecting"
           }
         ]
       }

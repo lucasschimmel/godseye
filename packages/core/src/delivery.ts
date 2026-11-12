@@ -12,6 +12,7 @@ import { schema } from "@godseye/store";
 import { admitDelivery, reserveDelivery } from "./delivery-admission.js";
 import { deliveryDelegatedAuthority } from "./delivery-authority.js";
 import { executeDelivery } from "./delivery-execution.js";
+import { migrationBindingsByPreparation, rollbackMigrationBlocker } from "./delivery-migration.js";
 import { createDeliveryPolicy, revokeDeliveryPolicy } from "./delivery-policy.js";
 import { prepareDelivery } from "./delivery-preparation.js";
 import type { DeliveryProvider, GithubSourceProvider } from "./delivery-provider.js";
@@ -28,6 +29,7 @@ import {
   deliveryRunView,
   policyView,
 } from "./delivery-state.js";
+import { deliveryLockView, deliveryUsageView } from "./delivery-usage.js";
 import type { FoundationEngine } from "./foundations.js";
 import { type Actor, assertOwner } from "./policy.js";
 
@@ -115,13 +117,17 @@ export class DeliveryEngine {
   }
   async overview(actor: Actor) {
     assertOwner(actor);
-    const [policies, preparations, artifacts, deployments, previews] = await Promise.all([
-      this.store.db.select().from(schema.deliveryPolicies),
-      this.store.db.select().from(schema.deliveryPreparations),
-      this.store.db.select().from(schema.deliveryArtifacts),
-      this.store.db.select().from(schema.deliveryRuns),
-      this.store.db.select().from(schema.deliveryPreviews),
-    ]);
+    const [policies, preparations, artifacts, deployments, previews, usage, locks] =
+      await Promise.all([
+        this.store.db.select().from(schema.deliveryPolicies),
+        this.store.db.select().from(schema.deliveryPreparations),
+        this.store.db.select().from(schema.deliveryArtifacts),
+        this.store.db.select().from(schema.deliveryRuns),
+        this.store.db.select().from(schema.deliveryPreviews),
+        this.store.db.select().from(schema.deliveryUsage),
+        this.store.db.select().from(schema.deliveryMigrationLocks),
+      ]);
+    const bindings = await migrationBindingsByPreparation(this.store.db);
     return DeliveryOverview.parse({
       source: this.options.sourceProvider ? "configured" : "unconfigured",
       execution: this.options.provider ? "configured" : "unconfigured",
@@ -142,6 +148,16 @@ export class DeliveryEngine {
           updatedAt: row.updatedAt.toISOString(),
         }),
       ),
+      usage: usage.map(deliveryUsageView),
+      migrationLocks: locks.map(deliveryLockView),
+      rollbackBlocked: deployments
+        .filter(
+          (run) =>
+            run.artifactId &&
+            ["active", "retired"].includes(run.state) &&
+            rollbackMigrationBlocker(deployments, (id) => bindings.get(id), run),
+        )
+        .map((run) => run.id),
     });
   }
 }

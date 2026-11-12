@@ -137,6 +137,11 @@ export function DeliveryPolicyForm({
               pids: Number(data.get("pids")),
             },
             autoDeploy: data.get("autoDeploy") === "on",
+            scanThreshold: String(data.get("scanThreshold")) as
+              | "critical"
+              | "high"
+              | "medium"
+              | "low",
             expiresAt: new Date(String(data.get("expiresAt"))).toISOString(),
           });
         }}
@@ -185,6 +190,15 @@ export function DeliveryPolicyForm({
             </label>
           ))}
         </div>
+        <label htmlFor="delivery-scan">
+          Seuil de gravité bloquant de l’analyse{" "}
+          <select id="delivery-scan" name="scanThreshold" defaultValue="high">
+            <option value="critical">Critique seulement</option>
+            <option value="high">Élevée et au-dessus</option>
+            <option value="medium">Moyenne et au-dessus</option>
+            <option value="low">Toute vulnérabilité</option>
+          </select>
+        </label>
         <label htmlFor="delivery-expiry">
           Expiration de la politique{" "}
           <Input
@@ -200,8 +214,9 @@ export function DeliveryPolicyForm({
           automatique compatible sous cette politique
         </label>
         <p className="muted">
-          Les previews utilisent une cellule distincte et des données synthétiques. Migration
-          destructive, restauration de données et purge définitive restent exclues.
+          Les previews utilisent une cellule distincte et des données synthétiques. Une migration
+          destructive exige une approbation exacte et récente ; restauration de données et purge
+          définitive restent exclues.
         </p>
         <Button disabled={disabled} type="submit">
           Enregistrer la politique

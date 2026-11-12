@@ -1,14 +1,18 @@
 import { randomUUID } from "node:crypto";
 import {
+  DEFAULT_SCAN_THRESHOLD,
   DELIVERY_POLICY_VERSION,
+  type MigrationBindingView,
   PrepareDelivery,
   type PrepareDeliveryInput,
 } from "@godseye/contracts";
 import { schema } from "@godseye/store";
 import { eq } from "drizzle-orm";
 import { BuildObservation, deliveryConfigurationHash } from "./delivery-evidence.js";
+import { assertRollbackMigrationCompatible } from "./delivery-migration.js";
 import { previewEnvironment, previewFor } from "./delivery-preview.js";
 import type { DeliveryManifest } from "./delivery-provider.js";
+import { assertScanGate } from "./delivery-scan.js";
 import {
   DELIVERY_SCHEDULER_ID,
   type DeliveryState,
@@ -95,6 +99,8 @@ export async function prepareDelivery(
     expectedTargetGeneration: 0,
     cleanupReason: null,
     previousScope: null,
+    scanThreshold: policy.input.scanThreshold ?? DEFAULT_SCAN_THRESHOLD,
+    migration: null,
   };
   let cleanupReason: "ttl" | "closed" | null = null;
   if (data.intent === "cleanup") {
@@ -168,7 +174,8 @@ export async function prepareDelivery(
       .where(eq(schema.deliveryTargets.environmentId, environmentId));
     let artifactId = data.artifactId ?? null,
       artifactDigest: string | null = null,
-      deploymentId = data.deploymentId ?? null;
+      deploymentId = data.deploymentId ?? null,
+      migration: MigrationBindingView | null = null;
     if (data.intent === "rollback") {
       if (!deploymentId)
         throw new DomainError(
@@ -193,6 +200,7 @@ export async function prepareDelivery(
           "Prior release is not an inspected compatible deployment",
           409,
         );
+      await assertRollbackMigrationCompatible(tx, prior);
       artifactId = prior.artifactId;
     }
     if (["release", "rollback"].includes(data.intent)) {
@@ -232,6 +240,8 @@ export async function prepareDelivery(
           "Artifact does not satisfy the current configuration and required checks",
           409,
         );
+      assertScanGate(evidence.data.scanner, preliminary.scanThreshold ?? DEFAULT_SCAN_THRESHOLD);
+      if (data.intent === "release") migration = evidence.data.migration;
       artifactDigest = artifact.metadata.digest;
     }
     if (data.intent === "cleanup") {
@@ -327,6 +337,7 @@ export async function prepareDelivery(
       binding: retainedBinding,
       expectedTargetGeneration: target?.generation ?? 0,
       cleanupReason,
+      migration,
       ownership: fingerprint({ projectId: policy.projectId, environmentId, policyId: policy.id }),
     });
     const row = {

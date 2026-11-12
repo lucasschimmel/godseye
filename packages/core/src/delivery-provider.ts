@@ -3,7 +3,9 @@ import type {
   DeliveryLimits,
   DeliveryPolicyView,
   DeliveryRecipe,
+  MigrationBindingView,
   RepositoryConfigurationInput,
+  ScannerEvidenceView,
 } from "@godseye/contracts";
 import type { z } from "zod";
 
@@ -75,6 +77,17 @@ export interface DeliveryManifest {
   expectedTargetGeneration: number;
   cleanupReason: "ttl" | "closed" | null;
   previousScope: DeliveryScope | null;
+  /** Policy severity threshold frozen into the preparation; absent on legacy manifests. */
+  scanThreshold?: "critical" | "high" | "medium" | "low";
+  /** Exact migration declaration of the selected artifact; null for build and cleanup. */
+  migration?: MigrationBindingView | null;
+}
+/** Local resource usage reported by a managed provider; never a billing figure. */
+export interface DeliveryResourceUsage {
+  cpuMilliSeconds: number;
+  peakMemoryMiB: number;
+  diskMiB: number;
+  durationMs: number;
 }
 export interface DeliveryScope {
   projectId: string;
@@ -100,6 +113,9 @@ export interface BuildEvidence {
   provenanceHash: string;
   configurationHash: string;
   schemaCompatibility: "compatible" | "incompatible";
+  scanner: ScannerEvidenceView;
+  migration: MigrationBindingView;
+  usage?: DeliveryResourceUsage;
   evidence: string;
 }
 export interface DeploymentInspection {
@@ -111,6 +127,7 @@ export interface DeploymentInspection {
   privateRuntime: boolean;
   syntheticDataOnly: boolean;
   url?: string | null;
+  usage?: DeliveryResourceUsage;
   evidence: string;
 }
 export interface DeliveryProvider {

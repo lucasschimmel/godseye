@@ -207,6 +207,9 @@ describe("strict bounded delivery inputs confer no caller execution authority", 
       artifacts: [],
       deployments: [],
       previews: [],
+      usage: [],
+      migrationLocks: [],
+      rollbackBlocked: [],
     };
     expect(DeliveryOverview.parse(overview)).toEqual(overview);
     expect(

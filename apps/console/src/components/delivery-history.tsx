@@ -1,5 +1,6 @@
 import type { CiRunView, DeliveryOverviewView, ProjectDTO } from "@godseye/contracts";
 import { timestamp } from "@/lib/api";
+import { AdmitControl, MigrationNote, ScanNote, UsageNote } from "./delivery-evidence";
 import { EmptyState, SectionTitle } from "./shared";
 import { Button } from "./ui/button";
 
@@ -143,6 +144,9 @@ export function DeliveryHistory({
                   {row.commitSha.slice(0, 12)} · {row.hash.slice(0, 12)}
                 </p>
                 <small>{run ? labels[run.state] : "Préparée, aucun effet exécuté"}</small>
+                <MigrationNote preparation={row} />
+                {artifact && <ScanNote artifact={artifact} />}
+                <UsageNote usage={overview.usage.find((item) => item.runId === run?.runId)} />
                 {run?.reason && (
                   <p role="status">
                     Contrôle bloquant : <span className="mono">{run.reason}</span>
@@ -151,21 +155,15 @@ export function DeliveryHistory({
               </div>
               <div className="button-group">
                 {!run && (
-                  <Button
+                  <AdmitControl
+                    preparation={row}
+                    post={post}
                     disabled={
                       disabled ||
                       (row.intent !== "cleanup" && !sourceAvailable) ||
                       !executionAvailable
                     }
-                    onClick={() =>
-                      post("/delivery/admissions", {
-                        preparationId: row.id,
-                        expectedHash: row.hash,
-                      })
-                    }
-                  >
-                    Exécuter cette livraison
-                  </Button>
+                  />
                 )}
                 {artifact && run?.state === "built" && (
                   <Button
@@ -195,7 +193,18 @@ export function DeliveryHistory({
                 {run?.state === "retired" && row.intent !== "cleanup" && run.artifactId && (
                   <Button
                     variant="outline"
-                    disabled={disabled || !sourceAvailable || !rollbackPolicy || !rollbackSource}
+                    title={
+                      overview.rollbackBlocked.includes(run.id)
+                        ? "Retour d’image exclu : une migration ultérieure n’est pas rétrocompatible. Une restauration de données reste une opération distincte."
+                        : undefined
+                    }
+                    disabled={
+                      disabled ||
+                      !sourceAvailable ||
+                      !rollbackPolicy ||
+                      !rollbackSource ||
+                      overview.rollbackBlocked.includes(run.id)
+                    }
                     onClick={() =>
                       post("/delivery/preparations", {
                         policyId: rollbackPolicy?.id,
@@ -248,6 +257,11 @@ export function DeliveryHistory({
                 · données synthétiques uniquement
               </p>
               <small>Expiration : {timestamp(preview.expiresAt)}</small>
+              {overview.usage
+                .filter((item) => item.environmentId === preview.environmentId)
+                .map((item) => (
+                  <UsageNote key={item.runId} usage={item} />
+                ))}
               {preview.state === "active" &&
               preview.url &&
               safePreviewUrl(preview.url) &&

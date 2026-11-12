@@ -98,6 +98,19 @@ test("T-AC-45 T-AC-51 creates, persists and revokes exact synthetic standing pol
   await expect(page.getByText("Aucune livraison préparée", { exact: true })).toBeVisible();
 });
 
+test("T-AC-46 T-AC-48 T-AC-52 states migration locks, scanner threshold and unbilled local usage honestly when nothing executed", async ({
+  page,
+}) => {
+  const project = await boundProject(page, "Delivery evidence");
+  await expect(project.form.getByLabel(/Seuil de gravité bloquant/)).toHaveValue("high");
+  await project.form.getByLabel(/Seuil de gravité bloquant/).selectOption("critical");
+  await createPolicy(page, project.form);
+  const resources = page.getByRole("region", { name: "Migrations et ressources", exact: true });
+  await expect(resources.getByText("Aucun verrou de migration", { exact: true })).toBeVisible();
+  await expect(resources.getByText("Aucune mesure de ressources", { exact: true })).toBeVisible();
+  await expect(resources.getByText(/Aucun coût n’est facturé en local/)).toBeVisible();
+});
+
 test("T-AC-45 T-AC-51 keeps finite mobile policy forms and rejects browser execution fields without leaking values", async ({
   page,
 }) => {
@@ -203,6 +216,9 @@ test("T-AC-49 T-AC-51 hides stale preview URLs at expiry without waiting for phy
         preparations: [],
         artifacts: [],
         deployments: [],
+        usage: [],
+        migrationLocks: [],
+        rollbackBlocked: [],
         previews: [
           {
             id: randomUUID(),
