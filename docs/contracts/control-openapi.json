@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "G.O.D.S.E.Y.E private owner control API",
-    "version": "1.8.0",
+    "version": "1.9.0",
     "description": "Local owner administration contract. Infrastructure execution remains gated by qualified adapters. This client is not the application-project SDK (F19)."
   },
   "paths": {
@@ -17,7 +17,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           }
@@ -34,7 +34,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -401,7 +401,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           },
@@ -427,7 +427,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -764,7 +764,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           },
@@ -790,7 +790,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -951,7 +951,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           },
@@ -977,7 +977,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -1169,7 +1169,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           },
@@ -1195,7 +1195,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -1363,7 +1363,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           },
@@ -1389,7 +1389,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -1552,7 +1552,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           }
@@ -1569,7 +1569,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -1766,7 +1766,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           },
@@ -1792,7 +1792,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -2056,7 +2056,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           }
@@ -2073,7 +2073,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -2388,7 +2388,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           },
@@ -2414,7 +2414,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -2679,7 +2679,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           },
@@ -2705,7 +2705,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -2888,7 +2888,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           },
@@ -2914,7 +2914,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -3237,7 +3237,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           }
@@ -3254,7 +3254,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -3547,7 +3547,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           },
@@ -3573,7 +3573,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -3931,7 +3931,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           },
@@ -3957,7 +3957,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -4303,7 +4303,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           }
@@ -4320,7 +4320,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -5318,7 +5318,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           },
@@ -5344,7 +5344,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -5759,7 +5759,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           },
@@ -5785,7 +5785,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -6069,7 +6069,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           },
@@ -6095,7 +6095,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -6196,7 +6196,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           },
@@ -6222,7 +6222,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -6447,7 +6447,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           },
@@ -6473,7 +6473,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -6666,7 +6666,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           },
@@ -6692,7 +6692,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -6784,7 +6784,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           }
@@ -6801,7 +6801,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -6818,6 +6818,7 @@
                           "enum": [
                             "unconfigured",
                             "local_fixture",
+                            "local_inngest",
                             "unavailable"
                           ]
                         },
@@ -6900,7 +6901,7 @@
                                   },
                                   "eventType": {
                                     "type": "string",
-                                    "pattern": "^[a-z][a-z0-9.-]{0,63}$"
+                                    "pattern": "^[a-z][a-z0-9_.-]{0,63}$"
                                   }
                                 },
                                 "required": [
@@ -7313,7 +7314,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           },
@@ -7339,7 +7340,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -7401,7 +7402,7 @@
                             },
                             "eventType": {
                               "type": "string",
-                              "pattern": "^[a-z][a-z0-9.-]{0,63}$"
+                              "pattern": "^[a-z][a-z0-9_.-]{0,63}$"
                             }
                           },
                           "required": [
@@ -7609,7 +7610,7 @@
                           },
                           "eventType": {
                             "type": "string",
-                            "pattern": "^[a-z][a-z0-9.-]{0,63}$"
+                            "pattern": "^[a-z][a-z0-9_.-]{0,63}$"
                           }
                         },
                         "required": [
@@ -7712,7 +7713,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           },
@@ -7738,7 +7739,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -7800,7 +7801,7 @@
                             },
                             "eventType": {
                               "type": "string",
-                              "pattern": "^[a-z][a-z0-9.-]{0,63}$"
+                              "pattern": "^[a-z][a-z0-9_.-]{0,63}$"
                             }
                           },
                           "required": [
@@ -7992,7 +7993,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           },
@@ -8018,7 +8019,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -8080,7 +8081,7 @@
                             },
                             "eventType": {
                               "type": "string",
-                              "pattern": "^[a-z][a-z0-9.-]{0,63}$"
+                              "pattern": "^[a-z][a-z0-9_.-]{0,63}$"
                             }
                           },
                           "required": [
@@ -8272,7 +8273,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           },
@@ -8298,7 +8299,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -8525,7 +8526,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           },
@@ -8551,7 +8552,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -8767,7 +8768,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           },
@@ -8793,7 +8794,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -9022,7 +9023,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           },
@@ -9048,7 +9049,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -9258,7 +9259,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           }
@@ -9275,7 +9276,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -9589,7 +9590,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           },
@@ -9615,7 +9616,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -9956,7 +9957,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           },
@@ -9982,7 +9983,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -10317,7 +10318,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           },
@@ -10343,7 +10344,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -10690,7 +10691,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           },
@@ -10716,7 +10717,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -11051,7 +11052,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           },
@@ -11077,7 +11078,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -11418,7 +11419,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           },
@@ -11444,7 +11445,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -11586,7 +11587,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           }
@@ -11603,7 +11604,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -11704,7 +11705,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           },
@@ -11730,7 +11731,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -11991,7 +11992,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           }
@@ -12008,7 +12009,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -12543,7 +12544,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           },
@@ -12569,7 +12570,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -12883,7 +12884,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           },
@@ -12909,7 +12910,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -13181,7 +13182,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           },
@@ -13207,7 +13208,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -13387,7 +13388,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           }
@@ -13404,7 +13405,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -13494,7 +13495,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           }
@@ -13511,7 +13512,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -13802,7 +13803,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           }
@@ -13819,7 +13820,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -14229,7 +14230,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           },
@@ -14255,7 +14256,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -14530,7 +14531,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           },
@@ -14556,7 +14557,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -14767,7 +14768,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           }
@@ -14784,7 +14785,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -15073,7 +15074,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           },
@@ -15099,7 +15100,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -15410,7 +15411,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           },
@@ -15436,7 +15437,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -15735,7 +15736,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           },
@@ -15761,7 +15762,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -16066,7 +16067,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           },
@@ -16092,7 +16093,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -16381,7 +16382,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           }
@@ -16398,7 +16399,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -17419,7 +17420,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           },
@@ -17445,7 +17446,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -18720,7 +18721,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           },
@@ -18746,7 +18747,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -19788,7 +19789,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           },
@@ -19814,7 +19815,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -20270,7 +20271,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           },
@@ -20296,7 +20297,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -20465,7 +20466,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           }
@@ -20482,7 +20483,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -20799,7 +20800,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           },
@@ -20825,7 +20826,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -20957,7 +20958,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           }
@@ -20970,7 +20971,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -21049,7 +21050,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           }
@@ -21062,7 +21063,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -21216,7 +21217,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           }
@@ -21233,7 +21234,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -21374,7 +21375,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           },
@@ -21409,7 +21410,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -21516,7 +21517,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           },
@@ -21542,7 +21543,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -21632,7 +21633,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           },
@@ -21658,7 +21659,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -21739,7 +21740,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           }
@@ -21756,7 +21757,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -21976,7 +21977,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           }
@@ -21993,7 +21994,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -22278,7 +22279,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           },
@@ -22304,7 +22305,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -22637,7 +22638,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           },
@@ -22663,7 +22664,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -23012,7 +23013,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           },
@@ -23038,7 +23039,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -23204,7 +23205,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           }
@@ -23221,7 +23222,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -23370,7 +23371,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           }
@@ -23387,7 +23388,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -23522,7 +23523,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           }
@@ -23539,7 +23540,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -23777,7 +23778,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           }
@@ -23794,7 +23795,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -23910,7 +23911,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           },
@@ -23936,7 +23937,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -24109,7 +24110,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           }
@@ -24126,7 +24127,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -24228,7 +24229,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           },
@@ -24254,7 +24255,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -24375,7 +24376,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           },
@@ -24401,7 +24402,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -25559,7 +25560,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           }
@@ -25576,7 +25577,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -26195,7 +26196,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           },
@@ -26221,7 +26222,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -26860,7 +26861,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           },
@@ -26886,7 +26887,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -27132,7 +27133,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           }
@@ -27149,7 +27150,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -27397,7 +27398,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           }
@@ -27414,7 +27415,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -27658,7 +27659,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           },
@@ -27684,7 +27685,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -27940,7 +27941,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           },
@@ -27966,7 +27967,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -28212,7 +28213,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           },
@@ -28251,7 +28252,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -28447,7 +28448,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           }
@@ -28464,7 +28465,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -28547,7 +28548,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             },
             "description": "When supplied, must match the supported control API version."
           },
@@ -28583,7 +28584,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -28680,7 +28681,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -28698,7 +28699,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.8.0"
+                  "const": "1.9.0"
                 }
               }
             },
@@ -28752,7 +28753,7 @@
           "x-godseye-api-version": {
             "schema": {
               "type": "string",
-              "const": "1.8.0"
+              "const": "1.9.0"
             }
           }
         },
