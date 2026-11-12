@@ -23,3 +23,4 @@ await build({
 });
 await mkdir("dist/migrations", { recursive: true });
 await cp("packages/store/migrations", "dist/migrations", { recursive: true });
+await cp("apps/control-api/src/inngest-guardian.mjs", "dist/control-api/inngest-guardian.mjs");
