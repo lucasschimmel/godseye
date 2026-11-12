@@ -1,0 +1,100 @@
+{
+  "verdict": "pass",
+  "kind": "code",
+  "criticity": "production",
+  "fresh_context": true,
+  "scope": [
+    "scripts/install-redis.py",
+    "scripts/install-redis.mjs",
+    ".codex/crafts/g-o-d-s-e-y-e-cfe8/e06-completion-research.md"
+  ],
+  "findings": [],
+  "criteria_run": 9,
+  "criteria_passed": 9,
+  "frozen_sha256": {
+    "scripts/install-redis.py": "6625E66992DBBECE870D28ECBA65FD4480D85E569EB3412C453447FF45284D4F",
+    "scripts/install-redis.mjs": "38C14F7740E9E8C3F1325848DACE16CE24BF81956422BCE0AC40D91CE6BE4672",
+    ".codex/crafts/g-o-d-s-e-y-e-cfe8/e06-completion-research.md": "E4A6F19E977586E9ED9642B46D312F66F5849031A2798776AFE01CFEB8148046"
+  },
+  "evidence": [
+    {
+      "criterion": "SAF-02 / COR-03",
+      "reference": "scripts/install-redis.py:36-43,46-67,97-103",
+      "result": "Cache ancestors must resolve identically and have the expected project-cache suffix. Existing file symlinks, nonregular leaves and multiply linked files are refused. Tree traversal does not follow directory links; package links must resolve within the extraction root."
+    },
+    {
+      "criterion": "SAF-02",
+      "reference": "scripts/install-redis.py:70-89,114-126",
+      "result": "gpgv with the Ubuntu archive keyring must exit successfully before InRelease SHA256/size is used. Packages.xz bytes must match that authenticated digest; selected package bytes must match index SHA256/size before dpkg-deb extraction. Redis package version is pinned; source filenames are constrained to safe pool .deb paths."
+    },
+    {
+      "criterion": "SAF-03 / COR-01",
+      "reference": "scripts/install-redis.py:110-137",
+      "result": "Extraction targets a freshly created private staging root. Existing installed trees are compared against verified staged bytes rather than extracted over. Publication is a same-cache rename; cleanup checks staging parent, resolved path and uid before removing it."
+    },
+    {
+      "criterion": "SAF-02 / SAF-01",
+      "reference": "scripts/install-redis.mjs:13-30; scripts/install-redis.py:95-100,126,138-143",
+      "result": "execFile and subprocess argument arrays avoid shell interpretation. Root execution is refused; no apt install, sudo, maintainer-script execution or service command exists. Output contains package provenance/version rather than generated application authority."
+    },
+    {
+      "criterion": "COR-02",
+      "reference": "scripts/install-redis.py:74-78,83-84,124-126,134-142",
+      "result": "Signature/hash, extraction, unsafe-tree, mismatched-cache, cleanup and version-probe failures surface; no swallowed exceptions."
+    }
+  ],
+  "probes": [
+    "Python AST parse passed without executing main; node --check scripts/install-redis.mjs passed.",
+    "Private disposable WSL helper probes passed: regular leaf allowed; symlink, hardlink and directory cache leaves denied; in-root package link described; escaping package link denied; multiply linked tree file denied. All fixtures were removed by TemporaryDirectory.",
+    "Source SHA256 values checked after probes and matched the initial reviewed values."
+  ],
+  "provenance_review": {
+    "verdict": "pass-with-explicit-limits",
+    "checked_claims": [
+      {
+        "reference": "e06-completion-research.md:7,13-16",
+        "sources": [
+          "https://github.com/inngest/inngest/blob/v1.52.0/cmd/start/cmd.go",
+          "https://github.com/inngest/inngest/blob/v1.52.0/pkg/devserver/devserver.go",
+          "https://raw.githubusercontent.com/inngest/inngest/v1.52.0/pkg/config/config.go"
+        ],
+        "result": "Pinned upstream source supports external PostgreSQL and external Redis selection versus embedded stores. The dossier correctly requires independent runtime evidence and preserves the ingress durability warning."
+      },
+      {
+        "reference": "e06-completion-research.md:14",
+        "sources": [
+          "https://raw.githubusercontent.com/inngest/inngest/v1.52.0/pkg/db/postgres/migrations.go"
+        ],
+        "result": "Pinned upstream implementation uses pgx and embedded Goose migrations; no unsupported whole-platform recovery claim is made."
+      },
+      {
+        "reference": "e06-completion-research.md:17",
+        "sources": [
+          "https://redis.io/docs/latest/operate/oss_and_stack/management/persistence/"
+        ],
+        "result": "Official Redis documentation supports AOF replay, the everysec loss window and fsync-before-reply behavior of always. The dossier correctly excludes host-wide failure qualification."
+      },
+      {
+        "reference": "e06-completion-research.md:28-30",
+        "sources": [
+          "scripts/install-redis.py:70-89",
+          "scripts/install-redis.py:114-142"
+        ],
+        "result": "Installer implementation supports the signed metadata/package verification, staging, link checking and local extraction claims. First acquisition success and exact host inventory are historical satellite observations, not independently re-run evidence from this review."
+      }
+    ]
+  },
+  "refutation_notes": [
+    "Post-extraction tree validation alone would not sandbox malicious upstream archive extraction. Here the extractor consumes packages already authenticated against the explicitly trusted Ubuntu signing authority, inside a fresh private stage. No attacker-controlled unsigned archive path reaches extraction.",
+    "Check-before-use filesystem checks do not isolate a concurrently malicious process running as the installer uid. The local first-party owner account and trusted executable search path/keyring are assumptions; these scripts do not claim hostile same-user OS containment.",
+    "InRelease signature verification establishes provenance, not archive freshness. Exact Redis version pinning is intentional; this review does not turn the installer into an automatic security-update mechanism."
+  ],
+  "not_reviewed": [
+    "COR-04: no installer concurrency guarantee requested; private-cache same-user TOCTOU races are outside the stated threat model.",
+    "REU-01, REU-02 and HYG-04: repository-wide reuse/abstraction/API documentation review excluded by the explicitly scoped installer security request.",
+    "No full installer acquisition/re-extraction run or native Redis launch performed; helper/syntax probes do not replace root final installer reverification.",
+    "No new global SAST/SCA scanner was installed or claimed; audit uses source-to-sink review and harmless local probes.",
+    "Research Connect SDK declaration/bundler details, host inventory, prior acquisition transcripts, Ubuntu archive freshness and all runtime/persistence experiments were not independently re-executed.",
+    "Unfinished jobs-runtime implementation and the previously reported plan majors remain unreviewed and unresolved by this scoped pass."
+  ]
+}

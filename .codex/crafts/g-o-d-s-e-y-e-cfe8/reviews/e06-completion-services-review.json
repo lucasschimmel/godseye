@@ -1,0 +1,73 @@
+{
+  "verdict": "pass",
+  "kind": "code",
+  "criticity": "production",
+  "fresh_context": true,
+  "status": "FROZEN_SCOPED_REREVIEW_PASSED_TWO_ORIGINAL_MAJORS_RESOLVED",
+  "frozen_sha256": {
+    "scripts/jobs-services.mjs": "CCEFE11BBDD6B6AE973421432B23F2760F4309BEAF5BEDAE7679B8AB1F9F4815",
+    "scripts/jobs-services.py": "534E77810527BA07CF2DDEEB6522A4A4C7594F225DF5804CA837250EE939B9AA",
+    "apps/control-api/src/identity/runtime.ts": "01D70A07961806C29C98184D96CBFCEE84208B4F30AC881233BB186569029EED"
+  },
+  "findings": [],
+  "criteria_run": 9,
+  "criteria_passed": 9,
+  "verified_boundaries": [
+    "scripts/jobs-services.mjs:32-42 restricts output to a strict workspace .local descendant, validates existing ancestor paths with lstat/realpath and reuses privateDirectory before private material writes. Its input/save leaves refuse symbolic links and multiply linked files.",
+    "The referenced identity privateDirectory walks state without allowing symlink/hardlink escape, protects a Unix root with mode0700, and resets/verifies Windows descendant ACL inheritance under an owner-only root.",
+    "scripts/jobs-services.py:17-48 validates native home-state ancestors, uid ownership, symlinks/hardlinks and entry kinds; private writes use O_NOFOLLOW/mode0600. The operation lock serializes commands for a marker. These checks assume no malicious concurrent process with the same uid.",
+    "PostgreSQL stop first proves process executable, data-directory command argument and authenticated current_setting(data_directory). Redis stop proves executable, authenticated process_id and CONFIG dir before issuing authenticated SHUTDOWN. No raw PID signal is sent by this helper, so a stale/foreign process is refused rather than killed.",
+    "Marker is deterministic workspace/directory binding, not an authentication MAC. Security rests on OS-private state plus schema-constrained dN paths/roles, strict generated auth formats and validated unique ports; caller-selected same-owner state tampering is outside hostile-code containment claims.",
+    "PostgreSQL roles are generated NOSUPERUSER/NOCREATEDB/NOCREATEROLE, separate control and per-cell clusters use SCRAM and explicit loopback HBA. Redis has loopback/protected-mode, generated requirepass, AOF appendfsync always, maxmemory and noeviction. No global install, sudo, system service manipulation or recursive data deletion exists.",
+    "Authentication is supplied to psql/redis-cli in subprocess environment; SQL/config content is private input/file material rather than command-line authentication strings. Python result material travels through a captured Node pipe and is saved privately; supported .mjs terminal output prints only status/path. Python errors are sanitized by exception class and Node discards stderr."
+  ],
+  "verification": [
+    "Python AST parse and node --check scripts/jobs-services.mjs passed.",
+    "Two private disposable failure-injection PoCs reproduced the confirmed findings; no PostgreSQL/Redis service was launched and no actual private material was read.",
+    "Initial and final source hashes matched the supplied research smoke report for both new scripts.",
+    "The supplied reviews/e06-completion-services.json records successful real start/stop/restart, retained sentinels, AOF/noeviction observations and final stopped smoke services. This review did not independently rerun that native smoke.",
+    "Independent re-review: 11 disposable WSL assertions passed for successful atomic replace, precommit preservation, postcommit rollback, rollback-stage failure, rollback-replace failure, temporary cleanup, new-file failed sync, symlink/hardlink refusal and continuation after multiple independent resource failures. Python AST and node syntax passed. No native daemon or Vitest run.",
+    "Updated supplied services.json records a corrected-source real start/stop/start sentinel recheck and final stop. That native evidence belongs to the research satellite; this review independently reproduced only harmless filesystem/control-flow failures."
+  ],
+  "not_reviewed": [
+    "No Vitest/native test was run because the test satellite is running its own lab; no global scanner was installed or claimed.",
+    "COR-04 concurrent hostile same-uid TOCTOU, REU-01/02 wider repository abstraction/reuse and HYG-04 public API documentation gates are outside this scoped security review.",
+    "Signed tool acquisition/reverification is covered by separate installer review; these service scripts only probe tool versions. Malicious replacement of trusted local tools or caller environment is not OS-sandboxed.",
+    "Forced host power loss, deployed network/Docker/gVisor isolation and cross-service disaster recovery are not qualified.",
+    "The unfinished supervisor runtime/guardian and previous plan/code findings are not superseded by this review.",
+    "Directory fsync EINVAL/ENOTSUP remains an explicit portability fallback (jobs-services.py:58-60); no physical power-loss or hostile same-user race guarantee is inferred."
+  ],
+  "previous_frozen_sha256": {
+    "scripts/jobs-services.mjs": "CCEFE11BBDD6B6AE973421432B23F2760F4309BEAF5BEDAE7679B8AB1F9F4815",
+    "scripts/jobs-services.py": "534E77810527BA07CF2DDEEB6522A4A4C7594F225DF5804CA837250EE939B9AA",
+    "apps/control-api/src/identity/runtime.ts": "01D70A07961806C29C98184D96CBFCEE84208B4F30AC881233BB186569029EED"
+  },
+  "resolved_findings": [
+    {
+      "id": "E06-SERVICES-01",
+      "criterion": "COR-02 / SAF-03",
+      "status": "CONFIRMED",
+      "severity": "major",
+      "cwe": "CWE-459",
+      "evidence": "scripts/jobs-services.py:250-257 starts PostgreSQL before Redis and invokes self.stop(state) after any startup failure. stop():205-216 aborts the entire loop on the first redis_live/pg_live ownership/readiness exception or shutdown failure. In particular a Redis ownership refusal at :207 prevents stopping that same cell's already-started PostgreSQL at :215-216 and prevents visiting subsequent cells.",
+      "refutation_survived": true,
+      "refutation": "Stopping a foreign Redis process would be unsafe, and preserving data is correct. Continuing independent authenticated ownership checks for other PostgreSQL/Redis services does not require stopping that foreign process. Aborting all cleanup unnecessarily leaves known-owned daemons live after failed start/stop. The ordinary successful smoke does not cover this failure path.",
+      "proof": "A private TemporaryDirectory fixture loaded the exact Services.execute/stop code with mocked service start/readiness methods. Simulated foreign Redis refusal occurred after d0 and d1 PostgreSQL started. Observed cleanupVisitedOwnedClusters=[d0], partialStartOwnedClustersStillRunning=[d1]. No real service process was launched or stopped.",
+      "suggestion": "Attempt cleanup independently for each service with its own ownership verification, collect safe diagnostics, and report all cleanup failures after visiting every owned service. Add failure injection for foreign/unavailable dependencies during partial startup.",
+      "resolution": "RESOLVED: scripts/jobs-services.py:282-302 independently guards Redis and PostgreSQL shutdown for every cell, accumulating safe errors until the traversal is complete. Independent failure injection combined a d0 PostgreSQL stop error with d1 Redis ownership refusal; all five resource checks, including d1 PostgreSQL and both d2 resources, were visited before the aggregate error surfaced."
+    },
+    {
+      "id": "E06-SERVICES-02",
+      "criterion": "SAF-03 / COR-03",
+      "status": "CONFIRMED",
+      "severity": "major",
+      "cwe": "CWE-664",
+      "evidence": "scripts/jobs-services.py:42-48 opens private files with O_TRUNC before writing. execute():243 creates the sole state.json; :253 rewrites it after every PostgreSQL start. That document holds bootstrap authentication, per-service authentication, ports, scope and ownership metadata. An I/O failure or process termination after truncate leaves the only restart/stop authority document empty or partial.",
+      "refutation_survived": true,
+      "refutation": "Existing database/AOF bytes are never recursively deleted, and successful writes are small. Neither prevents the truncate-to-write interruption window or disk/write errors. Windows control.json/storage.json retain application-role bindings after a prior successful start but omit bootstrap material and do not replace the native ownership state; failed initial starts may not produce them at all.",
+      "proof": "A private valid 1006-byte fixture state was rewritten using exact write_private with only os.fdopen replaced by a context manager simulating a write error after open. Observed ownershipStateBytesAfterWriteFailure=0. The disposable fixture was removed; no real state/material was accessed.",
+      "suggestion": "Write ownership state to a fresh private no-follow sibling, flush/fsync and atomically replace the previous document, retaining the old valid state on any failure. Cover interrupted replacement and recovery of partially initialized clusters.",
+      "resolution": "RESOLVED: scripts/jobs-services.py:44-125 validates ownership/link/inode identity, creates exclusive private sibling stages, flushes/fsyncs complete bytes, atomically replaces state and fsyncs the parent. Failure probes showed precommit errors preserve old bytes; postcommit sync errors restore complete old bytes; rollback-stage or rollback-replace failure retains complete new bytes and cleans temporary files; first-write sync failure leaves the file absent, never partial. Double storage failure cannot guarantee old version recovery but never exposed truncated authority state in the exercised paths."
+    }
+  ]
+}
