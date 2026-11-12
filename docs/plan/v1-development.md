@@ -1,0 +1,230 @@
+# G.O.D.S.E.Y.E V1 development plan
+
+Status: local E04 checkpoint verified, 2026-11-12. Local control foundations, owner/service access, infrastructure/data/recovery preparation, delivery and application-backend implementations exist; external qualification and complete epic acceptance remain separate. Scope authority: [V1 requirements](../spec/v1.md), [isolation/data contract](../spec/isolation.md), [ADR-002](../adr/ADR-002-professional-vm-and-dual-stack.md) and the [ADR-003 local-first/CI amendment](../adr/ADR-003-local-first-and-ci.md). This plan aims at the complete V1 catalog, not an MVP.
+
+## Delivery rules
+
+Each story produces a reviewable artifact, executes its named tests when the implementation exists, records evidence and leaves a rollback/checkpoint. Epics integrate into the same eventual product; a completed private checkpoint is not a public release. Requirements F01-F46, I01-I16, D01-D10 and N01-N08 remain mandatory regardless of implementation order.
+
+Effort labels are relative planning signals: S is a bounded component/flow, M crosses several modules, L is a provider or major data/runtime boundary. They are not hour/day estimates. There is no comparable project delivery record or qualified infrastructure yet; calendar commitments require E00 results. Dependencies are stated in the table below; story order within an epic is sequential unless independence is explicitly established. No parallel implementation ownership is assigned in this document.
+
+## Dependency graph
+
+```mermaid
+flowchart LR
+    E00 --> E01
+    E01 --> E02
+    E02 --> E03
+    E03 --> E04
+    E04 --> E05
+    E05 --> E06
+    E06 --> E07
+    E07 --> E08
+    E08 --> E09
+    E09 --> E10
+    E10 --> E11
+    E11 --> E12
+```
+
+The baseline sequence is deliberately conservative for a solo operator. Console views, authorization, audit and telemetry are built with each owning epic; the UI is not postponed until E10. E10 completes local decision routing and cross-feature experience. Future parallelization requires stable contracts and non-overlapping file ownership.
+
+| Epic | Outcome | Direct prerequisite | Required feature ownership | Effort/risk |
+| --- | --- | --- | --- | --- |
+| E00 | Prove the uncertain isolation/runtime topology and capacity | None | Qualification of I01-I16/D01-D10 | L / high |
+| E01 | Repository, contracts, operation engine and verification harness | Local subset may precede E00; remote capabilities still require E00 | F35, F39, F44 foundations | L / high |
+| E02 | Private owner console, credentials and infrastructure admission | E01 | F01, F05, F06, F42 | L / high |
+| E03 | Project/environment cells and independent data recovery | E02 | F03, F04, F12, F13, F15 | L / high |
+| E04 | Application backend, auth, files, realtime and SDK | E03 | F16, F17, F18, F19 | L / high |
+| E05 | Git/image delivery, domains, previews and rollback | E04; local event/configuration preparation may precede remote qualification | F07, F08, F09, F10, F11, F14, F44, F45, F46 | L / high |
+| E06 | Per-cell durable jobs, cron, outbox and recovery | E05 | F20, F21 | L / high |
+| E07 | Hermes Agent Center, skills, execution grants, remote coding and run recovery | E06 | F22, F23, F24, F25, F34, F43 | L / high |
+| E08 | Usage, budgets, operational views and incidents | E07 | F02, F30, F31, F32, F33 | L / high |
+| E09 | Recurring security, log investigation and market/marketing skills | E08 | F26, F27, F28 | M / high |
+| E10 | Evaluated Laya cascade and complete owner UX | E09 | F29, F40 | M / medium |
+| E11 | Personal services, migration/export and retention workflows | E10 | F36, F38, F41 | M / high |
+| E12 | Full disaster recovery, integration soak and V1 release | E11 | F37 plus all-feature release evidence | L / high |
+
+## E00 Qualification before architectural commitment
+
+This is infrastructure experimentation for the final V1, not a reduced product. It must resolve the largest uncertainties first. Experiments use isolated fixtures and no real production data. Record exact versions, hardware, memory/disk/CPU and errors. Do not claim a successful source-document review proves a running boundary.
+
+| Story | Deliverable and acceptance | Tests/evidence | Failure/checkpoint |
+| --- | --- | --- | --- |
+| E00.S01 | Inspect actual AX41 CPU/RAM/disks/SMART/addressing; design mirrored storage, private network, off-host repository and host recovery. | T03/T31 prerequisites; inventory and recovery worksheet | No reinstall before backup/ownership check; Rescue access retained |
+| E00.S02 | Establish one professional VM with two gVisor cell fixtures, separate games VM and optional host-level disposable-task allocation. Prove sandbox/management/network denial, effective runtime and one-IPv4/dual-stack paths. | T02-T05; network matrix and resource traces | Remove only fixture cell resources/task guests; retain host console |
+| E00.S03 | Qualify Coolify gVisor runtime selection after deploy/redeploy, manifest restrictions, dedicated PostgreSQL/Redis/Inngest and backup/PITR restore in the intended cell size. | T04/T06/T07/T11/T20/T34 | Reject engine/settings that cannot enforce profile; retain images/exports |
+| E00.S04 | Qualify Hermes Runs API, explicit skills, profile ownership, disposable tool execution, cancellation and unknown-run handling. | T21-T24 | Reconcile any live run before removing fixture; revoke grants |
+| E00.S05 | Measure two representative projects with prod/dev cells, games reference load and one heavy task; qualify private credential-store recovery and off-host archive connectivity. | T05/T08/T31/T36; measured compatibility/capacity report | Revise sizes/counts or require more hardware; no silent weaker isolation |
+
+Exit: a compatibility matrix and recommended resource profiles are attached to ADR-002; every unsupported capability has a chosen resolution. Actual game/application load profiles and recovery destination are recorded. T29 Laya quality is not required yet to establish infrastructure, but its memory/CPU allocation must be bounded before E10 traffic routing.
+
+## E01 Repository and durable control foundations
+
+| Story | Deliverable and acceptance | Requirements/tests | Failure/checkpoint |
+| --- | --- | --- | --- |
+| E01.S01 | Initialize Bun workspace/package management with the qualified Node.js runtime, strict TypeScript, Biome/Husky, CI and artifact checks; no real credentials committed. | F39; T39 | Revert scaffold change; no server mutation |
+| E01.S02 | Version project/action/operation contracts, scoped reference registries and final OpenAPI/SDK DTOs; define adapter capabilities. | F39/I12; T34 | Freeze v1 contracts and regenerate consistently |
+| E01.S03 | Implement operation/effect journal, activation epochs, revision/idempotency, leases/fencing, approval bindings, minimum task-budget reservations and visible cleanup. Freeze action policy and grant limits before adapters can execute. | F35/I08/I12; T09/T18/T23/T24/T26 admission cases/T37 | Replay fixture journal; external intents remain visible |
+| E01.S04 | Implement basic audit/telemetry context and reusable A/B integration fixtures; verify off-host audit export/gap detection. | F35/I14; T25/T37 | Retain prior audit format and stream cursor |
+
+Current local ownership exists in `apps/control-api`, `apps/console`, `packages/contracts`, `packages/store`, `packages/core` and `tests`. The local policy, operation and audit implementations are grouped under `packages/core`; the original `packages/policy`, `packages/operations` and `packages/audit` names remain possible later boundaries, not implemented packages. Full provider/effect behavior and feature views are completed in their owning epics using this common authorization/operation layer.
+
+## E02 Owner access, credentials and infrastructure
+
+| Story | Deliverable and acceptance | Requirements/tests | Failure/checkpoint |
+| --- | --- | --- | --- |
+| E02.S01 | Build console shell, owner passkeys/private-network checks, session revocation and independent recovery procedure. | F01; T01/T33 | Revoke new enrollment; use qualified break-glass recovery |
+| E02.S02 | Integrate owner-operated OpenBao credential broker, per-cell policies, static service rotation and short task grants; rehearse seal/unseal/recovery. | I08/D05; T08/T22/T31 | Fail closed for new credentials; preserve existing static service access |
+| E02.S03 | Implement host VM/network inventory plus professional-VM Docker/gVisor cell provisioning, real data quotas, dual-stack ingress/egress and atomic resource reservations with policy compiler. | F05/F06/F42; T02-T05 | Reconcile allocated sandbox/network/data IDs; quarantine orphan resources |
+| E02.S04 | Add infrastructure views, headroom/pressure reporting and bounded heavy-task queue. | F05/F42; T05/T25/T36 | Disable admission while retaining reads/recovery |
+
+## E03 Project cells and databases
+
+| Story | Deliverable and acceptance | Requirements/tests | Failure/checkpoint |
+| --- | --- | --- | --- |
+| E03.S01 | Build project/env lifecycle saga, server-owned resource mappings, immutable isolation profiles and suspend/resume. | F03/F04; T03/T09/T10 | Resume/compensate by recorded step; preserve live data |
+| E03.S02 | Provision independent PostgreSQL instances, PGDATA/WAL and service roles; enforce HBA/TLS and defaults. | F12/F13/D01-D06; T06/T08 | Restore known role/config version; no cross-cell credentials |
+| E03.S03 | Integrate pgBackRest base/archive management, recovery points and new-cell restore with paused producers, activation fencing and post-recovery-point effect reconciliation using E01 journal primitives. | F15/D07-D09; T07/T18/T30/T31 recovery-activation cases | Retain source cell; mark incomplete restore isolated and unactivated |
+| E03.S04 | Add database/backup/rotation views and archive/headroom incidents. | F12/F13/F15; T06-T08/T40 | Read-only status remains usable when provider degraded |
+
+## E04 Application backend and SDK
+
+Local continuation authorized 2026-11-12 after the owner-requested E05 preparation slice. [ADR-010](../adr/ADR-010-independent-application-backend.md) and the [operator guide](../development/application-backend.md) define the separate cell runtime, application identity, private files, SSE and project SDK. Owner configuration uses control API `1.6.0`; the application API remains independently versioned at `1.0.0`. The requested local E04 tranche is complete; hosted provider, off-host recovery and all-service activation qualification remain open.
+
+Current gates passed: 31/31 full browser journeys in 181.393319 seconds (JUnit); thirteen selected M74–M86 mutation kills in 257.091 seconds with thirteen baseline/restored passes and unchanged original source; frozen source review against 78 backend/code and twelve UI hashes; canonical builds, final affected backend rebuild, actual compiled-template HTTP/restart and SDK-consumer checks; lint (381 files), types, control OpenAPI `1.6.0` consistency and 62/62 local trace links. Final combined unit/integration verification passed 972/972 cases across 72 files in 751.83 seconds (Vitest; 752.705 seconds for the whole command). Cross-service recovery, qualified hosted providers and full E04 acceptance remain separate from this local checkpoint.
+
+| Story | Deliverable and acceptance | Requirements/tests | Failure/checkpoint |
+| --- | --- | --- | --- |
+| E04.S01 | Ship Hono/Drizzle app template and per-cell Better Auth identity/origins; reject cross-project tokens and owners. | F16; T06/T14 | Retain prior app/auth schema and recovery snapshot |
+| E04.S02 | Implement authorized file API, private filesystem provider, quotas, streaming/resume and recovery metadata. | F17; T16/T30 | Quarantine incomplete uploads; preserve committed objects |
+| E04.S03 | Implement scoped domain-event SSE/WebSocket with cursors/refetch, bounded buffers and revocation. | F18; T17 | Fall back to refetch; do not acknowledge dropped durable events |
+| E04.S04 | Ship versioned custom SDK and local-dev template; verify published contracts and no Supabase Cloud runtime path. | F19; T15/T34 | Pin last compatible SDK/API version |
+
+## E05 Application delivery
+
+| Story | Deliverable and acceptance | Requirements/tests | Failure/checkpoint |
+| --- | --- | --- | --- |
+| E05.S01 | Connect git/registry, build in disposable guest, scan/publish immutable artifact and preserve provenance. | F08; T03/T11/T39 | Revoke guest grants, retain logs, discard unpromoted artifacts |
+| E05.S02 | Implement Coolify adapter and edge/domain TLS binding to registered web services only. | F07/F09; T11/T13/T34 | Keep previous domain/artifact mapping and traffic target |
+| E05.S03 | Create isolated preview cells with synthetic data and TTL cleanup; surface actual resource costs. | F10; T03/T10/T38 | Quarantine failed preview; do not touch production |
+| E05.S04 | Implement migration lock, compatibility checks, readiness/smoke gates, promotion and eligible image rollback. | F09/F11/F14; T11/T12/T35 | Stop promotion; explicit data restore is separate |
+| E05.S05 | Complete signed GitHub App intake, exact source bindings, transactional fanout/deduplication and current-head verification before dispatch and promotion. | F45/F46; T41/T43 | Retain received intent; stale or revoked work cannot promote |
+| E05.S06 | Qualify private Jenkins, disposable isolated agents, recurring/source-triggered pipelines, durable dispatch/result reconciliation and retained evidence. | F44; T39/T42 | Queue when runners are unavailable; reconcile unknown submissions before retry |
+| E05.S07 | Implement owner-created exact-scope standing delivery policy, immutable artifact/check gates, policy revocation and stale-build fencing; preserve fresh approval for destructive/incompatible data changes and restore activation. | F46; T41/T42/T43 | Leave prior deployment serving; invalidate outdated authority and preserve failed-release evidence |
+
+## E06 Inngest and durable application work
+
+| Story | Deliverable and acceptance | Requirements/tests | Failure/checkpoint |
+| --- | --- | --- | --- |
+| E06.S01 | Provision cell-specific Inngest/Redis/workflow DB and platform engine; authenticate event ingress and worker registration. | F20/I07; T18/T20 | Freeze ingress for affected cell; retain persisted run state |
+| E06.S02 | Implement local outbox dispatcher and effect keys, safe retries and uncertain-side-effect reconciliation. | F21; T18/T19 | Resume cursor/intents; never replay an unknown effect blindly |
+| E06.S03 | Build cron/function catalog and job progress/pause/cancel/retry UI, restart/resume and history retention. | F20/F21; T18/T20/T24 | Pause scheduling, reconcile live jobs, preserve history |
+
+## E07 Hermes core operations
+
+| Story | Deliverable and acceptance | Requirements/tests | Failure/checkpoint |
+| --- | --- | --- | --- |
+| E07.S01 | Build project/env/role profile lifecycle, trusted versioned skill registry and explicit preloading compatibility. | F23; T21/T22 | Restore trusted skill snapshot; avoid concurrent home writers |
+| E07.S02 | Integrate Runs API, durable run correlation, SSE/chat, approval/clarification and artifacts. | F22/F25; T21/T23/T33 | Preserve provider run ID; show unknown/reconciling status |
+| E07.S03 | Enforce task grants, minimum model admission against E01 reservations, disposable execution, cancellation/fencing and tool allowlists. Complete usage reporting/pricing reconciliation in E08. | F24/I10-I11; T22/T24/T26 admission/overshoot cases | Revoke grants before cleanup; quarantine failed cleanup |
+| E07.S04 | Deliver approval inbox bound to immutable proposals and owner authority; agents cannot approve themselves. | F34; T22/T37 | Expire stale proposals; retain audit evidence |
+| E07.S05 | Integrate at least one qualified Codex/Claude Code runner for repository/worktree tasks, typed results and preview evidence; keep its vendor auth/usage limitations explicit. | F43; T11/T21/T22/T24/T33 | Retain patch/worktree artifacts, revoke task grants, reconcile before repeating side effects |
+
+## E08 Costs, observability and incidents
+
+| Story | Deliverable and acceptance | Requirements/tests | Failure/checkpoint |
+| --- | --- | --- | --- |
+| E08.S01 | Collect scoped logs/metrics, desired/observed freshness and correlated project timelines; complete Overview. | F02/F32; T25/T33 | Mark stale; never show missing observations as healthy |
+| E08.S02 | Extend E01 reservations with usage attempt ledger, price versions, unknown usage, tool/local charges, reporting and provider reconciliation; run full T26. | F30/F31; T24/T26 complete family | Stop new budgeted work on failed admission/accounting; preserve raw evidence |
+| E08.S03 | Implement deduplicated incidents, owner notifications, acknowledgements/mutes and delivery-failure state. | F33; T40 | External observer detects host loss; failed delivery remains visible |
+
+## E09 Operational skill bundles
+
+| Story | Deliverable and acceptance | Requirements/tests | Failure/checkpoint |
+| --- | --- | --- | --- |
+| E09.S01 | Create recurring security skill pipelines with scoped targets, scanner evidence, previous-baseline diff and remediation artifacts. | F26; T22/T27 | Cancel active grant; retain findings/baseline; no automatic duplicate destructive scan |
+| E09.S02 | Add log/metric investigation skills with redaction and deployment correlation. | F27; T22/T25/T27 | Return incomplete diagnosis when source unavailable |
+| E09.S03 | Add source-linked competitor/market deltas, brand-context drafts and campaign analysis; qualify any external publishing connector separately. | F28; T28 | Preserve drafts; unknown publish outcome requires reconciliation |
+
+## E10 Laya and owner experience
+
+| Story | Deliverable and acceptance | Requirements/tests | Failure/checkpoint |
+| --- | --- | --- | --- |
+| E10.S01 | Freeze the numeric V1 evaluation policy, dataset splits, labels and resource envelope before inspecting held-out outcomes; deploy bounded local decision service and version its model/configuration. | F29; T05/T29 protocol/resource cases | No auto-triage before frozen policy and qualified artifact |
+| E10.S02 | Evaluate held-out FR/EN data against the frozen macro-F1/precision/critical-override/resource targets; qualify at least one use case and then integrate the cascade with sampled review. Unqualified use cases stay disabled. | F29; T26/T29 complete family | Failed targets keep F29 incomplete; new tuning needs fresh held-out acceptance data |
+| E10.S03 | Complete all owner navigation, accessibility, desktop/mobile critical flows and loading/error/stale behavior. | F40; T33 | Preserve functional routes; no decorative-only operations |
+
+## E11 Personal services, portability and retention
+
+| Story | Deliverable and acceptance | Requirements/tests | Failure/checkpoint |
+| --- | --- | --- | --- |
+| E11.S01 | Add games/bots inventory and authorized lifecycle/log adapter; keep personal networking/credentials separate. | F36; T02/T32 | Preserve game data; expose native recovery route |
+| E11.S02 | Implement project export/import and case-by-case Supabase migration checks with reversible cutover. | F38; T15/T35/T38 | Keep source service until validated cutover; record dual-write limits |
+| E11.S03 | Implement retention, staged deletion, quarantine/purge and protected recovery/audit history. | F41/D10; T24/T30/T38 | Stop purge on failed prerequisite; report residual resources |
+
+## E12 Release qualification and recovery
+
+| Story | Deliverable and acceptance | Requirements/tests | Failure/checkpoint |
+| --- | --- | --- | --- |
+| E12.S01 | Produce platform/owner/credential-store/file/database recovery set and runbook; restore onto clean replacement capacity. | F37; T07/T08/T30/T31 | Keep recovery source read-only and original cell intact |
+| E12.S02 | Run all T01-T43, 72-hour qualified-load soak, negative isolation suite, provider outage and upgrade/rollback exercises. | All F/I/D; T01-T43 | Freeze release; classify failure and rerun affected scenarios |
+| E12.S03 | Produce a release evidence ledger, pinned compatibility matrix, residual-risk/capacity report, deployment/recovery instructions and owner walkthrough. | All F/I/D; T31/T33/T34/T36/T39 | Retain last qualified release and restore point |
+
+## Isolation implementation ownership
+
+Qualification E00 and final E12 verification do not replace these implementation owners. Each owner records the named control's evidence with its associated tests. Scenario families may be split into cases: for example E01/E07 gate reservation/admission portions of T26, while E08 gates its complete reporting/reconciliation behavior. No family is marked fully passed before all its cases exist and pass.
+
+| Control | Primary implementation owner | Verification |
+| --- | --- | --- |
+| I01 | E02.S03 and E03.S01 | T03/T09 |
+| I02 | E02.S03 | T02/T03 |
+| I03 | E02.S03 and E05.S02 | T02/T13 |
+| I04 | E02.S01 | T01/T02 |
+| I05 | E02.S03 and E05.S01 | T04 |
+| I06 | E02.S03-S04 | T05/T36 |
+| I07 | E03.S02 and E06.S01 | T06/T20 |
+| I08 | E01.S03 and E02.S02 | T06/T08/T22 |
+| I09 | E04.S01-S03 and E06.S01 | T14/T16/T17/T20 |
+| I10 | E02.S03 and E07.S03 | T03/T22/T24 |
+| I11 | E07.S01-S03 | T21/T22 |
+| I12 | E01.S02-S03 and E02.S03 | T04/T34 |
+| I13 | E02.S01-S03 and E12.S01 | T01/T03/T31 |
+| I14 | E01.S04 and E08.S01 | T25/T26/T38 |
+| I15 | E02.S03 and E07.S03 | T02/T22 |
+| I16 | E03.S03 and E12.S01 | T07/T30/T31 |
+
+Network N01-N08 implementation belongs to E00.S02 (qualification), E02.S03 (routing/firewall/allocation), E05.S02 (DNS/TLS/ingress) and E11.S01 (game port mapping); T02/T05/T13/T32/T36/T40 verify the mapped behaviors.
+
+## Required artifacts at V1 release
+
+- Tested version/compatibility and resource-placement matrix, with actual host inventory.
+- OpenAPI/SDK contracts, manifest exports, provider capabilities and policy profiles.
+- Every F/I/D requirement linked to named test results and reproducible evidence.
+- Negative cross-project sandbox/authorization/network/file/job/agent tests, plus disposable-task guest-root and outer VM-boundary tests.
+- Project PITR/file recovery and whole-platform rebuild evidence; actual measured RPO/RTO.
+- Agent skill/version registry, model evaluation, price ledger and known-unknown usage report.
+- Owner/passkey/credential-store recovery and operational runbooks, off-host inventory and credential references.
+- Explicit residual risks: one physical failure domain, trusted shared administrators, capacity ceiling and provider-specific qualifications.
+
+Completion is behavioral, not a count of screenshots, files, coverage percentages or partially scaffolded pages. No security/recovery gate is deferred to manufacture a "90% complete" release.
+
+## Local-first checkpoint and next sequence
+
+[ADR-003](../adr/ADR-003-local-first-and-ci.md) amends the initial ordering: the local subset below may precede physical E00 qualification. The graph above still represents the dependency for enabled infrastructure; it does not prohibit local configuration, user journeys or isolated control-database tests. No capability can be enabled solely because its local page or configuration file exists.
+
+| Area | Local checkpoint | Remaining acceptance before complete story/epic |
+| --- | --- | --- |
+| E00 | Owner reports a reset Ubuntu 26.04 host; no remote inspection or mutation | Verify hardware, recovery route, supported Proxmox installation, dual-stack networking, sandbox compatibility, data boundaries, recovery and measured capacity |
+| E01.S01–S02 | Local foundations implemented: pinned workspace/verification tools, strict action/plan/reference and HTTP DTOs, generated/checked versioned control OpenAPI and internal owner client | Actual CI/artifact qualification and provider-specific contract qualification; the E04 project SDK remains separate |
+| E01.S03–S04 | Durable effect intents and consumer, revisions/idempotency, exact approvals, leases/fencing/epochs, bounded grants/budget reservations, visible uncertainty/cleanup, retention and anchored audit export | Real provider/failure qualification, real PostgreSQL concurrency, protected off-host export/destination and release telemetry evidence |
+| E02.S01 local journeys | Local owner implementation complete: passkey-only gate, fresh confirmation, key/session revocation, durable auth audit, protected state/process exclusion and online/offline recovery | Real owner/hardware enrollment and private remote access/recovery qualification; E02.S02–S04 credential broker/service identities/infrastructure remain separate |
+| E02.S02 local continuation | Implemented local broker: exact project/environment/purpose service identity, metadata-only UI/HTTP, private offline material/proof handoff, FoundationEngine-bound short access and qualified rotation gates; separate core/API/browser groups and native OpenBao ACL/CAS/seal/restart cases passed | real upstream service transition/revocation, server private networking, deployment integration and off-host recovery remain distinct gates; no default transition adapter |
+| E02.S03 local continuation | Local source reviewed and combined 325-case check/build/smoke passed: evidence-bound inventory, strict immutable preparation, atomic capacity/dual-stack reservations, exact Foundation admission and provider-step/reconciliation/protective-stop journal; thirty-one selected mutants killed, 18/18 browser journeys, 4/4 bounded laboratory checks and 26/26 local traceability criteria passed | Actual professional-host runtime, persistent quota/firewall/artifact helpers and both-family enforcement remain provider/E00 qualification gates |
+| E03 local continuation | Verified project/environment metadata and bounded previews; independent PostgreSQL profiles/roles, exact Foundation database lifecycle and French owner UI/API `1.3.0`. Final static checks, 421/421 unit/integration cases, build/smoke, 21/21 browser journeys, 10/10 native checks and 47/47 selected mutation kills passed; backend/UI/final feedback reviews passed. See [ADR-007](../adr/ADR-007-independent-postgresql-cells.md), [operator guide](../development/project-databases.md) and [run history](../../tests/STRATEGY.md) | E03.S01 all-service project suspension/export/purge, deployed preview teardown, real Docker/VM quota/firewall/provider qualification, full migrations, rotation and all E03.S03 physical backup/PITR/activation acceptance remain open |
+| E03.S03 held-recovery continuation | Local physical full/differential backup, archive checks and restore to a new held environment/allocation via Foundation and API `1.4.0`; source retained, private encrypted material, strict scope/chain/capacity, durable hold and blocked activation. Actual signed-tool lab passed 11/11 in 49.52 seconds and three new browser journeys passed in 54.8 seconds. Independent backend/UI reviews passed; 61 selected mutations killed, with two affected post-fix cases rechecked separately. Final local verification passed 596/596 unit/integration cases across 45 files in 408.36 seconds, 24/24 browser journeys in 140.767398 seconds (JUnit), static checks and build/smoke. See [ADR-008](../adr/ADR-008-local-postgresql-held-recovery.md) and [guide](../development/postgresql-recovery.md) | Default execution unconfigured; real producer fencing and complete business-effect journal, file/auth/config recovery, automatic scheduling, off-host durability, hard quotas and production RPO/RTO remain unqualified. This does not close E03.S03/D08 or all E03.S04 views/rotation/incident acceptance |
+| E04 local continuation | Local application identities with actual email/password and configured OAuth fixture, independent store/files, resumable private uploads, authenticated download grants, scoped durable SSE, held file/auth/config recovery and separate TypeScript SDK/template. Owner API `1.6.0` and application API `1.0.0` stay separate. Final verification: 972/972 unit/integration cases across 72 files in 751.83 seconds Vitest (752.705 seconds whole command), 31/31 browser journeys in 181.393319 seconds JUnit, thirteen selected mutation kills with baseline/restored/source-hash proof, frozen source review and canonical builds. See [ADR-010](../adr/ADR-010-independent-application-backend.md) and [operator guide](../development/application-backend.md). | Actual hosted PostgreSQL/material/runtime/domain/proxy/cookie qualification; E06 job producers; off-host custody, external-effect reconciliation and all-service restore activation. Local capture intervals expose an unknown external PostgreSQL recovery-point gap; no complete T30/E03/E12 or V1 claim. |
+| E05 local continuation | Signed push/PR intake and fanout; exact independent source protocol; bounded owner standing policy; shared Foundation build/artifact/stage/readiness/promotion/rollback and synthetic preview lifecycle; `/pipelines`, owner API `1.5.0` and current source/retained artifact separation. Focused actual managed-provider fixture passed 12 checks in 4.21 seconds. The combined run passed 851/851 unit/integration cases across 58 files in 569.99 seconds wall time and 28/28 browser journeys in 163.404282 seconds (JUnit), including four delivery journeys. Static checks (320 linted files, types and API `1.5.0` consistency), build/smoke and frozen backend/UI source reviews passed. The narrow responsive-CSS follow-up passed four delivery browser journeys in 58.082768 seconds with refreshed desktop/mobile visual checks; all thirteen selected delivery mutations were killed with green baseline/restored checks and unchanged original sources. Final build/smoke passed after the stylesheet change. See [ADR-009](../adr/ADR-009-local-application-delivery.md) and [operator guide](../development/application-delivery.md) | Default source/executor unconfigured; actual GitHub App access/token exchange, isolated Jenkins/build guests, trusted registry/scanner, Coolify/runtime, Docker/VM quota/firewall, DNS/TLS/public preview, production migration and remote provider qualification remain open. TTL stop/unpublish does not authorize persistent purge; full E05/V1 acceptance remains partial |
+
+The requested E01 local foundation and E02 local owner implementation are complete; this does not close the full infrastructure-dependent stories or V1. The subsequent owner-requested migration to Bun 1.4.4 preserved the Node.js 24 runtime and passed the existing 153-case Vitest suite, fourteen browser cases, contract consistency, build and built-API smoke after a clean install. The [verification strategy](../../tests/STRATEGY.md) records the separate runs and limits. E02.S02 has the local implementation described by [ADR-005](../adr/ADR-005-bun-and-local-service-authority.md) and the [operator guide](../development/service-access.md). Its preceding combined 215-case check, build/smoke, eighteen selected mutations and eighteen local traceability criteria passed; that browser regression passed 16/16 cases in 53.8 seconds. E02.S03 now follows [ADR-006](../adr/ADR-006-local-inventory-and-cell-provisioning.md) and the [infrastructure guide](../development/infrastructure.md): the combined check passed 325/325 cases across thirty files in 244.70 seconds, build/smoke passed, thirty-one selected mutants were killed, and source review has no open confirmed findings after four independent fixes. The final browser suite passed 18/18 journeys in 73.155046 seconds (JUnit); the explicit laboratory alias passed 4/4 checks in 17.027 seconds (17.26 seconds total), following the earlier 14.65-second run. All 26 local traceability criteria passed. Qualify E00 on the dedicated server before enabling project/data/runtime and delivery providers. Local provider preparation does not activate remote effects. Jenkins and PostgreSQL Compose files can be reviewed independently; neither is a recorded live installation.
+
+[ADR-004](../adr/ADR-004-owner-authority-and-foundations.md) records the implemented owner/control boundary without changing those qualification gates. Current source and launch commands are documented in [local development](../development/local.md), with Jenkins/GitHub activation boundaries in [CI preparation](../development/ci.md). The [verification strategy](../../tests/STRATEGY.md) records tested local slices and the mandatory missing families. E12 must run T01–T43 and produce the full F01–F46 evidence ledger.
