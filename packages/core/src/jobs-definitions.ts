@@ -5,11 +5,17 @@ import {
   type RegisterJobDefinitionInput,
 } from "@godseye/contracts";
 import { type DatabaseAccess, schema } from "@godseye/store";
-import { and, eq } from "drizzle-orm";
+import { and, eq, notInArray } from "drizzle-orm";
 import { DomainError, parseInput } from "./errors.js";
 import { assertFresh, recordRequest, requestFor } from "./foundation-data.js";
 import { nextCronFire, parseCron } from "./jobs-cron.js";
-import { activeCell, definitionFor, definitionView, type JobState } from "./jobs-state.js";
+import {
+  activeCell,
+  definitionFor,
+  definitionView,
+  JOB_TERMINAL_STATES,
+  type JobState,
+} from "./jobs-state.js";
 import { appendAudit, fingerprint, write } from "./journal.js";
 import { type Actor, assertOwner } from "./policy.js";
 
@@ -60,6 +66,22 @@ export async function registerJobDefinition(
     const now = state.now();
     const id = current?.id ?? randomUUID();
     if (current && current.hash !== hash) {
+      const [live] = await tx
+        .select({ id: schema.jobRuns.id })
+        .from(schema.jobRuns)
+        .where(
+          and(
+            eq(schema.jobRuns.definitionId, current.id),
+            notInArray(schema.jobRuns.state, [...JOB_TERMINAL_STATES]),
+          ),
+        )
+        .limit(1);
+      if (live)
+        throw new DomainError(
+          "JOB_DEFINITION_BUSY",
+          "Resolve every active or uncertain run before changing its job definition",
+          409,
+        );
       await tx
         .update(schema.jobDefinitions)
         .set({
