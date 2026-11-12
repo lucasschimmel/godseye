@@ -2,7 +2,7 @@ import { schema } from "@godseye/store";
 import { and, eq, inArray, isNotNull } from "drizzle-orm";
 import { runFor } from "./foundation-data.js";
 import { HANDLER_UNAVAILABLE_EVIDENCE } from "./jobs-execution.js";
-import type { JobState } from "./jobs-state.js";
+import { type JobState, jobEnvironmentFilter } from "./jobs-state.js";
 import { write } from "./journal.js";
 
 type JobRow = typeof schema.jobRuns.$inferSelect;
@@ -101,7 +101,13 @@ export async function syncJobRuns(state: JobState) {
   const rows = await state.store.db
     .select({ id: schema.jobRuns.id })
     .from(schema.jobRuns)
-    .where(and(isNotNull(schema.jobRuns.runId), inArray(schema.jobRuns.state, LIVE)));
+    .where(
+      and(
+        isNotNull(schema.jobRuns.runId),
+        inArray(schema.jobRuns.state, LIVE),
+        jobEnvironmentFilter(state, schema.jobRuns.environmentId),
+      ),
+    );
   let changed = 0;
   for (const row of rows) if (await syncOne(state, row.id)) changed++;
   return changed;

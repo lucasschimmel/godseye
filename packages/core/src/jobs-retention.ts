@@ -1,6 +1,6 @@
 import { schema } from "@godseye/store";
-import { and, eq, inArray, lt } from "drizzle-orm";
-import { JOB_TERMINAL_STATES, type JobState } from "./jobs-state.js";
+import { and, eq, inArray, isNull, lt, ne, or } from "drizzle-orm";
+import { JOB_TERMINAL_STATES, type JobState, jobEnvironmentFilter } from "./jobs-state.js";
 import { write } from "./journal.js";
 
 const DAY_MS = 86_400_000;
@@ -63,6 +63,10 @@ async function pruneRuns(state: JobState, definition: Definition) {
         and(
           eq(schema.jobRuns.definitionId, definition.id),
           inArray(schema.jobRuns.state, [...JOB_TERMINAL_STATES]),
+          or(
+            isNull(schema.jobRuns.reason),
+            ne(schema.jobRuns.reason, "CANCELLED_FENCED_EFFECT_UNKNOWN"),
+          ),
           lt(schema.jobRuns.finishedAt, cutoff),
         ),
       )
@@ -83,7 +87,10 @@ async function pruneRuns(state: JobState, definition: Definition) {
 }
 /** Enforces limits.retentionDays on settled history only; uncertain, held or live work is never deleted. */
 export async function pruneJobs(state: JobState): Promise<RetentionResult> {
-  const definitions = await state.store.db.select().from(schema.jobDefinitions);
+  const definitions = await state.store.db
+    .select()
+    .from(schema.jobDefinitions)
+    .where(jobEnvironmentFilter(state, schema.jobDefinitions.environmentId));
   const outbox = await pruneOutbox(state, definitions);
   let runs = 0;
   for (const definition of definitions) runs += await pruneRuns(state, definition);
