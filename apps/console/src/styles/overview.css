@@ -1,0 +1,160 @@
+.overview-banner {
+  position: relative;
+  overflow: hidden;
+  background: var(--navigation-raised);
+  border-radius: var(--radius);
+  color: var(--navigation-text);
+  display: flex;
+  justify-content: space-between;
+  min-height: 227px;
+  padding: 31px 35px;
+}
+.overview-banner > div:first-child {
+  max-width: 445px;
+  position: relative;
+  z-index: 2;
+}
+.overview-banner .eyebrow {
+  color: var(--navigation-muted);
+  font-size: 8px;
+}
+.overview-banner h2 {
+  color: var(--surface);
+  font-family: var(--font-display);
+  font-size: 29px;
+  font-weight: 450;
+  letter-spacing: -0.6px;
+  line-height: 1.15;
+  margin-bottom: 13px;
+}
+.overview-banner p {
+  font-size: 11px;
+  color: var(--navigation-text);
+  line-height: 1.7;
+  max-width: 380px;
+}
+.text-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 11px;
+  color: var(--accent-ink);
+  font-weight: 550;
+}
+.overview-banner .text-link {
+  margin-top: 20px;
+  color: var(--surface);
+}
+.text-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.text-link.subtle {
+  color: var(--text-secondary);
+  font-size: 10px;
+}
+.control-graphic {
+  position: absolute;
+  right: 30px;
+  top: -15px;
+  width: 300px;
+  height: 300px;
+  color: var(--navigation-muted);
+}
+.orbit {
+  position: absolute;
+  border: 1px solid var(--navigation-border);
+  border-radius: 50%;
+  inset: 0;
+}
+.orbit-inner {
+  inset: 40px;
+}
+.control-core {
+  position: absolute;
+  inset: 88px;
+  border: 1px solid var(--navigation-border);
+  border-radius: 50%;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 9px;
+  color: var(--navigation-text);
+}
+.control-core small {
+  font: 7px var(--font-data);
+  letter-spacing: 1px;
+}
+.orbit-label {
+  position: absolute;
+  background: var(--navigation-raised);
+  padding: 3px 10px;
+  font: 7px var(--font-data);
+  letter-spacing: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+.label-top {
+  top: 35px;
+}
+.label-bottom {
+  bottom: 36px;
+}
+.orbit-node {
+  width: 7px;
+  height: 7px;
+  border: 1px solid var(--navigation-muted);
+  border-radius: 50%;
+  background: var(--navigation-raised);
+  position: absolute;
+}
+.node-one {
+  left: 0;
+  top: 115px;
+}
+.node-two {
+  right: 40px;
+  top: 107px;
+}
+.node-three {
+  left: 94px;
+  bottom: 7px;
+}
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  background: var(--surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius);
+  margin: 23px 0 27px;
+}
+.metric {
+  padding: 20px 22px;
+  border-right: 1px solid var(--border-default);
+}
+.metric:last-child {
+  border: 0;
+}
+.metric > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  color: var(--text-secondary);
+  font-size: 10px;
+}
+.metric > strong {
+  font-family: var(--font-display);
+  font-size: 32px;
+  display: block;
+  line-height: 1;
+  font-weight: 450;
+  letter-spacing: -1px;
+  margin: 19px 0 10px;
+}
+.metric small {
+  color: var(--text-secondary);
+  font-size: 9px;
+}

@@ -1,0 +1,40 @@
+.error-message {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--danger-ink);
+  background: var(--danger-ink-surface);
+  padding: 15px;
+  border-radius: var(--radius);
+  font-size: 12px;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+.error-message > svg {
+  flex-shrink: 0;
+}
+.success-message {
+  color: var(--accent-ink);
+  background: var(--accent-surface);
+  padding: 12px 15px;
+  margin-bottom: 20px;
+  font-size: 12px;
+  border-radius: var(--radius);
+}
+.loading {
+  min-height: 150px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+.spin {
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
