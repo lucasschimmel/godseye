@@ -6,6 +6,7 @@ import { type PgliteDatabase, drizzle as pgliteDrizzle } from "drizzle-orm/pglit
 import pg from "pg";
 import { ApplicationError, ApplicationScope, type ApplicationScopeInput } from "./contracts.js";
 import { acquireApplicationInstance } from "./instance.js";
+import { APPLICATION_JOBS_MIGRATION } from "./jobs-migration.js";
 import { APPLICATION_MIGRATION } from "./migration.js";
 import { protectApplicationDirectory } from "./private-files.js";
 import * as schema from "./schema.js";
@@ -110,6 +111,8 @@ export async function openApplicationStore(options: {
         );
       recoveryHeld = existing.recoveryHold;
       storeId = existing.storeId;
+      for (const statement of APPLICATION_JOBS_MIGRATION.split(";").filter((value) => value.trim()))
+        await tx.execute(statement);
     });
     const exclusive = serialApplicationLane();
     let closed = false;

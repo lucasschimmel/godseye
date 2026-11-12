@@ -3,6 +3,7 @@ import { z } from "zod";
 import type { ApplicationLimitsInput, ApplicationScopeInput } from "./contracts.js";
 import { ApplicationError, ApplicationLimits, ApplicationScope } from "./contracts.js";
 import type { ApplicationRouteRegistry } from "./custom.js";
+import type { ApplicationJobsOptions } from "./jobs-bridge.js";
 import type { ApplicationStore } from "./store.js";
 
 export interface ApplicationLifecycle {
@@ -39,8 +40,22 @@ export interface ApplicationBackendOptions {
   now?: () => Date;
   oauthProviders?: ApplicationOAuthProvider[];
   routes?: (registry: ApplicationRouteRegistry) => void;
+  jobs?: ApplicationJobsOptions;
 }
 export function applicationState(input: ApplicationBackendOptions) {
+  if (
+    input.jobs &&
+    [
+      input.jobs.timeoutMs ?? 10_000,
+      input.jobs.maxPending ?? 1000,
+      input.jobs.retentionDays ?? 30,
+    ].some((value) => !Number.isSafeInteger(value) || value < 1 || value > 2_147_483_647)
+  )
+    throw new ApplicationError(
+      "INVALID_CONFIGURATION",
+      "Invalid application job bridge bounds",
+      422,
+    );
   const scope = Object.freeze(ApplicationScope.parse(input.scope));
   const base = new URL(input.baseUrl);
   const validOrigin = (value: string) => {
@@ -135,6 +150,10 @@ export function applicationState(input: ApplicationBackendOptions) {
     lifecycle: input.lifecycle,
     limits: ApplicationLimits.parse(input.limits ?? {}),
     now: input.now ?? (() => new Date()),
+    jobs: input.jobs ? { ...input.jobs } : undefined,
+    jobBridgeActive: false,
+    jobBridgeSettleOffset: 0,
+    jobBridgeFlight: undefined as Promise<unknown> | undefined,
     oauthProviders,
     closed: false,
     streams: new Set<AbortController>(),

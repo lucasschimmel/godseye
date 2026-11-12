@@ -101,3 +101,14 @@ export const receipts = pgTable("app_receipts", {
   digest: text("digest").notNull(),
   result: jsonb("result").$type<unknown>().notNull(),
 });
+/** Independent from the bounded SSE history: unresolved job intent is never trimmed with it. */
+export const jobEvents = pgTable("app_job_events", {
+  id: text("id").primaryKey(),
+  eventKey: text("event_key").notNull().unique(),
+  envelope: jsonb("envelope")
+    .$type<import("@godseye/contracts").ApplicationJobEnvelopeInput>()
+    .notNull(),
+  deliveredAt: timestamp("delivered_at", { withTimezone: true }),
+  settledAt: timestamp("settled_at", { withTimezone: true }),
+  createdAt: time("created_at"),
+});
