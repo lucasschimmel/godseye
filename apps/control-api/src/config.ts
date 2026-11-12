@@ -29,6 +29,8 @@ export function loadConfiguration(env: NodeJS.ProcessEnv = process.env) {
       `localhost:${consolePort}`,
     ],
     databaseUrl: env.GODSEYE_DATABASE_URL,
+    /** Opt-in only: GODSEYE_JOBS_LOCAL_FIXTURES=enabled registers the simulated local handlers. */
+    jobsLocalFixtures: env.GODSEYE_JOBS_LOCAL_FIXTURES === "enabled",
     githubWebhookKey: env.GODSEYE_GITHUB_WEBHOOK_KEY,
     baoAddress: env.GODSEYE_BAO_ADDRESS,
     baoMount: env.GODSEYE_BAO_MOUNT,

@@ -43,7 +43,8 @@
     "backend:dev": "node --import tsx apps/backend-template/src/server.ts",
     "build:sdk": "node scripts/build-sdk.mjs",
     "build:backend": "node scripts/build-backend.mjs",
-    "test:mutation:backend": "node scripts/mutation-backend-check.mjs"
+    "test:mutation:backend": "node scripts/mutation-backend-check.mjs",
+    "test:mutation:jobs": "node scripts/mutation-jobs-check.mjs"
   },
   "devDependencies": {
     "@godseye/core": "workspace:*",

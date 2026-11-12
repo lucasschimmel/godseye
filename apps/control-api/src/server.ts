@@ -3,6 +3,7 @@ import {
   InfrastructureEngine,
   runDeliveryScheduler,
   runFoundationWorker,
+  runJobScheduler,
 } from "@godseye/core";
 import { openStore, type Store } from "@godseye/store";
 import { serve } from "@hono/node-server";
@@ -11,6 +12,7 @@ import { createApp } from "./app.js";
 import { loadConfiguration } from "./config.js";
 import { createOwnerIdentity } from "./identity/index.js";
 import { acquireInstance, loadIdentityMaterial, privateDirectory } from "./identity/runtime.js";
+import { jobsOptions } from "./jobs-fixtures.js";
 
 async function start() {
   const config = loadConfiguration();
@@ -22,6 +24,7 @@ async function start() {
   let server: ReturnType<typeof serve> | undefined;
   let worker: Promise<void> | undefined;
   let deliveryWorker: Promise<void> | undefined;
+  let jobsWorker: Promise<void> | undefined;
   let stopping: Promise<void> | undefined;
   function stop() {
     stopping ??= (async () => {
@@ -34,6 +37,10 @@ async function start() {
         });
       if (deliveryWorker)
         await deliveryWorker.catch(() => {
+          failed = true;
+        });
+      if (jobsWorker)
+        await jobsWorker.catch(() => {
           failed = true;
         });
       try {
@@ -64,7 +71,9 @@ async function start() {
       origin: `http://localhost:${config.consolePort}`,
       signingKey,
     });
-    const infrastructure = new InfrastructureEngine(store);
+    const infrastructure = new InfrastructureEngine(store, {
+      jobs: jobsOptions(config.jobsLocalFixtures),
+    });
     const engine = infrastructure.foundation;
     const broker = createRuntimeAccess(store, engine, config, signingKey);
     worker = runFoundationWorker(engine, {
@@ -72,6 +81,10 @@ async function start() {
       signal: abort.signal,
     });
     deliveryWorker = runDeliveryScheduler(infrastructure.delivery, { signal: abort.signal });
+    // The Foundation worker above also consumes the local.jobs adapter; the pump only schedules,
+    // dispatches, settles and prunes, and starts solely when the engine is explicitly configured.
+    if (config.jobsLocalFixtures)
+      jobsWorker = runJobScheduler(infrastructure.jobs, { signal: abort.signal });
     const app = createApp(
       new ControlPlane(store),
       config,
@@ -90,6 +103,7 @@ async function start() {
     });
     worker.catch(() => fail("Control worker failed; stopping local admission"));
     deliveryWorker.catch(() => fail("Delivery scheduler failed; stopping local admission"));
+    jobsWorker?.catch(() => fail("Job scheduler failed; stopping local admission"));
     server.once("error", () => fail("Local API listener failed"));
     for (const signal of ["SIGINT", "SIGTERM"] as const)
       process.once(signal, () => {

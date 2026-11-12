@@ -1,0 +1,109 @@
+{
+  "kind": "curated behavioral mutation experiment",
+  "suite": "jobs",
+  "runnerTimeoutMs": 180000,
+  "startedAt": "2026-11-12T16:02:47.569Z",
+  "finishedAt": "2026-11-12T16:05:10.697Z",
+  "scope": "6 selected mutations; not an exhaustive mutation score or coverage claim",
+  "isolation": "Temporary source copies with explicit Vitest workspace aliases; original source never mutated",
+  "baseline": {
+    "status": "passed",
+    "passed": 6
+  },
+  "restored": {
+    "status": "passed",
+    "passed": 6
+  },
+  "sourceUnchanged": true,
+  "selected": 6,
+  "killed": 5,
+  "survived": 1,
+  "invalid": 0,
+  "results": [
+    {
+      "id": "J01",
+      "file": "packages/core/src/jobs-execution.ts",
+      "behavior": "Report a timed-out protected effect as a retryable failure instead of unknown",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "T18 job fault injection treats a timed-out protected job as unknown and a timed-out idempotent job as retryable",
+            "message": "AssertionError: expected 'failed' to be 'unknown' // Object.is equality"
+          }
+        ]
+      }
+    },
+    {
+      "id": "J02",
+      "file": "packages/core/src/jobs-execution.ts",
+      "behavior": "Execute a run whose cancellation was already requested",
+      "status": "survived",
+      "evidence": {
+        "status": "passed",
+        "passed": 1
+      }
+    },
+    {
+      "id": "J05",
+      "file": "packages/core/src/jobs-outbox.ts",
+      "behavior": "Redeliver an abandoned claim to a receiver that cannot deduplicate",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "T19 transactional outbox leaves an abandoned claim unknown when the receiver cannot deduplicate",
+            "message": "AssertionError: expected 'delivered' to be 'unknown' // Object.is equality"
+          }
+        ]
+      }
+    },
+    {
+      "id": "J06",
+      "file": "packages/core/src/jobs-outbox.ts",
+      "behavior": "Accept a conflicting payload for an existing effect key",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "T19 transactional outbox deduplicates repeated intents by effect key and rejects a conflicting payload",
+            "message": "Error: promise resolved \"{ …(15) }\" instead of rejecting"
+          }
+        ]
+      }
+    },
+    {
+      "id": "J07",
+      "file": "packages/core/src/jobs-outbox.ts",
+      "behavior": "Leave outbox intent pending instead of parking it in a recovery-held cell",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "T20 cell isolation and recovery hold parks outbox intent as held in a recovery cell and requires an owner decision to release it",
+            "message": "AssertionError: expected 'pending' to be 'held' // Object.is equality"
+          }
+        ]
+      }
+    },
+    {
+      "id": "J08",
+      "file": "packages/core/src/jobs-execution.ts",
+      "behavior": "Let a fenced worker create new external outbox intent",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "T19 transactional outbox refuses new outbox intent from a worker whose lease has expired",
+            "message": "AssertionError: expected { …(12) } to be an instance of Error"
+          }
+        ]
+      }
+    }
+  ]
+}
