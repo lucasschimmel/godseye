@@ -1,0 +1,33 @@
+{
+  "verdict": "pass",
+  "kind": "code",
+  "criticity": "production",
+  "scope": "E01 local durable foundations; no remote or authenticated-service activation claim",
+  "rubric_overrides": [
+    "+kind=concurrent"
+  ],
+  "findings": [],
+  "criteria_run": 13,
+  "criteria_passed": 13,
+  "not_reviewed": [
+    "Remote adapter qualification and infrastructure isolation: deliberately outside this local-only E01 checkpoint; no adapter is implicitly registered.",
+    "Owner authentication and service transport authentication: assigned to subsequent work; Actor construction was treated as a trusted broker input.",
+    "Full T01-T43 acceptance, provider billing reconciliation, restored-cell activation and disposable-runtime cleanup qualification: later owning epics, not certified here.",
+    "No fresh full lint/typecheck/test rerun by this critic: producing worker was already running the 30 foundation cases. This review read the supplied tests and independently executed the whitespace-evidence PGlite probe.",
+    "FABER bash validator not invoked through the Windows WSL bash shim; equivalent JSON/verdict/finding validation is performed locally before delivery."
+  ],
+  "resolved_findings": [
+    {
+      "id": "FND-001",
+      "criterion": "COR-03",
+      "status": "CONFIRMED",
+      "severity": "blocker",
+      "evidence": "Initial snapshot: packages/core/src/foundation-effects.ts:75 used truthiness for optional evidence while the original EffectOutcome schema allowed whitespace, contrary to .crafts/constitution.md:11 and docs/spec/v1.md:86. The initial real-PGlite probe finalized succeeded with whitespace proof and released the reservation.",
+      "reproduction": "Executed a read-only-source tsx probe against foundationFixture's real in-memory PGlite. The fixture adapter returned {status:'succeeded',evidenceRef:'   ',costMicros:20}; after engine.tick, getRun returned succeeded/cleanupState=complete/terminalAt set, getEffect retained whitespace evidence, and getBudget returned reservedMicros=0/spentMicros=20.",
+      "refutation": "The strongest counterargument is that qualified adapters promise valid evidence and line 79 already trims evidence. Qualification does not strengthen the runtime EffectOutcome schema, which explicitly accepts whitespace. More importantly, line 79's confirmed result affects only the special overrun reconciliation branch, so normal completion and ordinary reconciliation still finalize whitespace evidence. The broker already treats absent evidence as uncertainty, demonstrating that the invariant belongs here rather than solely in adapters.",
+      "refutation_survived": true,
+      "suggestion": "Normalize evidence once and require a nonempty trimmed reference for every non-unknown settlement, including ordinary completion and reconciliation; add a real-store regression covering whitespace evidence.",
+      "resolution": "Resolved during review. packages/contracts/src/foundations.ts:117 now trims and requires nonempty supplied evidence; packages/core/src/foundation-outcome.ts:4 preserves known usage while normalizing invalid provider proof to unknown. Dispatch and reconciliation both normalize outcomes. Current-source PGlite rerun retained unknown/pending/null terminalAt, null evidenceRef, reservedMicros=50 and spentMicros=20. The producer added tests/foundations-execution.test.ts:68 covering dispatch, reconciliation, unchanged charge and final valid evidence."
+    }
+  ]
+}

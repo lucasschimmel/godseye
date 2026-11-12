@@ -1,0 +1,36 @@
+{
+  "status": "ok",
+  "scope": "local foundation; first-party working source and installed dependency metadata",
+  "date": "2026-11-11T14:32:58.585Z",
+  "findings": [],
+  "diff": {
+    "new": 0,
+    "resolved": 0,
+    "unchanged_waived": 0
+  },
+  "scanners_run": [
+    "pnpm audit --json (all dependency scopes)",
+    "pnpm licenses list --json",
+    "native pattern fallback: credential prefixes and high-risk JS sinks"
+  ],
+  "scanners_missing": [
+    "semgrep",
+    "gitleaks",
+    "complete SBOM generator"
+  ],
+  "vulnerabilities": {
+    "info": 0,
+    "low": 0,
+    "moderate": 0,
+    "high": 0,
+    "critical": 0
+  },
+  "firstPartyFilesScanned": 53,
+  "packageInventory": "artifacts/security/dependencies.json",
+  "degraded": "Pattern matching and fresh source review do not replace comprehensive SAST or history scanning",
+  "not_reviewed": [
+    "Remote host/container isolation",
+    "Jenkins runtime and agents",
+    "Production authentication and recovery"
+  ]
+}

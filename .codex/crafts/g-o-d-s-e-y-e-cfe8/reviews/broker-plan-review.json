@@ -1,0 +1,50 @@
+{
+  "verdict": "pass",
+  "kind": "plan",
+  "reviewer": "FABER / security-auditor plan-only satellite",
+  "criticity": "production intent; local implementation only",
+  "artifact": [".codex/crafts/g-o-d-s-e-y-e-cfe8/broker-design.md"],
+  "findings": [],
+  "criteria_run": 13,
+  "criteria_passed": 13,
+  "degraded": "inherited-producing-context: this child received parent history; not a structurally fresh FABER invocation",
+  "criteria": ["PLN-01", "PLN-02", "PLN-03", "PLN-04", "PLN-06", "PLN-07", "PLN-09", "SPC-01", "SPC-02", "SPC-03", "SPC-04", "SPC-05", "SPC-06"],
+  "evidence": [
+    {
+      "boundary": "verified exact-cell identity",
+      "reference": "broker-design.md:11; docs/spec/isolation.md:I08",
+      "result": "The design explicitly rejects project-wide Actor scope as sufficient, binds project/environment/purpose, derives identity from verified proof and keeps service authentication out of owner/admin routes. No concrete scope escalation is authorized by the plan."
+    },
+    {
+      "boundary": "material and provider authority",
+      "reference": "broker-design.md:9-13",
+      "result": "Metadata-only control/browser surface, private ingestion and consumption, server-compiled provider paths, non-root scoped controller authority and deny-by-default policies preserve the declared separation. Default unavailable/sealed behavior is explicit and does not erase mounted static application material."
+    },
+    {
+      "boundary": "task revocation and fencing",
+      "reference": "broker-design.md:15; broker-design.md:34",
+      "result": "Redemption must validate actual FoundationEngine grant/lease/context before and after provider I/O, including worker, epoch, fence, cancellation and expiry. Mint-time validation alone is explicitly insufficient."
+    },
+    {
+      "boundary": "ambiguous external mutation and rotation",
+      "reference": "broker-design.md:19-21; broker-design.md:35",
+      "result": "Intent and stable identities precede external writes; CAS and reconciliation prevent blind replay. Rotation requires a qualified consumer transition plus old upstream revocation evidence. KV versioning and arbitrary owner assertions are explicitly insufficient."
+    },
+    {
+      "boundary": "local qualification claims",
+      "reference": "broker-design.md:25; broker-design.md:31-38",
+      "result": "Actual non-dev OpenBao ACL/CAS/revocation and seal/cold-recovery testing is required. PostgreSQL transition, off-host recovery and server/network isolation are not implied by the local lab. Six new acceptance criteria carry named future test IDs, and the implementation order is sequential."
+    }
+  ],
+  "implementation_checks": [
+    "After an upstream old-key revocation with a lost response, old access may already be unusable. Preserve the actual transition/consumer state as uncertain and reconcile; do not interpret AC-17 as permission to route back blindly or promise that old upstream access still works.",
+    "Pin the concrete request/response/provider schemas, byte/time/TTL limits, private CLI proof protocol and rotation state machine before their downstream consumers are implemented. This plan review does not certify those unimplemented details."
+  ],
+  "not_reviewed": [
+    "PLN-05: no timing or effort estimate is stated in the artifact; no estimate/track-record calibration claim was made.",
+    "PLN-08: no parallel epic implementation is planned.",
+    "SPC-07/SPC-08: concrete new wire/provider schemas and numeric limits are not present yet; implementation review must check the resulting contracts and configuration.",
+    "No source implementation, provider binary, CLI, actual OpenBao lab, runtime mutation, static scan or test execution was reviewed or certified.",
+    "No actual environment files, private material or forbidden-name files were read. No production/server or remote recovery qualification was performed."
+  ]
+}
