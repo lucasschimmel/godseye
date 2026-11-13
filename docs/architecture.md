@@ -40,13 +40,15 @@ Docker project networks use private IPv4 and non-overlapping ULA IPv6 pools. Do 
 
 ## Product and implementation
 
-The owner console uses TanStack Start, React, TypeScript, Tailwind, shadcn/ui and TanStack Query/Table. Hono/Zod, Drizzle/PostgreSQL and Better Auth provide custom API/runtime templates. pnpm workspaces, supported Node.js LTS, Biome/Husky, Vitest/Playwright and independent CI are planned; Hermes/Laya retain qualified Python runtimes.
+The owner console uses TanStack Start, React, TypeScript, Tailwind, shadcn/ui and TanStack Query/Table. Hono/Zod, Drizzle/PostgreSQL and Better Auth provide custom API/runtime templates. Bun workspaces/package management, Node.js24, Biome/Husky, Vitest/Playwright and independent CI are the local baseline; Hermes/Laya retain separately qualified Python runtimes.
 
 The backend provides project/environment lifecycle, independent databases and identities, application auth/files, realtime domain/job events, custom SDK, migrations, backup/PITR and export/import without Supabase Cloud. Inngest remains cell-scoped plus a trusted platform scheduler. Hermes is central to operational/security/market/research/coding skills; Laya supplies evaluated local decisions. Usage accounting remains separate.
 
 Coolify is the first replaceable Docker deployment provider. It does not provision project VMs and is not assumed to manage Kubernetes. Kubernetes remains an evaluated later provider rather than an additional platform installed beside Docker for the same applications.
 
 ## Authoritative documents
+
+- [Dedicated-server specification](spec/dedicated-server.md) and [installation/qualification plan](plan/dedicated-server-installation.md): target-specific infrastructure requirements and pending P00–P09 execution phases.
 
 - [Current decision and sources](adr/ADR-002-professional-vm-and-dual-stack.md); [superseded per-project-VM decision](adr/ADR-001-isolation-and-orchestration.md).
 - [V1 functional requirements](spec/v1.md): 43 required capabilities.

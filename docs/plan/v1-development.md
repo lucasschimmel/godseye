@@ -46,6 +46,8 @@ The baseline sequence is deliberately conservative for a solo operator. Console 
 
 ## E00 Qualification before architectural commitment
 
+The target-specific [dedicated-server specification](../spec/dedicated-server.md) and [installation plan](dedicated-server-installation.md) expand E00 into execution phases P00–P09 with acceptance DS01–DS14. They define planned evidence and do not certify a deployed server.
+
 This is infrastructure experimentation for the final V1, not a reduced product. It must resolve the largest uncertainties first. Experiments use isolated fixtures and no real production data. Record exact versions, hardware, memory/disk/CPU and errors. Do not claim a successful source-document review proves a running boundary.
 
 | Story | Deliverable and acceptance | Tests/evidence | Failure/checkpoint |

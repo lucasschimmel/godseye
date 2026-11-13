@@ -104,6 +104,8 @@ The target is the complete V1 scope, not an MVP. Security, recovery and essentia
 
 ## Read in order
 
+Dedicated-server preparation: [infrastructure specification](docs/spec/dedicated-server.md) and [installation/qualification plan](docs/plan/dedicated-server-installation.md). All remote execution phases remain pending.
+
 1. [Architecture overview](docs/architecture.md)
 2. [Current placement and dual-stack decision](docs/adr/ADR-002-professional-vm-and-dual-stack.md)
 3. [Local-first and CI sequencing](docs/adr/ADR-003-local-first-and-ci.md)
