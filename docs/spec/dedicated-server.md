@@ -70,6 +70,8 @@ Illustration only for a healthy roughly477GiB mirror:40GiB host/images +200GiB p
 
 Inside32GiB professional memory, reserve control/ingress/monitoring capacity before admitting cells. Start with the existing4GiB production /2GiB development-or-preview aggregate service envelopes, then measure independent PostgreSQL, Inngest and runtime overhead. No project-count promise is made. Hermes model calls should initially be remote; Laya is a separately bounded, evaluated local decision service, not a large generative-model deployment.
 
+Explicitly configure and measure the ZFS ARC ceiling within the host/cache budget, together with kernel/daemon overhead; do not allocate guests assuming that all cache is free or that a vendor default fits the8GiB proposal. Bound guest swap, image/build caches, temporary files, snapshots and log rotation independently. Translate CPU planning envelopes into measured scheduler/cgroup settings; a Proxmox CPU limit is not a promise of dedicated physical cores.
+
 ## 4. Network and access contract
 
 Public IPv4 target: one. Absolute ceiling: two, with a documented fixed-port/protocol incompatibility proving the need for the second. No automatic IP purchase. Private cells, databases and admin interfaces consume no additional public IPv4.
@@ -78,7 +80,9 @@ Public IPv4 target: one. Absolute ceiling: two, with a documented fixed-port/pro
 - Public web projects share the professional ingress by hostname/SNI. A records point to the shared IPv4; AAAA records point to qualified ingress IPv6, not arbitrary application containers.
 - Route selected provider-assigned IPv6 addresses to guests. Prefer separate host-managed guest links and explicit static guest /128 routes when qualified; choose the actual route design from the assigned prefix/gateway/MAC evidence. Do not split one assigned /64 into invented SLAAC /64 networks or copy it onto unrelated bridges.
 - Project bridges use unique private IPv4 and generated ULA IPv6 subnets. Neither family permits lateral cells or access to management/games/task/backup networks by default.
+- ULA container addresses alone cannot reach the public IPv6 Internet. Qualify the actual controlled IPv6 egress proxy/relay or supported translation path and its source/return routing. Test IPv6-only and IPv4-only destinations; do not publish ULA addresses in public DNS.
 - IPv6-first means use working IPv6 where supported, retaining IPv4 egress/client compatibility. Databases, Docker APIs and private dashboards remain private even when IPv6 addresses are globally routable.
+- Egress authority revalidates resolved addresses and redirect destinations. Block cross-cell/management, loopback, private/link-local/metadata destinations unless explicitly granted; DNS rebinding or an allowed public hostname must not bypass that denial.
 - Preserve required ICMPv6 discovery/path-MTU functions. Qualify DNS resolution, return paths, NAT/hairpin behavior, forwarding and filters independently in both families, including after reboot.
 
 | Source | Allowed destinations | Default denial |
@@ -89,6 +93,8 @@ Public IPv4 target: one. Absolute ceiling: two, with a documented fixed-port/pro
 | Games VM | Explicit game/bot egress, authorized telemetry | Pro control/cells, host management and backup repositories |
 | Disposable runner | Exact source/registry/model destinations and returned artifacts | Production data, Docker socket, hypervisor keys and unrestricted LAN |
 | Backup identity | Its scoped data/archive and assigned off-host repository | Other cells and independent recovery/deletion authority |
+
+Public integration ingress is a narrow exception to the private-admin rule: publish only registered HTTPS webhook/callback paths needed by GitHub or enabled integrations, through the edge to a bounded receiver. Keep the remaining controller/Jenkins/Inngest/Hermes management paths private. Validate raw-byte signatures, delivery replay/age policy, payload limits and exact source installation/repository bindings; unauthenticated callbacks cannot choose a target, approve a deployment or broaden a grant. Test that neighboring admin URLs remain denied on the same hostname, through both IP families. Polling/private outbound alternatives must remain available when public callbacks are disabled.
 
 Management access uses WireGuard as the initial self-hosted private-access candidate, plus owner passkeys for G.O.D.S.E.Y.E and MFA for Proxmox/Robot where supported. Admin SSH is key-only through private access after a tested replacement session works. Root bootstrap is temporary; automation uses scoped API/service identities and separate emergency access. No ordinary daily account receives unrestricted cross-platform authority.
 
@@ -110,6 +116,54 @@ Jenkins controller has zero executors and remains private. Untrusted repository 
 
 Infrastructure baseline acceptance does not pretend unfinished G.O.D.S.E.Y.E adapters are complete. Install only qualified components, expose unavailable providers honestly and keep normal mutation dispatch disabled until exact target/version/scope/epoch checks pass. Future Inngest/Hermes/Laya rollouts follow their feature gates.
 
+### Service placement and operating inventory
+
+Every installed service needs an owner, immutable image/package version, resource/connection/temp limits, restart/health policy, listen addresses, ingress/egress rules, scoped material references, backup coverage and upgrade/rollback procedure. Record those in an as-built manifest; the following is the required target catalog, not a claim of installation.
+
+| Service | Placement and authority | Required operating behavior |
+| --- | --- | --- |
+| Proxmox/private VPN | Host, restricted management identities | Host lifecycle only; emergency route independent of pro VM/dashboard |
+| Console/control API and journal DB | Pro VM/private control plane | Owner passkeys, exact adapters, durable operations/audit and visible stale/unknown state |
+| OpenBao | Pro VM/private management | Scoped runtime/worker/backup identities, rotation/revocation; protected off-host seal/recovery custody |
+| Edge/Coolify/deploy broker | Pro VM/trusted management | Owned domains/TLS, immutable images, inspected policies; deployment authority separate from builds |
+| Jenkins controller | Pro VM/private; zero executors | Versioned controller/plugins/config, job inventory, periodic/source-triggered checks and retained evidence |
+| Jenkins/general coding agents | Disposable host-level work guest | Ephemeral workspace/cache, no prod keys, bounded checkout/model/registry access; clean or quarantine after task |
+| Per-cell app backend | Pro VM/qualified sandbox | Independent user auth, private files, domain/job realtime and custom SDK configuration without owner authority |
+| Per-cell PostgreSQL | Pro VM/qualified data profile | Independent instance/PGDATA/WAL, separate API/auth/worker/migration/reader/backup roles, SCRAM/HBA/TLS and connection limits |
+| Per-cell Inngest/Redis/workflow DB | Pro VM/qualified cell profile | Separate keys/state; supported external persistence, authenticated registration/events, cron/timezone/retry/cancel policies |
+| Platform scheduler/supervisor | Pro VM/trusted scoped process | Independent of dashboard/owner HTTP; durable outbox/effect reconciliation, fencing and missed-run reporting |
+| Hermes Agent Center/profiles | Pro VM/private orchestration; tools in work guest | Skills provenance/versioning, one owner per project/env/role home, bounded grants, approvals and unknown-run recovery |
+| Codex/Claude Code runner | Work guest, explicit supported vendor auth | Assigned repo/worktree only, patch/test/preview results, finite tools/model budgets and cancellation; no PC dependency |
+| Laya decision service | Pro VM/private bounded allocation, after evaluation | Versioned evaluated decision model and critical-escalation fallback; not generic text generation or a substitute for usage accounting |
+| Metrics/log/audit/usage/alerts | Pro VM/scoped collectors plus external outage observer/copy | Authenticated cell labels, redaction, finite retention, cost provenance, failed alert delivery visible |
+| Games and Discord bots | Personal VM/separate identities | Exact port inventory, save/restart procedure and controlled lifecycle/logs through a separate dashboard adapter |
+
+Choose an external DNS resolver, time source, certificate authority and off-host repository during installation preparation; qualify their outage/fallback behavior, authority scope and required network flows. Do not put all operational recovery dependencies behind the failed pro VM.
+
+### CI/CD, periodic work and branch mapping
+
+Jenkins must actually execute static/security/unit/integration/browser/build checks with frozen Bun dependencies and the qualified Node/runtime tools, retain JUnit/artifact provenance and surface runner outage/missed schedules. Pin plugins/configuration, restrict job configuration and checkout access; qualify cancellation, cleanup, cache scope and retention. Replacing GitHub Actions removes that execution dependency, not the dedicated host's finite compute or provider API limits.
+
+For this repository, platform CI initially follows trusted **develop**, because main currently contains presentation only. Future release/main validation starts only when main contains the appropriate released source. Application projects follow their own exact owner-approved branch/ref policies, including PR previews; builds recheck the current accepted head before promotion. The current prepared Jenkinsfile/JCasC and CI guide still refer to main: updating and qualifying that configuration is a mandatory P07 action, not a completed change in this documentation task.
+
+Nightly/source-triggered checks, security baseline scans, backup verification, certificate renewal, log retention, game-save schedules and agent/marketing jobs need explicit owners, timezone (Europe/Paris for business schedules unless explicitly overridden), UTC run timestamps, daylight-saving semantics, concurrency/deadline policies and missed-run handling. Keep Jenkins pipeline scheduling separate from Inngest application cron; one scheduled owner per task prevents duplicate triggers.
+
+Install boot-enabled system service/container supervision with explicit dependency order: network/private access and storage, material-store readiness, databases/Redis, workflow services/supervisors, application workers, ingress. Define orderly shutdown in reverse where necessary, retained in-flight intents, backoff limits and sealed-OpenBao startup behavior. Reboot must not silently unseal from an unprotected local file or start unauthorized producers from restored state.
+
+Closing the browser, disconnecting SSH and switching off the owner's PC must not stop admitted CI, cron, application jobs or Hermes runs. Test actual continued execution, reconnection/status correlation, cancellation and process/guest/host restart. Laptop tunnels, interactive shell sessions and frontend polling are not the service supervisor.
+
+### Agents, decisions, budgets and owner control
+
+Schedule recurring owned-application security checks, scoped log investigation, competitor/marketing watch and draft production through reviewed Hermes skills and Inngest jobs. Target/grant/tool limits apply to every run. External social posting/replies are separate explicitly authorized actions with scoped connector authority and unknown-result reconciliation; enabling a marketing skill is not blanket publication approval.
+
+Remote coding uses a supported configured Codex or Claude Code runner, with API/account entitlements checked separately. Do not assume a browser ChatGPT/Claude session or subscription automatically authorizes a server-side CLI/API. No large local generative model is required by the AX41 baseline. Keep Laya disabled until its held-out quality/resource gates pass; retain deterministic/owner/Hermes escalation where classification is unqualified.
+
+Laya inherits the exact F29 evaluation policy in the [V1 contract](v1.md): a bounded decision workload within its stated 1 vCPU / 3 GiB envelope, frozen evaluation thresholds, held-out FR/EN evidence and mandatory critical escalation. Account for its reservation inside the professional VM before admitting project cells; no automatic substitution with LiteLLM or a generation model is implied.
+
+The dashboard must expose actual service resource consumption and task/model usage by project, environment, module/job, run and skill: input/output/reported tokens, provider/model/price version, estimated versus reconciled cost and unknown usage. Bound local inference/tool/CI resource costs too. Reserve concurrent/in-flight spend before dispatch and enforce per-project/run/global budgets and rate limits; missing accounting must not become zero cost. Keep the billing/usage journal separate from the recoverable application DB and show freshness.
+
+Administrative VM control, project suspension/resume/export, credential rotation, approval inbox, incidents and staged deletion must use scoped adapters and audited typed operations. No browser receives unrestricted Proxmox/Docker authority. Quarantine/tombstone/purge require independent recovery/retention checks; preview TTL stop/unpublish is not persistent-data deletion. An unsupported lifecycle adapter is visible as unavailable rather than replaced with a general shell button.
+
 ## 6. Backups, recovery and operations
 
 Inherited objectives remain targets to demonstrate: production DB RPO <=15minutes with healthy off-host WAL archiving; project RTO <=4hours on available replacement capacity; files/config RPO <=24hours. Hardware replacement lead time is separately reported. One AX41 provides no multi-host HA guarantee.
@@ -121,6 +175,8 @@ Inherited objectives remain targets to demonstrate: production DB RPO <=15minute
 - Select an off-host repository with documented encryption/access/retention and independent deletion authority where supported. Compatibility, restore throughput and costs are unresolved until a specific destination is qualified; no purchase is authorized by this document.
 - Restore into isolated held destinations. No jobs, agents, webhooks, mail or external side effects resume until explicit activation, lineage/journal coverage and source-producer fencing are verified. Never rewind live data as an image rollback.
 - Keep emergency keys outside the system they recover; never publish them or archive plaintext material in Git.
+- Export protected audit anchors/history off-host and detect missing/truncated intervals. Redact logs/artifacts before ingestion/export; a cell cannot impersonate another cell's telemetry labels or enumerate its files/backups.
+- Record at-rest encryption and unattended-reboot/key-unlock choices explicitly. Disk encryption is not assumed by selecting ZFS or private networking; recovery keys must not depend solely on the encrypted host or sealed store.
 
 Collect host/guest/cell CPU/RAM/disk/IO/latency, pool health, temperatures where supported, certificate expiry, backup/WAL freshness and queued-task pressure. Start from existing log7day/metrics30day/execution90day/audit180day targets within measured disk budgets. Use an external observer for whole-host loss; an alert process on the failed AX41 is insufficient.
 
@@ -146,8 +202,14 @@ All entries start **not executed**. Evidence must record timestamp, versions, ex
 | DS12 | Two representative prod/dev projects, reference game load and bounded heavy task pass a72-hour soak | T05/T36 |
 | DS13 | G.O.D.S.E.Y.E provider admission matches actual target/version/ownership; no local fixture qualifies server authority | T09/T34/T37 |
 | DS14 | Replacement-host recovery runbook, key custody, compatibility evidence and residual limits are reviewable | T31/T34 |
+| DS15 | Actual Jenkins develop/release/project branch jobs, periodic checks, isolated checkout/build and retained evidence execute; main-only prepared configuration cannot be accepted unchanged | T11/T39/T41–T43 |
+| DS16 | Admitted cron/jobs/CI/Hermes continue with PC/SSH/browser disconnected and reconcile after supervised restarts; sealed/recovery-held services remain blocked | T18/T20–T24 |
+| DS17 | Enabled Hermes skills/coding runner, reviewed Laya decisions and per-run token/cost/budget accounting satisfy their product gates; unavailable integrations are explicit | T21–T29 |
+| DS18 | Scoped dashboard lifecycle, rotation/export/quarantine/purge, off-host audit and attribution/redaction controls preserve authorization and recovery | T08/T25/T30/T32/T37/T38 |
 
-Host baseline requires DS01–DS06 and DS11. Actual hosting additionally requires DS07–DS09, DS12 and DS13. Full V1 recovery/operations also requires DS10/DS14 and every applicable product release gate; staged acceptance never silently drops these requirements.
+Host baseline requires DS01–DS06 and DS11. Actual hosting additionally requires DS07–DS09, DS12, DS13 and the enabled lifecycle portions of DS18. Automated delivery requires DS15; autonomous jobs/agents require DS16 and their applicable DS17 gates. Full V1 requires DS01–DS18 and every applicable product release gate; staged acceptance never silently drops these requirements.
+
+Completeness trace: [original requests and V1 control coverage](../reviews/dedicated-server-coverage.md). Planned coverage is not implemented functionality or executed acceptance.
 
 ## 8. Source notes and unresolved choices
 
@@ -160,5 +222,6 @@ Official sources checked2026-11-13. Documentation supports mechanisms, not this 
 5. [Docker packet filtering](https://docs.docker.com/engine/network/packet-filtering-firewalls/): bridge publishing, forwarding and firewall backend behavior.
 6. [gVisor platforms](https://gvisor.dev/docs/user_guide/platforms/): systrap platform choice.
 7. [Coolify Docker options](https://coolify.io/docs/applications/builds/custom-docker-options): runtime-selection surface requiring effective inspection.
+8. [Jenkins controller isolation](https://www.jenkins.io/doc/book/security/controller-isolation/), [Inngest self-hosting](https://www.inngest.com/docs/self-hosting), [Docker daemon supervision](https://docs.docker.com/engine/daemon/start/) and [Proxmox ZFS documentation source](https://github.com/proxmox/pve-docs/blob/master/local-zfs.adoc): checked during the completeness recheck2026-11-13; installed service compatibility remains to qualify.
 
 Still unresolved: actual disk variant/health/usable capacity, precise provider routes, domains/private-access devices, off-host destination, game workloads/port requirements, exact pinned versions and measured compatible profiles. Resolve these through the plan before activating dependent services.
