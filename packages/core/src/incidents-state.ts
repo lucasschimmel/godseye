@@ -11,16 +11,20 @@ export interface Finding {
   key: string;
   kind: IncidentView["kind"];
   severity: IncidentView["severity"];
-  projectId: string;
-  environmentId: string;
-  allocationId: string;
+  projectId: string | null;
+  environmentId: string | null;
+  allocationId: string | null;
   subject: string | null;
   reason: string;
   summary: string;
 }
 /** Delivery is external and optional; absence of a notifier is a visible state, not a delivery. */
 export interface IncidentNotifier {
-  notify(incident: IncidentView): Promise<void>;
+  notify(
+    incident: IncidentView,
+    context?: { idempotencyKey: string },
+    // biome-ignore lint/suspicious/noConfusingVoidType: Legacy notifier callbacks return Promise<void>; typed delivery receipts extend that existing interface.
+  ): Promise<void | { state: "notified" | "failed" | "unknown"; receipt?: string }>;
 }
 export const MAX_DELIVERY_ATTEMPTS = 3;
 export const MAX_MUTE_MS = 30 * 86_400_000;

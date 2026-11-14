@@ -8,16 +8,16 @@ import {
   type RotationOverviewView,
 } from "@godseye/contracts";
 import { type DatabaseAccess, type Store, schema } from "@godseye/store";
-import { desc, eq } from "drizzle-orm";
+import { desc, eq, ne } from "drizzle-orm";
 import { DomainError, parseInput } from "./errors.js";
 import { foundationState, recordRequest, requestFor } from "./foundation-data.js";
+import { deliverIncidents } from "./incidents-delivery.js";
 import {
   backupFindings,
   type Finding,
   type IncidentNotifier,
   type IncidentRow,
   incidentView,
-  MAX_DELIVERY_ATTEMPTS,
   MAX_MUTE_MS,
   rotationFindings,
 } from "./incidents-state.js";
@@ -28,6 +28,16 @@ export type { IncidentNotifier } from "./incidents-state.js";
 export interface IncidentSources {
   backups(actor: Actor): Promise<BackupOverviewView>;
   rotations(actor: Actor): Promise<RotationOverviewView>;
+  observability?(actor: Actor): Promise<{
+    findings: Finding[];
+    coveredKinds: readonly string[];
+    coveredKeys?: readonly string[];
+  }>;
+  system?(): Promise<{
+    findings: Finding[];
+    coveredKinds: readonly string[];
+    coveredKeys?: readonly string[];
+  }>;
 }
 /**
  * Scoped, key-deduplicated incidents. Raising is a durable record; `delivery.state` becomes
@@ -47,7 +57,8 @@ export class IncidentEngine {
     const rows = await this.store.db
       .select()
       .from(schema.incidents)
-      .orderBy(desc(schema.incidents.lastRaisedAt));
+      .orderBy(desc(schema.incidents.lastRaisedAt))
+      .limit(1000);
     return {
       notifier: this.options.notifier ? ("configured" as const) : ("unconfigured" as const),
       incidents: rows.map((row) => incidentView(row, this.options.now())),
@@ -56,19 +67,88 @@ export class IncidentEngine {
   /** Recompute findings from current evidence; unscheduled by design (no qualified scheduler yet). */
   async evaluate(actor: Actor, key: string) {
     assertOwner(actor);
-    const findings = [
-      ...backupFindings(await this.options.sources.backups(actor)),
-      ...rotationFindings(await this.options.sources.rotations(actor)),
-    ];
+    const findings: Finding[] = [];
+    const coveredKinds: string[] = [];
+    const coveredKeys: string[] = [];
+    const collect = async (
+      work: () => Promise<{
+        findings: Finding[];
+        coveredKinds: readonly string[];
+        coveredKeys?: readonly string[];
+      }>,
+    ) => {
+      try {
+        const result = await work();
+        findings.push(...result.findings);
+        coveredKinds.push(...result.coveredKinds);
+        coveredKeys.push(...(result.coveredKeys ?? []));
+      } catch {
+        coveredKinds.push("detector-unavailable");
+      }
+    };
+    await collect(async () => {
+      const view = await this.options.sources.backups(actor);
+      return {
+        findings: backupFindings(view),
+        coveredKinds: [],
+        coveredKeys:
+          view.provider === "qualified"
+            ? view.environments.flatMap((item) => {
+                const base = `${item.environmentId}:${item.allocationId}`;
+                return [
+                  ...(item.lastBaseBackup && item.archive.state === "healthy"
+                    ? [`archive-lag:${base}`]
+                    : []),
+                  ...(item.lastBaseBackup && item.headroom.state === "ok"
+                    ? [`headroom:${base}`]
+                    : []),
+                ];
+              })
+            : [],
+      };
+    });
+    await collect(async () => {
+      const view = await this.options.sources.rotations(actor);
+      return {
+        findings: rotationFindings(view),
+        coveredKinds: [],
+        coveredKeys:
+          view.execution === "qualified"
+            ? view.roles
+                .filter((item) => item.state === "succeeded" || item.state === "never-rotated")
+                .map(
+                  (item) =>
+                    `rotation-failure:${item.environmentId}:${item.allocationId}:${item.role}`,
+                )
+            : [],
+      };
+    });
+    const observability = this.options.sources.observability;
+    if (observability) await collect(() => observability(actor));
     const replay = await write(this.store, async (tx) => {
       const request = await requestFor(tx, actor, key, "incident.evaluate", {});
       if (request.existing) return true;
-      await this.reconcileFindings(tx, actor, findings);
+      await this.reconcileFindings(tx, actor, findings, coveredKinds, coveredKeys);
       await recordRequest(tx, this.fresh, key, request.digest, randomUUID(), "incident.evaluate");
       return false;
     });
     if (!replay) await this.deliver();
     return this.overview(actor);
+  }
+  /** Server lifecycle entry point; it consumes only explicitly injected system detectors. */
+  async evaluateSystem() {
+    if (!this.options.sources.system) return;
+    const result = await this.options.sources.system();
+    const actor: Actor = { id: "godseye:incidents:controller", kind: "service", projectIds: [] };
+    await write(this.store, (tx) =>
+      this.reconcileFindings(
+        tx,
+        actor,
+        result.findings,
+        [...result.coveredKinds],
+        [...(result.coveredKeys ?? [])],
+      ),
+    );
   }
   async acknowledge(actor: Actor, id: string, input: AcknowledgeIncidentInput, key: string) {
     const data = parseInput(AcknowledgeIncident, input);
@@ -129,11 +209,19 @@ export class IncidentEngine {
     if (!row) throw new DomainError("NOT_FOUND", "Incident not found", 404);
     return row;
   }
-  private async reconcileFindings(tx: DatabaseAccess, actor: Actor, findings: Finding[]) {
+  private async reconcileFindings(
+    tx: DatabaseAccess,
+    actor: Actor,
+    findings: Finding[],
+    _coveredKinds: string[],
+    coveredKeys: string[] = [],
+  ) {
     const now = this.options.now();
-    const active = (await tx.select().from(schema.incidents)).filter(
-      (row) => row.state !== "resolved",
-    );
+    const active = await tx
+      .select()
+      .from(schema.incidents)
+      .where(ne(schema.incidents.state, "resolved"))
+      .limit(10000);
     const byKey = new Map(active.map((row) => [row.key, row]));
     for (const finding of findings) {
       const current = byKey.get(finding.key);
@@ -141,7 +229,9 @@ export class IncidentEngine {
       else await this.raise(tx, actor, finding, now);
     }
     const keys = new Set(findings.map((finding) => finding.key));
-    for (const row of active.filter((item) => !keys.has(item.key))) {
+    for (const row of active.filter(
+      (item) => !keys.has(item.key) && coveredKeys.includes(item.key),
+    )) {
       await tx
         .update(schema.incidents)
         .set({
@@ -180,6 +270,18 @@ export class IncidentEngine {
       acknowledgedAt: null,
       resolvedAt: null,
     });
+    if (this.options.notifier)
+      await tx.insert(schema.incidentOutbox).values({
+        id: randomUUID(),
+        incidentId: id,
+        payloadKey: `incident:${id}`,
+        state: "pending",
+        attempts: 0,
+        claimId: null,
+        claimedAt: null,
+        updatedAt: now,
+        receipt: null,
+      });
     await appendAudit(tx, actor, finding.projectId, "incident.raised", `Incident ${id}`);
   }
   private async reraise(tx: DatabaseAccess, row: IncidentRow, finding: Finding, now: Date) {
@@ -199,37 +301,8 @@ export class IncidentEngine {
       })
       .where(eq(schema.incidents.id, row.id));
   }
-  /** Attempt external notification for unacknowledged, unmuted incidents; failure stays visible. */
-  private async deliver() {
-    const notifier = this.options.notifier;
-    if (!notifier) return;
-    const now = this.options.now();
-    const rows = await this.store.db.select().from(schema.incidents);
-    for (const row of rows) {
-      const view = incidentView(row, now);
-      if (
-        row.state !== "open" ||
-        view.muted ||
-        row.deliveryState === "notified" ||
-        row.deliveryAttempts >= MAX_DELIVERY_ATTEMPTS
-      )
-        continue;
-      let delivered = true;
-      try {
-        await notifier.notify(view);
-      } catch {
-        delivered = false;
-      }
-      await write(this.store, async (tx) => {
-        await tx
-          .update(schema.incidents)
-          .set({
-            deliveryState: delivered ? "notified" : "failed",
-            deliveryAttempts: row.deliveryAttempts + 1,
-            deliveryAttemptedAt: now,
-          })
-          .where(eq(schema.incidents.id, row.id));
-      });
-    }
+  /** Durable outbox delivery is safe to invoke repeatedly or concurrently. */
+  async deliver() {
+    await deliverIncidents(this.store, this.options.now, this.options.notifier);
   }
 }

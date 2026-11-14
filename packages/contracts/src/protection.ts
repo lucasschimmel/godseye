@@ -121,7 +121,16 @@ export const RotationOverview = z
   .strict();
 export type RotationOverviewView = z.infer<typeof RotationOverview>;
 
-export const INCIDENT_KINDS = ["archive-lag", "headroom", "rotation-failure"] as const;
+export const INCIDENT_KINDS = [
+  "archive-lag",
+  "headroom",
+  "rotation-failure",
+  "health",
+  "provider",
+  "accounting",
+  "budget",
+  "external-uptime",
+] as const;
 export const AcknowledgeIncident = z.object({ expectedRevision: Revision }).strict();
 export const ResolveIncident = AcknowledgeIncident;
 export const MuteIncident = z.object({ expectedRevision: Revision, until: Moment }).strict();
@@ -133,8 +142,8 @@ export const Incident = z
     key: z.string().max(200),
     kind: z.enum(INCIDENT_KINDS),
     severity: z.enum(["warning", "critical"]),
-    projectId: Id,
-    environmentId: Id,
+    projectId: Id.nullable(),
+    environmentId: Id.nullable(),
     allocationId: Id.nullable(),
     subject: z.string().max(60).nullable(),
     state: z.enum(["open", "acknowledged", "resolved"]),
@@ -148,7 +157,7 @@ export const Incident = z
     /** `raised` is a record; only `delivery.state === "notified"` proves an external notification. */
     delivery: z
       .object({
-        state: z.enum(["unconfigured", "pending", "notified", "failed"]),
+        state: z.enum(["unconfigured", "pending", "notified", "failed", "unknown", "delivering"]),
         attempts: Count,
         lastAttemptAt: Moment.nullable(),
       })
