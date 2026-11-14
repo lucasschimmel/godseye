@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "hermesVersion": "0.23.1",
+  "roles": ["operations", "security", "research-marketing"],
+  "skills": [
+    {
+      "id": "godseye-context",
+      "version": "1.0.0",
+      "description": "Bootstrap scope and evidence policy; no operational automation.",
+      "provenance": "first-party:godseye",
+      "hermesVersion": "0.23.1",
+      "files": {
+        "SKILL.md": "dc0cbf46bc1eae40e83c1af692eb6c7ffe640b494dd6da6164fd2e98bdc76245"
+      }
+    }
+  ]
+}
