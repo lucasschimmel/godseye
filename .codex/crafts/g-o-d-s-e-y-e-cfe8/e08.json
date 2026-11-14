@@ -1,0 +1,129 @@
+{
+  "scope": "E08 local usage, budgets, observability and incidents",
+  "phase": "ship",
+  "status": "complete-local-scope",
+  "apiVersion": "1.15.0",
+  "design": "e08-design.md",
+  "report": "e08-report.md",
+  "criteria": [
+    {
+      "id": "AC-801",
+      "test": "T-AC-801",
+      "status": "verified-local-scope",
+      "evidence": "reviews/e08-tests.json"
+    },
+    {
+      "id": "AC-802",
+      "test": "T-AC-802",
+      "status": "verified-local-scope",
+      "evidence": "reviews/e08-tests.json"
+    },
+    {
+      "id": "AC-803",
+      "test": "T-AC-803",
+      "status": "verified-local-scope",
+      "evidence": "reviews/e08-tests.json"
+    },
+    {
+      "id": "AC-804",
+      "test": "T-AC-804",
+      "status": "verified-local-scope",
+      "evidence": "reviews/e08-tests.json"
+    },
+    {
+      "id": "AC-805",
+      "test": "T-AC-805",
+      "status": "verified-local-scope",
+      "evidence": "reviews/e08-tests.json"
+    },
+    {
+      "id": "AC-806",
+      "test": "T-AC-806",
+      "status": "verified-local-scope",
+      "evidence": "reviews/e08-tests.json"
+    },
+    {
+      "id": "AC-807",
+      "test": "T-AC-807",
+      "status": "verified-local-scope",
+      "evidence": "reviews/e08-tests.json"
+    },
+    {
+      "id": "AC-808",
+      "test": "T-AC-808",
+      "status": "verified-local-scope",
+      "evidence": "reviews/e08-tests.json"
+    },
+    {
+      "id": "AC-809",
+      "test": "T-AC-809",
+      "status": "verified-local-scope",
+      "evidence": "reviews/e08-tests.json"
+    },
+    {
+      "id": "AC-810",
+      "test": "T-AC-810",
+      "status": "verified-local-scope",
+      "evidence": "reviews/e08-tests.json"
+    },
+    {
+      "id": "AC-811",
+      "test": "T-AC-811",
+      "status": "verified-local-scope",
+      "evidence": "reviews/e08-tests.json"
+    },
+    {
+      "id": "AC-812",
+      "test": "T-AC-812",
+      "status": "verified-local-scope",
+      "evidence": "reviews/e08-tests.json"
+    },
+    {
+      "id": "AC-813",
+      "test": "T-AC-813",
+      "status": "verified-local-scope",
+      "evidence": "reviews/e08-tests.json"
+    },
+    {
+      "id": "AC-814",
+      "test": "T-AC-814",
+      "status": "verified-local-scope",
+      "evidence": "reviews/e08-tests.json"
+    },
+    {
+      "id": "AC-815",
+      "test": "T-AC-815",
+      "status": "verified-local-scope",
+      "evidence": "reviews/e08-tests.json"
+    },
+    {
+      "id": "AC-816",
+      "test": "T-AC-816",
+      "status": "verified-local-scope",
+      "evidence": "reviews/e08-tests.json"
+    },
+    {
+      "id": "AC-817",
+      "test": "T-AC-817",
+      "status": "verified-local-scope",
+      "evidence": "reviews/e08-tests.json"
+    },
+    {
+      "id": "AC-818",
+      "test": "T-AC-818",
+      "status": "verified-local-scope",
+      "evidence": "reviews/e08-tests.json"
+    }
+  ],
+  "paidCalls": 0,
+  "remoteChanges": false,
+  "gitMutations": false,
+  "externalNotifications": 0,
+  "qualificationLimits": [
+    "Current-source full Coding KVM requalification remains separate",
+    "Actual billing admin, notifier and independent uptime observer unconfigured",
+    "No AX41 host or guest metrics qualification",
+    "Semgrep/Syft/cdxgen unavailable"
+  ],
+  "outcome": "outcome-1794668844-1319d213"
+}
