@@ -1,0 +1,127 @@
+{
+  "date": "2026-11-13",
+  "scope": "Local advanced Hermes chat: streaming, immutable text artifacts, exact existing-plan approval requests",
+  "phase": "local-request-complete",
+  "prediction": "prediction-1794607354-3c715ee0",
+  "contract": "hermes-chat-design.md",
+  "mode": "One dependent epic with research/provider and GAUNTLET satellites; no independent epic swarm",
+  "provider": "OpenAI",
+  "model": "gpt-6-luna",
+  "serverChanged": false,
+  "paidCalls": 0,
+  "gitMutations": false,
+  "stories": [
+    {
+      "id": "CHAT01",
+      "status": "verified-local-scope",
+      "owner": "hermes_chat_core"
+    },
+    {
+      "id": "CHAT02",
+      "status": "verified-local-scope",
+      "owner": "hermes_chat_research"
+    },
+    {
+      "id": "CHAT03",
+      "status": "verified-local-scope",
+      "owner": "root"
+    },
+    {
+      "id": "CHAT04",
+      "status": "verified-local-scope",
+      "owner": "root/GAUNTLET/fresh-review"
+    }
+  ],
+  "criteria": [
+    {
+      "id": "AC-741",
+      "testId": "T-AC-741",
+      "status": "verified-local-scope"
+    },
+    {
+      "id": "AC-742",
+      "testId": "T-AC-742",
+      "status": "verified-local-scope"
+    },
+    {
+      "id": "AC-743",
+      "testId": "T-AC-743",
+      "status": "verified-local-scope"
+    },
+    {
+      "id": "AC-744",
+      "testId": "T-AC-744",
+      "status": "verified-local-scope"
+    },
+    {
+      "id": "AC-745",
+      "testId": "T-AC-745",
+      "status": "verified-local-scope"
+    },
+    {
+      "id": "AC-746",
+      "testId": "T-AC-746",
+      "status": "verified-local-scope"
+    },
+    {
+      "id": "AC-747",
+      "testId": "T-AC-747",
+      "status": "verified-local-scope"
+    },
+    {
+      "id": "AC-748",
+      "testId": "T-AC-748",
+      "status": "verified-local-scope"
+    },
+    {
+      "id": "AC-749",
+      "testId": "T-AC-749",
+      "status": "verified-local-scope"
+    },
+    {
+      "id": "AC-750",
+      "testId": "T-AC-750",
+      "status": "verified-local-scope"
+    },
+    {
+      "id": "AC-751",
+      "testId": "T-AC-751",
+      "status": "verified-local-scope"
+    }
+  ],
+  "remainingWholeEpic": [
+    "General disposable tool execution",
+    "Agent-created new privileged plans",
+    "Native canonical paused clarification/approval tools",
+    "Remote coding runners",
+    "Dedicated-host deployment and hostile-code containment"
+  ],
+  "verification": {
+    "ordinary": 1360,
+    "nativeDefaultSkipped": 17,
+    "files": 127,
+    "disjointExecutionGroups": 2,
+    "chatOrdinaryIncluded": 31,
+    "currentNativeSelections": 3,
+    "additionalLegacyNativeCases": 2,
+    "selectedBrowser": 3,
+    "selectedMutationKills": 4,
+    "productionHashes": 38,
+    "sourceScanPublicPaths": 123,
+    "sourceScanFindings": 0,
+    "nodeAuditPackages": 495,
+    "nodeAdvisories": 0,
+    "pythonDistributions": 74,
+    "pythonOsvQueries": 73,
+    "pythonKnownFindings": 0,
+    "staticFiles": 593,
+    "types": "pass",
+    "contracts": "control1.11.0/application1.0.0-pass",
+    "build": "pass",
+    "builtSmoke": "pass",
+    "links": 162
+  },
+  "completedAt": "2026-11-13T22:47:27.826Z",
+  "outcome": "outcome-1794609919-dc7c61cf",
+  "wholeEpicComplete": false
+}
