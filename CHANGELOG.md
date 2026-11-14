@@ -2,6 +2,58 @@
 
 ## [Unreleased]
 
+### Usage, observability and incidents (local)
+
+- Added trusted physical model-attempt intent/outcome accounting acknowledged before upstream POST, exclusive token categories with raw totals/cache TTL, immutable reviewed prices and honest unknown totals. Conservative Foundation charges remain separate and are never refunded by reconciliation.
+- Added scoped rolling monetary/rate/concurrency budgets, owner period invoice imports/reconciliation, SQL-filtered keyset pages and independent summaries, conservative evidence retention and actual provider/tool resource observations.
+- Added strictly source-bound structured telemetry, local process/filesystem metrics, freshness, real operational Overview/project timelines and seven-day log/thirty-day metric retention. Remote host metrics and producer continuity are explicitly unavailable/unknown.
+- Extended existing incidents with nullable scope and exact detector-owned coverage, plus a bounded durable notification outbox with claim-before-delivery and unknown/no-blind-retry recovery. Private notifier/independent observer adapters default to unconfigured; no actual messages were sent.
+- Added owner API `1.15.0`, migrations `0023_usage.sql`/`0024_observability.sql` and typed owner-client methods. The requested local software is complete and locally verified: 76 new focused cases, five browser journeys, six selected behavioral mutation kills, independent review with zero open findings and static/build/smoke gates passed. Related regressions and current native composition are recorded separately; full current-source Coding KVM qualification remains open. See [operations](docs/development/usage-observability.md) and [verification](tests/STRATEGY.md#local-e08-usage-observability-and-incidents--2026-11-14).
+
+### Approved agent orchestration (local)
+
+- Added immutable single-project/environment DAGs of at most twelve Hermes/coding/clarification steps, frozen hashes/revisions/epoch, aggregate reservation ceilings and finite authority windows. Recent-passkey owner approval binds the exact content; agents/services cannot approve themselves.
+- Added durable serialized service delegation through real Foundation admission, retained child identities, explicit bounded inert dependency-result handoff, protective cancellation and read-only unknown/no-replay reconciliation.
+- Added successful current Hermes strict whole-output pending proposals (automatic extraction or owner import), plus answered clarification creating a new pending remaining-effectful suffix with inert provenance and no completed-prefix replay.
+- Added owner API `1.14.0`, automatic migration `0022_orchestration.sql`, typed-client methods and responsive console controls. The requested local orchestration software is complete and locally verified; deployed/native-provider qualification, paid entitlement/E08, E09, native vendor paused-tool parity and separately authorized E05 previews/connectors remain distinct. No automatic deployment/publication or broad native Hermes approval is introduced.
+
+- Verified 60 new focused and 656 disjoint relevant regression passes (one legacy opt-in skip), two desktop/mobile browser journeys, three selected mutation kills, independent security/source review with zero open findings and canonical static/contracts/build/smoke gates. This is related local evidence, not a whole-repository or deployed-provider acceptance run. See [final evidence](tests/STRATEGY.md#local-e07-orchestration--2026-11-14).
+
+### Codex and Claude Code runners (local)
+
+- Added immutable owner repository/commit preparations, Foundation-backed coding admission, exact source verification, budget/resource bounds, logical worktree history, cancellation and read-only unknown-task reconciliation.
+- Added separate private API-only Codex/Claude Code bindings, pinned local KVM/CLI asset installers and opt-in setup commands. Default execution stays unavailable without current physical/source/resource/price proof. No desktop subscription OAuth material is reused.
+- Added owner API `1.13.0`, migration `0021_coding.sql`, owner console controls and bounded inert patch/test-log downloads. CLI summaries, actual tests, usage and unavailable previews remain separate evidence. No automatic commit, push, merge, deployment or publication occurs.
+- Added owner-visible editable runner-specific reservation proposals ($0.50 Codex/$0.10 Claude), preserving manual edits without increasing project budgets or changing Hermes defaults.
+- Verified 1,513 disjoint ordinary cases (1,426 existing plus 87 new), with 28 legacy default-native skips; three additional opt-in native composition cases passed in 123.946 seconds. Separate broker/source/readiness checks and two coding browser journeys pass.
+- Both actual pinned CLI edit/test chains passed in local KVM against scripted models; three actual Foundation/provider/controller/broker/KVM composition cases passed with only upstream HTTPS replaced by a trusted fixture; no paid request occurred. No paid vendor call, dedicated-host qualification or complete E07/V1 acceptance is claimed. See [coding runner operations](docs/development/coding-runners.md).
+
+### Task-scoped Hermes data tools (local)
+
+- Added five opt-in trusted scratch/artifact UTF-8 tools with an owner profile ceiling, explicit immutable task/chat-turn grants and copied inputs. Missing grants preserve the legacy no-tools/single-request default.
+- Added a finite model/tool loop with total task cost reservation, durable per-call intentions, unknown/no-replay recovery and exact invocation/OCI cleanup. Actual artifacts use successful nonrevoked/stopped settlement and inert owner downloads.
+- Added a pinned gVisor trusted-helper runtime with verified outer cgroup bounds and explicit local installation/foreground bootstrap. Native Hermes/model execution stays outside the sandbox. Arbitrary shell/build, I10 KVM, coding runners and deployed-host qualification remain open; E07 is partial.
+
+- Verified the tool continuation with 1,426 default regression passes, 28 default-native skips, 11 new plus two selected legacy actual-native passes, three browser journeys and five selected mutation kills. The 66 new ordinary cases are included in the global total. Lint/types/API 1.12 contracts, final build/first-attempt smoke and independent reviews passed with 68 frozen production hashes unchanged. Current WSL manager unavailability remains fail-closed; no paid call, dedicated-server action or Git publication occurred.
+
+### Advanced Hermes chat (local)
+
+- Added scoped persistent conversations with genuine incremental native Runs streaming, bounded successful context, durable cursor replay/reset and owner reauthentication/backpressure limits. Lost send responses retain their original body/key across conversation revision changes.
+- Added immutable private text artifacts with digest-verified inert downloads, and an exact existing-plan proposal inbox using atomic real Foundation owner approval. Rejection/history remain available after profile changes; approval may resume an existing waiting operation but does not enqueue a new plan.
+- Added API `1.11.0`, migration `0019`, regression/native/browser tests and isolated selected mutation checks. Native tools/session-wide approvals, new agent-created plans, coding runners, paid-provider accounting and dedicated-host qualification remain outside this slice.
+
+### Agent Center (local)
+
+- Added owner-only project/environment-bound Hermes role profiles, configuration/pause/resume, task launch/history and bounded dashboard polling. The initial allowlisted model is `gpt-6-luna`; no paid model call is part of qualification.
+- Added opt-in private provider bindings, a separately frozen native API execution environment and correlated Runs transport. Tasks reuse Foundation leases, heavy admission, grants, reservations and audit rather than creating a second scheduler.
+- Added bounded no-tools tasks, protective stop, uncertainty retention and read-only reconciliation. Generic cancellation/epoch revocation cannot publish a later model result. Conservative reservations are not provider invoice reconciliation.
+- Advanced the owner control API to `1.10.0`. Full chat/artifacts/approval inbox/general tools/coding runners and dedicated-server qualification remain open; the validation record distinguishes real native execution from model fixtures.
+
+### Hermes local setup
+
+- Added a pinned Hermes 0.23.1/CPython 3.14.9 installer with frozen minimal dependencies, immutable provenance, interrupted-install refusal and offline real-package inspection. No model call or global service is created.
+- Added operations, security and research-marketing role templates, OpenAI API preference, a versioned first-party bootstrap skill catalog and independent declared-scope immutable profile snapshots. Exact CAS promotion/retained rollback and private filesystem guards are local setup capabilities. Mutable run homes, owner/Agent Center integration and the rest of E07 execution remain pending; E09 operational skills are intentionally deferred.
+
 ### Documentation
 
 - Added the E06 detached-supervisor and external-persistence implementation contract, supported persistent local PostgreSQL/Redis provisioning, per-cell first-party workers, private control/storage bindings and independent platform engine. Full local regression, all eleven opt-in native cases, selected mutations, frozen source review and canonical build/smoke pass. Earlier green checkpoints do not cover later changes. Native process durability does not qualify the dedicated host, hostile-code containment or coordinated recovery.
