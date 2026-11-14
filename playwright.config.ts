@@ -68,12 +68,25 @@ const instances = [
     consolePort: Number(process.env.GODSEYE_E2E_LIFECYCLE_CONSOLE_PORT ?? consolePort + 16),
     apiPort: Number(process.env.GODSEYE_E2E_LIFECYCLE_API_PORT ?? apiPort + 16),
   },
+  {
+    name: "agents",
+    testMatch: "agents.spec.ts",
+    consolePort: Number(process.env.GODSEYE_E2E_AGENTS_CONSOLE_PORT ?? consolePort + 18),
+    apiPort: Number(process.env.GODSEYE_E2E_AGENTS_API_PORT ?? apiPort + 18),
+  },
 ].map((instance) => ({
   ...instance,
   baseURL: `http://localhost:${instance.consolePort}`,
   stateDir: join(dataDir, instance.name, "state"),
   storeDir: join(dataDir, instance.name, "control"),
 }));
+// Targeted journeys can start one owned instance; default full-suite behavior is unchanged.
+const selectedInstance = process.env.GODSEYE_E2E_INSTANCE;
+if (selectedInstance && !instances.some((instance) => instance.name === selectedInstance))
+  throw new Error("Unknown isolated E2E instance");
+const serverInstances = selectedInstance
+  ? instances.filter((instance) => instance.name === selectedInstance)
+  : instances;
 
 export default defineConfig({
   testDir: "./tests/e2e",
@@ -103,7 +116,7 @@ export default defineConfig({
     })),
     { name: "owner-auth", testMatch: "owner-auth.spec.ts" },
   ],
-  webServer: instances.map((instance) => ({
+  webServer: serverInstances.map((instance) => ({
     name: `${instance.name} isolated application`,
     command: "node scripts/dev.mjs",
     url: instance.baseURL,
