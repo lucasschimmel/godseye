@@ -1,0 +1,586 @@
+{
+  "version": 1,
+  "kind": "independent security source-fix closure",
+  "reviewedAt": "2026-11-14T12:45:53.037207+00:00",
+  "verdict": "pass-for-reviewed-local-security-scope; no-open-security-findings",
+  "originalReport": "reviews/coding-runners-security-review.json",
+  "summaryTable": [
+    {
+      "id": "SEC-CR-01",
+      "severity": "high",
+      "status": "source-closed; physical CLI-dependent proof pending"
+    },
+    {
+      "id": "SEC-CR-02",
+      "severity": "high",
+      "status": "source-closed; actual KVM pre-CLI policy refusal observed"
+    },
+    {
+      "id": "SEC-CR-03",
+      "severity": "high",
+      "status": "source-closed; physical CLI-dependent proof pending"
+    },
+    {
+      "id": "SEC-CR-04",
+      "severity": "high",
+      "status": "source-closed; physical CLI-dependent proof pending"
+    }
+  ],
+  "closureHistory": [
+    {
+      "id": "SEC-CR-01",
+      "sourceClosure": "Trusted root-private baseline and final filesystem snapshots replace untrusted index/config-derived diff. Entire CLI cgroup is killed and observed empty before test. Separate test cgroup killed/observed empty after test. Before/after SHA256 of file content/type/executable bit rejects mutating test. root-private no-index diff exports captured trees; provider now requires treeHash.",
+      "refutation": "Original before-test patch capture and mutable Git-index mechanism no longer used. Does not establish physical child containment or exported patch correctness in every path; SEC-CR-04 remains."
+    },
+    {
+      "id": "SEC-CR-02",
+      "sourceClosure": "Init uses set -e with failure trap, sets/readbacks exact64 for coding/verification pids.max. Fixed drop.mjs requires root plus pids64, writes child membership, verifies /proc/self/cgroup, clears supplementary groups, drops gid/uid1000 and verifies IDs before execve.",
+      "refutation": "Failed setup or child admission throws before arbitrary CLI/test invocation; physical failure-injection proof remains independent."
+    },
+    {
+      "id": "SEC-CR-03",
+      "sourceClosure": "Guest uses ls-tree -rz + cat-file blob with explicit path/type/mode policy; avoids archive attributes. Original source.git purged before CLI. Fixed live follow-up uses git add --force to retain tracked files matched by .gitignore and compares complete /seed vs /workspace file tree hashes before CLI.",
+      "refutation": "Exact blob bytes are materialized without archive filters; wildcard private attributes disable Git clean transforms. Force-add and pre-CLI filesystem hash comparison prevent silent worktree omission. Physical attributes/ignore regression still pending."
+    },
+    {
+      "id": "SEC-CR-04",
+      "status": "source-closed",
+      "sourceClosure": "Removed every patch-header string rewrite. Exporter creates new root-owned /verification/export Git metadata, installs highest-precedence clean-transform disabling info attributes, copies trusted baseline snapshot, force-adds all paths and commits baseline; removes nonmetadata files; copies trusted final snapshot; force-adds all paths and emits native Git --cached --binary --no-renames --no-ext-diff --no-textconv output. No untrusted index/config is imported. Native Git handles nested/quoted paths and executable/symlink modes.",
+      "refutation": "Original global replacement reproducibly corrupted internal filename segments. No rewrite now exists; standard Git paths represent snapshot files directly. Actual patch-application/attribute/index/background regressions still require guest evidence."
+    }
+  ],
+  "findings": [],
+  "additionalReviewedSource": {
+    "startup": "Explicit optional startup hook; missing bindings stay unavailable, sanitized invalid configuration fails provider closed without disabling owner administration. Exact Ubuntu private distro schema matches fixed WSL privileged launcher.",
+    "bindingAuthority": "Operator-only metadata excludes apiKey; selected process-private env vars injected; strict schema, duplicates refused, bounded reads, dedicated .local protected directory, no alias parents, independent staging, exclusive writes/fsync, locked atomic publish, no automatic enablement/model calls. No confirmed additional blocker from reviewed scope.",
+    "nativeIdentity": "Canonical root systemd-run/setpriv before workspace Python; no persistent root config. KVM-only/no NIC/jail; runtime source hash recipe now covers full listed runtime and broker/control chain, readiness requires same host boot and successful stopped CLI proof with matching source/runtime hashes.",
+    "finalExport": "Independent root-private snapshots, coding/test cgroup quiescence and pre/post-test hashes retained. Source ls-tree/cat-file plus force-add plus materialized source/workspace hash comparison retained. Final exporter uses entirely fresh trusted Git metadata and native filename/mode-aware diff; no header text rewrite remains."
+  },
+  "physicalProof": {
+    "status": "reviewed local normal and three integration composition gates passed; bounded adversarial history observed",
+    "observed": [
+      {
+        "finding": "SEC-CR-02",
+        "artifact": "artifacts/coding-native-regressions/codex-pids-failure.json",
+        "artifactSha256": "2685a69136319307d9600de774b7217776fa96b3432931a93ac6978df8159b90",
+        "case": "pids-failure",
+        "assertionsPassed": true,
+        "elapsedSeconds": 37.073,
+        "paidCalls": 0,
+        "evidence": "Synthetic actual-KVM output contains GODSEYE_POLICY_REJECTED and poweroff; result stopped=true, grantsRevoked=true, no guestResult, fixture has no completed model exchange. State unknown honestly records no coding result.",
+        "scope": "Exact task/drop/control source hashes match current files. Worker source changed after refusal proof; no worker/CLI execution claim is derived from an init-level refusal."
+      },
+      {
+        "artifact": "artifacts/coding-native-regressions/claude-code-index.json",
+        "artifactSha256": "b65aa9c0214cdfe762acc28a8cf14361bf4228116fdf3a67bea8705960095c75",
+        "case": "index",
+        "assertionsPassed": true,
+        "elapsedSeconds": 115.427,
+        "paidCalls": 0,
+        "state": "succeeded",
+        "stopped": true,
+        "grantsRevoked": true,
+        "hasGuestResult": true,
+        "scope": "Synthetic candidate-specific evidence read directly. Does not qualify later broker/capability source recipe."
+      },
+      {
+        "artifact": "artifacts/coding-native-regressions/claude-code-test-mutation.json",
+        "artifactSha256": "1b9d731f2ea0906bf72c9896c16f9cc24d9121817ba49fc7cd5b1e5093ba64e8",
+        "case": "test-mutation",
+        "assertionsPassed": true,
+        "elapsedSeconds": 35.354,
+        "paidCalls": 0,
+        "state": "failed",
+        "stopped": true,
+        "grantsRevoked": true,
+        "hasGuestResult": false,
+        "scope": "Synthetic candidate-specific evidence read directly. Does not qualify later broker/capability source recipe."
+      },
+      {
+        "artifact": "artifacts/tools/coding-kvm/10.2.1/codex-qualification.json",
+        "artifactSha256": "108a53b6898c20cb55242d0cd3a9ced7c60f1da61d1b31f4fb1ee3c5bfedb5ea",
+        "taskId": "5d8f54f0-33aa-4f34-af74-34d314c4880c",
+        "kind": "actual pinned CLI inside disposable KVM, local fake model transport",
+        "state": "succeeded",
+        "stopped": true,
+        "grantsRevoked": true,
+        "cliExit": 0,
+        "independentTestExit": 0,
+        "patchDigestVerified": true,
+        "treeHash": "232b95a1e5961bd59227d541ea5c9702ff76df2e3e5959d98c151bcfb8b6f293",
+        "fixtureCompleted": true,
+        "allSourceHashesIndependentlyMatchCurrent": false,
+        "scope": "Historical source-matching normal artifact observed at prior review. Later broker/control compatibility changes supersede its current-recipe status; preserve evidence without claiming qualification of new bytes."
+      },
+      {
+        "artifact": "artifacts/tools/coding-kvm/10.2.1/claude-code-qualification.json",
+        "artifactSha256": "1f307a622d45e11299b54e0f730aa2d85a1b9c40a88ff9d63f6dd9371e4aefc9",
+        "taskId": "d722a29d-c368-4e76-a79b-e35e5f22f0cc",
+        "kind": "actual pinned CLI inside disposable KVM, local fake model transport",
+        "state": "succeeded",
+        "stopped": true,
+        "grantsRevoked": true,
+        "cliExit": 0,
+        "independentTestExit": 0,
+        "patchDigestVerified": true,
+        "treeHash": "232b95a1e5961bd59227d541ea5c9702ff76df2e3e5959d98c151bcfb8b6f293",
+        "fixtureCompleted": true,
+        "allSourceHashesIndependentlyMatchCurrent": false,
+        "scope": "Historical source-matching normal artifact observed at prior review. Later broker/control compatibility changes supersede its current-recipe status; preserve evidence without claiming qualification of new bytes."
+      },
+      {
+        "artifact": "artifacts/tools/coding-kvm/10.2.1/codex-qualification.json",
+        "artifactSha256": "1f7357021483829103688704a9744b4db85cb581c5886a19743e314fae30381d",
+        "taskId": "c522a63b-dabc-4583-b879-3d0e31ab6c8f",
+        "kind": "final-v7 raw normal qualification",
+        "state": "succeeded",
+        "stopped": true,
+        "grantsRevoked": true,
+        "cliExit": 0,
+        "testExit": 0,
+        "patchDigestVerified": true,
+        "fixtureCompleted": true,
+        "all13SourceHashesMatchCurrent": true,
+        "scope": "Actual saved qualification inspected, fake model transport and zero paid calls. Does not imply paid entitlement or remote server qualification."
+      },
+      {
+        "artifact": "artifacts/tools/coding-kvm/10.2.1/claude-code-qualification.json",
+        "artifactSha256": "2792f188a7be382ddbc0ed6bd82fd8bcead7c306ebfa4b175075c33ad13ce6ee",
+        "taskId": "23752f08-3302-42b7-9e9b-8952094fe803",
+        "kind": "final-v7 raw normal qualification",
+        "state": "succeeded",
+        "stopped": true,
+        "grantsRevoked": true,
+        "cliExit": 0,
+        "testExit": 0,
+        "patchDigestVerified": true,
+        "fixtureCompleted": true,
+        "all13SourceHashesMatchCurrent": true,
+        "scope": "Actual saved qualification inspected, fake model transport and zero paid calls. Does not imply paid entitlement or remote server qualification."
+      }
+    ],
+    "pending": [
+      "Root final idle/smoke running; aggregate acceptance remains root-owned",
+      "Refreshed GAUNTLET aggregate summary/root scanner-build-source-freeze bookkeeping; direct final native XML and current hashes already observed",
+      "No paid entitlement or server deployment claims in scope."
+    ],
+    "orchestratorReported": "All3 final actual compositions completed; XML inspected. Raw normal v7 current-match. Follow-up cleanup naturally completed: exact3 socket directories absent, no units/controllers, no manual deletion. Root final idle smoke running."
+  },
+  "AEGIS": {
+    "preliminaryReported": "Bun audit0; Gitleaks731publicpaths one known synthetic placeholder, zero actual new secrets. Reviewer did not rerun scanners.",
+    "final": "Aggregate root gate owns final post-change freeze scan; fresh broker/capability source requires hash reconciliation.",
+    "degradation": [
+      "Semgrep unavailable",
+      "SBOM unavailable",
+      "No independent ledger/cache read; no waiver inferred or written"
+    ],
+    "finalReported": "Orchestrator final public-source scan758paths: one known synthetic placeholder, zero actual new secrets. Build+smoke passed351compiledinputs without drift. Not independently rerun by security reviewer."
+  },
+  "notReviewed": [
+    "Actual private bindings/keys/journals, paid requests or entitlement.",
+    "Physical latest KVM/CLI/adversary proof, complete native stop/restart fault injection.",
+    "Final full source scanner/dependency/SBOM/license gate.",
+    "Source edits after hashes below; preserve old finding history and rerun focused closure."
+  ],
+  "authorization": "Read-only public source review, one pure string reproduction, report-only writes. No Git operations, protected reads, network/model calls, production edits, installation or persistent config changes.",
+  "reviewedSourceSha256": {
+    "scripts/coding_guest_worker.mjs": "92e39e85bfc6170181c65154d41a8e4d0b2b64c9a5732b94ebd760ca77690ac1",
+    "scripts/coding_guest_task.py": "4abedb3b4fdcd6501db4bb94984b794eb09db9e62e376d90bbcaf15e953f6e65",
+    "scripts/coding_guest_drop.mjs": "858066f3d844c7a7aad22b861534f11a6637f75da383c0be973b96f2783b9e63",
+    "scripts/coding_guest_control.py": "0840fc8c30a6b9ac065c62a3c430db29f50695f2c2bb17b84e3c667fd893b934",
+    "scripts/coding_guest_source.py": "79e1b9656abb014f9f3493c6862d7a34d7c6ce930e4a9925a942cc59c46425a5",
+    "scripts/coding_guest_lab.py": "72450fc89244464aeed9090138a6d922d144517cc39c2ccf057274b33b87ece0",
+    "scripts/coding_guest_proxy.mjs": "80c3a85d9df2bd4b054178181ffc588c3bc28f87f092f9b403e7b06ce7d14b93",
+    "scripts/coding_guest_broker.py": "353857c225cadb1c1dbd2d634e5ce08b765d4f90c092f349a52a36043d82e5f9",
+    "scripts/coding_guest_install.py": "fb2d375de3736eb27a3a07ad983cf0c30a1781573cb166d8917b9b44b19458ea",
+    "scripts/coding_cli_install.py": "45bb96bc32fe5639cae09c11ea9a4bef3fe69acb3112f367aefe16d0d0117af8",
+    "scripts/coding_guest_qualify.py": "0dd78789591a15a0e9f89e0e6aa57377972861526abdf5a539dc26eca5326077",
+    "scripts/coding-bindings.mjs": "275ed685caf5147099707684b6595083a0e9cdd96f4c085df675109022764504",
+    "scripts/coding-runtime.mjs": "35a826b14ed2b1fd894eb3ca206cdee4299f9b0d44762cfe5fea820ee82de398",
+    "apps/control-api/src/coding-provider.ts": "b56da7f654b8be63ad632274f1fa415506656952b423984446fb14dd46497371",
+    "apps/control-api/src/coding-startup.ts": "575692151baac5334454a805237d61060bc280e3137db16c81fe230145c55a0e",
+    "apps/control-api/src/server.ts": "ad6e0f438ef9ed99dfb4ada7beab947bb2a16523f68a9cc30e99d3c871128d54",
+    "apps/control-api/src/private-json.ts": "fbddc66900c366bff9e97e4c49473aa4246c5e3ca55c0a62b17b5b09117016c5",
+    "tests/helpers/coding-broker.py": "181b1f00fd128cc39d75a8dab075a1e557f29d9d0eb6fac17ec260e390466319",
+    "scripts/coding_cli_fixture.py": "c482e1dd5f5c1cdbb6974ba544e26b074dd8849e5b80ac2be600fcb428b3238c",
+    "scripts/coding_runner_config.mjs": "f451cdc1ca764fc9237b7308397df8771ac12ee236d67af4d56ed04c2f03b7f6",
+    "tests/helpers/coding-readiness.py": "062cbe9131a08511d0d1cb6bd9d3259fea0e51f5b3854e969111381b9219cb0e",
+    "packages/contracts/src/coding.ts": "aef9b9a0f967b8976927896c233dee7b52965e3de62e123bfac2577f5039dc0f",
+    "apps/console/src/components/agents-coding.tsx": "19158f04f319e20cbf7a4617775f1f956760d1b2e55fb41d2bd27073286d78f5",
+    "tests/coding-composition-native.test.ts": "2d3dd44a8223672c2a0788b322e42496dce8501ac18141dcd1260505caec1545",
+    "tests/helpers/coding-composition-launcher.py": "823a9a59d223de24d08e0c59b69cb17de99f25ddb7a220c954ed8b4dcabec6a6",
+    "apps/control-api/src/coding-protocol.ts": "d62353936d97058a95936cc1e5457f3dcb36cd66654b861bdd7d8621b12d1574"
+  },
+  "findingHistory": [
+    {
+      "id": "SEC-CR-04",
+      "layer": "logic",
+      "severity": "high",
+      "cwe": "CWE-706",
+      "reachability": "proven (pure string transformation); physical Git application not run",
+      "status": "CONFIRMED",
+      "evidence": "scripts/coding_guest_worker.mjs:356 globally replaces a/baseline/ and b/final/ throughout patch header lines.",
+      "description": "Valid nested source path containing a/baseline/ or b/final/ is modified internally, so exported inert patch targets another file instead of the tested tree.",
+      "reproduction": {
+        "input": "--- a/baseline/nested/a/baseline/file.txt",
+        "actual": "--- a/nested/a/file.txt",
+        "expected": "--- a/nested/a/baseline/file.txt",
+        "execution": "Executed local pure Python string equivalent of production replaceAll; no Git/private files or repository commands."
+      },
+      "refutation": "Header-only rewriting avoids content-hunk mutations but still rewrites all matching substrings inside a header path. Bound SHA256 only authenticates the malformed patch.",
+      "suggestion": "Normalize only the added baseline/final path prefix with a path-aware parser handling quoted Git paths; preserve arbitrary internal path bytes. Add nested-prefix and quoted-filename regression cases."
+    }
+  ],
+  "reviewRounds": [
+    {
+      "round": "SEC04 final source closure",
+      "reviewedAt": "2026-11-14T10:31:19.933195+00:00",
+      "verdict": "source-pass",
+      "physical": "SEC02 synthetic failure proof observed; other qualification pending",
+      "productionEdits": false
+    },
+    {
+      "round": "durable broker completion guard and capability/allocation distinction",
+      "reviewedAt": "2026-11-14T10:59:52.684292+00:00",
+      "verdict": "source-pass-for-reviewed-code; capability-change-and-final-physical-freeze-pending",
+      "independentBrokerTests": "20/20 WSL fake HTTPS",
+      "productionEdits": false
+    },
+    {
+      "round": "final host capability implementation + native freeze v2",
+      "reviewedAt": "2026-11-14T11:11:34.330259+00:00",
+      "verdict": "source-pass; current-normal-CLI-proof-observed; remaining-physical-gates-pending",
+      "independentReadinessTests": "8/8 WSL pure policy",
+      "productionEdits": false
+    },
+    {
+      "round": "narrow Claude compatibility + cheap readiness + launch stdin isolation",
+      "reviewedAt": "2026-11-14T12:04:40.860179+00:00",
+      "verdict": "source-pass; latest-recipe-normal-and-composition-physical-gates-pending",
+      "independentTests": "24/24 broker including selected replay;12/12 readiness/launch",
+      "productionEdits": false
+    },
+    {
+      "round": "final bounded Codex namespace/schema metadata and plaintext-only compatibility",
+      "reviewedAt": "2026-11-14T12:42:17.229542+00:00",
+      "verdict": "source-pass; final-three-physical-compositions-pending",
+      "independentTests": "31/31 broker both exact payloads;13/13 readiness/retention",
+      "productionEdits": false
+    },
+    {
+      "round": "final v7 normal receipts, five bounded adversaries and three real Foundation/native compositions evidence closure",
+      "reviewedAt": "2026-11-14T12:45:53.037207+00:00",
+      "verdict": "pass-for-reviewed-local-security-scope; no-open-security-findings",
+      "productionEdits": false,
+      "heavyTestsRerun": false
+    },
+    {
+      "round": "cleanup final observation resolved transient",
+      "reviewedAt": "2026-11-14T12:46:08.783407+00:00",
+      "verdict": "no-residual-cleanup-security-finding",
+      "evidence": "Root/test owner follow-up exact3directories absent, no units/controllers, no manual delete"
+    }
+  ],
+  "brokerReview": {
+    "sha256": "353857c225cadb1c1dbd2d634e5ce08b765d4f90c092f349a52a36043d82e5f9",
+    "verdict": "source-pass",
+    "evidence": "Normalized request SHA256 recorded with irrevocable charge/pending effect in locked atomic file+directory fsynced ledger before POST. Permanent fingerprints deny exact normalized duplicates even after known completion. Pending/uncertain publication fences all payloads across reopen. Completion guard is file+directory durable before pending clear; only after cleared ledger and parent fsync is guard unlinked. OSError recovery and uncaught process death retain guard/pending fail-closed; no refunds or automatic retry.",
+    "independentTest": {
+      "passed": 31,
+      "failed": 0,
+      "skipped": 0,
+      "seconds": 0.454,
+      "command": "WSL Python-I tests/helpers/coding-broker.py with both exact known synthetic Claude and Codex captured payload environment selectors",
+      "fixtures": [
+        "artifacts/coding-composition-fixtures/synthetic-cvv5_11y/request-2.json",
+        "artifacts/coding-composition-fixtures/synthetic-bx5057oo/request-1.json"
+      ],
+      "network": "Fake HTTPS only, no real vendor calls",
+      "scope": "Both exact production-handle replays; strict malformed metadata/namespace/remote/opaque denials; durable uncertainty and completion guard regressions."
+    },
+    "limits": "Semantic changes that produce distinct normalized payloads remain distinct bounded requests. No paid entitlement, price correctness or live vendor billing claim.",
+    "compatibilityDelta": {
+      "verdict": "source-pass",
+      "source": "For claude-code only, exact equality with {edits:[{type:clear_thinking_20251015,keep:all}]} is required; accepted context_management is deleted before strict upstream field validation. Codex same field and unknown/extended Claude shapes remain denied. Debit upper bound uses max(original UTF8 request bytes, normalized wire bytes). No beta header, URL/remote tool, model or premium tier propagation. Durable dedup and completion fence remain unchanged.",
+      "officialResearchOwnership": "Runtime report coding-runners-claude-context-report.json cites official context editing documentation; security closure relies on direct production source trace and independent fake-HTTPS tests, not independent live vendor documentation/entitlement verification."
+    },
+    "codexCompatibilityDelta": {
+      "verdict": "source-pass",
+      "brokerSha256": "353857c225cadb1c1dbd2d634e5ce08b765d4f90c092f349a52a36043d82e5f9",
+      "runnerConfigSha256": "f451cdc1ca764fc9237b7308397df8771ac12ee236d67af4d56ed04c2f03b7f6",
+      "localDefinitions": "Codex namespace accepted only one level, exact namespace fields with bounded children; leaf function/custom type, names/description/grammar bounded, unknown endpoints/types disallowed, total64/namespace32 caps. Schema descriptors scrubbed in isolated schema mode so reserved property names are declarations; actual input scrub remains opaque/remote-content denying. External schema $ref denied. No server remote-tool authority added.",
+      "metadata": "client_metadata exact known top-level UUID/window fields, total8192B/field4096B, known bounded nested turn fields, /workspace-only exact source info; diagnostic reasoning_effort only none. Metadata stripped before upstream/dedup. No upstream credentials inferred.",
+      "opaqueContext": "Only known include hint accepted and stripped; reasoning structure validated then forced effort=none. Actual encrypted_content/file/image/remote tool input still denied. Raw-vs-normalized max-byte charging and normalized durable dedup retained.",
+      "fixedCLI": "Pinned model catalog and argv request none only; broker independently enforces wire none; zero request/stream retries retained."
+    }
+  },
+  "capabilityLifecycleReview": {
+    "decision": "source-pass; implemented at final native freeze v2",
+    "distinction": "Historical stopped-success CLI qualification is capability evidence bound to runtime, guest CLI, source recipe, host kernel/architecture/KVM-device and confinement-policy identity. It may survive WSL idle reboot if those identities still match and every fresh launch enforces actual KVM, cgroups, namespaces and root drop. It grants no retained allocation authority.",
+    "strictAllocationRequirement": "Existing native allocations MUST still validate exact task/unit/cgroup, nonempty InvocationID, original bootId and observed inactive/empty cgroup; mismatched/missing boot or invocation remains unknown/quarantined. Never reuse capability identity as allocation stop proof.",
+    "liveSource": "host_profile exact equality checks version, WSL2 x86_64 kernel release, machine-id SHA256, /dev/kvm character-device major/minor/KVM group, unified cgroup controller list and finite guest/VMM/CPU/PID policy. readiness additionally executes fixed current KVM API12/CREATE_VM probe under canonical root entrypoint dropping UID/gid1000+observed KVM group, env-i Python-I, closing both fds. Only software/capability boot comparison removed. Allocation stop remains strict task/unit/cgroup/nonempty exact InvocationID plus original bootId and observed inactive+empty controls. End-of-run source/host profile change invalidates success.",
+    "classification": "Inspected exact stopped+grants revoked finalization converts unknown-with-no-result to failed, preserving no result and full conservative task charge through core settlement. No stopped proof retains unknown/quarantine. This is safe cleanup classification; not evidence of successful execution.",
+    "independentTests": {
+      "command": "wsl.exe -d Ubuntu --exec /usr/bin/python3 -I /mnt/d/Developer/Projects/G.O.D.S.E.Y.E/tests/helpers/coding-readiness.py",
+      "passed": 13,
+      "failed": 0,
+      "seconds": 0.037,
+      "scope": "Synthetic pure policy/actual rejection boundaries, DEVNULL auth pipe isolation, guarded exact stopped workspace retention and read-only inspection. No real VM launch by reviewer."
+    }
+  },
+  "nativeSourceFreeze": {
+    "artifact": ".Codex/crafts/g-o-d-s-e-y-e-cfe8/coding-runners-native-source-freeze.json",
+    "sha256": "6b4a7d60bec77b9a39a0183dc141eb4b51acd104282036efc26b5f4c31e693db",
+    "version": "coding-runners-native-freeze-v7",
+    "all13SourceHashesIndependentlyMatch": true,
+    "sources": {
+      "coding_guest_worker.mjs": "92e39e85bfc6170181c65154d41a8e4d0b2b64c9a5732b94ebd760ca77690ac1",
+      "coding_guest_proxy.mjs": "80c3a85d9df2bd4b054178181ffc588c3bc28f87f092f9b403e7b06ce7d14b93",
+      "coding_guest_drop.mjs": "858066f3d844c7a7aad22b861534f11a6637f75da383c0be973b96f2783b9e63",
+      "coding_guest_task.py": "4abedb3b4fdcd6501db4bb94984b794eb09db9e62e376d90bbcaf15e953f6e65",
+      "coding_guest_lab.py": "72450fc89244464aeed9090138a6d922d144517cc39c2ccf057274b33b87ece0",
+      "coding_guest_source.py": "79e1b9656abb014f9f3493c6862d7a34d7c6ce930e4a9925a942cc59c46425a5",
+      "coding_guest_control.py": "0840fc8c30a6b9ac065c62a3c430db29f50695f2c2bb17b84e3c667fd893b934",
+      "coding_guest_broker.py": "353857c225cadb1c1dbd2d634e5ce08b765d4f90c092f349a52a36043d82e5f9",
+      "coding_guest_install.py": "fb2d375de3736eb27a3a07ad983cf0c30a1781573cb166d8917b9b44b19458ea",
+      "coding_cli_install.py": "45bb96bc32fe5639cae09c11ea9a4bef3fe69acb3112f367aefe16d0d0117af8",
+      "coding_cli_fixture.py": "c482e1dd5f5c1cdbb6974ba544e26b074dd8849e5b80ac2be600fcb428b3238c",
+      "coding_guest_qualify.py": "0dd78789591a15a0e9f89e0e6aa57377972861526abdf5a539dc26eca5326077",
+      "coding_runner_config.mjs": "f451cdc1ca764fc9237b7308397df8771ac12ee236d67af4d56ed04c2f03b7f6"
+    },
+    "adapterSourcesIndependentlyMatch": true
+  },
+  "latestDeltaSourceReview": {
+    "cheapReadiness": "Server readiness/preflight use deep=False and do not bulk hash assets. Exact CLI bytes are independently verified by actual build before launch; exact VMM bytes and cgroups are independently checked by actual jail before physical-ready notification and final start authorization. Availability alone grants no execution. Corrupt assets fail before guest or mounting/exec as appropriate.",
+    "launchStdin": "Privileged subprocess.Popen explicitly stdin=DEVNULL; controller stdin remains exclusively trusted Foundation correlation/sequence ACK channel.",
+    "windowsProvider": "Provider localPath and action launch call fixed absolute SystemRoot/System32/wsl.exe after absolute drive-root validation; fixed args and private child env remain unchanged.",
+    "reservation": "Owner-visible coding-only default ceiling is100000micros=$0.10; explicit per-task CodingLimits remain finite, fresh authority/launch checks unchanged. No automatic launch or project/Foundation budget increase inferred. Root-authorized product decision; no security blocker.",
+    "guardedStopRetention": "Inspect remains read-only. Stop may restore retained disposition only for exact physically stopped/revoked task with known launch intent, valid image digest and no retained integrity reason; unresolved or anomalous evidence remains quarantined. Pure regression exercises valid/invalid launch/image/reason/previous disposition cases."
+  },
+  "compositionEvidence": {
+    "artifact": "artifacts/test-results/coding-runners-composition-native.xml",
+    "sha256": "e803b18af14bdc3b42ffcd56823d512535fcc75c2985cbb46476e68966417e57",
+    "tests": 3,
+    "failures": 0,
+    "errors": 0,
+    "seconds": 123.9464835,
+    "cases": [
+      {
+        "name": "T-AC-787 T-AC-788 T-AC-790 real Foundation and real provider execute qualified claude-code KVM CLI through only a synthetic upstream HTTPS seam",
+        "seconds": 38.3968434,
+        "taskId": "8d69cb05-36ae-45d8-85d2-40f88c7972c0",
+        "authorizationSequences": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13
+        ],
+        "paidCalls": 0,
+        "observedToolResult": true,
+        "terminalFrames": [
+          {
+            "action": "run",
+            "state": "succeeded",
+            "stopped": true
+          }
+        ]
+      },
+      {
+        "name": "T-AC-787 T-AC-788 T-AC-790 real Foundation and real provider execute qualified codex KVM CLI through only a synthetic upstream HTTPS seam",
+        "seconds": 46.6557585,
+        "taskId": "c750bb9b-686a-43ac-a5c5-a75f02fed3e7",
+        "authorizationSequences": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12
+        ],
+        "paidCalls": 0,
+        "observedToolResult": true,
+        "terminalFrames": [
+          {
+            "action": "run",
+            "state": "succeeded",
+            "stopped": true
+          }
+        ]
+      },
+      {
+        "name": "T-AC-789 real epoch revocation during native authorization suppresses output and stops only its actual guest",
+        "seconds": 38.8924391,
+        "taskId": "130edbf6-f502-4a99-a9c2-a70a1f248475",
+        "authorizationSequences": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "paidCalls": 0,
+        "observedToolResult": true,
+        "terminalFrames": [
+          {
+            "action": "stop",
+            "state": "cancelled",
+            "stopped": true
+          },
+          {
+            "action": "stop",
+            "state": "cancelled",
+            "stopped": true
+          },
+          {
+            "action": "inspect",
+            "state": "cancelled",
+            "stopped": true
+          }
+        ]
+      }
+    ],
+    "boundary": "Security reviewer parsed XML and inspected actual test/launcher source. Real Foundation, real private TS provider, real Python controller and production broker policy/journal, real KVM/pinned CLI; only upstream HTTPSConnection replaced by fake vendor response transport. Test source enforces no DNS/INET upstream via audit hook, read/write source staging is synthetic. Happy cases assert result tests/patch, exact cleanup and released reservation; epoch case asserts current authority rejection, no output, exact stopped cancellation, no extra late POST. Reviewer did not rerun heavy tests."
+  },
+  "adversaryEvidenceFinal": [
+    {
+      "artifact": "artifacts/coding-native-regressions/claude-code-attributes.json",
+      "artifactSha256": "10a3c8d7f8c87a2250c4142f5a8cf8edb7409b8f15266a55944fe20e6bd9fef0",
+      "case": "attributes",
+      "taskId": "01a500a0-d617-42a9-8cd7-7ebded8ced3d",
+      "assertionsPassed": true,
+      "paidCalls": 0,
+      "state": "succeeded",
+      "stopped": true,
+      "grantsRevoked": true,
+      "hasGuestResult": true,
+      "sourceChangesSinceRecordedRecipe": [
+        "coding_guest_task.py",
+        "coding_guest_control.py",
+        "coding_guest_broker.py",
+        "coding_runner_config.mjs"
+      ],
+      "scope": "One unique physical mechanism regression on recorded bounded candidate recipe; source changes tracked explicitly, not falsely represented as full adversary execution on every final byte."
+    },
+    {
+      "artifact": "artifacts/coding-native-regressions/claude-code-background.json",
+      "artifactSha256": "2d89ef578f511cdca7474ed36ec7c8cce5b9fb723789bd4e12607f7b32a74e5f",
+      "case": "background",
+      "taskId": "43a6bb0f-6aa5-4d85-ad84-6afc297c4384",
+      "assertionsPassed": true,
+      "paidCalls": 0,
+      "state": "succeeded",
+      "stopped": true,
+      "grantsRevoked": true,
+      "hasGuestResult": true,
+      "sourceChangesSinceRecordedRecipe": [
+        "coding_guest_task.py",
+        "coding_guest_source.py",
+        "coding_guest_control.py",
+        "coding_guest_broker.py",
+        "coding_runner_config.mjs"
+      ],
+      "scope": "One unique physical mechanism regression on recorded bounded candidate recipe; source changes tracked explicitly, not falsely represented as full adversary execution on every final byte."
+    },
+    {
+      "artifact": "artifacts/coding-native-regressions/claude-code-index.json",
+      "artifactSha256": "b65aa9c0214cdfe762acc28a8cf14361bf4228116fdf3a67bea8705960095c75",
+      "case": "index",
+      "taskId": "50983947-4b43-495f-9ca4-f4f3f8f19c4d",
+      "assertionsPassed": true,
+      "paidCalls": 0,
+      "state": "succeeded",
+      "stopped": true,
+      "grantsRevoked": true,
+      "hasGuestResult": true,
+      "sourceChangesSinceRecordedRecipe": [
+        "coding_guest_task.py",
+        "coding_guest_source.py",
+        "coding_guest_control.py",
+        "coding_guest_broker.py",
+        "coding_runner_config.mjs"
+      ],
+      "scope": "One unique physical mechanism regression on recorded bounded candidate recipe; source changes tracked explicitly, not falsely represented as full adversary execution on every final byte."
+    },
+    {
+      "artifact": "artifacts/coding-native-regressions/claude-code-test-mutation.json",
+      "artifactSha256": "1b9d731f2ea0906bf72c9896c16f9cc24d9121817ba49fc7cd5b1e5093ba64e8",
+      "case": "test-mutation",
+      "taskId": "47692fad-484f-4425-b227-e1c4b76f2cc7",
+      "assertionsPassed": true,
+      "paidCalls": 0,
+      "state": "failed",
+      "stopped": true,
+      "grantsRevoked": true,
+      "hasGuestResult": false,
+      "sourceChangesSinceRecordedRecipe": [
+        "coding_guest_task.py",
+        "coding_guest_source.py",
+        "coding_guest_control.py",
+        "coding_guest_broker.py",
+        "coding_runner_config.mjs"
+      ],
+      "scope": "One unique physical mechanism regression on recorded bounded candidate recipe; source changes tracked explicitly, not falsely represented as full adversary execution on every final byte."
+    },
+    {
+      "artifact": "artifacts/coding-native-regressions/codex-pids-failure.json",
+      "artifactSha256": "2685a69136319307d9600de774b7217776fa96b3432931a93ac6978df8159b90",
+      "case": "pids-failure",
+      "taskId": "f71f6fbe-f766-4f42-9001-ad63ce789a78",
+      "assertionsPassed": true,
+      "paidCalls": 0,
+      "state": "unknown",
+      "stopped": true,
+      "grantsRevoked": true,
+      "hasGuestResult": false,
+      "sourceChangesSinceRecordedRecipe": [
+        "coding_guest_worker.mjs",
+        "coding_guest_task.py",
+        "coding_guest_source.py",
+        "coding_guest_control.py",
+        "coding_guest_broker.py",
+        "coding_cli_install.py",
+        "coding_cli_fixture.py"
+      ],
+      "scope": "One unique physical mechanism regression on recorded bounded candidate recipe; source changes tracked explicitly, not falsely represented as full adversary execution on every final byte."
+    }
+  ],
+  "housekeepingLimitation": {
+    "status": "resolved natural teardown transient; no residual limitation",
+    "history": "Intermediate epoch test observation found task socket directory while controller finalization was still completing. Follow-up root/test-owner inspection found all exact3 task socket directories absent and no units/native controllers. No manual deletion performed.",
+    "evidenceOwnership": "Follow-up cleanup state supplied by root/test owner; reviewer did not read actual private task state. Historical concern did not survive final observation."
+  },
+  "finalScopeLimits": [
+    "Local x86_64 WSL2 nested-KVM profile only, pinned runtime/CLI/assets/source recipe.",
+    "All model responses synthetic; zero paid vendor calls, no account entitlement or live API billing guarantee tested.",
+    "No remote server creation/deployment, shared host/game coexistence or preview hosting.",
+    "Source backend deliberately limited to independent bounded loose Git closure; packed-only/alternate/shared/submodule inputs fail unavailable.",
+    "Five adversarial cases prove recorded mechanisms, not exhaustive hypervisor/vendor/OS security. Missing Semgrep/SBOM and final root scan ownership remain explicit.",
+    "Root final idle smoke and refreshed aggregate summary are outside this security report pass."
+  ],
+  "aggregateTestsSummaryObserved": {
+    "artifact": ".Codex/crafts/g-o-d-s-e-y-e-cfe8/reviews/coding-runners-tests-final.json",
+    "sha256": "8c9d8c14237aaa60b16d892c482387ac27193463ecf4718ba81d64f88b8fec4d",
+    "status": "independent-final-gates-passed",
+    "scope": "Summary observed after owner refresh; direct native XML is primary reviewed integration evidence."
+  }
+}

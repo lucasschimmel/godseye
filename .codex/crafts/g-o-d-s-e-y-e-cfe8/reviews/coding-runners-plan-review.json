@@ -1,0 +1,55 @@
+{
+  "verdict": "pass-with-findings",
+  "kind": "plan",
+  "criticity": "production",
+  "reviewed_at": "2026-11-14",
+  "findings": [
+    {
+      "id": "CR-PLAN-01",
+      "criterion": "SPC-07",
+      "status": "CONFIRMED",
+      "severity": "major",
+      "evidence": "packages/contracts/src/coding.ts:35-41 — CodingProvider has qualified:boolean, verifySource returns only repositoryHash/commitSha, and preflight returns Promise<void>; coding-runners-core-proposal.md:31 requires structured server-owned observed runner/KVM/source/auth/network/resource qualification; coding-runners-design.md:27-30 requires qualification again at final dispatch.",
+      "refutation": "The provider is a trusted private seam, and runtime enforcement can reject unsafe requests independently. That prevents a claim of a demonstrated exploit. It does not freeze the promised observation identity, expiry and policy evidence across independently implemented core/runtime modules; an empty successful preflight currently satisfies the interface.",
+      "refutation_survived": true,
+      "suggestion": "Before parallel implementation, pin strict qualification/source receipts with exact runtime/source/scope identities, observed/expiry times and policy digest; define stale/mismatched receipt rejection and runtime revalidation immediately before submit. Test that true/void-only claims cannot authorize dispatch."
+    },
+    {
+      "id": "CR-PLAN-02",
+      "criterion": "PLN-02 / SPC-02",
+      "status": "CONFIRMED",
+      "severity": "major",
+      "evidence": "coding-runners-design.md:55-68 defines canonical AC-781..AC-794 and T-AC-781..T-AC-794; reviews/coding-runners-test-strategy.md:9 and :35-49 still use provisional CR-01..CR-13 without their canonical crosswalk.",
+      "refutation": "The design already assigns every criterion a named test ID and the strategy explicitly acknowledges provisional labels. Thus the acceptance contract itself is traceable at the naming level. However, concrete scenarios are not assigned to those IDs, including the separate Codex/Claude protocol cases and regression/build/migration criterion, so the test handoff is still incomplete.",
+      "refutation_survived": true,
+      "suggestion": "Before test authoring, publish an explicit many-to-many CR-to-T-AC mapping for all fourteen canonical criteria, including actual protocol vs fixture evidence and AC-794 migration/OpenAPI/regression gates; retain unsupported native qualification as an explicit gap."
+    },
+    {
+      "id": "CR-PLAN-03",
+      "criterion": "PLN-04",
+      "status": "PLAUSIBLE",
+      "severity": "minor",
+      "evidence": "reviews/coding-runners-test-strategy.md:51 puts KVM/native qualification last, while coding-runners-runtime-research.md Recommended implementation contract item 5 recommends actual networkless KVM shell/patch qualification first; coding-runners-design.md:13-18 explicitly leaves this execution prerequisite unqualified.",
+      "refutation": "A final exhaustive native suite can correctly run last while a smaller feasibility probe runs first. The orchestrator reports actual CREATE_VM has now passed and guest boot is next, indicating that intended risk ordering already distinguishes feasibility from final qualification.",
+      "refutation_survived": false,
+      "suggestion": "Clarify early feasibility probe versus final exhaustive qualification in the strategy and record the pinned guest-boot/containment result before describing either runner as executable."
+    }
+  ],
+  "criteria_run": 16,
+  "criteria_passed": 13,
+  "not_reviewed": [
+    "PLN-05 estimate calibration: no implementation estimates or underlying SYNAPSE pack supplied; the design records consultation and prior test evidence but that is not independent estimate verification.",
+    "Implementation correctness, executable tests, real source fetching, actual CLI protocol compatibility, guest boot/containment, physical stop and resource enforcement: this is a plan/spec review, not code or native qualification.",
+    "Paid vendor entitlement, billing accuracy and authenticated model exchange: excluded by authorized no-paid-call scope.",
+    "Detailed security assessment: separate security satellite owns it; this review checked stated authority and isolation contracts only.",
+    "Live edits after the CodingProvider snapshot: core/runtime are actively tightening contracts; closure requires reviewing the updated receipt schema and behavior."
+  ],
+  "scope_notes": [
+    "Fresh reviewer context; no authorship or production-code changes.",
+    "Reviewed plan+spec rubric at production criticity with code and swarm tags; one dependent continuation is explicitly declared rather than claimed independent epic parallelism.",
+    "Unknown submit replay is explicitly prohibited; read-only restart reconciliation, nonterminal unknown/quarantine, retained capacity and sole patch preservation are specified.",
+    "Exact source identity must be independently observed before admission, and final post-await authority fences are explicitly required.",
+    "Transient WSL root-to-unprivileged numeric KVM-group launch is a feasible candidate, not a proven system-configuration blocker or a qualified guest. CREATE_VM progress alone does not satisfy I10.",
+    "No confirmed blocker in the reviewed plan; major findings are concrete freeze/test-handoff closure conditions."
+  ]
+}
