@@ -1,0 +1,58 @@
+{
+  "version": "coding-runners-native-freeze-v7",
+  "date": "2026-11-14",
+  "sourceMatchesBothNormalReceipts": true,
+  "sources": {
+    "coding_guest_worker.mjs": "92e39e85bfc6170181c65154d41a8e4d0b2b64c9a5732b94ebd760ca77690ac1",
+    "coding_guest_proxy.mjs": "80c3a85d9df2bd4b054178181ffc588c3bc28f87f092f9b403e7b06ce7d14b93",
+    "coding_guest_drop.mjs": "858066f3d844c7a7aad22b861534f11a6637f75da383c0be973b96f2783b9e63",
+    "coding_guest_task.py": "4abedb3b4fdcd6501db4bb94984b794eb09db9e62e376d90bbcaf15e953f6e65",
+    "coding_guest_lab.py": "72450fc89244464aeed9090138a6d922d144517cc39c2ccf057274b33b87ece0",
+    "coding_guest_source.py": "79e1b9656abb014f9f3493c6862d7a34d7c6ce930e4a9925a942cc59c46425a5",
+    "coding_guest_control.py": "0840fc8c30a6b9ac065c62a3c430db29f50695f2c2bb17b84e3c667fd893b934",
+    "coding_guest_broker.py": "353857c225cadb1c1dbd2d634e5ce08b765d4f90c092f349a52a36043d82e5f9",
+    "coding_guest_install.py": "fb2d375de3736eb27a3a07ad983cf0c30a1781573cb166d8917b9b44b19458ea",
+    "coding_cli_install.py": "45bb96bc32fe5639cae09c11ea9a4bef3fe69acb3112f367aefe16d0d0117af8",
+    "coding_cli_fixture.py": "c482e1dd5f5c1cdbb6974ba544e26b074dd8849e5b80ac2be600fcb428b3238c",
+    "coding_guest_qualify.py": "0dd78789591a15a0e9f89e0e6aa57377972861526abdf5a539dc26eca5326077",
+    "coding_runner_config.mjs": "f451cdc1ca764fc9237b7308397df8771ac12ee236d67af4d56ed04c2f03b7f6"
+  },
+  "adapterSourcesAtHandoff": {
+    "apps/control-api/src/coding-provider.ts": "b56da7f654b8be63ad632274f1fa415506656952b423984446fb14dd46497371",
+    "apps/control-api/src/coding-protocol.ts": "d62353936d97058a95936cc1e5457f3dcb36cd66654b861bdd7d8621b12d1574"
+  },
+  "runtimeHash": "7cb8a5e8d2ef7a546b9607190e66f4c3a630ba6d7884696113ca766111987316",
+  "templateHash": "3d0aeaed78ff0f06abb60f90ad67de1470b1be221ddfd2cbaab4c4b4d67442f0",
+  "codex": {
+    "state": "succeeded",
+    "imageHash": "497344c49a9d0ff8ac9a4776e697f4efa30cd70ae92c6ea7ecf2c8008247a4e6",
+    "taskId": "c522a63b-dabc-4583-b879-3d0e31ab6c8f",
+    "invocationId": "e5bc1370579742379eb6b3c78079e940",
+    "stopped": true
+  },
+  "claude": {
+    "state": "succeeded",
+    "imageHash": "7db898af5810735259abe3f52412fabe1789b8aaf8b55558bbeb5c3b402de8af",
+    "taskId": "23752f08-3302-42b7-9e9b-8952094fe803",
+    "invocationId": "842005316dba46f6a455f4007e12ede4",
+    "stopped": true
+  },
+  "profile": {
+    "kernel": "6.6.87.2-microsoft-standard-WSL2",
+    "version": "local-coding-host-v1",
+    "policy": {
+      "guestMemoryMiB": 4096,
+      "vmmMemoryMiB": 5120,
+      "cpuMilliCores": 1000,
+      "outerPids": 64,
+      "guestPids": 64
+    },
+    "architecture": "x86_64"
+  },
+  "paidCalls": 0,
+  "serverDeployment": false,
+  "pending": [
+    "Final actual Foundation/provider/production-broker KVM composition: happy Claude, happy Codex, epoch Claude"
+  ],
+  "handoffObservedAt": "2026-11-14T12:41:57.5552269Z"
+}
