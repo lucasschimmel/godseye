@@ -1,0 +1,6 @@
+CREATE TABLE usage_attempts (id uuid PRIMARY KEY, run_id uuid NOT NULL REFERENCES execution_runs(id), sequence integer NOT NULL CHECK(sequence BETWEEN 1 AND 64), project_id uuid NOT NULL REFERENCES projects(id), metadata jsonb NOT NULL, created_at timestamptz NOT NULL, CONSTRAINT usage_attempt_run_sequence UNIQUE(run_id,sequence));
+CREATE TABLE usage_prices (id uuid PRIMARY KEY, identity text NOT NULL UNIQUE, metadata jsonb NOT NULL);
+CREATE TABLE usage_budgets (id uuid PRIMARY KEY, project_id uuid NOT NULL REFERENCES projects(id), identity text NOT NULL UNIQUE, revision integer NOT NULL, metadata jsonb NOT NULL);
+CREATE TABLE usage_reservations (id uuid PRIMARY KEY, budget_id uuid NOT NULL REFERENCES usage_budgets(id), run_id uuid NOT NULL REFERENCES execution_runs(id), amount bigint NOT NULL CHECK(amount>=0), charged bigint NOT NULL DEFAULT 0 CHECK(charged>=0), state text NOT NULL, created_at timestamptz NOT NULL, CONSTRAINT usage_reservation_budget_run UNIQUE(budget_id,run_id));
+CREATE TABLE usage_invoices (id uuid PRIMARY KEY, project_id uuid NOT NULL REFERENCES projects(id), identity text NOT NULL UNIQUE, metadata jsonb NOT NULL);
+CREATE TABLE usage_receipts (key text PRIMARY KEY,digest text NOT NULL,result jsonb NOT NULL);
