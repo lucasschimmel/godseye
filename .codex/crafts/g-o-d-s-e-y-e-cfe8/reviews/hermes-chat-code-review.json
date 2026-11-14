@@ -1,0 +1,152 @@
+{
+  "review": "hermes-chat-code",
+  "date": "2026-11-13",
+  "reviewer": "fresh-faber-security-source-reviewer",
+  "review_state": "final-source-frozen",
+  "verdict": "pass",
+  "findings": [],
+  "criteria_run": 23,
+  "criteria_passed": 23,
+  "method": "Fresh delegated context; read-only adversarial source review. No production/test edits, Git mutations, server launch, private-journal or credential reads, or external model calls.",
+  "rubric": {
+    "kind": "code",
+    "criticity": "production",
+    "tags": [
+      "concurrent"
+    ],
+    "active": [
+      "COR-01",
+      "COR-02",
+      "COR-03",
+      "COR-04",
+      "SAF-01",
+      "SAF-02",
+      "SAF-03",
+      "REU-01",
+      "REU-02",
+      "HYG-01",
+      "HYG-02",
+      "HYG-03",
+      "HYG-04"
+    ]
+  },
+  "additional_criteria": [
+    {
+      "id": "CHAT-AUTHORITY",
+      "pass": true,
+      "evidence": "packages/core/src/agents-chat.ts:chatSend reuses launchAgentTask; packages/core/src/agents-runs.ts retains Foundation plan/enqueue/budget admission and assertNotBusy."
+    },
+    {
+      "id": "CHAT-PROGRESS-FENCING",
+      "pass": true,
+      "evidence": "packages/core/src/agents-chat-progress.ts:chatProgress validates lease, dispatch grant, live task/run/profile, abort, run expiry, provider identity and sequence before durable publication; lease/dispatch are rechecked after awaited operations."
+    },
+    {
+      "id": "CHAT-FINAL-FENCING",
+      "pass": true,
+      "evidence": "packages/core/src/agents-execution.ts:observe and packages/core/src/agents.ts:settlement preserve revoked cancellation, epoch/profile checks, physical-stop proof and output suppression; chatOutputs only accepts successful noncancelled final output."
+    },
+    {
+      "id": "CHAT-CONTEXT-IDENTITY",
+      "pass": true,
+      "evidence": "packages/core/src/agents-chat-state.ts:chatHistory includes only bounded successful same-conversation pairs; scripts/hermes_gateway_state.py:identity hashes the complete conversation alongside task/profile/scope/correlation/deadline."
+    },
+    {
+      "id": "CHAT-NATIVE-POLICY",
+      "pass": true,
+      "evidence": "scripts/hermes_agent_boot.py:BoundedAgent checks actual native empty tools/provider/endpoint/output cap and overrides all tool dispatch seams; scripts/hermes_gateway_reply.py:validated_frames rejects tool-bearing, oversized, foreign-model and incomplete frames before forwarding each frame."
+    },
+    {
+      "id": "CHAT-NATIVE-SETTLEMENT",
+      "pass": true,
+      "evidence": "scripts/hermes_gateway.py:run requires broker.reply_validated and joined event reader before terminal success; scripts/hermes_gateway_transport.py:observed does not copy the mutable requests counter; scripts/hermes_gateway_broker.py retains physical request count/inflight ownership through stop."
+    },
+    {
+      "id": "CHAT-STREAM-LIFETIME",
+      "pass": true,
+      "evidence": "apps/control-api/src/agent-chat-transport.ts:registerAgentChatTransport bounds connection count, per-conversation count, stream lifetime, unread consumer, poll/heartbeat and periodic same-owner/session authentication; close/cancel/abort release capacity independently of task execution."
+    },
+    {
+      "id": "CHAT-OUTPUT-INERTNESS",
+      "pass": true,
+      "evidence": "packages/core/src/agents-chat-outputs.ts validates finite strict structured blocks and exact UTF-8 bytes/digest, derives safe server names and never resolves model paths/URLs; apps/control-api/src/agent-chat-transport.ts uses attachment text/plain, nosniff, sandbox and private no-store; console renders React text/pre content."
+    },
+    {
+      "id": "CHAT-EXACT-APPROVAL",
+      "pass": true,
+      "evidence": "packages/core/src/agents-chat-outputs.ts:chatResolve checks exact stored proposal/plan/scope/hash/revision/target/command/expiry, requires fresh owner for approval and invokes Foundation.approveInTransaction inside the same write transaction as proposal state, receipt and audit. No native broad grants or independent enqueue introduced."
+    },
+    {
+      "id": "CHAT-UI-INTENTION-SCOPE",
+      "pass": true,
+      "evidence": "apps/console/src/components/agents-chat.tsx: drafts and frozen send intention are stored by conversation ID; exact original body/revision is retained for uncertain retry. apps/console/src/components/agents-panel.tsx: failed requests retain the idempotency key keyed by method/path/exact JSON body. UI keeps owner history visible while stale/paused profiles block new sends and approval."
+    }
+  ],
+  "resolved_observations": [
+    {
+      "criterion": "COR-04 / durable cursor reset",
+      "original_issue": "A cursor read at 256 followed by one append/prune could return events 2..257 to after=0 without reset if metadata and events were read outside one transaction.",
+      "refutation": "The UI already detects gaps and refetches, preventing silent concatenation, but that does not satisfy the server explicit-reset contract.",
+      "resolution": "packages/core/src/agents-chat-state.ts:readChatEvents now encloses cursor validation and event selection in the shared serialized write() transaction used by append/prune.",
+      "status": "resolved-source-verified"
+    },
+    {
+      "criterion": "protective read availability",
+      "original_issue": "Owner history, retained events and artifacts were unnecessarily blocked by profile pause/reconfiguration because read and admission shared mandatory currentProfile validation.",
+      "resolution": "conversationFor defaults to owner read access; chatSend and approve request requireActive=true. Progress independently retains its current-profile authority checks. History and rejection remain available after protective changes.",
+      "status": "resolved-source-verified"
+    }
+  ],
+  "not_reviewed": [
+    "Independent execution of Vitest, browser, native delayed-stream or truncated-DONE fixtures: GAUNTLET/root own those gates; this is source review, not a runtime attestation.",
+    "Independent lint/type/build/dependency/scanner execution: root owns executable gates; no claim of completed executable qualification is made here.",
+    "Paid provider behavior, deployed-host containment, remote/server operation and continuous autonomy are outside the authorized local scope.",
+    "Private runtime journals, bindings and credentials were deliberately excluded.",
+    "All unrelated preexisting uncommitted Agent Center work was treated as baseline; no full-repository audit is claimed."
+  ],
+  "source_freeze": {
+    "manifest": ".codex/crafts/g-o-d-s-e-y-e-cfe8/reviews/hermes-chat-source-freeze.json",
+    "verified_at": "2026-11-13T22:27:07.9791339Z",
+    "matched_files": 38,
+    "sha256": {
+      "apps/console/src/components/agents-chat-outputs.tsx": "c13d46e82f00e7f41e98035afeb000a1c797fa5d5b64779e1c0f91e6471d70d1",
+      "apps/console/src/components/agents-chat-stream.ts": "d7bbcf080b3556ac8c5e0daa43a15c77077113a09300bae62e3b45a6d2367230",
+      "apps/console/src/components/agents-chat-transcript.tsx": "98c303df8170edb1f327f72e7de6e2ce571be6f15f30609e089e2170b527aae9",
+      "apps/console/src/components/agents-chat.tsx": "ee14629a819dfc1304dba354e7e5be10b137267e83bffb3386bdc355e52d0b0d",
+      "apps/console/src/components/agents-panel.tsx": "deffff0a8c6510bd7080808525a7354dc472fb94ae106069e4644c4dd8e74103",
+      "apps/console/src/styles/agents-chat.css": "f4645f6794575c10d514c0ff4f57e82f4724d3bb79da8eba7a13e49bb008f830",
+      "apps/control-api/src/agent-chat-routes.ts": "d20947553c2da569e86325f9901b411494b6d203ef80963cf5665b744809c407",
+      "apps/control-api/src/agent-chat-transport.ts": "27f8e13e72249db5ca0d94ace996b24c62ea0eac942e5043b3017e1aceaf1717",
+      "apps/control-api/src/hermes-provider.ts": "b645554bcaca077859259899dbed4236da1118756af14ee4cec4805486f0b9de",
+      "packages/contracts/src/agents-chat-endpoints.ts": "c6b402f81c46714cc936d45cf6a07e6b4b63879141251a3ddccfc99c67f5afd6",
+      "packages/contracts/src/agents-chat-transport-endpoints.ts": "f9348dc0914116d3ad836d13c142c7b09e69e490af240d53b13c5dfae9ce5a2b",
+      "packages/contracts/src/agents-chat.ts": "3bc80e2a0360d98673e8a0175055ff8f4736d1d34495683a3794a8fa5e743323",
+      "packages/core/src/agents-chat-outputs.ts": "cd4e3603ee97f857e3b4e2903ba2d4e9c8ee599fffd6577214e7190852d7d0bb",
+      "packages/core/src/agents-chat-progress.ts": "4d6cbe6bc198e7307e52386d50cfd9bf2568e1629a0bf6b3dc9ae013cd46f1c7",
+      "packages/core/src/agents-chat-state.ts": "9df44fe8546bc16339663a2c7a33b05cca0c418977050e0ce5f0a1f4b0106a04",
+      "packages/core/src/agents-chat.ts": "f26b012f152ecd80536b1f3fda35103816a6355ac10cbb251b7b7ffca8662695",
+      "packages/core/src/agents-execution.ts": "c07646e79bf5f49871b94b6ebde31fe2db1bec3bff60297e098253b124e6cd45",
+      "packages/core/src/agents-provider.ts": "4b08134574993188e6712fc3349ad021248c634c11b0b0a4b03f304439967c16",
+      "packages/core/src/agents-runs.ts": "7e1976e4aa42a9eded860c3c3c29f44527e720e44bd780868fb13981ae4c0803",
+      "packages/core/src/agents-state.ts": "6658d8ea3cedcdc0c164df88619b42090ffe1d35dca7aca266ce47ccdf277969",
+      "packages/core/src/agents.ts": "87a120c7733fa3c03489aeea4a469f72eb4dcee812b4e98f84458ef31616e608",
+      "packages/store/migrations/0019_agent_chat.sql": "405ad6f98f97e215564861d90425c7218922e12fac8ba3ee8f46dc5c1ce35dac",
+      "packages/store/src/agent-chat-schema.ts": "09d35b1a304fc58618b37fa2df64610685a21453928c2d66fe97ce5addb5106d",
+      "scripts/hermes_gateway.py": "c9f283e24f7dd4e28c5536bd19d4cc2026dca37d4a758d0431f40b91c90fcd96",
+      "scripts/hermes_gateway_broker.py": "eba09b54a2f4458b25239003c27eee67ac4f2cfe50599a2bc77b12e1df50411c",
+      "scripts/hermes_gateway_events.py": "2e335b071219ae989b964a7ea69e6fe97a6ad82670d7f745ec0c6412e1fd157c",
+      "scripts/hermes_gateway_reply.py": "b98e2cb5a8f75d062d1ae52bdcb4a1cfb91db6cc6fcb38e0d090e4e3366fa813",
+      "scripts/hermes_gateway_state.py": "fae9f88fa21d675521dc0f0ea1fe9a97bd16eefb448b00e5877a9674af8fb6a8",
+      "apps/console/src/lib/api.ts": "baf697b3456c432585fda02d0e82c0d17fc6f86a4771f421ffafc51c0511dcf2",
+      "apps/console/src/styles.css": "20828874a36b11b563b900951f72cc28dcd531699a22a60b6d5f14bcebbd45f0",
+      "apps/control-api/src/api-types.ts": "c3dd58275e727a2ebdbb803ce171151babd02c64805383e6b74d8605a1c8d3ad",
+      "apps/control-api/src/app.ts": "98ed1fde5431a5c56a63c04915e286e0e192c19fd2c2cd62c20a97918d1499f7",
+      "packages/contracts/src/http-endpoints.ts": "bcef5034674da9ae833a75f1b9ccda397e126fc9615c6a4bea7f0aad55a26c59",
+      "packages/contracts/src/http-openapi.ts": "9eef444689fcddaa97c0de70b4c3be19529a93cd2e1c2ad135d6aa3c0a17e9b6",
+      "packages/contracts/src/index.ts": "91e04a60bca451d62c6c138033293cded7edc33b4527f10a1d122e67190435e3",
+      "packages/core/src/foundation-plans.ts": "d3ae33e9e1588dc2b5cae7c2531f646cc880ebe7ac6efbe2c28ecc410a482540",
+      "packages/core/src/foundations.ts": "678ac830937e7a8814aca8bda4a03d37b8b366f4a7a9b0263112ab9200e2fa5d",
+      "packages/store/src/schema.ts": "50962ff14e6079d999be62ee14b79fb2eff12b3b9f36c500bdfe9976f0c9f4db"
+    }
+  }
+}

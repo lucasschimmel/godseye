@@ -1,0 +1,76 @@
+{
+  "status": "local-request-complete",
+  "date": "2026-11-13",
+  "scope": "Advanced local Hermes chat only; not complete E07/V1",
+  "targeted": {
+    "ordinary": 31,
+    "newNative": 3,
+    "legacyNative": 2,
+    "browser": 3,
+    "selectedMutantsKilled": 4
+  },
+  "global": {
+    "strategy": "Two disjoint groups: shared artifact builder serialized, remainder configured two workers",
+    "builders": {
+      "passed": 2,
+      "files": 1,
+      "vitestWallSeconds": 23.03,
+      "artifact": "artifacts/test-results/hermes-chat-global-builders.xml"
+    },
+    "remainder": {
+      "status": "pass",
+      "excluded": "tests/backend-template.test.ts",
+      "workers": 2,
+      "artifact": "artifacts/test-results/hermes-chat-global-rest.xml",
+      "passed": 1358,
+      "skippedNative": 17,
+      "files": 126,
+      "vitestWallSeconds": 1107.89
+    },
+    "aggregate": {
+      "passed": 1360,
+      "nativeDefaultSkipped": 17,
+      "total": 1377,
+      "collectedFiles": 127,
+      "passingFiles": 119,
+      "skippedFiles": 8,
+      "failures": 0,
+      "overlapIdentities": [],
+      "vitestWallSecondsSum": 1130.92,
+      "artifact": "artifacts/test-results/hermes-chat-global-aggregate.json"
+    }
+  },
+  "static": {
+    "lintFiles": 593,
+    "lint": "pass",
+    "types": "pass",
+    "controlApi": "1.11.0",
+    "applicationApi": "1.0.0",
+    "contracts": "pass"
+  },
+  "source": {
+    "productionPaths": 38,
+    "review": "reviews/hermes-chat-code-review.json",
+    "openFindings": 0,
+    "hashDrift": 0
+  },
+  "security": "reviews/hermes-chat-security.json",
+  "docs": {
+    "report": "reviews/hermes-chat-docs.json",
+    "criteria": 11,
+    "links": 162,
+    "openFindings": 0
+  },
+  "nativeIntegrity": "reviews/hermes-chat-native-integrity.json",
+  "trace": "reviews/hermes-chat-trace.json",
+  "build": {
+    "canonical": "pass",
+    "builtApiSmoke": "first-attempt-pass"
+  },
+  "serverChanged": false,
+  "paidCalls": 0,
+  "gitMutations": false,
+  "completedAt": "2026-11-13T22:47:27.826Z",
+  "outcome": "outcome-1794609919-dc7c61cf",
+  "wholeE07Complete": false
+}

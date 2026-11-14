@@ -1,0 +1,88 @@
+{
+  "review": "hermes-chat-documentation",
+  "date": "2026-11-13",
+  "reviewer": "independent-source-reviewer-followup",
+  "verdict": "pass",
+  "findings": [],
+  "criteria_run": 11,
+  "criteria_passed": 11,
+  "coverage": [
+    "Exact same-project/environment existing Foundation plan approvals, no self-approval or model-created plans.",
+    "Actual approval may resume an already-admitted waiting run; resolution creates no new enqueue and retains executor/capacity gates.",
+    "Native legacy session/always/bulk authority and canonical paused controls remain unexposed/deferred.",
+    "Four prior successful messages in whole pairs, 16 KiB history, 64 conversations, 100 turns, 256 events, 500 global tasks and bounded text artifacts match source.",
+    "Each explicit turn is independently admitted/reserved; the positive native selection contains two explicit turns/requests.",
+    "Browser fixture cases are distinguished from actual backend/native evidence and do not claim a browser-to-native paid-provider end-to-end run.",
+    "Broker one-hour pending proposal deadline is distinguished from separate effective Foundation approval expiry of five minutes locally; idempotent inbox replay does not renew a grant.",
+    "Security ledger supports 123 public paths/zero Gitleaks findings, 495 Node packages/zero advisories, 73 exact third-party PyPI queries/zero known OSV findings; 74 total installed distributions are not conflated with queried third-party packages.",
+    "162 relative local links across the nine requested documentation files resolve to existing targets.",
+    "All 38 frozen production SHA-256 values remain unchanged during documentation review.",
+    "Final advanced aggregate table accurately distinguishes two disjoint ordinary executions (2 + 1358 passing, 17 skipped, 127 collected files, zero failures); 31 focused ordinary cases are included rather than added, and separate native/browser/mutation selections are not inflated into the ordinary aggregate."
+  ],
+  "resolved_observations": [
+    {
+      "criterion": "Expiry derivation accurately separates immutable plan data and broker policy",
+      "original_evidence": "docs/development/hermes-chat.md:79 and docs/adr/ADR-015-durable-hermes-chat-and-exact-plan-inbox.md:31 previously described expiry as derived from the existing plan, but source creates pending proposal expiry from AGENT_CHAT_LIMITS.proposalMs.",
+      "refutation": "Expiry is trusted server policy, so the former wording did not widen implemented authority; nevertheless it misdescribed the immutable plan fields and conflated separate lifetimes.",
+      "resolution": "Guide, ADR015 and design now distinguish plan-derived resource/command/hash/revision/scope from broker one-hour pending proposal deadline. Guide also explains separate Foundation expiry and nonrenewing replay.",
+      "status": "resolved-source-and-doc-verified"
+    }
+  ],
+  "checked_local_links": 162,
+  "missing_local_links": [],
+  "production_hashes_matched": 38,
+  "evidence_ledgers": [
+    ".codex/crafts/g-o-d-s-e-y-e-cfe8/reviews/hermes-chat-test-results.json",
+    ".codex/crafts/g-o-d-s-e-y-e-cfe8/reviews/hermes-chat-security.json",
+    ".codex/crafts/g-o-d-s-e-y-e-cfe8/reviews/hermes-chat-code-review.json"
+  ],
+  "not_reviewed": [
+    "Scanner and test counts are checked against retained root/GAUNTLET ledgers; no independent scanner, OSV query, test or native/browser execution was repeated.",
+    "Rendered visual QA and anchor-fragment navigation were not independently rerun; local file target existence was checked.",
+    "Historical unrelated epic evidence is outside this narrow documentation review."
+  ],
+  "documentation_sha256": {
+    "docs/development/hermes-chat.md": "1499b8923c9175373b9524378504ea15afc043e78ab18e8e3ba76f04a5a2ad74",
+    "docs/adr/ADR-015-durable-hermes-chat-and-exact-plan-inbox.md": "0cdf2bd95325adf136526c49e44b44a5d06cac6be7327d5acc3ab02071e1e6d7",
+    "docs/spec/v1.md": "8da31f45e00281c0928cbff91363f0e95c725b739e7ef9a2955c8b09db658c98",
+    "docs/plan/v1-development.md": "eb61e13845a0e1b3f0c7405b7cb9a8cc8c7c5ad110ce64ebbb16fbed2085385f",
+    "README.md": "eeb414328ab9c49a66ee2988058f5d1d928ee1ba30c5a044f5c23c5be3986777",
+    "docs/development/handoff.md": "ba9945b594b082fa643f63fd5b197cc651506e557d56c37138650b6b493324e5",
+    "docs/development/agent-center.md": "6625c00d2998366f5b58ed83b667ba8898962e7a57da39885c3fc1e3b9fb5d1a",
+    "CHANGELOG.md": "cff3ff37094eb069072bdecadacfa3f28e837a91ca2759f1f0ea47a4044476a2",
+    "tests/STRATEGY.md": "9cf78b2e4f309639a844e562a78ba88180452e4ff5599ac780688a420b8a4c7d",
+    ".codex/crafts/g-o-d-s-e-y-e-cfe8/hermes-chat-design.md": "c254867770a556eabba66a49742e815ddc12cd33cb8a5eb268ae6be6683f2628"
+  },
+  "verified_at": "2026-11-13T22:45:41.9066279Z",
+  "final_aggregate_review": {
+    "verdict": "pass",
+    "artifacts": [
+      {
+        "artifact": "artifacts/test-results/hermes-chat-global-builders.xml",
+        "passed": 2,
+        "skipped": 0,
+        "failed": 0,
+        "testIdentities": 2
+      },
+      {
+        "artifact": "artifacts/test-results/hermes-chat-global-rest.xml",
+        "passed": 1358,
+        "skipped": 17,
+        "failed": 0,
+        "testIdentities": 1375
+      }
+    ],
+    "cross_group_duplicate_identities": [],
+    "aggregate_passed": 1360,
+    "aggregate_skipped": 17,
+    "aggregate_failures": 0,
+    "collected_files": 127,
+    "summed_vitest_wall_seconds": 1130.92,
+    "document_hash_deltas": [
+      "tests/STRATEGY.md"
+    ],
+    "production_hashes_matched": 38,
+    "build_static_results": "Table matches root-reported completed gates; not independently rerun",
+    "native_browser_boundary": "Three current native selections, two legacy native/parser cases and three selected browser journeys are explicitly separate; no full-browser/all-native rerun claimed."
+  }
+}
