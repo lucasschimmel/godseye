@@ -1,0 +1,152 @@
+{
+  "gaps": [
+    "Coverage percentages not measured",
+    "No native Hermes API, KVM or real provider qualification in this suite",
+    "No dedicated-server or paid model execution"
+  ],
+  "flaky": [],
+  "run": "godseye-local-orchestration",
+  "constraints": [
+    "Real PGlite, actual Foundation admission/reservations/grants/settlement and existing AgentEngine/CodingEngine composition",
+    "Only external provider effects replaced; concurrency/clock barriers preserve actual database SQL and rollback",
+    "No production source edits by tests satellite; source-copy mutation validates hashes",
+    "No paid calls, actual VM, external server or Git mutation"
+  ],
+  "stack": "TypeScript strict / Node24 / Vitest / PGlite",
+  "strategySource": ".codex/crafts/g-o-d-s-e-y-e-cfe8/orchestration-design.md",
+  "layers_run": [
+    "contract",
+    "deterministic invariant corpus",
+    "PGlite/Foundation integration",
+    "HTTP/typed-client integration",
+    "real owner desktop/mobile browser",
+    "curated source-copy mutation"
+  ],
+  "state": "complete",
+  "generatedBy": "gauntlet",
+  "behaviors": [
+    "T-AC-701 strict bounded DAG: duplicate IDs, cycles, missing refs, unsafe fields, UTF8 bytes",
+    "T-AC-702 immutable owner preparation freezes scope and child hashes without admission",
+    "T-AC-703 exact hash and fresh owner approval; service denied; idempotent audited decision",
+    "T-AC-704 actual Foundation delegation and aggregate finite admission budget",
+    "T-AC-705 restart, concurrent ticks and lost admission response preserve one durable child",
+    "T-AC-706 dispatch fences cancellation, epoch, target revision, profile, source/preparation and expiry",
+    "T-AC-707 failure/unknown block dependents; cancellation propagates; reconcile stays read-only",
+    "T-AC-708 clarification creates changed separately approved pending plan",
+    "T-AC-709 successful current output may create pending typed proposals only",
+    "T-AC-710 HTTP anonymous/service/CSRF/version denial and typed client"
+  ],
+  "coverage": {
+    "line": null,
+    "branch": null,
+    "reason": "Not instrumented; no percentage claim"
+  },
+  "mutation": {
+    "score": null,
+    "kind": "bounded curated source-copy behavioral sensitivity",
+    "finalSelected": 3,
+    "finalKilled": 3,
+    "baselinePassed": true,
+    "restoredPassed": true,
+    "productionSourcesUnchanged": true,
+    "report": "artifacts/orchestration-mutation/summary.json",
+    "operators": [
+      "Exact owner hash comparison removed",
+      "Ready dependency check removed",
+      "Closing Foundation parent publication fence removed"
+    ],
+    "preliminary": {
+      "report": "artifacts/orchestration-mutation/preliminary-summary.json",
+      "survivors": [
+        {
+          "mutant": "omit-parent-final-publication-fence",
+          "location": "packages/core/src/agents-execution.ts",
+          "why_survived": "Later Foundation authority/cleanup still masks the result; this selected adapter-only guard is redundant for this scenario",
+          "suggested_test": "No weakening or artificial kill; stronger distinct Foundation closing gate was tested and killed"
+        }
+      ]
+    },
+    "limitation": "Three final selected operators plus one retained preliminary redundant guard; no repository-wide or touched-line mutation percentage"
+  },
+  "runs": [
+    {
+      "report": "artifacts/test-results/orchestration-core-initial.json",
+      "passed": 34,
+      "failed": 8,
+      "durationSeconds": 64.98,
+      "purpose": "Behavior-first implementation checkpoint; actual expiry worker escape plus harness timing/status corrections"
+    },
+    {
+      "report": "artifacts/test-results/orchestration-second.json",
+      "passed": 43,
+      "failed": 2,
+      "durationSeconds": 108.62,
+      "purpose": "Expired Foundation approval worker escape and documented API version status correction"
+    },
+    {
+      "report": "artifacts/test-results/orchestration-third.json",
+      "passed": 23,
+      "failed": 0,
+      "durationSeconds": 51.83
+    },
+    {
+      "report": "artifacts/test-results/orchestration-final.json",
+      "passed": 52,
+      "failed": 0,
+      "durationSeconds": 122.73
+    },
+    {
+      "report": "artifacts/test-results/orchestration-frozen-final.json",
+      "passed": 59,
+      "failed": 0,
+      "files": 7,
+      "durationSeconds": 130.57,
+      "purpose": "Final frozen production source batch"
+    },
+    {
+      "report": "artifacts/test-results/orchestration-coding-stop-final.json",
+      "passed": 1,
+      "failed": 0,
+      "durationSeconds": 6.88,
+      "purpose": "Additional coding stop-throw quarantine regression on same frozen production source"
+    }
+  ],
+  "finalUniqueUnitIntegrationTests": 60,
+  "browser": {
+    "report": "artifacts/test-results/orchestration-e2e.xml",
+    "passed": 2,
+    "failed": 0,
+    "durationApproximatelySeconds": 60,
+    "desktopSeconds": 18.6,
+    "mobileSeconds": 9.3,
+    "realOwnerEnrollment": true,
+    "responseFakes": false,
+    "scenarios": [
+      "Real project and Hermes profile creation",
+      "Question-only pending plan exact owner approval",
+      "Actual scheduler waiting clarification",
+      "Answer creates separately approved pending continuation; owner rejects",
+      "Inert script text",
+      "Whole-panel controls/pre viewport and ancestor clipping checks"
+    ],
+    "screenshots": [
+      "artifacts\\orchestration-playwright-results\\orchestration-T-AC-711-des-71c11-ects-its-inert-continuation-agents\\orchestration-desktop-pending.png",
+      "artifacts\\orchestration-playwright-results\\orchestration-T-AC-711-des-71c11-ects-its-inert-continuation-agents\\orchestration-desktop-rejected.png",
+      "artifacts\\orchestration-playwright-results\\orchestration-T-AC-711-mob-1e80d-ects-its-inert-continuation-agents\\orchestration-mobile-pending.png",
+      "artifacts\\orchestration-playwright-results\\orchestration-T-AC-711-mob-1e80d-ects-its-inert-continuation-agents\\orchestration-mobile-rejected.png"
+    ],
+    "note": "Final cosmetic mobile heading delta included; subsequent UI rejection freshness alignment does not alter these fresh-session journeys"
+  },
+  "static": {
+    "typecheck": "passed",
+    "biomeOwnedFiles": "passed"
+  },
+  "notableRegressions": [
+    "Expired delegated Foundation claim no longer escapes and stops unrelated worker work",
+    "Invalid successful nested proposal references remain inert without scheduler exception",
+    "Dependency context overflow is contained to its plan",
+    "Cancellation before child staging retains a terminal logical intent",
+    "Parent authority checked after actual final result SQL and Foundation success audit SQL",
+    "Coding stop failure quarantines retained physical uncertainty while unrelated plans continue"
+  ]
+}

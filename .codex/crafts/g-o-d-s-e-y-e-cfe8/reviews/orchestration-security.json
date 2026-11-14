@@ -1,0 +1,244 @@
+{
+  "verdict": "pass",
+  "review_phase": "final-frozen-source-reinspection",
+  "reviewed_at": "2026-11-14",
+  "reviewer": "independent SECURITY-AUDITOR + FABER",
+  "scope": "local E07 orchestration; production source read-only",
+  "criteria_run": 12,
+  "criteria_passed": 12,
+  "findings": [],
+  "resolved_during_initial_review": [
+    {
+      "criterion": "Queued revoked parent fails locally rather than crashing Foundation worker",
+      "evidence": "packages/core/src/foundation-queue.ts:307 now rejects expected domain authority errors through rejectQueued; final regression evidence owned by parent/test worker."
+    }
+  ],
+  "probes": [
+    {
+      "command": "node --import tsx .codex/crafts/g-o-d-s-e-y-e-cfe8/reviews/orchestration-security-probe.mts",
+      "runtime": "Node v24.22.1, real PGlite/Foundation, synthetic external provider only",
+      "result": {
+        "scenario": "bounded dependency overflow isolates one plan",
+        "failure": null,
+        "oversizedState": "failed",
+        "independentState": "running"
+      }
+    }
+  ],
+  "reviewed_controls": [
+    "Strict finite acyclic typed DAG; exact immutable plan hash and scoped profile/preparation hashes.",
+    "Fresh owner approval, service approval denial, owner HTTP middleware and same-origin/JSON controls.",
+    "Trusted service delegation at staging/create/enqueue/approval; task IDs persisted before admission.",
+    "Deterministic child ID and idempotent request binding across restart/concurrent/lost response paths.",
+    "Aggregate conservative child maximum and existing Foundation budget/heavy-capacity composition.",
+    "Clarification produces a separately approved pending suffix and preserves original prefix child evidence.",
+    "Successful source extraction is pending-only and bounded; no output execution authority.",
+    "UI renders title, input, answer and output as React text, exact hash is passed for approval."
+  ],
+  "not_reviewed": [
+    "Dependency/CVE and secret scans are root AEGIS responsibility; no duplicate scan.",
+    "Paid provider calls, remote host/server, physical isolation, new native VM qualification.",
+    "Full test suite/build/browser runs executed by other agents; this reviewer independently ran only the bounded PGlite overflow probe.",
+    "Database corruption and privileged in-process code outside public actor threat model.",
+    "No exhaustive concurrency/fault-state model checking; confidence limited to inspected paths and cited probes."
+  ],
+  "initial_review": {
+    "verdict": "fail",
+    "findings": [
+      {
+        "id": "ORCH-SEC-01",
+        "criterion": "COR-02/COR-03 untrusted data cannot terminate the global scheduler",
+        "status": "CONFIRMED",
+        "severity": "blocker",
+        "cwe": "CWE-400",
+        "evidence": "packages/core/src/orchestration.ts:79 — initial tick propagated errors across all plans and sources; apps/control-api/src/server.ts:167 shuts down admission after scheduler rejection. Initial proposalFromTask catch omitted NOT_FOUND; dependencyInput overflow escaped launch catch.",
+        "counterargument": "Strict input schemas and 8192-byte child input cap reject malformed or oversized requests.",
+        "refutation": "A schema-valid same-scope proposal can name a nonexistent profile/preparation, and bounded valid dependency output plus static input can exceed the child byte cap. Both are normal untrusted-data outcomes, not infrastructure failures.",
+        "refutation_survived": true,
+        "suggestion": "Treat invalid source references as inert proposals and fail only the dependent plan on assembled-input overflow.",
+        "remediation_status": "Draft fix inspected: orchestration-plans.ts:85 catches domain 4xx, orchestration-scheduler.ts:75 catches dependency-input domain 4xx. Independent overflow probe passed. Final freeze/test reinspection still required."
+      },
+      {
+        "id": "ORCH-SEC-02",
+        "criterion": "COR-03/COR-04 exact parent authority at final logical publication",
+        "status": "CONFIRMED",
+        "severity": "blocker",
+        "cwe": "CWE-367",
+        "evidence": "packages/core/src/agents-execution.ts:106 and packages/core/src/coding-execution.ts:143 initially tested parent expiry before multiple awaited operations; closing read-only validateLease at agents-execution.ts:117 and coding-execution.ts:192 intentionally skips parent authority.",
+        "counterargument": "The whole observation occurs under the serialized write lock and normal mutation checks parent authority.",
+        "refutation": "The lock excludes concurrent mutations but does not stop wall-clock expiry. A read-only result can cross the parent's shorter deadline during awaited transaction operations while its own task/lease deadlines remain valid. Physical cleanup may settle, but parent-expired logical success must be masked.",
+        "refutation_survived": true,
+        "suggestion": "Recheck parent at closing publication; mask revoked success/output while preserving physical cleanup settlement.",
+        "remediation_status": "Backend began adding closing checks at agents-execution.ts:146 and coding-execution.ts:197 during review. Not yet reviewed or probed on frozen source; initial blocking verdict retained until explicit follow-up."
+      }
+    ],
+    "phase": "initial-review-awaiting-final-freeze"
+  },
+  "closures": [
+    {
+      "id": "ORCH-SEC-01",
+      "status": "CLOSED",
+      "evidence": "orchestration-plans.ts domain 4xx handling; orchestration-scheduler.ts dependency input catch; foundation-queue.ts claim rejection; independent overflow probe rerun passes",
+      "counterargument": "Unexpected infrastructure exceptions still fail closed globally",
+      "reconciliation": "Expected malformed source and bounded overflow now stay local; database/integrity faults legitimately stop admission."
+    },
+    {
+      "id": "ORCH-SEC-02",
+      "status": "CLOSED",
+      "evidence": "orchestration-authority.ts:125-175 accepts live now callback and checks deadline after awaits; agents-execution.ts:146 and coding-execution.ts:196 mask read-only late evidence; foundation-effects.ts:155-158 awaits settlement then checks parent before commit",
+      "counterargument": "Read-only Foundation reconciliation intentionally permits physical settlement after revocation",
+      "reconciliation": "markOrchestrationUnknown atomically revokes parent before uncertainty or adapter settlement; read-only observation and settlement mask logical output/result while physical cleanup settles. Closing normal finish guard rolls back result/artifact settlement if parent expires."
+    }
+  ],
+  "final_inspection": [
+    "Parent source current profile and cancellation state rechecked by assertOrchestrationTask; own scope and epoch remain Foundation gates.",
+    "Unknown effect updates parent to unknown before state.settlement and state.uncertainty; dependent admission cannot resume during explicit reconciliation.",
+    "Coding provider stop errors caught by stopChildren and recorded CLEANUP_UNCERTAIN/quarantined; reservations not released here. Exact throwing branch also executed by tests agent; evidence and assertions independently inspected in final evidence follow-up.",
+    "Terminal task metadata still permits protective Foundation cancellation for physically active operations.",
+    "Exact origin/CSRF/owner boundary and inert React text unchanged by final backend delta."
+  ],
+  "external_test_evidence": [
+    {
+      "source": "root and tests agent",
+      "artifact": "artifacts/test-results/orchestration-settlement-final.json",
+      "outcome": "Reported green; test source independently inspected",
+      "test": "T-AC-706 rolls back late Foundation settlement after the final success audit SQL",
+      "sourceLine": "tests/orchestration-runtime.test.ts:238",
+      "verifies": "No task output, no chat artifacts, no dependent child and no second provider submission after late settlement expiry."
+    },
+    {
+      "source": "tests agent execution; security reviewer independently inspected JSON and test source",
+      "artifact": "artifacts/test-results/orchestration-coding-stop-final.json",
+      "outcome": "success=true, 1 passed selected test, 0 failed; 7 collected",
+      "test": "T-AC-707 quarantines a coding child whose physical stop throws without blocking other plans",
+      "sourceLine": "tests/orchestration-composition.test.ts:139",
+      "verifies": "Actual coding provider stop throws; CLEANUP_UNCERTAIN/quarantined metadata, held reservation and unrelated waiting clarification asserted."
+    }
+  ],
+  "final_source_freeze": [
+    {
+      "path": "apps/console/src/components\\agents-plans-answer.tsx",
+      "sha256": "4dbd497f474939b5ca1936a90f8390126c5fdcf56cfc1f14b6c74dad64a7fbf9"
+    },
+    {
+      "path": "apps/console/src/components\\agents-plans-composer.tsx",
+      "sha256": "671d43d4a659c64ec3e907a036744d3c9d1d0da84d78d6f6b18709ddf24d9976"
+    },
+    {
+      "path": "apps/console/src/components\\agents-plans-detail.tsx",
+      "sha256": "035592579bc2c699b8fe8dab33688e154764d0b7b8eceb7cf2bd577045b3cbb2"
+    },
+    {
+      "path": "apps/console/src/components\\agents-plans-evidence.tsx",
+      "sha256": "d9528b5604f074ab93d9c7239648a0ab15a75a67d444f3d4251c023c41914e7f"
+    },
+    {
+      "path": "apps/console/src/components\\agents-plans-step.tsx",
+      "sha256": "db00b4f20deaf96e80f303e1183dbbef1a287dd381242e4846616a98373b828b"
+    },
+    {
+      "path": "apps/console/src/components\\agents-plans.tsx",
+      "sha256": "39c119a33d796f1594877808948b245a8299f4bc6e4d07b1a9ef6b7eb8258df8"
+    },
+    {
+      "path": "apps/control-api/src\\orchestration-routes.ts",
+      "sha256": "fcba2c89c52762b8760ec91e9f21d1600dd953305f18af4602fff87ef26340fe"
+    },
+    {
+      "path": "packages/contracts/src\\agents.ts",
+      "sha256": "01ec95c6342ba95d302ad689a8fc7bc8936a28a13656c0aae02f0de22b62033c"
+    },
+    {
+      "path": "packages/contracts/src\\coding.ts",
+      "sha256": "aef9b9a0f967b8976927896c233dee7b52965e3de62e123bfac2577f5039dc0f"
+    },
+    {
+      "path": "packages/contracts/src\\infrastructure.ts",
+      "sha256": "bb7555044b00337f3cd56471d549eb82c6ccc17921bd42862900fb863fa656dd"
+    },
+    {
+      "path": "packages/contracts/src\\orchestration-endpoints.ts",
+      "sha256": "f4fc58121c67757ceb54a50521f61a2030f2262ec732aca41609d2ee542684d6"
+    },
+    {
+      "path": "packages/contracts/src\\orchestration.ts",
+      "sha256": "e827e79dcb702c145b78a0dd4ca147a7adda942aba394545aa3487d1e2641a98"
+    },
+    {
+      "path": "packages/core/src\\agents-execution.ts",
+      "sha256": "27a6c6b6d3262bf2cf055c7faa2503a229556587af8312948b568ca8c0a6a266"
+    },
+    {
+      "path": "packages/core/src\\agents-runs.ts",
+      "sha256": "6a845d7f57e0e2780e6b59c59b0c58b24bec1d0caa27364bab949c06ae18e929"
+    },
+    {
+      "path": "packages/core/src\\agents.ts",
+      "sha256": "1e19f3c5564eb7dad39aa824b2b1c9d44b8ed8bb6c73e3dfcb3a61353391072a"
+    },
+    {
+      "path": "packages/core/src\\coding-execution.ts",
+      "sha256": "b6ed09da0ff7b328308db8f7239cbcc91ddaea365763278c5eb99a25dff67813"
+    },
+    {
+      "path": "packages/core/src\\coding-preparation.ts",
+      "sha256": "25f867a539e9971806fbf8f45b08a7ba456e2ad41f977a9d7cb0008bb110ac19"
+    },
+    {
+      "path": "packages/core/src\\coding.ts",
+      "sha256": "15cfa2dd570458e69d52f9ea236f672c8e7da02f930b4e2a0740d42dfbe2caa3"
+    },
+    {
+      "path": "packages/core/src\\foundation-data.ts",
+      "sha256": "feeda09e6c94b3ffbe3e19a2a5326eedff35bf29b67421e6a9eed096fa7e5418"
+    },
+    {
+      "path": "packages/core/src\\foundation-effects.ts",
+      "sha256": "67e8143c68ea98dfe396511ac08240e11113754d91a02b9981b45fb0c8459165"
+    },
+    {
+      "path": "packages/core/src\\foundation-plans.ts",
+      "sha256": "c60bd35999cd87c339dca32ac3a32e354c318b933a739771d45f6dcfbe008319"
+    },
+    {
+      "path": "packages/core/src\\foundation-queue.ts",
+      "sha256": "d9fd15f5e6689d393d77e7a1c1699e33c3599fa36d8efd6ff9e9f850c02e78f5"
+    },
+    {
+      "path": "packages/core/src\\infrastructure.ts",
+      "sha256": "318f4b590596bd6d1192a329d89138bbac409a509b98dd8d9ea3b358d8ea8322"
+    },
+    {
+      "path": "packages/core/src\\orchestration-authority.ts",
+      "sha256": "7d8c91bb53b6c20ddd8b3b4c4a923e9241ed2f79fb8b7e81ffc3d6c8585a1261"
+    },
+    {
+      "path": "packages/core/src\\orchestration-delegation.ts",
+      "sha256": "39a597a7966d0f4bace65de1f4eac209591cd60ddd45fdd3ae140927e017635e"
+    },
+    {
+      "path": "packages/core/src\\orchestration-plans.ts",
+      "sha256": "182c4b3b4d8e9322024043ae90fafcb8fd7a4691827efee820c525712c5fc06e"
+    },
+    {
+      "path": "packages/core/src\\orchestration-scheduler.ts",
+      "sha256": "8b2308aef01219d5f1d045777b20752cce206c5ea9b2ae7d42567c9dd2703a2a"
+    },
+    {
+      "path": "packages/core/src\\orchestration-state.ts",
+      "sha256": "87c1d25fb7b3316eccd2317cf9b894e04017d9c4273a4ee38189aaecca0591fe"
+    },
+    {
+      "path": "packages/core/src\\orchestration.ts",
+      "sha256": "344426acf6ff20b74a818c9d3f9d54547e5fbe49c357f4158b5e1ab0bbf8e372"
+    },
+    {
+      "path": "packages/store/migrations/0022_orchestration.sql",
+      "sha256": "5f681fa831399b41ddaa2bd0515dc2260889cd0800003f9aa1bea8befd7cf6af"
+    },
+    {
+      "path": "packages/store/src\\orchestration-schema.ts",
+      "sha256": "d1ce3e9fb51a996634ef2be704516051277510676d6b1ec65440fe55f23bb6cd"
+    }
+  ]
+}
