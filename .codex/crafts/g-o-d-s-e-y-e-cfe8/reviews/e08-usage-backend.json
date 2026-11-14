@@ -1,0 +1,65 @@
+{
+  "role": "e08-usage-backend-and-shared-integration",
+  "status": "implemented-pending-final-independent-native-and-full-gates",
+  "apiVersion": "1.15.0",
+  "core": [
+    "usage.ts",
+    "usage-attempts.ts",
+    "usage-budgets.ts",
+    "usage-pricing.ts",
+    "usage-resources.ts",
+    "usage-findings.ts"
+  ],
+  "sharedIntegration": [
+    "packages/contracts/src/index.ts",
+    "packages/contracts/src/http-endpoints.ts",
+    "packages/contracts/src/http-openapi.ts",
+    "packages/store/src/schema.ts",
+    "packages/store/src/protection-schema.ts",
+    "packages/core/src/index.ts",
+    "packages/core/src/infrastructure.ts",
+    "apps/control-api/src/app.ts",
+    "apps/control-api/src/server.ts",
+    "packages/control-client/src/index.ts"
+  ],
+  "native": [
+    "scripts/model_attempt_evidence.py",
+    "scripts/hermes_gateway.py",
+    "scripts/hermes_gateway_broker.py",
+    "scripts/hermes_gateway_state.py",
+    "scripts/hermes_gateway_transport.py",
+    "scripts/hermes_runtime_install.py",
+    "scripts/coding_guest_control.py",
+    "scripts/coding_guest_broker.py",
+    "apps/control-api/src/hermes-provider.ts",
+    "apps/control-api/src/coding-provider.ts",
+    "packages/core/src/agents-provider.ts",
+    "packages/core/src/agents-execution.ts",
+    "packages/core/src/coding-execution.ts",
+    "packages/contracts/src/coding.ts"
+  ],
+  "verification": {
+    "focusedSuites": 6,
+    "focusedTestsPassed": 45,
+    "pythonCompilation": "passed",
+    "typecheck": "owned code clean; last global errors in concurrent UI incident labels/null scope and invoice test chargedMicros property",
+    "nativeProof": "independent tests worker in progress; no full VM proof claimed"
+  },
+  "semantics": [
+    "Foundation charge remains monotone conservative max and is never refunded by invoice or estimates",
+    "Per-attempt intent acknowledged only after server write committed, before trusted native POST",
+    "Outcome read-only replay cannot dispatch or renew authority",
+    "USD immutable priceId selected at intent; nullable exclusive categories, raw vendor totals retained when present",
+    "Unknown financial reports remain unknown but physically stopped tasks settle conservative charge and free concurrency",
+    "Physical unknown retains reserved exposure and capacity across time windows",
+    "Actual deliveryUsage and typed tool-call observations only; allocation ceilings never reported as measured",
+    "Provider admin billing is unconfigured; fixture/operator invoice provenance remains explicit"
+  ],
+  "limits": [
+    "No paid provider calls or real vendor invoice access performed",
+    "Hermes controller source provenance now required and old receipt is unavailable until explicit runtime install refresh",
+    "Coding source closure changed: existing native qualification invalid until genuine requalification",
+    "Actual production HermesProvider parser path/VM proof deferred to root coordinated qualification",
+    "API resources page is bounded/truncated; no client supplied telemetry/billing authority"
+  ]
+}

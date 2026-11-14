@@ -1,0 +1,15 @@
+{
+  "facet": "usage-query-pagination-retention",
+  "status": "implementation-checkpoint",
+  "files": ["packages/contracts/src/usage-query.ts", "packages/core/src/usage-query.ts", "packages/core/src/usage-retention.ts"],
+  "sharedEdits": ["packages/contracts/src/usage.ts UsageOverview.page and nullable exposure summary fields", "packages/core/src/usage.ts overview/summary/summarySystem/prune and imports", "apps/control-api/src/usage-routes.ts GET and import"],
+  "exports": ["UsageQuery", "UsageQueryInput", "UsageQueryView", "UsagePage"],
+  "query": "GET /api/v1/usage?projectId=<uuid>&environmentId=<uuid>&profileId=<uuid>&runner=codex&runId=<uuid>&since=<ISO>&until=<ISO>&limit=100&cursor=<returned>",
+  "semantics": ["Strict server query, start inclusive/end exclusive, limit1..200 default100", "Timestamp/UUID keyset cursor bound to normalized filters and snapshot", "SQL scope before page fetch and independent full-scope aggregate summary", "Run exposure attributed by run creation window; attempt costs by attempt intent window", "Global prices catalog, project-scoped budgets and invoices", "Narrower-than-project or partially overlapping invoice period produces unknown invoice total", "Overflow totals become null; legacy runs force unknown usage totals/completeness", "Retention watermark makes pre-cutoff evidence totals unknown"],
+  "retention": {"defaultDays":90,"minimumDays":90,"defaultBatch":100,"maximumBatch":500,"engineMethod":"prune(options?)","policy":"Only single-attempt complete priced/provider-reported terminal histories, no active/unknown reservations or effects, no invoice references. Preserve all accounting/run/reservation/reconciliation rows and multi-attempt histories."},
+  "checks": ["Biome check on all three new files passed", "TypeScript produced no errors in query/retention/contracts/route helpers", "PGlite migrated empty database query and empty prune executed successfully"],
+  "blockers": ["Whole suite/typecheck currently blocked by concurrent worker usage-findings.ts import before file exists", "Existing e08-invoices.test.ts references Foundation chargedMicros field absent from budget view"],
+  "remainingVerification": ["Nonempty filtered aggregation and stable pagination fixtures", "Cross-project/cross-ancestry denial", "Nonempty invoice period attribution", "Retention candidate deletion/protected records/watermark behavior", "Concurrent inserts at identical millisecond snapshot are not transactionally frozen; cursor is keyset/snapshot bounded, not an MVCC export"],
+  "limitations": ["Execution and financial journals intentionally retained; pruning deletes safe usage evidence only", "Multi-attempt histories preserved rather than partially deleting ancestry", "Default prices/invoices/budgets response caps remain explicit through truncated; totals are independent of record caps", "Retention metadata is global and conservative across projects"],
+  "paidCalls":0,"remoteChanges":false,"gitMutations":false
+}
