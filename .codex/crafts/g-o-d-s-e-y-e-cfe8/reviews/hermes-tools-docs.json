@@ -1,0 +1,85 @@
+{
+  "written": [
+    "README.md",
+    "CHANGELOG.md",
+    "docs/spec/v1.md",
+    "docs/plan/v1-development.md",
+    "docs/development/hermes-tools.md",
+    "docs/development/hermes.md",
+    "docs/development/agent-center.md",
+    "docs/development/hermes-chat.md",
+    "docs/development/handoff.md",
+    "docs/adr/ADR-016-task-scoped-hermes-data-tools.md"
+  ],
+  "verified": {
+    "relativeLinksChecked": 179,
+    "clean": true,
+    "drifted": [],
+    "commands": "Package script names and installer/bootstrap CLI arguments checked against source; not executed by SCRIBE.",
+    "scope": "Source/docs accuracy verification only; final validation supplied by parent.",
+    "productionHashesChecked": 68,
+    "productionHashDrift": []
+  },
+  "sourceProofMappings": [
+    {
+      "claim": "Catalog, strict schemas, logical/physical bounds, policies, grants, receipt identity",
+      "source": "packages/contracts/src/agents-tools.ts"
+    },
+    {
+      "claim": "Opt-in API startup executor",
+      "source": "apps/control-api/src/server.ts; apps/control-api/src/hermes-tool-executor.ts"
+    },
+    {
+      "claim": "Foreground eight-hour bootstrap and explicit exact user-manager activation",
+      "source": "scripts/hermes-tools-bootstrap.mjs"
+    },
+    {
+      "claim": "Explicit sealed runtime install",
+      "source": "scripts/hermes-tools-install.mjs; scripts/hermes_tools_install.py"
+    },
+    {
+      "claim": "Standalone/chat selection and history UI",
+      "source": "apps/console/src/components/agents-tools-fields.tsx; agents-task-form.tsx; agents-chat.tsx; agents-tools-history.tsx"
+    },
+    {
+      "claim": "Actual physical helper/owner death and sampled membership; smaller/lab probes distinct",
+      "source": ".codex/crafts/g-o-d-s-e-y-e-cfe8/reviews/hermes-tools-production-native-evidence.md"
+    },
+    {
+      "claim": "Distinct standalone toolsDetail/local Blob path versus chat artifact storage/endpoint",
+      "source": "packages/core/src/agents-tools-artifacts.ts; apps/console/src/components/agents-tools-history.tsx"
+    }
+  ],
+  "baseline": "Focused English contributor/operator documentation; prior accepted ADRs unchanged; ADR-016 partially supersedes ADR-014/015 restrictions only.",
+  "skipped": [
+    {
+      "what": "Run documented installer/bootstrap or model commands",
+      "why": "Docs-only assignment; commands inspected against source, no runtime mutation."
+    },
+    {
+      "what": "Whole-repository API doc coverage and automated Bash skill scripts",
+      "why": "Scoped documentation continuation; source and relative link verification performed directly on Windows."
+    }
+  ],
+  "pending": [],
+  "status": "complete-verified",
+  "reviewRemediation": {
+    "HTD-001": "Corrected five docs to distinguish standalone retained snapshots/local text Blob downloads from chat artifact IDs/store/endpoint; source verified."
+  },
+  "finalEvidence": {
+    "globalAggregate": "artifacts/test-results/hermes-tools-global-aggregate.json",
+    "passed": 1426,
+    "defaultNativeSkipped": 28,
+    "files": 132,
+    "newOrdinaryIncluded": 66,
+    "newNative": 11,
+    "selectedLegacyNative": 2,
+    "browser": 3,
+    "selectedMutantsKilled": 5,
+    "lintFiles": 615,
+    "controlApi": "1.12",
+    "reviews": "code/security/docs pass, HTR-001 and HTD-001 resolved",
+    "currentRuntime": "Current WSL manager unavailable; holder already absent; no fabricated old stopped journals.",
+    "cleanup": ".codex/crafts/g-o-d-s-e-y-e-cfe8/reviews/hermes-tools-final-cleanup-truth.md"
+  }
+}

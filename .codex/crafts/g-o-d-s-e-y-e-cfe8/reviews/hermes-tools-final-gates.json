@@ -1,0 +1,97 @@
+{
+  "date": "2026-11-14",
+  "status": "local-fixed-tools-request-complete-with-recorded-qualification-limits",
+  "scope": "Five fixed trusted Hermes data tools and explicit task permissions; not complete E07/V1 or general code execution",
+  "orchestration": "Focused core/runtime/GAUNTLET implementation agents; parent coordinated design and final validation; fresh independent code, security and documentation reviews",
+  "global": {
+    "strategy": "Serialized shared-artifact builder group followed by disjoint two-worker remainder; canonical build only after tests finished",
+    "builders": {
+      "passed": 2,
+      "files": 1,
+      "vitestWallSeconds": 18.86
+    },
+    "remainder": {
+      "passed": 1424,
+      "nativeDefaultSkipped": 28,
+      "files": 131,
+      "vitestWallSeconds": 1082.09
+    },
+    "aggregate": {
+      "passed": 1426,
+      "nativeDefaultSkipped": 28,
+      "collectedFiles": 132,
+      "totalTestCases": 1454,
+      "failures": 0,
+      "crossGroupOverlap": [],
+      "vitestWallSecondsSum": 1100.95
+    },
+    "artifact": "artifacts/test-results/hermes-tools-global-aggregate.json",
+    "displayLabels": "Two preexisting within-file parameterized titles serialize distinct nonfinite inputs as null. They are separate JUnit cases; no cross-group overlap."
+  },
+  "focused": {
+    "newOrdinaryIncludedInGlobal": 66,
+    "newNativeUnique": 11,
+    "selectedLegacyNative": 2,
+    "browser": 3,
+    "curatedMutationKills": 5,
+    "report": "reviews/hermes-tools-test-results.json",
+    "trace": "reviews/hermes-tools-test-matrix.md",
+    "qualification": "Only model transport is simulated in three actual pinned-Hermes/Foundation/executor cases. Browser setup has one actual owner/backend case and two labeled task/result contract cases. No paid provider or whole-suite mutation score."
+  },
+  "static": {
+    "lint": "pass",
+    "lintFiles": 615,
+    "types": "pass",
+    "contracts": "pass",
+    "controlApi": "1.12.0",
+    "applicationApi": "1.0.0"
+  },
+  "build": {
+    "canonical": "pass",
+    "builtApiSmoke": "first-attempt-pass"
+  },
+  "source": {
+    "frozenPaths": 68,
+    "hashDrift": 0,
+    "freeze": "reviews/hermes-tools-source-freeze.json",
+    "review": "reviews/hermes-tools-independent-review.json",
+    "securityReview": "reviews/hermes-tools-security-review.json",
+    "resolvedFindings": [
+      "HTR-001: closing transaction time/abort fence",
+      "HTD-001: distinguish standalone snapshot and chat artifact delivery"
+    ],
+    "openConfirmedFindings": 0,
+    "sizeExceptions": [
+      "Existing control-client index is the intentional typed public API boundary.",
+      "Hermes provider keeps correlated native message handling and owned-process teardown together; scoped review covers that lifecycle boundary."
+    ]
+  },
+  "security": "reviews/hermes-tools-security.json",
+  "physicalEvidence": "reviews/hermes-tools-production-native-evidence.md",
+  "visualEvidence": "reviews/hermes-tools-visual-proof.json",
+  "cleanup": {
+    "report": "reviews/hermes-tools-final-cleanup-truth.md",
+    "currentBootOwnedRuntimes": 0,
+    "manager": "unavailable after observed WSL boot change",
+    "holder": "24838 no longer registered; no release or repair performed",
+    "qualification": "Current-boot public physical absence inventory does not rewrite historical uncertain journals as stopped. Explicit operator bootstrap is required for later tool use."
+  },
+  "docs": {
+    "report": "reviews/hermes-tools-docs.json",
+    "review": "reviews/hermes-tools-docs-review.json",
+    "relativeLinks": 179,
+    "finalAggregateUpdate": "complete-verified"
+  },
+  "gitHygiene": "reviews/hermes-tools-git-hygiene.json",
+  "serverChanged": false,
+  "paidCalls": 0,
+  "gitMutations": false,
+  "wholeE07Complete": false,
+  "qualificationLimits": [
+    "General shell/build/project-code execution requires unqualified I10 disposable KVM guests and remains disabled.",
+    "Sampled production cgroup membership; smaller-limit OOM/PID refusal probes and separate lab storage/network controls do not claim production exhaustion or exhaustive descendant enumeration.",
+    "No physical hostile-link injection campaign, deployed dedicated-host containment/recovery, complete SBOM/SAST, paid billing reconciliation or browser-to-native paid-provider run."
+  ],
+  "completedAt": "2026-11-14T09:30:54.7413211Z",
+  "outcome": "outcome-1794648611-75faf710"
+}

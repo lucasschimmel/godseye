@@ -1,0 +1,172 @@
+{
+  "status": "frozen-pending-gauntlet-regression",
+  "createdAt": "2026-11-14T09:08:16.4514349Z",
+  "owner": "hermes_tools_core",
+  "files": [
+    {
+      "path": "packages/contracts/src/agents-tools.ts",
+      "sha256": "25fef126a83bcda9cfa3f01f6a7d2cd31c784d4c04c21fcba3e2dffe465ef636"
+    },
+    {
+      "path": "packages/contracts/src/agents-tools-endpoints.ts",
+      "sha256": "ab7a3aee5049a286c4ee8fde9bee422b9471eee842b36d1fd9d4f08736e29425"
+    },
+    {
+      "path": "packages/contracts/src/agents.ts",
+      "sha256": "01ec95c6342ba95d302ad689a8fc7bc8936a28a13656c0aae02f0de22b62033c"
+    },
+    {
+      "path": "packages/contracts/src/agents-chat.ts",
+      "sha256": "0f0fcd826a2facaa907557b8b1bac9293c4f30ab83668879edff192fbea1a27f"
+    },
+    {
+      "path": "packages/contracts/src/foundations.ts",
+      "sha256": "3fb20eeb1e1d5afa5facbc9bce8036ff2fd195db12189f0bc27cc5c399d04c7a"
+    },
+    {
+      "path": "packages/contracts/src/http-endpoints.ts",
+      "sha256": "ad2888efcfa7ee412371bfb04d7af7235c443286fb3d9c81b53978e1f669d59a"
+    },
+    {
+      "path": "packages/contracts/src/index.ts",
+      "sha256": "5901c9730109e50c2e096a50d5a1ca50baf1ec83c7169e307bd39d59ca7057ef"
+    },
+    {
+      "path": "packages/core/src/agents-tools.ts",
+      "sha256": "28775c34702d1defc57ce45eca83ea63325e21a0f8dc6137a1cbb77f725bfcf8"
+    },
+    {
+      "path": "packages/core/src/agents-tools-fence.ts",
+      "sha256": "44d2cf54a9211c04667ada9ed12f67766ddf595cd597da6cd6abd88dc2e18da4"
+    },
+    {
+      "path": "packages/core/src/agents-tools-policy.ts",
+      "sha256": "10f730692b1cc268f59a2f234bc5142e90bc04fb100bf4951f7d8c621dd3918b"
+    },
+    {
+      "path": "packages/core/src/agents-tools-lifecycle.ts",
+      "sha256": "8d530dbc352e62f0b60d9bde126c870ce2533761030a2e52e7c3a961a05df111"
+    },
+    {
+      "path": "packages/core/src/agents-tools-artifacts.ts",
+      "sha256": "e73fbc87ee5d33cbabc9cf43fba63873adbf0c6088391a54f1a2b456dfb0abad"
+    },
+    {
+      "path": "packages/core/src/agents.ts",
+      "sha256": "a0f69d6f08399e8b4860b5e0ae31e44cd476fe9e57edbfd6e62ade6f0b758324"
+    },
+    {
+      "path": "packages/core/src/agents-state.ts",
+      "sha256": "30bc65dba4a092fb7100ea0783d1d649d5b3a09cb4b2fbb7984e430afa553e61"
+    },
+    {
+      "path": "packages/core/src/agents-runs.ts",
+      "sha256": "73f0619d36172ee3f3a448a338d80572c17899a5337412eb53e22d60b072e9b7"
+    },
+    {
+      "path": "packages/core/src/agents-profiles.ts",
+      "sha256": "3fdee49f86215c6295b19ee033cdd88873f8eab5de9718185e25c88f25785ec9"
+    },
+    {
+      "path": "packages/core/src/agents-execution.ts",
+      "sha256": "ebfcbc0b3a0104c8328bd9b9aeddd1aa7c79459bd8d5d2b160b254c9d6446a95"
+    },
+    {
+      "path": "packages/core/src/agents-chat.ts",
+      "sha256": "2cb56ae9d91879b925f4fccba2c93648fc687c552005a23b5654b81923440ad6"
+    },
+    {
+      "path": "packages/core/src/agents-provider.ts",
+      "sha256": "bee17508e289ed4540acabe0c0dca5bd34d8dd0d91906556b70e918f58a9c521"
+    },
+    {
+      "path": "packages/core/src/index.ts",
+      "sha256": "c1d6dd79099a2ad4896d04faeab1341e14d01079846c7ccac8f159c45a8b44c6"
+    },
+    {
+      "path": "packages/store/src/agent-schema.ts",
+      "sha256": "e77ea35e65b633ed8ce978b7b980b780be42852d99061a8d744774fd7e45257f"
+    },
+    {
+      "path": "packages/store/src/agent-tools-schema.ts",
+      "sha256": "2cc1183a4a92504c721064490c342aa29dd71b906c3b04febea53943936218a1"
+    },
+    {
+      "path": "packages/store/src/schema.ts",
+      "sha256": "351090d9803013c270f755f27ecd8863955f29ea2502d506c53960d9dcc67f90"
+    },
+    {
+      "path": "packages/store/migrations/0020_agent_tools.sql",
+      "sha256": "df5df817aecf48b8a06ec36b9ee25021b85dfef84a1849ec97f413dd1207b11c"
+    },
+    {
+      "path": "packages/control-client/src/index.ts",
+      "sha256": "705a1f2eaa61fb5457521d9b5581d33501a472c04337621951ec2257e5318217"
+    },
+    {
+      "path": "apps/control-api/src/agent-routes.ts",
+      "sha256": "16db730c87db38d40d47adc65080bcfb7cb45e4ff6cf701f39464fbfedd0762b"
+    },
+    {
+      "path": "apps/control-api/src/server.ts",
+      "sha256": "6838a30a529f11030bdf6d89441741b63706e09cd7d4190ff85668ccaf359b6f"
+    },
+    {
+      "path": "apps/console/src/components/agents-tools-fields.tsx",
+      "sha256": "48c9aa879b3e56be9581b5c59360e6a3885e948ed1337fc6e44514520b246436"
+    },
+    {
+      "path": "apps/console/src/components/agents-tools-history.tsx",
+      "sha256": "a05a2d2f7ebb75774ff5e465135d027ee9d0b81d17e2ad02d3ea86b9e6a172b6"
+    },
+    {
+      "path": "apps/console/src/components/agents-profile-form.tsx",
+      "sha256": "8bc16f89ee3136187316533a20ef594ad8a79ff3e43922b0acfcf35dc51280f7"
+    },
+    {
+      "path": "apps/console/src/components/agents-task-form.tsx",
+      "sha256": "84f8c1b2f1d573eb01e432fd4471ffd85bf0ee54d6ff78c341d185613384ed8a"
+    },
+    {
+      "path": "apps/console/src/components/agents-task-history.tsx",
+      "sha256": "3ef5bd0914cb606f68b6b6d9854a2a78548e33e8c66408a3d127e6d2dba52a5b"
+    },
+    {
+      "path": "apps/console/src/components/agents-chat.tsx",
+      "sha256": "bc5555d941783097323aba5796769084136b7dab1bd630a14d5de849cdbcdc54"
+    },
+    {
+      "path": "apps/console/src/components/agents-chat-transcript.tsx",
+      "sha256": "6d7d08425b0a815dc7845fcc1f4098e5a461da11b16d0b7a703e2f4e35d8de03"
+    },
+    {
+      "path": "apps/console/src/components/agents-panel.tsx",
+      "sha256": "6c9834854bfddb1ff8d06601b48c1562a6bf48157d5d1751e68d347697a0a001"
+    },
+    {
+      "path": "apps/console/src/components/agents-profiles.tsx",
+      "sha256": "6e65a039a78b0ad9d4e8750b2fdfe759fdd05defaa3163aa89022370c9ec0bd1"
+    },
+    {
+      "path": "apps/console/src/styles/agents.css",
+      "sha256": "a92923ec7562d207393628fd40664466d2576af604ade26ed63802bab4939c1b"
+    },
+    {
+      "path": "package.json",
+      "sha256": "cc12a2c4b38c7d450d88a5ab6dd7b7247475c943a4984a46763ee906aeaa06c0"
+    },
+    {
+      "path": "docs/contracts/control-openapi.json",
+      "sha256": "9400344cfc4109ba7fbb3df450f053adae73d8df6a23b2c96ed6bbc21e47e6ec"
+    }
+  ],
+  "checks": [
+    "Targeted Biome passed",
+    "TypeScript passed",
+    "Generated control OpenAPI and contracts check passed"
+  ],
+  "finalDelta": [
+    "HTR-001 final transaction fence after last awaited result/intent/allocation mutation",
+    "No test or native runtime files edited"
+  ]
+}
