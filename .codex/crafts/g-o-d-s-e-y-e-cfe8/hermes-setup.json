@@ -1,0 +1,99 @@
+{
+  "scope": {
+    "id": "E07-local-setup",
+    "status": "local-request-complete",
+    "contract": "hermes-setup-design.md",
+    "provider": "OpenAI API (no key or model call)",
+    "roles": [
+      "operations",
+      "security",
+      "research-marketing"
+    ],
+    "evidence": "reviews/hermes-tests.json",
+    "review": "reviews/hermes-code-review.json",
+    "remaining": "Partial S01; real owner/project binding, mutable run homes and S02-S05 execution remain pending. E09 operational bundles deferred."
+  },
+  "phase": "local-request-complete",
+  "prediction": "prediction-1794599505-a351a7bc",
+  "sequential": true,
+  "epics": [
+    {
+      "id": "E07",
+      "files": [
+        "scripts/hermes*",
+        "scripts/install-hermes*",
+        "infra/hermes"
+      ],
+      "stories": [
+        {
+          "id": "E07.SETUP01",
+          "status": "verified",
+          "deps": []
+        },
+        {
+          "id": "E07.SETUP02",
+          "status": "verified",
+          "deps": [
+            "E07.SETUP01"
+          ]
+        },
+        {
+          "id": "E07.SETUP03",
+          "status": "verified",
+          "deps": [
+            "E07.SETUP02"
+          ]
+        }
+      ]
+    }
+  ],
+  "swarm": {
+    "eligible": false,
+    "reason": "One dependent epic; delegated satellites only"
+  },
+  "acceptance": [
+    {
+      "id": "AC-701",
+      "testId": "T-AC-701",
+      "status": "verified"
+    },
+    {
+      "id": "AC-702",
+      "testId": "T-AC-702",
+      "status": "verified"
+    },
+    {
+      "id": "AC-703",
+      "testId": "T-AC-703",
+      "status": "verified"
+    },
+    {
+      "id": "AC-704",
+      "testId": "T-AC-704",
+      "status": "verified"
+    },
+    {
+      "id": "AC-705",
+      "testId": "T-AC-705",
+      "status": "verified"
+    },
+    {
+      "id": "AC-706",
+      "testId": "T-AC-706",
+      "status": "verified"
+    },
+    {
+      "id": "AC-707",
+      "testId": "T-AC-707",
+      "status": "verified"
+    },
+    {
+      "id": "AC-708",
+      "testId": "T-AC-708",
+      "status": "verified"
+    }
+  ],
+  "finalGates": "reviews/hermes-final-gates.json",
+  "outcome": "outcome-1794600401-39c31fe0",
+  "modelCalls": 0
+}
