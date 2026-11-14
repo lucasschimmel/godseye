@@ -1,0 +1,82 @@
+import type {
+  AgentLimitsInput,
+  AgentProfileView,
+  AgentTaskToolSelection,
+  AgentToolPolicy,
+} from "@godseye/contracts";
+import {
+  boolean,
+  index,
+  integer,
+  jsonb,
+  pgTable,
+  text,
+  timestamp,
+  unique,
+  uuid,
+} from "drizzle-orm/pg-core";
+
+export const agentProfiles = pgTable(
+  "agent_profiles",
+  {
+    id: uuid("id").primaryKey(),
+    projectId: uuid("project_id").notNull(),
+    environmentId: uuid("environment_id").notNull(),
+    role: text("role").notNull(),
+    model: text("model").notNull(),
+    limits: jsonb("limits").$type<AgentLimitsInput>().notNull(),
+    toolPolicy: jsonb("tool_policy").$type<AgentToolPolicy>(),
+    revision: integer("revision").notNull(),
+    projectRevision: integer("project_revision").notNull(),
+    environmentRevision: integer("environment_revision").notNull(),
+    hash: text("hash").notNull(),
+    paused: boolean("paused").notNull().default(false),
+    skill: jsonb("skill").$type<AgentProfileView["skill"]>().notNull(),
+    skillRef: uuid("skill_ref").notNull(),
+    grantRef: uuid("grant_ref").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull(),
+  },
+  (t) => [unique("agent_profile_scope_role").on(t.projectId, t.environmentId, t.role)],
+);
+export const agentTasks = pgTable(
+  "agent_tasks",
+  {
+    id: uuid("id").primaryKey(),
+    profileId: uuid("profile_id").notNull(),
+    projectId: uuid("project_id").notNull(),
+    environmentId: uuid("environment_id").notNull(),
+    profileRevision: integer("profile_revision").notNull(),
+    profileSnapshot: jsonb("profile_snapshot").$type<AgentProfileView>().notNull(),
+    toolGrant: jsonb("tool_grant").$type<AgentTaskToolSelection>(),
+    runId: uuid("run_id"),
+    state: text("state").notNull(),
+    providerRunId: text("provider_run_id"),
+    input: text("input").notNull(),
+    output: text("output"),
+    reason: text("reason"),
+    inputTokens: integer("input_tokens"),
+    outputTokens: integer("output_tokens"),
+    cancelRequested: boolean("cancel_requested").notNull().default(false),
+    submissionIntended: boolean("submission_intended").notNull().default(false),
+    deadline: timestamp("deadline", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull(),
+    finishedAt: timestamp("finished_at", { withTimezone: true }),
+  },
+  (t) => [
+    index("agent_task_profile_state").on(t.profileId, t.state),
+    unique("agent_task_run").on(t.runId),
+  ],
+);
+export const agentEvents = pgTable(
+  "agent_events",
+  {
+    id: uuid("id").primaryKey(),
+    taskId: uuid("task_id").notNull(),
+    sequence: integer("sequence").notNull(),
+    state: text("state").notNull(),
+    occurredAt: timestamp("occurred_at", { withTimezone: true }).notNull(),
+  },
+  (t) => [unique("agent_event_sequence").on(t.taskId, t.sequence)],
+);
