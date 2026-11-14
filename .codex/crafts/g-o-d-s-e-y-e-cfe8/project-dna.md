@@ -110,3 +110,26 @@
 - Trusted supervisor is independent of owner HTTP; cell code runs in scope-bound child processes with sanitized environments. Session-held PostgreSQL singleton loss fences admission after every awaited authorization boundary. Read-only reconciliation has a separate current-lease checkpoint and cannot renew mutation authority.
 - Native guardian holds the actual ChildProcess handle; never kill persisted numeric PIDs. Atomic private service state and independent all-resource cleanup preserve restart authority. Inngest1.52 cron identities are canonical UTC RFC3339, not opaque IDs; actual dynamic calendar tests exposed the mismatch.
 - Final1225ordinary/11separate native/8Python/7curatedkills,47frozenproductionhashes,static/build/smoke/docs passed. Docker/VM/untrusted-code/capacity/off-host/coordinated recovery remains unqualified. No new user preference beyond confirmed local-only/Bun/customSDK; no dedicated-server/Git/actualownerdata mutation.
+
+## Local Hermes setup — 2026-11-13
+
+- Installed immutable pinned Hermes0.23.1/CPython3.14.9, frozen minimal PM environment; actual status/offline smoke/idempotence passed. OpenAI API selected by owner, no key/modelcall.
+- Three role templates and exact bootstrap skill catalog; immutable scoped snapshots with CAS promotion/retained rollback. Scope bindings are local declarations, runtimeHome=null/runEnabled=false. Agent Center, real binding, mutable run-home materializer and other E07 stories remain pending.
+- Actual upstream config loads create auth.lock/config backups. Native qualification uses mutable disposable copies and re-verifies the original immutable snapshot. Read-only verification must not mkdir missing profile/revision paths; regression caught/fixed poisoning inspection.
+-57ordinary/2separate native/7curatedkills,10sourcefrozenreview,static/build/smoke/147doclinks passed. Initial built smoke timed out, unchanged retry passed; no deadline adjustment or proven latency cause. Full existing/browser suites not rerun for this isolated scope.
+- Outcome outcome-1794600401-39c31fe0 joins prediction-1794599505-a351a7bc. No ownerdata/server/Git mutation.
+
+## Local Agent Center continuation — 2026-11-13
+
+- Bound profiles and tasks reuse Foundation authority, budgets and heavy queue; no second scheduler. Default runtime unconfigured without private bindings.
+- Real Hermes direct APIServerAdapter avoids unrelated general-gateway session authority. Explicit exact skill preload and model-only broker enforce one physical attempt; tools denied at request, response and dispatch.
+- Observation merges never rewind durable attempt count; known run identity survives exceptions. Generic cancellation/epoch revocation masks late result. Keep helper ownership until actual HTTP handler settlement.
+- Verified local scope:1329ordinary,3nativeRuns+1Pythonhelper,7AgentCenter+2existingbrowser,4curatedkills,53sourcehashes; fullchat/generaltools/approvals/coding runners/E08/E09/host remain open.
+
+## Advanced local Hermes chat — 2026-11-13
+
+- Keep actual API-only Runs event/history protocol separate from native canonical/legacy broad approvals; initial inbox links existing exact plans only. Pending1h proposal deadline differs from effective5min Foundation approval.
+- Freeze failed send CAS body/key across revision refresh; keep drafts/intents scoped per conversation. Read stream cursor+pruned suffix atomically and create artifacts/proposals only in actual successful nonrevoked settlement.
+- Verified complete default regression in disjoint serialized-builder/remainder groups;1360ordinary plus separate native/browser/mutation proof. Dedicated host/general tools/native paused controls/coding runners remain unqualified.
+
+E08: freeze reviewed price revision at intent, retain nullable exclusive token categories and provider request header IDs only. Accounting is data after cancellation, never renewed authority. Unknown physical effects retain budget obligations; missing token evidence after confirmed completion does not hold concurrency forever. Detector coverage is exact owned keys, never global kinds. Delete all expired full logs, keep minimal health metadata. Capture budget CAS revision with visible form values; refetch must reset both. Current-source native broker proof is not full Coding/KVM qualification.

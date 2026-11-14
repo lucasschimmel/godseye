@@ -137,3 +137,45 @@ E06 checkpoint: actual external Inngest persisted sleep resumes once after engin
 E06 final gate: native9new+2legacy verified; source42runtime/47combined production hashes unchanged, scopedGitleaks0, mutation7/7killed, static527/types/contracts/audit0/495/build/builtSmoke pass. Full Vitest session75525 active; artifact artifacts/test-results/e06-unit-final.xml. Do not start another Vitest/build while active. Final docs/memory/state wait actual exit/count. No dedicated-server/Git mutation.
 
 E06 REQUEST COMPLETE 2026-11-12T21:47:40.516Z: all required local code/native/full/mutation/source/doc gates passed. Full1225ordinary/108collectedfiles950.24s,11nativeoptinsseparatelyverified,8Python,7curatedkills,47reviewedproductionhashesunchanged,7frozendocs109links25anchors. Predictionprediction-1794515651-cf3f9e5f -> outcome-1794520013-c51e64b6. No server/Git/actualownerstate changes.
+
+## Local Hermes setup — 2026-11-13
+
+- Installed immutable pinned Hermes0.23.1/CPython3.14.9, frozen minimal PM environment; actual status/offline smoke/idempotence passed. OpenAI API selected by owner, no key/modelcall.
+- Three role templates and exact bootstrap skill catalog; immutable scoped snapshots with CAS promotion/retained rollback. Scope bindings are local declarations, runtimeHome=null/runEnabled=false. Agent Center, real binding, mutable run-home materializer and other E07 stories remain pending.
+- Actual upstream config loads create auth.lock/config backups. Native qualification uses mutable disposable copies and re-verifies the original immutable snapshot. Read-only verification must not mkdir missing profile/revision paths; regression caught/fixed poisoning inspection.
+-57ordinary/2separate native/7curatedkills,10sourcefrozenreview,static/build/smoke/147doclinks passed. Initial built smoke timed out, unchanged retry passed; no deadline adjustment or proven latency cause. Full existing/browser suites not rerun for this isolated scope.
+- Outcome outcome-1794600401-39c31fe0 joins prediction-1794599505-a351a7bc. No ownerdata/server/Git mutation.
+
+## Local Agent Center — 2026-11-13
+
+Owner authorized bound profiles and task launch/tracking, inexpensive model delegated. OpenAI gpt-6-luna allowlisted; no paid call/server/Git mutation. Core/UI implemented;47ordinary targeted,7browser(4actualbackend+3explicitUIresponsefixtures),4selectedcopy-onlymutationkills. Fresh source review46paths passes with ACR-001 genericcancel/epoch lateoutput defect and UI staleidentity fixed. Native realgateway reaches exactlyone fixture request; positive finalization/skill wire qualification still running. Full unit regression82344 still running green to date; no final acceptance yet.
+
+AGENT CENTER REQUEST COMPLETE 2026-11-13T21:35:03.627Z: full1329ordinary/14native skips/120files2195.94s, native3+Pythonhelper1, browser7+existing2, curatedkills4, reviewed53productionhashesunchanged, static570/types/contracts1.10/build/firstbuiltSmoke pass,92sourceGitleaks0/495Nodeaudit0/73PyPIOSV0. Outcome outcome-1794605646-fa3165de. Whole E07/remote remain gated; no paidcall/server/Git mutation.
+
+## Advanced local Hermes chat — 2026-11-13
+
+Authorized continuation, existingplan autoexecution. Design hermes-chat-design.md;11criteria741-751; independentplanpass beforebehaviorForge. Core conversations/Foundation-backed exactplanapproval; genuineincremental native stream/history qualified; truncated-DONErefusalqualified; UI/browser andregressiontrial ongoing. Research/test satellites, singledependentepic, existinguncommittedbaselinepreserved. No paidcall/server/Git mutation.
+
+Chatfinaltrial:31ordinary/3newnative+2legacy/3browser/4curatedkills pass;38productionhashes reviewed/frozen,23source+10doccriteriapass,lint593/types/contracts1.11 and495Node/73PyPI audits0,123publicGitleaks0. Core+executionimmutableverificationpass. Fullglobalbuildergroup2pass23.03s; remainder66594active2workers, no canonicalbuildwhileit runs. No paidcall/server/Gitmutation.
+
+ADVANCED CHAT REQUEST COMPLETE 2026-11-13T22:47:27.826Z:1360ordinary/17native skips/127files, disjointA2+B1358 zerooverlap;3currentnative+2legacy/3browser/4curatedkills,38sourcehashes/23source+11doccriteria,593lint/types/contracts1.11/build/firstbuiltSmoke pass,123Gitleaks0/495Node0/73PyPI0. Outcome outcome-1794609919-dc7c61cf. Full E07 and server remain gated, no paidcall/Gitmutation.
+
+## Local Hermes task tools — 2026-11-14
+
+Owner explicitly requests root as orchestrator with focused parallel agents. PlanT-AC761..774 independent9/9 pass beforeproductionbehavior. Corepublishescontracts/backendthenUI; runtimeactualgVisor+cgroup typedhelper; GAUNTLETtests. Generalcode/shellI10KVMunchanged/unqualified. Actualcaps+CPU/memory/pids/tmpfs/EOF probes and firstproductionwrite/readworker passed; fullmodelchainpending. Prediction prediction-1794645765-5cfb1665. No paidcall/server/Git mutation.
+
+Tools final trial underway: actual native11 unique cases, owner browser3, curated5 mutants, HTR-001 final transaction expiry fixed with real rollback regression and fresh review. Frozen68 production paths; buildergroup2 pass18.86s; remainder98408 active, canonical build pending. No paidcall/server/Gitmutation.
+
+HERMES FIXED TOOLS REQUEST COMPLETE:1426ordinary/28defaultnative skips/132files, disjoint2+1424/0fail/1100.95s;11newnative+2selectedlegacy/3browser/5curatedkills;68productionhashes0drift, code/security/docs reviews pass and HTR001/HTD001resolved;615lint/types/contracts1.12/canonicalbuild/firstsmoke pass;179doclinksvalid;713publicscanpaths1oldplaceholder/0new, Bun0/73PyPIOSV0. Currentboot0ownedruntimes; managerunavailable afterbootchange, holderalreadygone; no fabricatedoldjournalstop. GeneralcodeKVM/E07remaining gated. Outcome outcome-1794648611-75faf710; user orchestration preference decision-1794647857-4baa285f. No paidcall/server/Gitmutation.
+
+2026-11-14 coding runners: design AC781..794, contracts shared, separate CodingEngine. Actual KVM API12/createVM passed under transient supplementary group with UID1000/no-new-privs; no permanent config. Guest/protocol/containment qualification pending. Prediction prediction-1794649036-ca1d66e1.
+
+Coding runners checkpoint: existing1426ordinary +new86focused green,28defaultnative skips. Actual source10/broker12/PID-failureKVM1 separate. UI2desktop/mobile green after root clipping finding;3curatedmutants. Core4reviewfindingsclosed; native3securitymechanismsfixed, newpathrewrite removed pendingclosure. ActualCodextransport stillpending, Claude diagnostic requested. Localonly0paid0server. Rootmasterdelegates sourceimplementation; docs draftpendingfinalnativeproof. Canonicalbuild/smoke/finalscans/completefreeze/finalreviews remain.
+
+Final integration checkpoint: ordinary87 green / aggregate1513, broker31 strict captured-payload replays green. Actual Foundation/native Claude succeeds; final Codex/Claude/epoch three-case group awaits fresh353857 broker normals. Full build, lint649, types and OpenAPI checks pass. No paid calls/server/Git mutations.
+
+LOCAL CODING RUNNERS COMPLETE: AC781..794 traced;1513 disjoint ordinary passed/28legacy skips;31broker10source13readiness2browser3selectedkills;both latest pinnedCLI normal KVM proofs;3 genuine Foundation/native cases pass123.946sXML/126.52swall. Final full build/static/API1.13+original15s idle smoke pass. Final77sourcefreeze,351compiled/13native hashes match,762publicscan0new, independent code/security pass, exactcleanup0units/controllers/socketdirs. No paid/server/Git mutations. Memory outcome-1794660396-3c379d1e. E07/V1 remain partial outside this local continuation.
+
+2026-11-14: Local E07 approved orchestration complete. 60 focused+656 related tests,1legacyoptinskip;2browser;3curatedkills+1retainedredundantsurvivor; types/lint/contracts/finalbuild/original15s smoke/review/scans/docs passed. See orchestration-report.md. No paid calls, remote/Git changes; whole E07/V1 deployment qualification remains separate.
+
+2026-11-14: E08 local software complete; 76 new focused,671 related and60 orchestration passed;1 related opt-in skip;5browser;6curatedkills; actualHermes2 included; Codingbroker4 included plus29legacyPython/2skips. ReviewPASS0open after4fixes. Final static/build/smoke/scans pass within stated limits. No paid/remote/Git changes. See e08-report.md.

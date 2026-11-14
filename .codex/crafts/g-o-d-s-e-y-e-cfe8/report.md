@@ -1,3 +1,25 @@
+# Current continuation: advanced local Hermes chat — 2026-11-13
+
+Requested slice complete and verified. Multi-turn scoped conversations receive real incremental Runs text, retain bounded context/cursor/history, produce immutable inert text drafts and submit existing-plan requests to the real owner Foundation approval boundary. No broad native tool/session grants, new agent-created plans or new enqueue; approving can resume a prior waiting operation.
+
+Evidence: 1,360 ordinary passes/17native opt-in skips across127files in two disjoint groups (2builders23.03s +1,358remainder1,107.89s);31chatordinary included,3current native selections+2legacy cases,3selectedbrowser,4curated behavioral mutant kills. Independent38-source/23criterion and11criteriondoc reviews pass with zero open findings;593lint/types/contracts1.11/fullbuild/firstbuiltSmoke pass.123public paths Gitleaks0,495Node audit0,73PyPI OSV0.
+
+See [final gates](reviews/hermes-chat-final-gates.json), [tests](reviews/hermes-chat-test-results.json), [design](hermes-chat-design.md) and [source review](reviews/hermes-chat-code-review.json). Outcome outcome-1794609919-dc7c61cf. Full E07/V1, canonical paused controls, general tools, agent-created plans, coding runners/E09/deployed-host qualification remain open. No paid call, real key, owner migration, server change, commit or push. Earlier checkpoints below are historical.
+
+## Historical checkpoint: local Agent Center — 2026-11-13
+
+Requested scope complete and verified. Owner project/environment-bound operations/security/research-marketing profiles, bounded task launch/history, private OpenAI bindings, conservative Foundation reservations/heavy admission and protective cancellation/read-only reconciliation. Initial inexpensive model gpt-6-luna. Actual pinned Hermes Runs API is hosted directly; no general gateway or tool execution.
+
+Evidence: 1,329 ordinary passes/14 native opt-in skips in 120 collected files (2,195.94s Vitest); seven Agent Center plus two selected existing console browser journeys; three actual native model-fixture scenarios and one actual Python reply/counter case; four curated mutation kills. All53 production hashes match retained/current fresh reviews; lint570/types/contracts1.10/build/first built-smoke pass. Gitleaks92publicsource paths0; Node495audit0; Python73exact OSVqueries0. See [final gates](reviews/agent-center-final-gates.json) and [test report](reviews/agent-center-test-results.json).
+
+No paid model call, real key, owner-data migration, server change, commit or push. Full E07 remains partial: chat/artifacts/approvals/general tools/coding runners; billing and operational skills remain E08/E09. Native authorization stubs and controlled fixture release are explicit limits, not paid-provider or host qualification. Outcome outcome-1794605646-fa3165de.
+
+## Historical checkpoint: E07 local Hermes setup — 2026-11-13
+
+Requested installation/profile/skill-versioning scope complete. Hermes0.23.1/Python3.14.9 installed; actual offline config/version and idempotent reinstall qualified. Three role templates prefer OpenAI API, one pinned bootstrap skill, immutable declared-scope snapshots and exact promotion/rollback. No key/model call, real project binding, mutable runtime home or execution authority.57ordinary/2native/7curatedkills, source review, static/build/smoke and documentation passed; scanner limits and initial failed attempts remain in the reports.
+
+See [final gates](reviews/hermes-final-gates.json), [tests](reviews/hermes-tests.json), [design](hermes-setup-design.md). Full E07 and E09 remain incomplete; dedicated server untouched. Existing records below are historical for their own scope.
+
 ## Local E06 completion — autonomous workers and external persistence
 
 The requested local E06 software slice is complete and verified on 2026-11-12. Seven public documents are frozen,109relative links/25anchors pass, and final read-only Git hygiene passes. The owner HTTP process and trusted jobs supervisor are independent. Scoped first-party application workers and the platform engine use separate native Inngest instances and mandatory workflow PostgreSQL/Redis. Live cron registration, durable event receipts, remote outbox and owner-requested read-only reconciliation preserve Foundation authority.
@@ -125,3 +147,7 @@ Develop is published as100 responsibility-based import commits plus one final ha
 ## Memory and provenance
 
 Canonical contract: backend-design.md; AC53–62 in spec.md; rationale ADR-010; guide docs/development/application-backend.md. Official references were consulted with Context7 unavailable and saved through SYNAPSE as godseye-application-backend/2026-11-12-snapshot. Outcome outcome-1794469549-cbbe6541 joins prediction-1794466236-2bf4f3fc; decision decision-1794469550-aa964e41 records the owner's Git workflow. The scoped playbook and project registry session8 were updated. No additional human-wiki capture is needed: ADR010/operator guide/research and ledger retain provenance. Graph is explicitly grep based.
+
+## Local Hermes fixed tools checkpoint — 2026-11-14
+
+Complete bounded local request; final evidence: reviews/hermes-tools-final-gates.json. Five trusted file/JSON tools, explicit task grants and actual gVisor/cgroup execution; general code/shell remains I10 KVM-gated. Global1426 passes/28 default-native skips/132files, newnative11+legacy2/browser3/curated5, static/contracts1.12/build/smoke and fresh reviews pass. Frozen68 production files unchanged. See cleanup truth for unavailable current WSL manager; operator bootstrap remains explicit. No paid call/server/Git publication. Outcome outcome-1794648611-75faf710.

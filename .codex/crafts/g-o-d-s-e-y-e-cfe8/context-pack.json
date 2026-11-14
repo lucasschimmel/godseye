@@ -61,19 +61,40 @@
     "Native local trusted fixture execution does not qualify untrusted repository builds, Jenkins guests, Coolify or public DNS/TLS.",
     "Cortex TanStack/Drizzle/Zod notes expired2026-09-19: consulted as historical hints only, official current docs and installedtypes govern syntax."
   ],
+  "previous_continuation": {
+    "scope": "Local Codex/Claude Code repository/worktree runners",
+    "contract": "coding-runners-design.md",
+    "status": "complete-local-scope",
+    "previousCheckpoint": "hermes-tools.json",
+    "sources": [
+      "coding-runners-core-proposal.md",
+      "coding-runners-runtime-research.md",
+      "reviews/coding-runners-test-strategy.md",
+      "reviews/coding-runners-plan-review.json"
+    ],
+    "serverChanged": false,
+    "paidCalls": 0,
+    "checkpoint": "coding-runners.json",
+    "outcome": "outcome-1794660396-3c379d1e"
+  },
   "current_continuation": {
-    "scope": "Local E06 completion: autonomous application workers and PostgreSQL/Redis",
-    "contract": "e06-completion.json",
-    "status": "Local request complete;1225ordinary/11native/8Python/7curatedmutations/static/build/smoke/source/docs passed",
-    "finalGates": "reviews/e06-completion-final-gates.json",
-    "tests": "reviews/e06-completion-tests.json",
-    "trace": "reviews/e06-completion-trace.json",
-    "sourceReview": "reviews/e06-completion-code-review.json",
-    "sourceFreeze": "reviews/e06-completion-source-freeze.json",
-    "docs": "reviews/e06-completion-docs.json draft pending final full-suite count",
-    "git": "reviews/e06-completion-git.json PASS read-only",
-    "remaining": "E03/E05 software and E03/E12 coordinated recovery, target-host qualification; requested E06 local runtime complete",
-    "graph": "Legacy full graph stale; scoped139-export delta on frozen source",
-    "outcome": "outcome-1794520013-c51e64b6"
+    "scope": "E07 approved local agent orchestration",
+    "status": "complete-local-scope",
+    "state": "orchestration.json",
+    "report": "orchestration-report.md",
+    "design": "orchestration-design.md",
+    "providerCalls": 0,
+    "remoteChanges": false,
+    "gitMutations": false,
+    "validation": "716 related ordinary checks plus2browser; finaltypes/lint/contracts/build/smoke/review/scans/docs passed",
+    "next": "Follow owner instruction; do not resume completed gates automatically"
+  },
+  "e08Continuation": {
+    "scope": "Local E08",
+    "status": "complete-local-scope",
+    "design": "e08-design.md",
+    "report": "e08-report.md",
+    "reuse": "Foundation conservative accounting, existing IncidentEngine, existing Agent/Coding brokers",
+    "limits": "No external billing/notification/host qualification; Coding KVM closure requires separate requalification"
   }
 }

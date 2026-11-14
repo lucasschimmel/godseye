@@ -60,3 +60,23 @@
 - (29 refs) apps/console/src/components/ui/button.tsx — interface ButtonProps;
 - (28 refs) packages/control-client/src/transport.ts — interface ControlClientOptions {;class ControlHttpError extends Error {;function controlTransport(options: ControlClientOptions) {;
 - (23 refs) packages/sdk/src/events.ts — type GodseyeEventMessage =;interface EventSubscriptionOptions {;function applicationEvents(transport: ApplicationTransport, reconnectMs = 1000) {;
+
+Hermes tools continuation (2026-11-14): scoped grep symbol/reuse delta in ../reviews/hermes-tools-symbol-delta.json; frozen source hashes in ../reviews/hermes-tools-source-freeze.json. Fixed typed helper only; general-code KVM remains unavailable.
+
+## Coding runners continuation — 2026-11-14
+
+Focused graph delta; prior ranking above retained (grep/import approximation, no full AST rebuild).
+- Contracts `coding.ts` / `coding-endpoints.ts` -> store `coding-schema.ts`, migration0021 -> core `coding*.ts` -> control routes/provider/startup -> control-client -> console `agents-coding.tsx`.
+- CodingEngine composes existing Foundation admission, grants, epoch, budget, heavy pool, execution journal and read-only recovery. Do not fork the Hermes AgentProvider or add a second budget/recovery engine.
+- Runtime path: fixed Windows WSL launcher -> `coding_guest_control.py` -> private source/object closure -> pinned QEMU/KVM jail -> trusted guest worker -> pinned Codex/Claude -> serial-only bounded model broker.
+- Worktree source and CLI homes are disposable guest RAM. Result proof uses independent immutable file trees and trusted Git export, not the agent-controlled index.
+- Public startup is optional/fail-closed; operator `coding-bindings.mjs` owns protected local configuration, `coding-runtime.mjs` owns fixed setup actions. No public host paths/argv/credential fields.
+- Reuse existing owner session UI, environment labels, Foundation lifecycle and inert text artifact behavior; no alternate publication/deployment path.
+- Evidence is split: ordinary coding tests, source/broker/readiness mechanisms, browser owner flows, real native qualification and genuine Foundation/native composition. Pure fixtures cannot qualify a CLI/VM.
+
+## Approved orchestration continuation — 2026-11-14
+
+Scoped grep/import delta, no full AST rebuild: contracts orchestration.ts/endpoints -> store orchestration-schema/migration0022 -> core orchestration{,-plans,-state,-authority,-scheduler,-delegation} -> Infrastructure/Foundation exact delegation and final authority fences -> owner API/client -> console agents-plans*. Reuses AgentEngine/CodingEngine, Foundation write/admission/budget/grants/effects and owner passkey. No parallel execution engine or alternate credential/deployment path. Context and evidence: orchestration-design.md, orchestration-report.md and reviews/orchestration-{tests,security,docs}.json.
+
+## E08 continuation — 2026-11-14
+Scoped grep/import delta (no full AST rebuild): usage/observability contracts -> migrations0023/0024 -> UsageEngine/ObservabilityEngine -> existing Foundation/IncidentEngine/Infrastructure -> owner routes/client -> Usage/Budgets and Observability pages. Native attempt evidence helper composes existing Hermes/Coding brokers; do not fork financial authority, incident lifecycle or execution engine. Resource inventory is explicitly global; invoice totals are not invented for narrower attribution. See e08-report.md and reviews/e08-tests.json.
