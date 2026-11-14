@@ -22,8 +22,12 @@ import { HTTPException } from "hono/http-exception";
 import { secureHeaders } from "hono/secure-headers";
 import { z } from "zod";
 import { registerAccessRoutes } from "./access-routes.js";
+import { registerAgentChatRoutes } from "./agent-chat-routes.js";
+import { registerAgentChatTransport } from "./agent-chat-transport.js";
+import { registerAgentRoutes } from "./agent-routes.js";
 import { type ControlEnvironment, registerControlResponseValidation } from "./api-types.js";
 import { registerBackendRoutes } from "./backend-routes.js";
+import { registerCodingRoutes } from "./coding-routes.js";
 import type { Configuration } from "./config.js";
 import { registerDatabaseRoutes } from "./database-routes.js";
 import { registerDeliveryRoutes } from "./delivery-routes.js";
@@ -32,9 +36,12 @@ import type { OwnerIdentity } from "./identity/index.js";
 import { registerInfrastructureRoutes } from "./infra-routes.js";
 import { registerJobsRoutes } from "./jobs-routes.js";
 import { registerLifecycleRoutes } from "./lifecycle-routes.js";
+import { registerObservabilityRoutes } from "./observability-routes.js";
 import { registerOpenApi } from "./openapi.js";
+import { registerOrchestrationRoutes } from "./orchestration-routes.js";
 import { registerProtectionRoutes } from "./protection-routes.js";
 import { registerRecoveryRoutes } from "./recovery-routes.js";
+import { registerUsageRoutes } from "./usage-routes.js";
 
 const Uuid = z.string().uuid();
 const RepositoryUpdate = z
@@ -235,6 +242,14 @@ export function createApp(
   registerProtectionRoutes(app, infrastructure);
   registerDeliveryRoutes(app, infrastructure);
   registerJobsRoutes(app, infrastructure);
+  registerAgentRoutes(app, infrastructure);
+  registerCodingRoutes(app, infrastructure);
+  registerUsageRoutes(app, infrastructure);
+  registerObservabilityRoutes(app, infrastructure?.observability);
+  registerOrchestrationRoutes(app, infrastructure);
+  registerAgentChatRoutes(app, infrastructure);
+  if (infrastructure && identity)
+    registerAgentChatTransport(app, infrastructure.agents, (headers) => identity.actor(headers));
   registerLifecycleRoutes(app, infrastructure);
   registerOpenApi(app);
   app.notFound((c) =>

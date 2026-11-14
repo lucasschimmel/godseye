@@ -5,12 +5,20 @@ import {
   runDeliveryScheduler,
   runFoundationWorker,
   runJobScheduler,
+  runObservabilityScheduler,
+  runOrchestrationScheduler,
 } from "@godseye/core";
 import { openStore, type Store } from "@godseye/store";
 import { serve } from "@hono/node-server";
 import { createRuntimeAccess } from "./access-runtime.js";
 import { createApp } from "./app.js";
+import { codingStartupOptions } from "./coding-startup.js";
 import { loadConfiguration } from "./config.js";
+import { configuredHermesProvider, type ManagedHermesProvider } from "./hermes-provider.js";
+import {
+  configuredHermesToolExecutor,
+  type ManagedHermesToolExecutor,
+} from "./hermes-tool-executor.js";
 import { createOwnerIdentity } from "./identity/index.js";
 import { acquireInstance, loadIdentityMaterial, privateDirectory } from "./identity/runtime.js";
 import { prepareLocalInngest } from "./inngest-runtime.js";
@@ -27,11 +35,16 @@ async function start() {
   let worker: Promise<void> | undefined;
   let deliveryWorker: Promise<void> | undefined;
   let jobsWorker: Promise<void> | undefined;
+  let orchestrationWorker: Promise<void> | undefined;
+  let stopObservability: (() => Promise<void>) | undefined;
   let stopping: Promise<void> | undefined;
   let inngest: Awaited<ReturnType<typeof prepareLocalInngest>> | undefined;
+  let hermes: ManagedHermesProvider | undefined;
+  let hermesTools: ManagedHermesToolExecutor | undefined;
   function stop() {
     stopping ??= (async () => {
       abort.abort();
+      await stopObservability?.();
       let failed = false;
       try {
         await inngest?.close();
@@ -51,6 +64,20 @@ async function start() {
         await jobsWorker.catch(() => {
           failed = true;
         });
+      if (orchestrationWorker)
+        await orchestrationWorker.catch(() => {
+          failed = true;
+        });
+      try {
+        await hermes?.close();
+      } catch {
+        failed = true;
+      }
+      try {
+        await hermesTools?.close();
+      } catch {
+        failed = true;
+      }
       try {
         await store?.close();
       } catch {
@@ -86,7 +113,11 @@ async function start() {
       cells: config.jobsDetached ? [] : config.inngestCells,
     });
     const fixtures = jobsOptions(config.jobsLocalFixtures);
+    hermes = configuredHermesProvider();
+    hermesTools = configuredHermesToolExecutor(process.env);
     const infrastructure = new InfrastructureEngine(store, {
+      agents: { provider: hermes, toolExecutor: hermesTools },
+      coding: await codingStartupOptions(),
       ...(config.jobsDetached
         ? { foundationConsumer: { excludedAdapterIds: new Set([JOBS_ADAPTER_ID]) } }
         : {}),
@@ -105,6 +136,14 @@ async function start() {
           : {}),
       },
     });
+    stopObservability = runObservabilityScheduler(infrastructure.observability, {
+      onError: () => console.error("Local telemetry collection failed"),
+      evaluate: () => infrastructure.incidents.evaluateSystem(),
+      deliver: async () => {
+        await infrastructure.incidents.deliver();
+        await infrastructure.usage.prune();
+      },
+    });
     inngest.bind(infrastructure);
     await inngest.start({
       signal: abort.signal,
@@ -115,6 +154,9 @@ async function start() {
     const broker = createRuntimeAccess(store, engine, config, signingKey);
     worker = runFoundationWorker(engine, {
       workerId: `local-controller-${process.pid}`,
+      signal: abort.signal,
+    });
+    orchestrationWorker = runOrchestrationScheduler(infrastructure.orchestration, {
       signal: abort.signal,
     });
     deliveryWorker = runDeliveryScheduler(infrastructure.delivery, { signal: abort.signal });
@@ -138,6 +180,9 @@ async function start() {
         "Initial enrollment: bun run owner:setup. Management always requires an owner passkey.",
       );
     });
+    orchestrationWorker.catch(() =>
+      fail("Orchestration scheduler failed; stopping local admission"),
+    );
     worker.catch(() => fail("Control worker failed; stopping local admission"));
     deliveryWorker.catch(() => fail("Delivery scheduler failed; stopping local admission"));
     jobsWorker?.catch(() => fail("Job scheduler failed; stopping local admission"));

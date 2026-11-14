@@ -20,6 +20,13 @@ export function registerControlResponseValidation(app: Hono<ControlEnvironment>)
     )
       return;
     const previous = context.res;
+    const transport = findControlEndpoint(context.req.method, context.req.path)?.transport;
+    if (transport) {
+      const expected = transport === "sse" ? "text/event-stream" : "text/plain";
+      if (previous.headers.get("content-type")?.split(";")[0] !== expected)
+        throw new DomainError("INTERNAL_ERROR", "Control transport violated its contract", 500);
+      return;
+    }
     let body: unknown;
     try {
       body = parseControlResponse(
