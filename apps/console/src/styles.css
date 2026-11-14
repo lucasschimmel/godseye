@@ -18,3 +18,8 @@
 @import "./styles/jobs.css";
 @import "./styles/protection.css";
 @import "./styles/backend.css";
+@import "./styles/agents.css";
+@import "./styles/agents-chat.css";
+@import "./styles/agents-coding.css";
+
+@import "./styles/telemetry.css";

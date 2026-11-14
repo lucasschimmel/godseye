@@ -1,0 +1,105 @@
+.telemetry-stack {
+  display: grid;
+  gap: 20px;
+}
+.telemetry-section {
+  padding: 24px;
+  min-width: 0;
+}
+.telemetry-section h2 {
+  font-family: var(--font-display);
+  font-size: 20px;
+  margin-bottom: 14px;
+}
+.telemetry-section p {
+  margin: 10px 0;
+  overflow-wrap: anywhere;
+}
+.telemetry-section summary {
+  cursor: pointer;
+  font-weight: 600;
+  padding: 6px 0;
+  overflow-wrap: anywhere;
+}
+.telemetry-filters,
+.telemetry-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+  gap: 16px;
+  align-items: end;
+  margin: 16px 0;
+}
+.telemetry-form label,
+.telemetry-filters label,
+.telemetry-section > label {
+  display: grid;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+.telemetry-section input,
+.telemetry-section select {
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text-primary);
+  padding: 9px;
+  min-width: 0;
+  width: 100%;
+}
+.telemetry-section :is(input, select, summary):focus-visible {
+  outline: 2px solid var(--accent-ink);
+  outline-offset: 3px;
+}
+.telemetry-form fieldset {
+  grid-column: 1 / -1;
+  border: 1px solid var(--border-default);
+  padding: 16px;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+}
+.telemetry-form fieldset legend {
+  padding: 0 8px;
+}
+.telemetry-form > p {
+  grid-column: 1 / -1;
+}
+.telemetry-totals {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr));
+  gap: 16px;
+  margin: 18px 0;
+}
+.telemetry-totals dt {
+  color: var(--text-secondary);
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+.telemetry-totals dd {
+  font-family: var(--font-data);
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+.telemetry-record {
+  padding: 16px 0;
+  border-top: 1px solid var(--border-default);
+  min-width: 0;
+}
+.telemetry-record p {
+  font-size: 13px;
+}
+.telemetry-section .button-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+@media (max-width: 600px) {
+  .telemetry-section {
+    padding: 16px;
+  }
+  .telemetry-totals {
+    grid-template-columns: 1fr;
+  }
+}
