@@ -10,6 +10,7 @@ import {
   environmentFor,
   type FoundationState,
   planFor,
+  readOnlyAgentRecovery,
   recordRequest,
   requestFor,
   runFor,
@@ -18,6 +19,11 @@ import {
 import { normalizeOutcome } from "./foundation-outcome.js";
 import { contextFor, terminalRequests, viewRun } from "./foundation-queue.js";
 import { appendAudit, write } from "./journal.js";
+import {
+  assertOrchestrationDispatch,
+  markOrchestrationUnknown,
+} from "./orchestration-authority.js";
+import type { DelegatedTask } from "./orchestration-delegation.js";
 import { type Actor, assertOwner, assertProjectAccess } from "./policy.js";
 
 export async function revokeGrants(tx: DatabaseAccess, state: FoundationState, runId: string) {
@@ -32,7 +38,13 @@ export async function markUnknown(
   runId: string,
   code: string,
 ) {
-  const { operation } = await runFor(tx, runId);
+  const { operation, run } = await runFor(tx, runId);
+  const plan = await planFor(
+    tx,
+    { id: "effect-reconciler", kind: "service", projectIds: [run.projectId] },
+    run.planId,
+  );
+  await markOrchestrationUnknown(tx, plan.command, state.now);
   await tx
     .update(schema.operations)
     .set({
@@ -87,7 +99,15 @@ export async function settle(
       ? "unknown"
       : outcome.status;
   const terminal = status !== "unknown";
-  await state.settlement?.(tx, runId, status);
+  if (status === "unknown") {
+    const plan = await planFor(
+      tx,
+      { id: "effect-reconciler", kind: "service", projectIds: [run.projectId] },
+      run.planId,
+    );
+    await markOrchestrationUnknown(tx, plan.command, state.now);
+  }
+  await state.settlement?.(tx, runId, status, actual);
   if (status === "unknown") await state.uncertainty?.(tx, runId);
   await tx
     .update(schema.budgetAccounts)
@@ -132,7 +152,11 @@ export async function finish(
 ) {
   return write(state.store, async (tx) => {
     await validateLease(state, tx, context);
-    return settle(tx, state, context.runId, outcome);
+    const result = await settle(tx, state, context.runId, outcome);
+    // A parent deadline may cross during settlement SQL and artifact writes.
+    if (outcome.status !== "unknown")
+      await assertOrchestrationDispatch(tx, context.command, state.now);
+    return result;
   });
 }
 export async function reconcileExpired(state: FoundationState) {
@@ -176,8 +200,8 @@ export async function reconcile(state: FoundationState, actor: Actor, runId: str
       actor,
       run.projectId,
       run.environmentId,
-      false,
-      retainedPlan.command.kind === "delivery.lifecycle",
+      readOnlyAgentRecovery(retainedPlan),
+      readOnlyAgentRecovery(retainedPlan) || retainedPlan.command.kind === "delivery.lifecycle",
       state.now(),
     );
     const receipt = await requestFor(tx, actor, key, "execution.reconcile", { runId });
@@ -212,8 +236,8 @@ export async function reconcile(state: FoundationState, actor: Actor, runId: str
         actor,
         context.projectId,
         context.environmentId,
-        false,
-        plan.command.kind === "delivery.lifecycle",
+        readOnlyAgentRecovery(plan),
+        readOnlyAgentRecovery(plan) || plan.command.kind === "delivery.lifecycle",
         state.now(),
       ),
     );
@@ -228,8 +252,8 @@ export async function reconcile(state: FoundationState, actor: Actor, runId: str
       actor,
       context.projectId,
       context.environmentId,
-      false,
-      plan.command.kind === "delivery.lifecycle",
+      readOnlyAgentRecovery(plan),
+      readOnlyAgentRecovery(plan) || plan.command.kind === "delivery.lifecycle",
       state.now(),
     );
     const { run, operation } = await runFor(tx, runId);
@@ -243,9 +267,16 @@ export async function reconcile(state: FoundationState, actor: Actor, runId: str
     return settle(tx, state, runId, outcome);
   });
 }
-export async function cancel(state: FoundationState, actor: Actor, runId: string, key: string) {
-  assertOwner(actor);
+export async function cancel(
+  state: FoundationState,
+  actor: Actor,
+  runId: string,
+  key: string,
+  delegated?: DelegatedTask,
+) {
+  if (!delegated) assertOwner(actor);
   return write(state.store, async (tx) => {
+    await delegated?.authorize(tx);
     const { run, operation } = await runFor(tx, runId);
     assertProjectAccess(actor, run.projectId);
     const receipt = await requestFor(tx, actor, key, "execution.cancel", { runId });
@@ -275,6 +306,11 @@ export async function cancel(state: FoundationState, actor: Actor, runId: string
       await state.releaseQueued?.(tx, runId);
     } else if (operation.status === "running" || operation.status === "reconciling")
       await markUnknown(tx, state, runId, "CANCELLED_WITH_UNCERTAIN_EFFECT");
+    else if (operation.status === "unknown") {
+      const plan = await planFor(tx, actor, run.planId);
+      if (readOnlyAgentRecovery(plan))
+        await markUnknown(tx, state, runId, "CANCELLED_WITH_UNCERTAIN_EFFECT");
+    }
     await revokeGrants(tx, state, runId);
     await recordRequest(tx, state, key, receipt.digest, runId, "execution.cancel");
     await appendAudit(

@@ -205,7 +205,8 @@ export async function createPlan(
       hash: fingerprint(data),
       requiresApproval:
         needsApproval(data, environment.kind === "production") ||
-        (state.approvalPolicy?.(data) ?? false),
+        (state.approvalPolicy?.(data) ?? false) ||
+        (actor.kind === "service" && actor.id === "orchestration-worker"),
       createdAt: state.now(),
     };
     await tx.insert(schema.executionPlans).values(plan);
@@ -227,59 +228,69 @@ export async function approve(
   expectedHash: string,
   key: string,
 ) {
+  return write(state.store, (tx) =>
+    approveInTransaction(state, tx, actor, planId, expectedHash, key),
+  );
+}
+export async function approveInTransaction(
+  state: FoundationState,
+  tx: DatabaseAccess,
+  actor: Actor,
+  planId: string,
+  expectedHash: string,
+  key: string,
+) {
   assertFresh(actor, state);
-  return write(state.store, async (tx) => {
-    const plan = await planFor(tx, actor, planId);
-    const receipt = await requestFor(tx, actor, key, "plan.approve", { planId, expectedHash });
-    if (receipt.existing) return plan;
-    if (plan.hash !== expectedHash)
-      throw new DomainError("APPROVAL_MISMATCH", "Approval does not match the immutable plan", 409);
-    const approval = {
-      id: newId(),
-      planId,
-      planHash: plan.hash,
-      ownerId: actor.id,
-      sessionId: actor.sessionId ?? "",
-      authenticatedAt: new Date(actor.authenticatedAt ?? ""),
-      approvedAt: state.now(),
-      expiresAt: new Date(state.now().getTime() + state.approvalMs),
-    };
-    await tx
-      .insert(schema.approvals)
-      .values(approval)
-      .onConflictDoUpdate({ target: schema.approvals.planId, set: approval });
-    const waiting = await tx
-      .select({ id: schema.executionRuns.id })
-      .from(schema.executionRuns)
-      .innerJoin(schema.operations, eq(schema.operations.id, schema.executionRuns.id))
-      .where(
-        and(
-          eq(schema.executionRuns.planId, planId),
-          isNull(schema.executionRuns.terminalAt),
-          eq(schema.operations.status, "awaiting_approval"),
-        ),
-      );
-    for (const run of waiting) {
-      await state.requeueAdmission?.(tx, plan, run.id, actor);
-      await tx
-        .update(schema.operations)
-        .set({
-          status: "queued",
-          revision: sql`${schema.operations.revision} + 1`,
-          updatedAt: state.now(),
-        })
-        .where(
-          and(eq(schema.operations.id, run.id), eq(schema.operations.status, "awaiting_approval")),
-        );
-    }
-    await recordRequest(tx, state, key, receipt.digest, planId, "plan.approve");
-    await appendAudit(
-      tx,
-      actor,
-      plan.projectId,
-      "plan.approved",
-      `Approved exact plan ${plan.hash} under a recent owner session`,
+  const plan = await planFor(tx, actor, planId);
+  const receipt = await requestFor(tx, actor, key, "plan.approve", { planId, expectedHash });
+  if (receipt.existing) return plan;
+  if (plan.hash !== expectedHash)
+    throw new DomainError("APPROVAL_MISMATCH", "Approval does not match the immutable plan", 409);
+  const approval = {
+    id: newId(),
+    planId,
+    planHash: plan.hash,
+    ownerId: actor.id,
+    sessionId: actor.sessionId ?? "",
+    authenticatedAt: new Date(actor.authenticatedAt ?? ""),
+    approvedAt: state.now(),
+    expiresAt: new Date(state.now().getTime() + state.approvalMs),
+  };
+  await tx
+    .insert(schema.approvals)
+    .values(approval)
+    .onConflictDoUpdate({ target: schema.approvals.planId, set: approval });
+  const waiting = await tx
+    .select({ id: schema.executionRuns.id })
+    .from(schema.executionRuns)
+    .innerJoin(schema.operations, eq(schema.operations.id, schema.executionRuns.id))
+    .where(
+      and(
+        eq(schema.executionRuns.planId, planId),
+        isNull(schema.executionRuns.terminalAt),
+        eq(schema.operations.status, "awaiting_approval"),
+      ),
     );
-    return plan;
-  });
+  for (const run of waiting) {
+    await state.requeueAdmission?.(tx, plan, run.id, actor);
+    await tx
+      .update(schema.operations)
+      .set({
+        status: "queued",
+        revision: sql`${schema.operations.revision} + 1`,
+        updatedAt: state.now(),
+      })
+      .where(
+        and(eq(schema.operations.id, run.id), eq(schema.operations.status, "awaiting_approval")),
+      );
+  }
+  await recordRequest(tx, state, key, receipt.digest, planId, "plan.approve");
+  await appendAudit(
+    tx,
+    actor,
+    plan.projectId,
+    "plan.approved",
+    `Approved exact plan ${plan.hash} under a recent owner session`,
+  );
+  return plan;
 }

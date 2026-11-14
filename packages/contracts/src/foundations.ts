@@ -1,9 +1,18 @@
 import { z } from "zod";
+import { AgentToolName } from "./agents-tools.js";
 
 const Id = z.string().uuid();
 const Digest = z.string().regex(/^sha256:[a-f0-9]{64}$/);
 const Ref = { configurationRef: Id };
 export const ActionCommand = z.union([
+  z
+    .object({
+      kind: z.literal("coding.run"),
+      taskId: Id,
+      preparationId: Id,
+      preparationHash: z.string().regex(/^[a-f0-9]{64}$/),
+    })
+    .strict(),
   z
     .object({
       kind: z.literal("delivery.lifecycle"),
@@ -134,7 +143,7 @@ export const CreateExecutionPlan = z
     adapterId: z.string().regex(/^[a-z][a-z0-9.-]{1,63}$/),
     command: ActionCommand,
     maxCostMicros: z.number().int().min(0).max(Number.MAX_SAFE_INTEGER),
-    tools: z.array(z.string().regex(/^[a-z][a-z0-9.-]{1,63}$/)).max(32),
+    tools: z.array(z.union([z.string().regex(/^[a-z][a-z0-9.-]{1,63}$/), AgentToolName])).max(32),
     destinations: z.array(z.string().regex(/^[a-z0-9][a-z0-9.-]{0,252}$/)).max(32),
   })
   .strict();

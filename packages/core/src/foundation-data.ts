@@ -9,9 +9,15 @@ import { type DatabaseAccess, type Store, schema } from "@godseye/store";
 import { eq } from "drizzle-orm";
 import { DomainError } from "./errors.js";
 import { fingerprint } from "./journal.js";
+import { assertOrchestrationDispatch } from "./orchestration-authority.js";
 import { type Actor, assertOwner, assertProjectAccess } from "./policy.js";
 
 export interface FoundationOptions {
+  dispatchGate?: (
+    tx: DatabaseAccess,
+    plan: typeof schema.executionPlans.$inferSelect,
+    runId: string,
+  ) => Promise<void>;
   /** Server-owned consumer partition, applied before validation or lease reconciliation. */
   consumer?: {
     adapterIds?: ReadonlySet<string>;
@@ -47,7 +53,12 @@ export interface FoundationOptions {
   ) => Promise<boolean>;
   approvalPolicy?: (input: CreateExecutionPlanInput) => boolean;
   releaseQueued?: (tx: DatabaseAccess, runId: string) => Promise<void>;
-  settlement?: (tx: DatabaseAccess, runId: string, status: string) => Promise<void>;
+  settlement?: (
+    tx: DatabaseAccess,
+    runId: string,
+    status: string,
+    chargedMicros?: number,
+  ) => Promise<void>;
   uncertainty?: (tx: DatabaseAccess, runId: string) => Promise<void>;
   adapters?: ExecutionAdapter[];
   now?: () => Date;
@@ -56,6 +67,7 @@ export interface FoundationOptions {
   restoreWindowMs?: number;
 }
 export interface FoundationState {
+  dispatchGate?: FoundationOptions["dispatchGate"];
   consumer?: FoundationOptions["consumer"];
   delegatedAuthority?: FoundationOptions["delegatedAuthority"];
   admission?: FoundationOptions["admission"];
@@ -79,6 +91,7 @@ export function foundationState(store: Store, options: FoundationOptions): Found
     adapters.set(adapter.id, adapter);
   }
   const state = {
+    dispatchGate: options.dispatchGate,
     consumer: options.consumer,
     delegatedAuthority: options.delegatedAuthority,
     admission: options.admission,
@@ -234,16 +247,30 @@ export async function validateLease(
       "Execution context does not match its recorded scope or command",
       409,
     );
+  if (!readOnlyReconciliation) {
+    await state.dispatchGate?.(tx, plan, context.runId);
+    await assertOrchestrationDispatch(tx, context.command, state.now);
+  }
   await environmentFor(
     tx,
     { id: "executor", kind: "service", projectIds: [row.run.projectId] },
     row.run.projectId,
     row.run.environmentId,
-    false,
-    plan.command.kind === "delivery.lifecycle" && plan.command.intent === "cleanup",
+    readOnlyReconciliation && readOnlyAgentRecovery(plan),
+    (readOnlyReconciliation && readOnlyAgentRecovery(plan)) ||
+      (plan.command.kind === "delivery.lifecycle" && plan.command.intent === "cleanup"),
     state.now(),
   );
   return row;
+}
+/** Exact first-party agent adapters may observe physical cleanup after ordinary admission expires. */
+export function readOnlyAgentRecovery(
+  plan: Pick<typeof schema.executionPlans.$inferSelect, "adapterId" | "command">,
+) {
+  return (
+    (plan.adapterId === "local.hermes" && plan.command.kind === "agent.run") ||
+    (plan.adapterId === "local.coding" && plan.command.kind === "coding.run")
+  );
 }
 export async function requestFor(
   tx: DatabaseAccess,

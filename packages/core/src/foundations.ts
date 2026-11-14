@@ -12,6 +12,7 @@ import { exportAudit } from "./audit-export.js";
 import { DomainError } from "./errors.js";
 import {
   adapterFor,
+  assertFresh,
   type FoundationOptions,
   type FoundationState,
   foundationState,
@@ -30,6 +31,7 @@ import { authorizeGrant, getGrant, heartbeat, validateGrant } from "./foundation
 import { normalizeOutcome } from "./foundation-outcome.js";
 import {
   approve,
+  approveInTransaction,
   configureBudget,
   createPlan,
   getBudget,
@@ -38,6 +40,7 @@ import {
 import { claim, enqueue, getRun, listRuns } from "./foundation-queue.js";
 import { prune } from "./foundation-retention.js";
 import { write } from "./journal.js";
+import type { DelegatedTask } from "./orchestration-delegation.js";
 import { type Actor, assertProjectAccess } from "./policy.js";
 
 export type {
@@ -81,6 +84,18 @@ export class FoundationEngine {
   approve(actor: Actor, planId: string, expectedHash: string, key: string) {
     return approve(this.state, actor, planId, expectedHash, key);
   }
+  assertFreshOwner(actor: Actor) {
+    assertFresh(actor, this.state);
+  }
+  approveInTransaction(
+    tx: DatabaseAccess,
+    actor: Actor,
+    planId: string,
+    expectedHash: string,
+    key: string,
+  ) {
+    return approveInTransaction(this.state, tx, actor, planId, expectedHash, key);
+  }
   enqueue(actor: Actor, planId: string, key: string) {
     return enqueue(this.state, actor, planId, key);
   }
@@ -117,6 +132,9 @@ export class FoundationEngine {
   }
   cancel(actor: Actor, id: string, key: string) {
     return cancel(this.state, actor, id, key);
+  }
+  cancelDelegated(actor: Actor, id: string, key: string, delegated: DelegatedTask) {
+    return cancel(this.state, actor, id, key, delegated);
   }
   advanceEpoch(actor: Actor, environmentId: string, key: string) {
     return advanceEpoch(this.state, actor, environmentId, key);

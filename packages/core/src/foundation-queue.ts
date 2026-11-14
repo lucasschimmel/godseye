@@ -77,8 +77,8 @@ export async function validApproval(
   state: FoundationState,
   plan: typeof schema.executionPlans.$inferSelect,
 ) {
-  if (!plan.requiresApproval) return;
   if (await state.delegatedAuthority?.(tx, plan, "approval")) return;
+  if (!plan.requiresApproval) return;
   const [approval] = await tx
     .select()
     .from(schema.approvals)
@@ -303,7 +303,11 @@ export async function claim(
       try {
         await validApproval(tx, state, plan);
       } catch (error) {
-        if (!(error instanceof DomainError) || error.code !== "APPROVAL_REQUIRED") throw error;
+        if (!(error instanceof DomainError)) throw error;
+        if (error.code !== "APPROVAL_REQUIRED") {
+          await rejectQueued(tx, state, run, error.code);
+          continue;
+        }
         await tx
           .update(schema.operations)
           .set({
