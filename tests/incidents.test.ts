@@ -224,14 +224,22 @@ describe("scoped archive and headroom incidents", () => {
   it("keeps a failed delivery visible and bounds retries", async () => {
     await fixture.backup();
     await patchMetadata({ archiveFreeGiB: 0.25 });
-    const configured = withNotifier();
-    notifier.fail = true;
+    let rejections = 0;
+    const configured = new InfrastructureEngine(fixture.store, {
+      ...fixture.configuration,
+      incidentNotifier: {
+        async notify() {
+          rejections += 1;
+          return { state: "failed" as const };
+        },
+      },
+    });
 
     for (let index = 0; index < 5; index += 1) await evaluate(configured);
     const incident = (await configured.incidents.overview(fixture.freshOwner())).incidents[0];
 
     expect(incident?.delivery).toMatchObject({ state: "failed", attempts: 3 });
-    expect(notifier.sent).toEqual([]);
+    expect(rejections).toBe(3);
   });
 
   it("does not notify a muted incident", async () => {
