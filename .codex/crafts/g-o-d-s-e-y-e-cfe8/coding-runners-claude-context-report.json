@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "status": "narrow-real-Claude-compatibility-implemented; exact-synthetic-pure-replay-passed",
+  "officialSource": "https://platform.claude.com/docs/en/build-with-claude/context-editing",
+  "findings": [
+    "Context editing is optional server-side preprocessing of the complete client-provided conversation history",
+    "clear_thinking_20251015 supports keep=all or a positive thinking_turns count; absence has model-specific defaults",
+    "Haiku5.5 default preserves prior thinking; the broker already disables new thinking explicitly",
+    "No context-management beta header, external URL, additional tool, higher cost tier or new authority is required to omit this optional feature"
+  ],
+  "plannedBoundary": "Validate only the reviewed observed edit shape, drop context_management before upstream HTTP, keep unknown fields and strategies rejected, and conservatively charge original request bytes as well as normalized wire bytes",
+  "pendingVerification": [
+    "Independent GAUNTLET malformed/unknown-field pure replay additions in progress",
+    "Fresh raw normal runtime qualification receipts must bind the new broker hash before composition rerun"
+  ],
+  "paidCalls": 0,
+  "brokerSha256": "31b4ca142b342873f3a7e2c64cf04d390c66158bfadbe658e16fdf55abd7c609",
+  "observedShape": {
+    "edits": [
+      {
+        "type": "clear_thinking_20251015",
+        "keep": "all"
+      }
+    ]
+  },
+  "fix": "For claude-code only, require exact equality with the observed documented no-op shape, then remove context_management before strict upstream field validation and HTTP. Unknown other fields and alternative context edits remain denied. The cost upper bound uses the larger of original UTF8 body bytes and normalized wire bytes.",
+  "verification": [
+    "Python isolated compile passed",
+    "All existing 20 independent fake-HTTPS broker regressions passed",
+    "Exact known-synthetic pinned-Claude 4462-byte request-2.json replayed through actual production handle with fake HTTPS: status200, exactly one POST, context_management absent upstream"
+  ],
+  "syntheticFixture": "artifacts/coding-composition-fixtures/synthetic-cvv5_11y/request-2.json",
+  "notChanged": [
+    "No beta headers forwarded, endpoint/model/authority/tier/tool allowlists unchanged",
+    "Durable dedup/uncertainty ledger, retries, refunds and grant checks unchanged",
+    "No paid calls"
+  ]
+}
