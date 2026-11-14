@@ -145,9 +145,9 @@ test("T33 navigates the CI, operations, infrastructure and Hermes views with hon
   ).toBeVisible();
 
   await navigation.getByRole("link", { name: "Hermes CORE", exact: true }).click();
-  await expect(page.getByRole("heading", { name: "Hermes CORE", exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Agent Center", exact: true })).toBeVisible();
   await expect(
-    page.getByRole("heading", { name: "Aucune consommation collectée", exact: true }),
+    page.getByRole("heading", { name: "Runtime local à connecter", exact: true }),
   ).toBeVisible();
 });
 
