@@ -1,0 +1,69 @@
+{
+  "status": "local-request-complete",
+  "date": "2026-11-13",
+  "scope": "Owner-bound local Agent Center; not whole E07",
+  "targeted": {
+    "ordinary": 47,
+    "browser": 7,
+    "existingConsole": 2,
+    "existingFoundationInfra": 38,
+    "selectedMutationKills": 4
+  },
+  "global": {
+    "status": "pass",
+    "passed": 1329,
+    "skippedNative": 14,
+    "total": 1343,
+    "passingFiles": 114,
+    "skippedFiles": 6,
+    "collectedFiles": 120,
+    "vitestWallSeconds": 2195.94,
+    "junitSummedSeconds": 1941.5510423,
+    "artifact": "artifacts/test-results/agent-center-unit-final.xml"
+  },
+  "native": {
+    "status": "pass",
+    "actualHermesScenarios": 3,
+    "actualPythonReplyCounterCase": 1,
+    "paidCalls": 0,
+    "positive": "artifacts/test-results/agents-native-execution-seventh.xml",
+    "hostile": "artifacts/test-results/agents-native-hostile-reply.xml",
+    "controlledHangingCancellation": "artifacts/test-results/agents-native-hang-cancel.xml",
+    "reply": "artifacts/test-results/agents-native-reply-final.xml",
+    "caveat": "Controlled upstream is explicitly released after stop request; no instantaneous remote cancellation claim. Authorization is a counted stub in provider transport; real Foundation tested separately."
+  },
+  "static": {
+    "biome": {
+      "files": 570,
+      "status": "pass"
+    },
+    "types": "passed",
+    "contracts": "passed-control1.10.0-application1.0.0"
+  },
+  "build": "full-canonical-build-and-first-built-api-smoke-pass",
+  "security": "agent-center-security.json",
+  "review": "agent-center-code-review.json",
+  "trace": "agent-center-trace.json",
+  "serverChanged": false,
+  "paidCalls": 0,
+  "gitMutations": false,
+  "remainingEpicScope": [
+    "Full interactive chat/SSE/artifacts/clarification",
+    "General disposable tools and approval inbox",
+    "Coding runners",
+    "E08 invoice reconciliation",
+    "E09 operational skills",
+    "Dedicated-host deployment and isolation/recovery qualification"
+  ],
+  "completedAt": "2026-11-13T21:35:03.627Z",
+  "outcome": "outcome-1794605646-fa3165de",
+  "sourceHashes": {
+    "productionPaths": 53,
+    "drift": 0
+  },
+  "docs": {
+    "files": 10,
+    "relativeLinks": 156,
+    "newGuideAnchorValid": true
+  }
+}
