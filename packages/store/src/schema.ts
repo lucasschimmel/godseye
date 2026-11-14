@@ -1,6 +1,8 @@
 import type { CiState, OperationState, RepositoryConfigurationInput } from "@godseye/contracts";
 import { sql } from "drizzle-orm";
 
+export * from "./agent-schema.js";
+export * from "./agent-tools-schema.js";
 export * from "./foundation-schema.js";
 
 import {
@@ -160,13 +162,18 @@ export const ciRuns = pgTable(
   ],
 );
 export * from "./access-schema.js";
+export * from "./agent-chat-schema.js";
 export * from "./backend-schema.js";
+export * from "./coding-schema.js";
 export * from "./database-schema.js";
 export * from "./delivery-schema.js";
 export * from "./infra-admission-schema.js";
 export * from "./infra-schema.js";
 export * from "./jobs-schema.js";
 export * from "./lifecycle-schema.js";
+export * from "./observability-schema.js";
+export * from "./orchestration-schema.js";
 export * from "./owner-schema.js";
 export * from "./protection-schema.js";
 export * from "./recovery-schema.js";
+export * from "./usage-schema.js";

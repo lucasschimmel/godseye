@@ -15,7 +15,7 @@ export const HEAVY_INTENTS = {
   "database.operation": ["backup", "restore", "export", "migrate"],
 } as const;
 export function isHeavyCommand(command: ActionCommandInput) {
-  if (command.kind === "agent.run") return true;
+  if (command.kind === "agent.run" || command.kind === "coding.run") return true;
   const intents: readonly string[] | undefined =
     HEAVY_INTENTS[command.kind as keyof typeof HEAVY_INTENTS];
   return intents !== undefined && "intent" in command && intents.includes(command.intent);

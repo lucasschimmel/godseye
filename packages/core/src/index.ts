@@ -199,9 +199,23 @@ export class ControlPlane {
           id: "hermes",
           name: "Hermes CORE",
           status: "unconfigured",
-          description: "Scoped skills, budgets and execution policy are pending",
+          description:
+            "Local Agent Center profiles and bounded tasks are implemented; private runtime bindings must be configured",
         },
       ],
     };
   }
 }
+export type {
+  AgentToolAllocationRequest,
+  AgentToolExecutionRequest,
+  AgentToolExecutor,
+  AgentToolExecutorContext,
+  AgentToolObservation,
+} from "@godseye/contracts";
+export * from "./agents.js";
+
+export * from "./coding.js";
+export * from "./observability.js";
+export * from "./orchestration.js";
+export * from "./usage.js";
