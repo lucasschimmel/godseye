@@ -1,0 +1,97 @@
+{
+  "contract": "agent-center-design.md",
+  "bindingMethod": "Literal canonical test ID scan, not an exhaustive semantic coverage proof",
+  "criteria": [
+    {
+      "testId": "T-AC-721",
+      "files": [
+        "tests/agents-http.test.ts",
+        "tests/agents-profiles.test.ts",
+        "tests/agents-tasks.test.ts"
+      ],
+      "status": "verified-local-scope"
+    },
+    {
+      "testId": "T-AC-722",
+      "files": [
+        "tests/agents-profiles.test.ts",
+        "tests/agents-tasks.test.ts"
+      ],
+      "status": "verified-local-scope"
+    },
+    {
+      "testId": "T-AC-723",
+      "files": [
+        "tests/agents-http.test.ts",
+        "tests/agents-tasks.test.ts"
+      ],
+      "status": "verified-local-scope"
+    },
+    {
+      "testId": "T-AC-724",
+      "files": [
+        "tests/agents-bindings.test.ts",
+        "tests/agents-profiles.test.ts"
+      ],
+      "status": "verified-local-scope"
+    },
+    {
+      "testId": "T-AC-725",
+      "files": [
+        "tests/agents-native-reply.test.ts",
+        "tests/agents-native.test.ts"
+      ],
+      "status": "verified-local-scope"
+    },
+    {
+      "testId": "T-AC-726",
+      "files": [
+        "tests/agents-persistence.test.ts",
+        "tests/agents-tasks.test.ts"
+      ],
+      "status": "verified-local-scope"
+    },
+    {
+      "testId": "T-AC-727",
+      "files": [
+        "tests/agents-native.test.ts",
+        "tests/agents-tasks.test.ts"
+      ],
+      "status": "verified-local-scope"
+    },
+    {
+      "testId": "T-AC-728",
+      "files": [
+        "tests/agents-persistence.test.ts",
+        "tests/agents-tasks.test.ts"
+      ],
+      "status": "verified-local-scope"
+    },
+    {
+      "testId": "T-AC-729",
+      "files": [
+        "tests/agents-contracts.test.ts",
+        "tests/agents-tasks.test.ts"
+      ],
+      "status": "verified-local-scope"
+    },
+    {
+      "testId": "T-AC-730",
+      "files": [
+        "tests/e2e/agents.spec.ts"
+      ],
+      "status": "verified-local-scope"
+    },
+    {
+      "testId": "T-AC-731",
+      "files": [
+        "tests/agents-bindings.test.ts",
+        "tests/agents-contracts.test.ts",
+        "tests/agents-http.test.ts",
+        "tests/agents-tasks.test.ts"
+      ],
+      "status": "verified-local-scope"
+    }
+  ],
+  "wholeEpicAcceptance": false
+}
