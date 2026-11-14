@@ -1,0 +1,128 @@
+{
+  "run": "godseye-local-hermes-tools",
+  "date": "2026-11-14",
+  "author": "gauntlet",
+  "status": "focused-gates-pass-with-explicit-qualification-limits",
+  "rootFinalGates": {
+    "report": "reviews/hermes-tools-final-gates.json",
+    "status": "passed",
+    "ordinaryPassed": 1426,
+    "defaultNativeSkipped": 28,
+    "collectedFiles": 132,
+    "failures": 0,
+    "builder": { "passed": 2, "seconds": 18.86 },
+    "remainder": { "passed": 1424, "seconds": 1082.09 },
+    "summedVitestWallSeconds": 1100.95,
+    "junitCases": 1454,
+    "displayLabels": 1452,
+    "duplicateLabelExplanation": "Two existing Infinity/NaN parameterized pairs serialize as JSON null labels within their file; zero cross-group overlap.",
+    "canonicalBuild": "passed",
+    "builtApiSmoke": "first-attempt-pass",
+    "lintFiles": 615,
+    "types": "passed",
+    "controlApiContracts": "1.12",
+    "productionHashCount": 68,
+    "productionHashDrift": 0,
+    "resolvedFindings": ["HTR-001", "HTD-001"],
+    "note": "The66 focused new ordinary cases are included in1426; never add focused/native/browser/mutation selections to the global ordinary count."
+  },
+  "ordinary": {
+    "newUniquePassed": 66,
+    "contracts": 57,
+    "realFoundationAdmission": 9,
+    "existingCompatibilityPassedSeparately": 5,
+    "artifacts": ["artifacts/test-results/hermes-tools-contracts-final.xml", "artifacts/test-results/hermes-tools-focused.xml"],
+    "note": "Focused XML contains the earlier 56 contract cases plus admission9 and existing5. Final contract XML adds the exact Foundation catalog/legacy-underscore authority regression, for 57 unique contract cases. These overlap the root default regression; never add them to its aggregate."
+  },
+  "native": {
+    "newUniquePassed": 11,
+    "actualExecutorBoundary": {
+      "passed": 4,
+      "seconds": 22.77,
+      "artifact": "artifacts/test-results/hermes-tools-executor-native.xml",
+      "identities": [
+        "T-AC-762 keeps actual copied data and artifacts private across task allocations",
+        "T-AC-762 keeps actual copied data and artifacts private across environment allocations",
+        "T-AC-762 keeps actual copied data and artifacts private across project allocations",
+        "T-AC-773 refuses forged scope for actual retained inspection and cleanup"
+      ],
+      "qualification": "Actual pinned runsc worker/file effects and stop/inspect; direct counted authority callbacks. This group alone does not establish Foundation or Hermes composition."
+    },
+    "actualFoundationAndExecutor": {
+      "passed": 4,
+      "artifacts": ["artifacts/test-results/hermes-tools-journal-native-final.xml", "artifacts/test-results/hermes-tools-final-tx-regression.xml"],
+      "identities": [
+        "T-AC-767 retains actual lost tool acknowledgment across physical store reopen without replay",
+        "T-AC-767 replays an exact model call receipt without executing the real tool twice",
+        "T-AC-766 refuses actual tool result publication after epoch revocation during executor return",
+        "T-AC-766 rolls back a real tool publication when authority expires after the final journal mutation await"
+      ],
+      "qualification": "Real PGlite/Foundation/native executor. Model-provider behavior is scripted in process. Lost acknowledgment is injected only after one actual tool effect; epoch/clock edges use deterministic controls. Final transaction regression preserves actual mutation, commit and rollback; no fake database or executor."
+    },
+    "actualPinnedHermesFoundationExecutor": {
+      "passed": 3,
+      "artifacts": ["artifacts/test-results/hermes-tools-native-loop-final.xml", "artifacts/test-results/hermes-tools-native-call-limit.xml"],
+      "identities": [
+        "T-AC-763 T-AC-769 T-AC-770 actual pinned Hermes/Foundation/isolated tools enforce success",
+        "T-AC-763 T-AC-769 T-AC-770 actual pinned Hermes/Foundation/isolated tools enforce call-limit",
+        "T-AC-763 T-AC-769 T-AC-770 actual pinned Hermes/Foundation/isolated tools enforce cost-limit"
+      ],
+      "success": { "modelPosts": 3, "durableSucceededToolCalls": 2, "actualArtifactDigestVerified": true, "physicalStopped": true, "reservationReleased": true },
+      "callLimit": { "modelPosts": 4, "durableSucceededToolCalls": 3, "fourthToolRefused": true, "failedNoFinalOutputOrArtifact": true, "physicalStopped": true, "fixtureTotalBudgetMicros": 30000 },
+      "costLimit": { "modelPosts": 1, "durableSucceededToolCalls": 1, "fixtureTotalBudgetMicros": 3000, "positiveDurableConservativeSpendAtOrBelowBudgetAsserted": true, "furtherModelPostDenied": true, "failedNoFinalOutputOrArtifact": true, "physicalStopped": true },
+      "note": "Loop-final XML preserves an initial over-specific call-limit assertion under10000 fixture budget; total-cost exhaustion correctly intercepted before fourth POST. Call-limit was independently rerun with30000 solely to isolate the intended tool-count boundary and passed. Success/cost identities were already green; duplicate reruns are not recounted. Only the loopback model endpoint is simulated in these three full-chain cases."
+    },
+    "externalPaidCalls": 0,
+    "legacyCompatibility": {
+      "passed": 2,
+      "seconds": 87.9,
+      "artifact": "artifacts/test-results/hermes-tools-legacy-native.xml",
+      "identities": [
+        "T-AC-725 runs the actual pinned Hermes Runs API with no tools and one bounded local model request",
+        "T-AC-743 actual Hermes publishes incremental text before held completion and preserves the next explicit context"
+      ],
+      "note": "Separate from new11. Actual pinned native no-tools1POST and incremental/history2POST selections preserve baseline behavior after bridge/parser changes. Remaining legacy native variants were not rerun here."
+    }
+  },
+  "browser": {
+    "uniquePassed": 3,
+    "seconds": 40,
+    "artifact": "artifacts/test-results/e2e.xml",
+    "realBackendCases": 1,
+    "labeledUiContractCases": 2,
+    "covered": [
+      "Actual owner profile ceiling subset persists across reload; unavailable runtime disables task rights and launch",
+      "Labeled lost first task response advances profile revision and pauses policy; verification retains identical original body, nested grant, copied bytes and idempotency key",
+      "Labeled mobile task sends explicit subset/copied input, renders script-like tool result inert, shows unknown cleanup with retained budget/profile and no horizontal overflow"
+    ],
+    "screenshot": "artifacts/hermes-tools-mobile.png",
+    "visualQa": "Unmodified390x844 viewport inspected: unknown cleanup, quota counters and protective actions remain visible inside viewport; no skip-link overlay or masking.",
+    "qualification": "Real owner enrollment/project/profile setup precedes labeled task/result/provider response fixtures. No native run through browser end to end is claimed. Default e2e.xml is overwritten by later browser selections; retained source and command output identify these three cases."
+  },
+  "mutation": {
+    "selected": 5,
+    "behavioralKills": 5,
+    "baselineAndRestoredPassed": true,
+    "originalProductionSourcesUnchangedWithinEachRun": true,
+    "artifacts": ["artifacts/hermes-tools-mutation/summary.json", "artifacts/hermes-tools-native-mutation/summary.json", "artifacts/hermes-tools-commit-mutation/summary.json"],
+    "operators": ["accept duplicate tool allowlist", "accept dot traversal", "remove UTF-8 file cap", "compare durable runtime allocation by JSON key order", "omit final publication transaction authority fence"],
+    "note": "Curated isolated source-copy sensitivity only; last two execute the actual native helper, and final fence mutant uses actual transaction rollback assertions. No repository-wide or touched-line mutation percentage. Initial commit-mutant harness alias collision failed collection and was corrected with importer-scoped resolution; it is not counted as a kill."
+  },
+  "checks": { "typescript": "passed", "ownedBiomeFiles": 14, "ownedBiome": "passed", "mutationSourceCoherence": "Schema3 rerun against final frozen contracts. Native identity386a8689 and final commit28775c34 source hashes match current production; no repeat native mutation needed." },
+  "coverage": { "line": "not measured", "branch": "not measured" },
+  "flaky": [],
+  "layers_run": ["strict-contract", "real-PGlite-Foundation-admission", "actual-runsc-executor", "actual-Foundation-native-executor", "physical-store-reopen", "actual-pinned-Hermes-Foundation-tools-chain", "real-owner-browser", "labeled-ui-contract", "curated-source-copy-mutation"],
+  "redBeforeGreen": [
+    "Actual Foundation composition rejected canonical underscore tool IDs; fixed with exact catalog enum plus preserved strict legacy regex.",
+    "Actual durable JSONB reorder broke executor execute/stop identity equality; canonical strict comparison corrected both, and source-copy mutant is killed.",
+    "Fresh review HTR-001 required final in-transaction expiry fence; deterministic actual-executor/real-transaction regression and missing-fence mutant prove rollback sensitivity."
+  ],
+  "physicalEvidence": ["reviews/hermes-tools-native-capability-probes.json", "reviews/hermes-tools-production-native-evidence.md"],
+  "gaps": [
+    "Root final gates are passed and recorded in reviews/hermes-tools-final-gates.json; root owns their complete scanner, runtime integrity and final acceptance details.",
+    "Physical limits evidence separates actual production cgroup values/sample membership from smaller controlled kernel OOM/PID refusal probes and separate runsc lab tmpfs exhaustion. Production4MiB tmpfs exhaustion is not measured.",
+    "No hostile physical symlink/hardlink/device fixture injection. Catalog cannot construct these; strict paths, task-data-only input boundary, fixed no-follow implementation and fresh source review are complementary evidence, not an injected-link proof.",
+    "No exhaustive parser fuzz/property campaign, line/branch coverage percentage, complete mutation score or flakiness history campaign.",
+    "No paid provider entitlement, general code/shell/KVM, dedicated host, Docker networking, remote deployment or complete E07/V1 qualification."
+  ]
+}
