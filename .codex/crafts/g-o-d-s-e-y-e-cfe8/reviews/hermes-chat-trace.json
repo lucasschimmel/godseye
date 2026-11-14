@@ -1,0 +1,91 @@
+{
+  "contract": "hermes-chat-design.md",
+  "method": "Canonical literal test ID binding plus separately retained actual test outcomes; no exhaustive semantic coverage percentage",
+  "criteria": [
+    {
+      "id": "T-AC-741",
+      "files": [
+        "tests/agents-chat.test.ts"
+      ],
+      "status": "verified-local-scope"
+    },
+    {
+      "id": "T-AC-742",
+      "files": [
+        "tests/agents-chat.test.ts"
+      ],
+      "status": "verified-local-scope"
+    },
+    {
+      "id": "T-AC-743",
+      "files": [
+        "tests/agents-chat-native.test.ts"
+      ],
+      "status": "verified-local-scope"
+    },
+    {
+      "id": "T-AC-744",
+      "files": [
+        "tests/agents-chat-persistence.test.ts",
+        "tests/agents-chat-transport.test.ts",
+        "tests/agents-chat.test.ts"
+      ],
+      "status": "verified-local-scope"
+    },
+    {
+      "id": "T-AC-745",
+      "files": [
+        "tests/agents-chat-http.test.ts",
+        "tests/agents-chat-transport.test.ts"
+      ],
+      "status": "verified-local-scope"
+    },
+    {
+      "id": "T-AC-746",
+      "files": [
+        "tests/agents-chat.test.ts"
+      ],
+      "status": "verified-local-scope"
+    },
+    {
+      "id": "T-AC-747",
+      "files": [
+        "tests/agents-chat-http.test.ts",
+        "tests/agents-chat.test.ts"
+      ],
+      "status": "verified-local-scope"
+    },
+    {
+      "id": "T-AC-748",
+      "files": [
+        "tests/agents-chat-proposals.test.ts"
+      ],
+      "status": "verified-local-scope"
+    },
+    {
+      "id": "T-AC-749",
+      "files": [
+        "tests/agents-chat-proposals.test.ts"
+      ],
+      "status": "verified-local-scope"
+    },
+    {
+      "id": "T-AC-750",
+      "files": [
+        "tests/e2e/agents.spec.ts"
+      ],
+      "status": "verified-local-scope"
+    },
+    {
+      "id": "T-AC-751",
+      "files": [
+        "tests/agents-chat-http.test.ts",
+        "tests/agents-chat-transport.test.ts",
+        "tests/agents-chat.test.ts"
+      ],
+      "status": "verified-local-scope"
+    }
+  ],
+  "missing": [],
+  "wholeEpicAcceptance": false
+}
