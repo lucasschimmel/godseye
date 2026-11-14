@@ -1,0 +1,93 @@
+{
+  "kind": "independent-adversarial-code-review",
+  "date": "2026-11-14",
+  "reviewer": "hermes_tools_review fresh-context satellite",
+  "criticity": "production",
+  "verdict": "pass",
+  "findings": [
+    {
+      "id": "HTR-001",
+      "criterion": "COR-04 / AC-766",
+      "status": "CONFIRMED",
+      "severity": "major",
+      "priority": "P1",
+      "title": "Recheck time-based authority before committing a tool result",
+      "evidence": [
+        "packages/core/src/agents-tools.ts:219 \u00e2\u20ac\u201d result transaction checks assertToolTransaction at entry, then awaits quota read and allocation/call updates through line 257 without a closing time/abort fence.",
+        "packages/core/src/agents-tools.ts:25 \u00e2\u20ac\u201d Foundation grant/lease validation occurs before subsequent awaited profile/allocation reads.",
+        "packages/core/src/foundation-grants.ts:80 \u00e2\u20ac\u201d grant expiry is checked against state.now only during validateGrant.",
+        "packages/core/src/agents-tools.ts:259 \u00e2\u20ac\u201d next authority check executes after transaction commit; catch at line 271 subsequently changes state to unknown.",
+        "packages/core/src/agents-tools-lifecycle.ts:163 \u00e2\u20ac\u201d owner detail validates succeeded/failed observations and exposes their result at line 207 during the post-commit interval."
+      ],
+      "scenario": "A valid tool completes just before the immutable allocation deadline, task lease/grant expiry or AbortController deadline. Advance fixture time or abort while the publication transaction awaits its quota select or final update. The entry check passed, so a succeeded observation commits after authority expired. The post-commit assertToolActive can eventually change its state to unknown, but an owner reader can already observe the committed result; a process interruption in that interval leaves it retained as succeeded.",
+      "refutation": "The serialized control_lock prevents concurrent control-plane cancellation/epoch/profile writes from interleaving inside this transaction, and executeAgent has later fences before task success. Those safeguards narrow the impact: this is time/abort expiry and tool-result publication, not a demonstrated cross-task escape or final artifact export bypass. Wall-clock expiry and signal abort still occur while the transaction awaits, and the post-commit fence cannot roll back an already published result.",
+      "refutation_survived": true,
+      "suggestion": "Capture/validate the exact lease, grant and allocation deadlines and signal again at the closing transaction boundary after relevant awaits, throwing inside the transaction to roll back result/quota publication. Add a deterministic clock/abort edge regression at that boundary.",
+      "verification": "Static source interleaving; deterministic executable regression requested from the core implementation worker. No production changes by reviewer.",
+      "remediation_status": "Resolved: frozen source delta verified and actual-executor transaction-boundary regression passed.",
+      "resolved": true
+    }
+  ],
+  "criteria_run": 9,
+  "criteria_passed": 9,
+  "reviewed": [
+    "Strict five-tool schemas and profile/task ceiling refinement; default no-tools compatibility",
+    "Foundation intent/result journal, changed duplicate/unknown handling and immutable allocation binding",
+    "Python runtime exact task/unit/invocation ownership, user-service resource checks, gVisor OCI configuration and EOF/stop lifetime",
+    "Trusted worker path, no-follow/regular-file/link checks, UTF-8/file/entry/depth/read/write/output bounds and inert artifact snapshots",
+    "Pinned installation digest checks and isolated Python worker execution without evaluating task data",
+    "Provider/bridge sequence correlation and bounded callbacks",
+    "Broker durable conservative aggregate attempt reservation before bounded model POSTs, fixed destination, redirect denial and finite continuation",
+    "Hermes boot fixed schema injection and disabled native registry/sequential/concurrent dispatch paths",
+    "Console explicit task opt-in, immutable lost-response retry body, escaped result rendering and text/plain downloads"
+  ],
+  "not_reviewed": [
+    "No native or paid model invocation performed by this reviewer. Parent reports actual loopback-model full-chain 3/3 and executor 4/4; these results are caller-provided evidence, not independently rerun here.",
+    "No claim of whole-repository audit, complete scanner coverage, mutation percentage, deployed-host qualification or KVM/general-code support.",
+    "Real protected secret/credential/token/.env files were not read; runtime-generated private material was not inspected.",
+    "Preexisting uncommitted advanced-chat baseline was preserved and not independently comprehensively reviewed."
+  ],
+  "limitations": "Single-pass source review in a fresh satellite context; scoped source and design/plan/test strategy read. No fixes made. One report artifact added. Critical shell/general-code authority remains excluded by the design.",
+  "initial_verdict": "pass-with-findings",
+  "remediation_review": {
+    "finding": "HTR-001",
+    "source_verdict": "pass",
+    "regression_verdict": "pass",
+    "evidence": [
+      "packages/core/src/agents-tools-fence.ts:21 \u2014 exact Foundation actor/tool/destination grant is revalidated within the same transaction.",
+      "packages/core/src/agents-tools-fence.ts:27 \u2014 final awaited runFor is followed by synchronous now/signal and lease/grant/allocation deadline checks at lines 28-36.",
+      "packages/core/src/agents-tools.ts:275 \u2014 final result publication fence follows awaited quota and observation mutations, so expiry throws before transaction return and rolls them back.",
+      "packages/core/src/agents-tools.ts:132 \u2014 known receipt replay rechecks the closing fence before returning retained data.",
+      "packages/core/src/agents-tools.ts:195 \u2014 new intent fence follows appendAudit and precedes transaction return.",
+      "packages/core/src/agents-tools-lifecycle.ts:85 \u2014 allocation intention closes with the fence; available receipt transaction does the same at line 112."
+    ],
+    "refutation": "A final assertion that itself awaits could otherwise repeat the original issue. This implementation captures exact grant and run and performs clock/signal checks synchronously after its final await. The existing serialized control lock excludes concurrent logical authority mutations until transaction completion. Asynchronous database COMMIT is an unavoidable transaction boundary; no additional application I/O is interposed after this guard.",
+    "freeze": "hermes-tools-core-freeze.json",
+    "hash_checks": [
+      {
+        "path": "packages/core/src/agents-tools.ts",
+        "sha256": "28775c34702d1defc57ce45eca83ea63325e21a0f8dc6137a1cbb77f725bfcf8",
+        "matches": true
+      },
+      {
+        "path": "packages/core/src/agents-tools-fence.ts",
+        "sha256": "44d2cf54a9211c04667ada9ed12f67766ddf595cd597da6cd6abd88dc2e18da4",
+        "matches": true
+      },
+      {
+        "path": "packages/core/src/agents-tools-lifecycle.ts",
+        "sha256": "8d530dbc352e62f0b60d9bde126c870ce2533761030a2e52e7c3a961a05df111",
+        "matches": true
+      }
+    ],
+    "regression_evidence": {
+      "artifact": "artifacts/test-results/hermes-tools-final-tx-regression.xml",
+      "selected_test": "T-AC-766 rolls back a real tool publication when authority expires after the final journal mutation await",
+      "result": "1 selected pass; 3 other native journal tests skipped by selection, zero failures/errors; not a claim that all four ran.",
+      "source": "tests/agents-tools-journal-native.test.ts:21",
+      "method": "Actual createHermesToolExecutor and real fixture store/Foundation; Proxy preserves real queries/rollback and advances fixture clock only after the actual succeeded journal update resolves. Scripted provider transport invokes real tool prepare/call callbacks. It verifies no task success/output, unknown call with null result, no artifacts, and write quota rolled back to seed bytes.",
+      "reviewer_execution": "Read source and generated JUnit artifact; did not rerun this native test."
+    },
+    "limitation": "Source and selected native regression evidence reviewed. Remaining global/native/browser/mutation gates remain owned by parent and GAUNTLET; no unmeasured coverage percentage claimed."
+  }
+}

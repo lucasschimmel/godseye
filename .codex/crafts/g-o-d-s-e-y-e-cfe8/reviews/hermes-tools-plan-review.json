@@ -1,0 +1,45 @@
+{
+  "run": "godseye-local-hermes-tools",
+  "date": "2026-11-14",
+  "kind": "independent-binary-plan-review",
+  "reviewer": "gauntlet-satellite",
+  "artifacts": ["hermes-tools-design.md", "hermes-tools-core-contract-proposal.md"],
+  "verdict": "pass",
+  "findings": [],
+  "criteria_run": 9,
+  "criteria_passed": 9,
+  "evidence": {
+    "PLN-01": "hermes-tools-design.md Acceptance gives fourteen externally observable admission, execution, isolation, cleanup, browser and compatibility outcomes.",
+    "PLN-02": "Acceptance maps AC-761 through AC-774 one-to-one to T-AC-761 through T-AC-774.",
+    "PLN-03": "Execution architecture and ownership orders parent freeze/review, core shared types, dependent runtime integration, then stable UI and final frozen validation.",
+    "PLN-04": "Scope explicitly makes actual cgroup/runsc qualification a prerequisite; unavailable proof must fail closed before model admission. Remaining resource/descendant/stop proofs are named rather than deferred beyond acceptance.",
+    "PLN-05": "Qualification and evidence reuses the existing bus and isolates native/model/browser proof; no unsupported numerical delivery estimate is asserted. Prior cgroup-unqualified runsc evidence is explicitly insufficient.",
+    "PLN-06": "Five exact first-party tools, pinned Hermes callback interception, Foundation journal, WSL user-service cgroup and existing owner artifacts make this project-specific.",
+    "PLN-07": "Scope excludes shell/build under unchanged I10 KVM requirement, and defines useful fixed trusted file/data operations with exact task grants; no dedicated-host or general E07 completion is claimed.",
+    "PLN-08": "Core owns contracts/store/core/API then UI; runtime owns native/Python/adapter; tests own tests only. Shared-type dependency is explicitly sequenced types-first, not claimed as independent simultaneous production edits.",
+    "PLN-09": "Contract freeze preserves unknown allocation/call intentions, retained capacity, exact physical identity and inspect/stop-only recovery; no automatic replay or native fallback after interruption. Legacy behavior is separately gated."
+  },
+  "refutation": [
+    {
+      "candidate": "Typed gVisor tools weaken mandatory disposable KVM shell isolation",
+      "counterevidence": "Design Scope forbids arbitrary argv/project code/evaluation, permits only fixed helper operations on copied UTF-8 data, and retains I10 for general shell/build.",
+      "result": "not-a-finding"
+    },
+    {
+      "candidate": "Submitted systemd/OCI resource fields are being treated as observed enforcement",
+      "counterevidence": "Scope and AC-764 require all-descendant membership and physical negative controls; freeze explicitly forbids deriving qualification solely from fields and requires absent proof to fail closed.",
+      "result": "not-a-finding"
+    },
+    {
+      "candidate": "Parallel runtime implementation races shared contract changes",
+      "counterevidence": "Architecture explicitly requires core publishes types first; runtime consumes frozen signatures and owns disjoint production areas.",
+      "result": "not-a-finding"
+    }
+  ],
+  "not_reviewed": [
+    "Production implementation correctness; production behavior is not yet authorized by this review artifact alone without parent sequencing.",
+    "Claimed preliminary physical probe measurements were not rerun or independently authenticated during plan review.",
+    "Actual runtime resource support, native Hermes chain, browser workflow, source security review and measured final gates remain required."
+  ],
+  "limitations": "This satellite independently reviewed parent/core-authored artifacts without authoring those plans; it previously authored the test strategy, so this is independent plan review rather than a fresh-context FABER execution. No executable/native/coverage/mutation pass is implied."
+}
