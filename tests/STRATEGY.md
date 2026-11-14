@@ -631,3 +631,350 @@ The requested local E06 software scope is complete and verified. E00 dedicated-h
 untrusted-code Docker/gVisor containment, network/IPv6/quota/capacity enforcement, off-host custody
 and coordinated E03/E12 recovery/activation retain their mandatory release gates. No server setup,
 owner-data migration, account enrollment, commit or push was performed.
+
+## Local Hermes setup checkpoint — 2026-11-13
+
+The E07 setup tranche adds 57 ordinary scenarios across filesystem, catalog, profile lifecycle, installer and CLI boundaries. Its dedicated batch passed; two native opt-ins were skipped there and passed separately against the actual Hermes 0.23.1/CPython 3.14.9 installation. The native profile case resolves all three generated role configurations in disposable mutable probe homes with socket/DNS access denied, only the pinned bootstrap skill and zero CLI/API tools. Immutable original snapshots and the installed runtime manifest remain unchanged. No model call, owner-store access or dedicated-host operation occurs.
+
+Seven selected security/lifecycle mutations were killed with green baseline/restored checks and unchanged source bytes. Regression covers the confirmed missing-revision verification defect: refused promotion and inspection cannot create a broken profile or revision. Installer retry, archive/alias/hardlink refusal, snapshot tampering, scope/role partitioning, exact promotion/rollback, writer exclusion and failure-preserving pointer updates are covered.
+
+Canonical criterion IDs T-AC-701 through T-AC-708 map to the local setup contract, not full T21–T24 epic acceptance. The E01–E06 full regression and browser suites were not rerun for this isolated script/configuration tranche; their earlier counts remain historical. No UI, owner API, store migration or execution engine changed. Actual running agents, mutable run-home materialization, provider calls, task grants, budgets, cancellation, Runs API and deployed containment remain unqualified.
+
+
+## Local Agent Center continuation — 2026-11-13
+
+The owner API advances to `1.10.0`; the application API remains `1.0.0`. The local
+contract in `.codex/crafts/g-o-d-s-e-y-e-cfe8/agent-center-design.md` binds eleven
+criteria, T-AC-721 through T-AC-731, to actual test files. Scope includes real
+owner project/environment profile admission, one-turn model tasks, shared Foundation
+reservations/heavy capacity, bounded history, stop/unknown reconciliation and the
+private local provider. This is not whole-E07 or deployed-host acceptance.
+
+The targeted ordinary batch passed 46 cases; an additional real-deadline ignored-abort
+case passed separately, for 47 distinct ordinary Agent Center scenarios. The native
+cases skipped by the default suite are separately qualified and never counted as
+ordinary passes. Two actual PGlite reopen scenarios retain profile/task correlation.
+Thirty-eight existing Foundation/infra regressions passed separately; they overlap
+the eventual full suite and are not added to its count.
+
+Seven Agent Center browser scenarios pass: four use the actual owner HTTP profile
+backend, and three explicitly fixture task-transport responses to exercise launch,
+result, cancellation and stale-security-query UI behavior. The latter do not prove
+a native task traverses browser, HTTP and Hermes end to end. Two existing console
+navigation/mobile-keyboard scenarios also pass. Desktop/mobile/result screenshots
+are retained under ignored `artifacts/agents-*.png`.
+
+Four curated copy-only mutation experiments were killed with green baseline and
+restored checks and unchanged original source: missing provider identity, missing
+physical stop proof, UTF-8 result bound and removed epoch fencing. This selected
+score is not a whole-repository mutation or coverage percentage. Two genuine RED
+regressions preceded the generic Foundation cancellation/epoch late-result fix;
+a fresh delegated source review independently verifies logical cancellation survives
+read-only physical reconciliation. A browser regression also verifies failed owner
+security refetch cannot retain cached fresh identity or disable protective stop.
+
+Native qualification runs actual pinned Hermes0.23.1, CPython3.14.9, gateway/skill
+resolver and installed OpenAI SDK against a loopback model fixture. No provider key
+or paid call is used. The separate frozen execution environment contains 74 installed
+distributions; exact OSV queries cover 73 third-party PyPI name/version pairs with no
+known findings. This is not a complete SBOM, reachability audit or hostile-code sandbox.
+The initial native failures and their concrete dependency/provider/socket/skill/framing
+fixes remain evidence of failures; they are not relabeled as passing qualification.
+The final actual native selections pass separately: text completion in 41.66 seconds,
+hostile tool-reply refusal in 47.93 seconds and controlled hanging-request cancellation
+in 50.66 seconds. Each retains a stable run identity, actual stopped proof, one physical
+fixture request, the reviewed skill and exact model/output/no-tools policy. The hanging
+fixture is explicitly released after the stop request; proof requires actual handler
+settlement, not the acknowledgement. Two subsequent read-only inspections do not replay.
+Artifacts: `agents-native-execution-seventh.xml`, `agents-native-hostile-reply.xml` and
+`agents-native-hang-cancel.xml` under ignored `artifacts/test-results`.
+
+A separate actual Python reply-boundary opt-in passes text JSON/SSE and refuses tool/
+function calls, oversized and expired replies; its stale-observation merge check proves
+that polling cannot rewind the durable physical-attempt counter. It is one test case
+with several assertions, not nine independent Vitest tests. No positive/hostile/cancel
+native count is added to the ordinary suite total. Final global gates follow below.
+
+Remaining measured limits: provider transport uses a counted authorization stub while
+real Foundation admission/fencing is exercised separately through a typed provider;
+no single browser-to-native production-key end-to-end journey is claimed. Native real
+clock lease expiry, deterministic pre-enqueue cancellation race, binding-helper TTY
+and fsync fault injection are not independently measured. General tools, publication,
+approval inbox, full chat/SSE/artifacts, coding runners, invoicing reconciliation and
+dedicated-server isolation/recovery remain separate implementation/release obligations.
+
+
+### Final Agent Center aggregate gates
+
+| Gate | Actual result | Evidence |
+| --- | --- | --- |
+| Complete default regression | **1,329 passed, 14 native opt-ins skipped**, zero failures; 114 passing files plus six skipped files, 120 collected; **2,195.94 seconds Vitest wall time** | `artifacts/test-results/agent-center-unit-final.xml` (JUnit summed test time is separately 1,941.5510423 seconds) |
+| Current Agent Center cases | All 47 ordinary scenarios included in the global run, including ignored-abort/deadline retention; seven Agent Center browser scenarios plus two selected existing console journeys pass | `reviews/agent-center-test-results.json` in CRAFTS state |
+| Actual new native qualification | Three distinct executions pass (normal response, unsolicited tool reply, controlled hanging cancellation); one final actual Python parser/counter case passes separately in 4.253 seconds | Native XML artifacts above; `agents-native-reply-final.xml` |
+| Mutation | Four selected copy-only mutations killed; original sources unchanged | `artifacts/agents-mutation/summary.json` |
+| Static/contracts | Biome 570 files, TypeScript and control OpenAPI 1.10.0/application 1.0.0 consistency pass | Root verification ledger |
+| Build/runtime | Full console/API/SDK/backend/jobs build and actual built-API smoke pass | Canonical `bun run build` and `bun run smoke:built` |
+| Security/source | 92 changed public source/docs/test files scanned with zero Gitleaks findings; 73 exact third-party PyPI OSV queries and 495 Node packages audited with zero known advisories; 53 production hashes unchanged under union of retained setup and current fresh reviews | `reviews/agent-center-security.json`, `agent-center-source-freeze.json`, `agent-center-code-review.json` |
+| Trace/docs | All 11 local criterion IDs bind to existing cases; 156 relative file links and the new guide-to-strategy anchor resolve | `agent-center-trace.json`; `artifacts/agent-center-doc-links.json` |
+
+The default native skips are opt-in boundaries, not failures or fresh verification.
+The earlier Hermes setup and E06 native results remain historical for their frozen
+source; their full native suites were not rerun here. The newly added Python reply
+case was collected and executed separately after the global run began. The full
+browser suite was not rerun; the nine selected journeys above are the current UI
+evidence. Native counts, focused regressions and mutations overlap and are never
+added to 1,329 ordinary passes. No exhaustive coverage/mutation percentage is claimed.
+Scanner limitations and two harmless state-report/hash false positives from a broader
+machine-state scan are retained in the security report; no risk waiver was created.
+
+The requested local Agent Center slice is complete and verified. Full E07 and V1
+remain incomplete as specified. No real API key, paid model call, owner-data migration,
+dedicated-server change, commit or push was performed.
+
+
+## Advanced local Hermes chat — 2026-11-13
+
+The `hermes-chat-design.md` contract in CRAFTS state binds eleven local criteria,
+T-AC-741 through T-AC-751, to conversations, actual incremental progress, history,
+artifacts and exact existing-plan approvals. Control API 1.11.0 and migration 0019
+reuse the existing Foundation queue/lease/grant/reservation/approval machinery.
+The prior Agent Center checkpoints remain historical for their frozen source.
+
+The targeted batch passes 31 ordinary cases across five files: real PGlite/Foundation
+conversation/progress admission, exact plan proposals, private owner HTTP, bounded
+SSE and physical store reopen. They cover idempotency/CAS, old-policy history versus
+new admission, partial progress, epoch suppression, exact draft bytes/tamper, inert
+attachment headers, expired/foreign/stale plan refusal, protective rejection, real
+Foundation approval, cursor suffix/reset, capacity/abort/unread lifetime and actual
+owner-session expiry. The confirmed read/prune race was corrected by serializing
+cursor+suffix observation; the exact 256-event retention boundary is measured, but
+no dedicated deterministic mid-transaction fault schedule is claimed.
+
+Three current actual native selections pass: a held multi-frame response emits visible
+text before completion, then a second explicit turn carries exact prior context;
+a truncated stream cannot become success; an unsolicited tool response is refused.
+The first selection has two explicit model requests, one per turn, rather than one
+request for an entire conversation. The fixture controls only the model endpoint;
+Hermes 0.23.1, Python 3.14.9, the installed OpenAI SDK, actual Runs API, broker and IPC
+remain real. Raw prompts are not printed; context is compared with metadata hashes.
+The older actual hanging-cancellation and reply-parser/counter cases pass separately
+(2/2 in 47.76 seconds), preserving their original deadlines. No paid call is used.
+Core and separate execution immutable manifests verify after the new native tests;
+this is installation integrity, not hostile-code containment or provider entitlement.
+
+Three new browser journeys pass across explicit selections: actual backend private
+conversation creation/reload/unavailable feedback; labeled mobile EventSource partial/
+reconnect, inert draft and rejection states; and a lost-send response with advanced
+conversation revision that must retain the exact original body/key on verification.
+The latter two model/stream/output paths use labeled UI contract fixtures after real
+owner enrollment/project/profile setup. No single browser-to-paid-provider/native
+end-to-end journey is claimed. Desktop/mobile checks preserve the existing visual
+system, keyboard access, inert rendering and no horizontal page overflow.
+
+Four curated copy-only mutation experiments are killed by actual behavioral assertions:
+accepting a changed artifact digest, accepting a foreign plan, approving an expired
+proposal and disabling cursor reset. Baseline/restored tests pass and original
+production hashes remain unchanged. This is selected sensitivity, not an exhaustive
+mutation score or line/branch coverage percentage. Missing-facade scaffolding failures
+and corrected fixture mistakes are retained as such, not behavioral RED evidence.
+
+The independent source review passes 23 binary criteria over 38 production files, with
+no active finding; scope/expiry/approval, partial/final authority, native frame policy,
+SSE lifecycle and UI lost-response handling are explicitly reviewed. General tools,
+agent-created plans, canonical native paused controls, coding runners, E09 bundles,
+paid billing and deployed-host containment/recovery remain outside this local slice.
+Final full regression/build/scanner counts are recorded below after actual completion.
+
+
+### Final advanced chat aggregate gates
+
+| Gate | Actual result | Evidence |
+| --- | --- | --- |
+| Complete default regression, two disjoint groups | **1,360 passed, 17 native opt-ins skipped**, zero failures; **127 collected files** (119 passing, eight skipped) | `hermes-chat-global-builders.xml` + `hermes-chat-global-rest.xml` under ignored `artifacts/test-results` |
+| Builder group | Two passed in one file, one worker, 23.03 seconds Vitest; shared artifact builder serialized | `hermes-chat-global-builders.xml` |
+| Remaining default group | 1,358 passed/17 skipped, 126 files, two workers, 1,107.89 seconds Vitest; builder file excluded | `hermes-chat-global-rest.xml` |
+| Aggregate integrity | No duplicate test identities across groups; summed Vitest wall durations 1,130.92 seconds | `artifacts/test-results/hermes-chat-global-aggregate.json` |
+| Focused behavior | All 31 ordinary chat cases are included in the complete aggregate; three selected browser journeys, three current native selections and two additional legacy native/parser cases pass separately | `reviews/hermes-chat-test-results.json`; `reviews/hermes-chat-legacy-native-results.json` |
+| Mutation | Four curated behavioral kills, baseline/restored pass, production unchanged | `artifacts/hermes-chat-mutation/summary.json` |
+| Static/API | Biome 593 files, TypeScript, generated control 1.11.0/application 1.0.0 contracts pass | Root final gates |
+| Build/runtime | Canonical full console/API/SDK/backend/jobs build and first actual built-API smoke pass | `bun run build`; `bun run smoke:built` |
+| Security/review | 123 public source/docs/test paths Gitleaks 0; 495 Node packages audit 0; 73 third-party PyPI exact OSV queries 0; 38 production hashes unchanged under fresh review, 23 binary criteria pass | `reviews/hermes-chat-security.json`, `hermes-chat-code-review.json`, `hermes-chat-source-freeze.json` |
+| Docs/trace/visual | Eleven canonical criterion bindings resolve; 162 local file links, reviewed scope/expiry wording, clean unmasked 390px/mobile and 1440px/desktop viewport captures | `hermes-chat-trace.json`; `hermes-chat-docs.json`; `hermes-chat-visual-proof.json` |
+
+The two groups together cover the default Vitest include/exclude set. This is an
+aggregate of two disjoint executions, not a fictitious single 1,360-case process.
+Native opt-ins, focused cases, browser selections and mutants are not added to the
+ordinary aggregate. E06 and earlier Hermes native qualifications remain historical
+for their source; the full browser and all legacy native suites were not rerun.
+A tall element screenshot initially stitched an offscreen skip-link overlay; final
+unmodified viewport captures and computed focus/position metadata confirm it is
+not a rendered product defect. No mask or style override is used for final proof.
+
+The requested advanced local chat slice is complete and verified. Full E07/V1,
+canonical native paused tools, agent-created plans, coding runners, external connectors,
+paid billing and deployed containment/recovery retain their explicit remaining work.
+No paid model call, real API key, owner-data migration, dedicated-server change,
+commit or push was performed. Scanner and coverage limitations remain in the reports.
+
+## Local typed Hermes tools — 2026-11-14
+
+The frozen `hermes-tools-design.md` contract binds T-AC-761..774 to five fixed
+first-party scratch/file/JSON operations. General shell/build/project code remains
+blocked under I10 KVM; task contents never execute. A profile ceiling and separate
+immutable owner task grant are required. The focused proof adds57 strict contract
+cases and9 real PGlite/Foundation admission cases, preserving existing5 Agent Center
+contract cases. Exact catalog IDs compose with Foundation without permitting
+arbitrary underscore authority; unavailable execution refuses before model work.
+
+Eleven distinct new native cases pass across separate selections: four actual
+isolated-executor task/environment/project/scope checks; four actual Foundation+
+executor receipt/restart/epoch/final-transaction expiry cases; three complete real
+Foundation→pinned Hermes→scripted loopback model→actual isolated helper chains.
+Success has3 actual model POSTs and2 durable tool calls plus actual artifact bytes,
+digest, physical cleanup and released reservation. The count boundary has4 actual
+POSTs and3 tools, refusing the fourth call without final output/artifact. A3000-micro
+total reservation stops continuation after1 POST/tool and retains positive durable
+conservative spending within the total cap. Only the model endpoint is simulated
+in those complete chains; direct authority callbacks are reported separately.
+Two selected existing actual native cases also pass after the bridge changes:
+one-request no-tools and incremental text followed by exact successful-history reuse.
+
+Three selected browser cases pass: actual owner ceiling persistence with unavailable
+task controls; labeled lost-response retry preserving exact nested grant/copied bytes/
+key after policy revision and pause; labeled mobile explicit rights/copied inputs,
+inert tool output and uncertain cleanup/budget messaging. These response fixtures
+follow real owner/project/profile setup and are not browser-to-native-provider proof.
+The unmodified390px viewport was inspected without clipping or skip-link overlay.
+
+Five selected isolated source-copy mutation operators are killed with baseline and
+restored passes and original source hashes unchanged within each run. They cover
+duplicate allowlists, traversal, UTF-8 caps, canonical durable allocation identity,
+and the final in-transaction authority fence. The last two use actual native tools;
+the final fence regression preserves real database mutations/rollback and injects
+clock expiry after the final observation update await. No whole-suite mutation or
+line/branch coverage percentage is claimed.
+
+The runtime reports actual production cgroup values and sampled gofer/sentry
+membership, production owner-death/EOF cleanup and benign sentinel survival.
+Smaller controlled kernel OOM/PID refusal and a separate pinned runsc tmpfs ENOSPC
+laboratory supplement those observations; they are not exhaustion of production
+512MiB/128-task/4MiB workspace bounds. Hostile links/special files cannot be created
+through the catalog and were not physically injected. Fixed no-follow/regular-file
+checks, strict paths, copied-data-only execution and fresh review are the stated
+complementary boundary. No deployed Docker/host or KVM qualification is implied.
+
+Distinct names, exact artifacts and canonical14-criterion limits are recorded in
+`.codex/crafts/g-o-d-s-e-y-e-cfe8/reviews/hermes-tools-test-results.json` and
+`hermes-tools-test-matrix.md`. Final root gates passed:1,426 ordinary cases and28
+default native skips across132 files, zero failures. The disjoint serialized builder
+group passed2 cases in18.86s and the remainder passed1,424 in1,082.09s, totaling
+1,100.95s Vitest wall time. The66 focused new ordinary cases are already included.
+The1,454 JUnit cases have1,452 display labels because two existing Infinity/NaN
+parameterized pairs serialize as JSON null names within their file; there is zero
+cross-group overlap. Canonical build and first built-API smoke passed, as did lint
+over615 files, types and contracts at control API1.12. Frozen68 production hashes
+have zero drift; HTR-001 and HTD-001 review findings are resolved. Exact evidence is
+`.codex/crafts/g-o-d-s-e-y-e-cfe8/reviews/hermes-tools-final-gates.json`.
+Focused and repeated native/browser/mutation cases are never added to this aggregate.
+
+## Local E07 orchestration — 2026-11-14
+
+The requested local bounded orchestration software is complete and locally verified. The
+[operator guide](../docs/development/agent-orchestration.md) and
+[story-level table](../docs/plan/v1-development.md#local-e07-orchestration--2026-11-14)
+distinguish local completion from external/native-provider qualification.
+
+Focused ordinary families are `orchestration-contracts`, `orchestration-plans`,
+`orchestration-runtime`, `orchestration-http`, `orchestration-composition`,
+`orchestration-clarification` and `orchestration-proposals`. They exercise strict
+DAG/UTF-8 limits, immutable hashes/revisions/epoch, aggregate budgets, recent-passkey
+exact approval, service denial, durable child identity, serialized real Foundation
+composition, unknown/no-replay, protective cancellation, bounded explicit inert
+handoffs, strict pending-only Hermes extraction and new remaining-effectful
+clarification continuations without completed-prefix replay.
+
+Final authority checks occur after awaited settlement before committing logical
+success; expiry/revocation rolls back publication. Foundation uncertainty marks the
+parent unknown atomically before coordinator polling, fencing dependent publication.
+A stop transport error retains `CLEANUP_UNCERTAIN` resources without terminating the
+whole coordinator. These are regression targets, not claims of paid-provider or
+physical interruption qualification. Browser coverage uses desktop/mobile owner
+flows with labeled contract-backed model/runner states and inert rendered output.
+Final evidence is split by scope rather than reported as a whole-repository run:
+
+| Gate | Final result | Evidence boundary |
+| --- | --- | --- |
+| New focused ordinary cases | 60 unique passes: 59 across seven files in 130.57 seconds plus one disjoint coding-stop-throws case in 6.88 seconds | `artifacts/test-results/orchestration-frozen-final.json` and `orchestration-coding-stop-final.json`; same frozen production source |
+| Existing relevant regression | 656 passes, one legacy opt-in skip across 55 files in 533.21 seconds | `artifacts/test-results/orchestration-regression.xml`; selected relevant scope, not the full repository suite |
+| Disjoint ordinary total | 716 related passes | 60 new plus 656 existing; repeated checks and browser cases excluded |
+| Desktop/mobile browser | 2/2 passes in 60.418002 seconds (final JUnit) | Responsive owner plan/clarification/recovery flows; labeled provider fixtures |
+| Selected mutations | Three selected mutants killed; baseline/restored checks pass | Preliminary redundant adapter-guard survivor retained in the mutation history; no generalized mutation score |
+| Independent security/source review | PASS, zero open findings | `.codex/crafts/g-o-d-s-e-y-e-cfe8/reviews/orchestration-security.json`; source and probe history, including the now-passing coding stop-throws regression |
+| Static/contracts | TypeScript, Biome 676 files, generated API `1.14.0` check pass | Root final checks |
+| Canonical build/smoke | Build and built-API smoke pass | Original 15-second local health bound; remote server disconnected |
+| Source freeze | 508 public source/input hashes unchanged after final build | Final source identity, not deployed qualification |
+| AEGIS/dependencies | 791 public files, zero new actual credentials; one unchanged synthetic placeholder; Bun audit zero advisories | Semgrep and SBOM tools unavailable; no claim of their coverage |
+
+The two selected focused runs are disjoint by case despite sharing a test file.
+Their 60 passes are not added again when reading repeated focused reports. All
+required local final gates passed. No paid calls, dedicated-server actions or Git
+mutations occurred.
+
+No new paid calls or native-host qualification is implied. Existing locally measured
+coding KVM/provider composition and Hermes native tool evidence retain their original
+source boundaries. Native vendor pause/resume parity, deployed providers/host and
+coordinated recovery, E08 invoice/usage reconciliation, E09 bundles and separately
+authorized E05 preview/connectors remain distinct. Neither general Hermes shell nor
+automatic deployment/publication is introduced.
+
+## Local E08 usage, observability and incidents — 2026-11-14
+
+The requested local software is complete and locally verified. This
+section tracks current-source AC-801–AC-818, not a new whole-repository pass count.
+The [operator guide](../docs/development/usage-observability.md) and
+[story table](../docs/plan/v1-development.md#local-e08-usage-observability-and-incidents--2026-11-14)
+distinguish implemented local behavior from qualification.
+
+Required behavioral evidence includes committed acknowledged intent before POST,
+immutable/idempotent outcomes and scope denial; exclusive token categories/raw
+vendor totals/cache TTL; frozen prices/expiry/overflow; unknown usage; no Foundation
+invoice refund; atomic rolling monetary/rate/concurrency budgets; terminal missing
+report releasing only the physical slot; actual physical unknown retaining exposure;
+SQL-scoped summaries/keyset pages/windows/invoice attribution/retention; and actual
+provider/tool observations distinct from allocated maxima.
+
+Observability checks cover exact source/ancestry/correlation binding, fixed bounded
+structured input, no raw prompt/stdout storage, fresh/stale/missing/unknown states,
+seven-day log/thirty-day metric pruning with a minimal health head, scoped database
+cursor gaps and explicit unknown producer continuity. Operational counts/timelines
+must use real journals and explicit identities. Incident checks cover exact
+detector-owned clearing coverage, detector failure isolation, lifecycle CAS,
+durable outbox claim-before-effect, concurrency/restart, bounded explicit-failure
+retry, active physical-slot retention and timeout-unknown/no-blind-retry behavior.
+
+The final frozen-source evidence is bounded to this local implementation:
+
+| Gate | Result and counting boundary |
+|---|---|
+| New E08 focused | 76/76 cases across 18 files, zero skips, 173.13 seconds; `artifacts/test-results/e08-focused.json` |
+| Native composition inside those 76 | Two actual ManagedHermesProvider/Hermes/Foundation cases, four production broker/custom-Node-parent cases and one wrapper running four production coding-broker Python probes; these are included/nested, not additional passes |
+| Other related regression | 671 passes, one skip across 56 files; separate from the new E08 cases |
+| E07 orchestration regression | 60 passes across seven files, disjoint from the preceding 56-file run |
+| Existing coding Python | 29 passes, two explicit opt-in captured-payload skips, separate from the new focused batch |
+| Owner browser | 5/5 desktop/mobile cases, zero skips, 85.119 seconds XML time; `artifacts/test-results/e08-e2e.xml`. Includes real source metric value 123, unavailable freshness/time/incident and owner acknowledgement, plus stale-CAS and refetch draft-reset races |
+| Selected mutation | Six of six behavioral source-copy mutants killed, baseline/restored runs passed and original sources unchanged; three preliminary harness-interception survivors are retained in the report history |
+| Independent review | PASS, zero open findings; four confirmed findings independently closed, including starvation, cross-detector false clearing, expired full-log retention and budget draft/revision mismatch; final lint delta rechecked |
+| Static/contracts/build | Biome 733 files, TypeScript, generated API `1.15.0` consistency and build exited zero |
+| Built smoke | Original 15-second smoke exited zero; local health reachable and remote server disconnected |
+| Security/dependencies | 854 public paths scanned: zero new findings and one unchanged placeholder; dependency audit zero |
+
+Do not add repeated focused reports or nested Python/native subsets. These are
+related local gates, not a whole-repository run. The selected mutation result is
+not a general mutation score. Whole-scope line/branch coverage remains unmeasured.
+
+Native WSL checks use actual production broker/authority code, loopback upstream and
+a custom Node parent. Two actual ManagedHermesProvider/pinned-Hermes/Node-IPC/Foundation composition cases passed with loopback upstream. These mechanisms do not substitute for full current-source Coding/KVM
+qualification after source-closure/helper changes; earlier E07 proofs remain
+historical. Refresh Hermes with `bun run hermes:runtime:install` before using its new
+receipt. No paid vendor billing, real notification messages, live independent
+observer, remote metrics or dedicated-host qualification has been performed.
