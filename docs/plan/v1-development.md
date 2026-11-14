@@ -1,6 +1,6 @@
 # G.O.D.S.E.Y.E V1 development plan
 
-Status: E01–E06 local implementation assessed, 2026-11-12. Local foundations and feature slices exist; the current status table separates implemented behavior, remaining software and external qualification. Historical checkpoints remain evidence for their original source, not blanket current acceptance. Scope authority: [V1 requirements](../spec/v1.md), [isolation/data contract](../spec/isolation.md), [ADR-002](../adr/ADR-002-professional-vm-and-dual-stack.md) and the [ADR-003 local-first/CI amendment](../adr/ADR-003-local-first-and-ci.md). This plan aims at the complete V1 catalog, not an MVP.
+Status: E01–E06 local implementation assessed; E07 local Agent Center, advanced chat, trusted data tools, locally qualified coding runners and requested bounded owner-approved orchestration implemented, 2026-11-14. The requested local orchestration software is complete and locally verified. See the story-level local completion/qualification table below; complete deployed E07 and V1 acceptance remain distinct. Historical checkpoints apply to their original source. Scope authority: [V1 requirements](../spec/v1.md), [isolation/data contract](../spec/isolation.md), [ADR-002](../adr/ADR-002-professional-vm-and-dual-stack.md) and [ADR-003](../adr/ADR-003-local-first-and-ci.md).
 
 ## Delivery rules
 
@@ -91,7 +91,7 @@ Current local ownership exists in `apps/control-api`, `apps/console`, `packages/
 
 ## E04 Application backend and SDK
 
-Local continuation authorized 2026-11-12 after the owner-requested E05 preparation slice. [ADR-010](../adr/ADR-010-independent-application-backend.md) and the [operator guide](../development/application-backend.md) define the separate cell runtime, application identity, private files, SSE and project SDK. That checkpoint used owner control API `1.6.0`; current owner API is `1.9.0` and the application API remains independently versioned at `1.0.0`. The requested local E04 tranche is complete; hosted provider, off-host recovery and all-service activation qualification remain open.
+Local continuation authorized 2026-11-12 after the owner-requested E05 preparation slice. [ADR-010](../adr/ADR-010-independent-application-backend.md) and the [operator guide](../development/application-backend.md) define the separate cell runtime, application identity, private files, SSE and project SDK. That checkpoint used owner control API `1.6.0`; current owner API is `1.11.0` and the application API remains independently versioned at `1.0.0`. The requested local E04 tranche is complete; hosted provider, off-host recovery and all-service activation qualification remain open.
 
 Historical E04 gates passed: 31/31 full browser journeys in 181.393319 seconds (JUnit); thirteen selected M74–M86 mutation kills in 257.091 seconds with thirteen baseline/restored passes and unchanged original source; frozen source review against 78 backend/code and twelve UI hashes; canonical builds, final affected backend rebuild, actual compiled-template HTTP/restart and SDK-consumer checks; lint (381 files), types, control OpenAPI `1.6.0` consistency and 62/62 local trace links. Final combined unit/integration verification passed 972/972 cases across 72 files in 751.83 seconds (Vitest; 752.705 seconds for the whole command). Cross-service recovery, qualified hosted providers and full E04 acceptance remain separate from this local checkpoint.
 
@@ -164,6 +164,43 @@ actual local autonomy and durability; they do not certify deployed isolation or 
 See [final aggregate gates](../../tests/STRATEGY.md#final-aggregate-gates-for-local-e06-completion).
 No current local E06 task in this slice remains pending; E00 and cross-epic release gates remain.
 ## E07 Hermes core operations
+
+Historical setup checkpoint, 2026-11-13: the initial request covered installation,
+profile preparation and skill versioning only. [ADR-013](../adr/ADR-013-local-hermes-setup.md)
+and the [local guide](../development/hermes.md) define the boundary. Hermes 0.23.1 is
+pinned to its release commit with CPython 3.14.9 and a minimal frozen PM environment.
+Operations, security and research-marketing templates prefer the OpenAI API; no key
+or model call is used during setup. One bootstrap context skill is versioned with
+provenance and exact file digests. Profiles have separate native homes, immutable
+snapshots, exact promotion/rollback and concurrent-writer exclusion. They report
+declared-local scope and no run authority. This is a **partial E07.S01** checkpoint;
+owner/Agent Center binding and explicit skill preloading in a qualified run remain
+pending. S02–S05 and all E09 operational bundles remain pending. No server setup is
+included. Earlier epic evidence remains historical for its frozen source.
+
+Historical Agent Center continuation, 2026-11-13: [ADR-014](../adr/ADR-014-owner-bound-agent-center.md)
+and the [operator guide](../development/agent-center.md) supersede the setup-only execution
+boundary. S01 now includes real owner project/environment binding, profile revisions,
+pause/resume and one exact trusted skill. S02 adds durable Runs correlation, task history
+and bounded polling; interactive chat/SSE, artifacts and clarification remain open.
+S03 adds shared Foundation budget/heavy admission, one request/turn, private model
+injection, no tools, protective stop and uncertainty/reconciliation. This does not complete
+general disposable tool execution or all of S03. S04/S05 and E09 remain pending.
+Actual pinned Runs qualification passes text completion, hostile tool-reply refusal and
+controlled hanging-request stop/settlement without replay. Full regression/build gates
+are recorded separately in the test strategy; there is no
+paid OpenAI call or dedicated-server qualification in this implementation tranche.
+
+Advanced chat continuation, 2026-11-13: [ADR-015](../adr/ADR-015-durable-hermes-chat-and-exact-plan-inbox.md)
+and the [chat guide](../development/hermes-chat.md) add local S02 multi-turn conversations,
+actual incremental SSE, durable cursor/reopen, immutable text drafts and S04 existing-plan
+owner inbox. Each response remains one separately admitted Foundation task. Actual native
+text/context, truncated stream and tool refusal are measured; browser contract fixtures
+are identified separately. Approvals atomically use real Foundation owner authority and
+can resume already-waiting operations, with no new enqueue or broad native grant.
+Native canonical paused clarification/approval tools, agent-created plans, general
+disposable tools, S05 coding runners and E09 bundles remain pending. Final aggregate
+verification is recorded in the test strategy; dedicated-host work remains deferred.
 
 | Story | Deliverable and acceptance | Requirements/tests | Failure/checkpoint |
 | --- | --- | --- | --- |
@@ -255,9 +292,9 @@ Completion is behavioral, not a count of screenshots, files, coverage percentage
 
 [ADR-003](../adr/ADR-003-local-first-and-ci.md) amends the initial ordering: the local subset below may precede physical E00 qualification. The graph above still represents the dependency for enabled infrastructure; it does not prohibit local configuration, user journeys or isolated control-database tests. No capability can be enabled solely because its local page or configuration file exists.
 
-### Current E01–E06 status
+### Current E01–E07 status
 
-Owner control API: `1.9.0`. Application API: `1.0.0`. The [2026-11-12 audit and remediation record](../reviews/2026-11-12-e01-e06-audit.md) preserves the preceding hardening checkpoint; the current E06 continuation is described above. The detailed checkpoint table below preserves historical runs.
+Owner control API: `1.11.0`. Application API: `1.0.0`. The [2026-11-12 audit and remediation record](../reviews/2026-11-12-e01-e06-audit.md) preserves the preceding hardening checkpoint; the current E06 continuation is described above. The detailed checkpoint table below preserves historical runs.
 
 | Epic | Current local status | Next software work | Separate qualification |
 | --- | --- | --- | --- |
@@ -267,6 +304,7 @@ Owner control API: `1.9.0`. Application API: `1.0.0`. The [2026-11-12 audit and 
 | E04 | Local auth/files/events/SDK/template slice implemented | Preserve coordinated recovery and jobs integration dependencies owned by E03/E06 | Hosted runtime, domains/cookies/material, hard quotas and off-host recovery |
 | E05 | Partial: rich local delivery orchestration and trusted-process fixtures | Implement concrete Coolify/DNS/TLS/Jenkins dispatch and GitHub App authorization wiring | Isolated guests, registry/scanner, production migrations and public previews |
 | E06 | Requested local software complete and verified: detached supervisor, trusted per-cell workers, supported PostgreSQL/Redis provisioning, platform engine and live catalog | Preserve contracts while integrating deployed services and E03/E12 coordinated recovery | Deployed hostile-code/network/cell isolation, capacity and coordinated T07/T30 recovery |
+| E07 | Local Agent Center, streaming chat/artifacts, exact approvals, trusted tools, locally qualified coding runners and requested bounded orchestration complete and locally verified | Native upstream paused-tool parity and general Hermes shell remain separate from platform controls and coding KVM; see story table | Paid entitlement, E08 invoice/reporting, deployed provider/host/containment/recovery, preview/connectors and E09 bundles |
 
 The four audit corrections are locally verified: 16 new regression scenarios, the full 1,146/1,146 unit/integration suite across 93 files (1,033.11 seconds Vitest), and 41/41 browser journeys (315.46236 seconds JUnit) passed. Five selected mutations were killed with green baseline/restored checks and unchanged sources. Lint (471 files, including mutation scripts), types, generated OpenAPI `1.8.0`, canonical build, built-API smoke and independent source review passed; the audit remediation section retains exact evidence and scanner limits. Those counts are the preceding hardening checkpoint and do not automatically cover the subsequent Inngest source. The current continuation completes and verifies local E06 runtime supervision/external persistence. Automatic backup/coordinated recovery, concrete delivery transports and project-wide lifecycle orchestration retain their existing ownership. E00 remains deferred until the owner requests dedicated-server work.
 
@@ -299,3 +337,114 @@ remaining software work and E00 host qualification retain their existing ownersh
 The requested E01 local foundation and E02 local owner implementation are complete; this does not close the full infrastructure-dependent stories or V1. The subsequent owner-requested migration to Bun 1.4.4 preserved the Node.js 24 runtime and passed the existing 153-case Vitest suite, fourteen browser cases, contract consistency, build and built-API smoke after a clean install. The [verification strategy](../../tests/STRATEGY.md) records the separate runs and limits. E02.S02 has the local implementation described by [ADR-005](../adr/ADR-005-bun-and-local-service-authority.md) and the [operator guide](../development/service-access.md). Its preceding combined 215-case check, build/smoke, eighteen selected mutations and eighteen local traceability criteria passed; that browser regression passed 16/16 cases in 53.8 seconds. E02.S03 now follows [ADR-006](../adr/ADR-006-local-inventory-and-cell-provisioning.md) and the [infrastructure guide](../development/infrastructure.md): the combined check passed 325/325 cases across thirty files in 244.70 seconds, build/smoke passed, thirty-one selected mutants were killed, and source review has no open confirmed findings after four independent fixes. The final browser suite passed 18/18 journeys in 73.155046 seconds (JUnit); the explicit laboratory alias passed 4/4 checks in 17.027 seconds (17.26 seconds total), following the earlier 14.65-second run. All 26 local traceability criteria passed. Qualify E00 on the dedicated server before enabling project/data/runtime and delivery providers. Local provider preparation does not activate remote effects. Jenkins and PostgreSQL Compose files can be reviewed independently; neither is a recorded live installation.
 
 [ADR-004](../adr/ADR-004-owner-authority-and-foundations.md) records the implemented owner/control boundary without changing those qualification gates. Current source and launch commands are documented in [local development](../development/local.md), with Jenkins/GitHub activation boundaries in [CI preparation](../development/ci.md). The [verification strategy](../../tests/STRATEGY.md) records tested local slices and the mandatory missing families. E12 must run T01–T43 and produce the full F01–F46 evidence ledger.
+
+## Local E07 task-scoped data tools — 2026-11-14
+
+[ADR-016](../adr/ADR-016-task-scoped-hermes-data-tools.md) and the
+[tools runbook](../development/hermes-tools.md) extend S01 profile policy, S02
+standalone/chat artifact handling and S03 grants/isolated execution. Five fixed
+trusted UTF-8 data operations use a profile ceiling plus explicit immutable task
+subset. No-grant tasks preserve legacy no-tools/one-request behavior. A granted
+loop has at most four model POSTs/three calls, one total cost reservation and durable
+intent before each effect. Unknown work is never replayed; cleanup requires exact
+unit invocation/OCI stopped evidence before releasing retained capacity.
+
+Actual local helper/runsc and Foundation → pinned Hermes → scripted model → helper
+proof is distinct from browser/provider fixtures. Smaller-limit kernel and lab tmpfs
+negative controls are not production-bound exhaustion claims. Local acceptance for
+T-AC-761–T-AC-774 passed the verification strategy and fresh reviews. Final disjoint
+regression passed 1,426 cases with 28 default-native skips across 132 files; 66 new
+ordinary cases are included. Eleven new actual-native cases, two selected legacy
+native cases, three browser journeys and five selected mutation checks passed.
+615-file lint/types/control API 1.12 contracts, canonical build and first-attempt
+built smoke passed; 68 production hashes stayed unchanged. HTR-001 and HTD-001 were
+resolved. No Semgrep/SBOM/OS or general-code KVM qualification is implied. E07 remains partial: native paused controls, new agent-created
+plans, arbitrary shell/build disposable tools, I10 KVM qualification, S05 coding
+runners and E09 operational bundles remain open. Dedicated-host work is deferred.
+
+## Local E07.S05 coding runners — 2026-11-14
+
+[ADR-017](../adr/ADR-017-local-coding-runners.md) and the
+[coding guide](../development/coding-runners.md) record immutable owner
+repository/commit preparations, independent source verification, actual Foundation
+budget/epoch/heavy-task admission, logical task-private worktrees, separate
+Codex/Claude Code API bindings and bounded patch/test-log evidence. Cancellation
+retains uncertain resources; reconciliation is read-only and never repeats
+submission. Owner API is `1.13.0`, migration `0021_coding.sql`.
+
+Software support alone does not close S05's qualified-runner requirement. Both actual pinned CLI edit/test chains passed inside Windows/Ubuntu WSL KVM
+against scripted models. Three actual Foundation/provider/controller/broker/KVM composition cases passed
+with only upstream HTTPS replaced by a trusted fixture and zero paid requests. Preview remains explicitly
+unavailable, and no paid upstream request, dedicated-server setup, Git publication
+or subscription OAuth reuse occurred. Source/price/resource/runtime proof is
+required for opt-in launch. Full E07, E09 and V1 acceptance remain open.
+
+Coding launch proposes an owner-editable $0.50 Codex/$0.10 Claude reservation,
+preserves manual edits and requires fresh explicit admission; project budgets
+and Hermes defaults are unchanged. The physically qualified adapter is
+Windows/Ubuntu WSL2 only. Retained coding records preserve frozen source/image
+and patch/log evidence; the live guest-RAM worktree/home is not resumable.
+
+## Local E07 orchestration — 2026-11-14
+
+The requested local orchestration software is complete and locally verified. [ADR-018](../adr/ADR-018-approved-agent-orchestration.md)
+and the [operator guide](../development/agent-orchestration.md) document API `1.14.0`,
+automatic migration `0022`, strict bounded single-scope DAGs, immutable references,
+recent-passkey exact approval, real Foundation service delegation and serialized
+child dispatch. This closes the requested local model-proposal/approval/clarification
+workflow; it does not assert physical completion of every
+E07 requirement or V1 release acceptance.
+
+| Story | Local completion at this checkpoint | Exact remaining acceptance / adjacent scope |
+| --- | --- | --- |
+| E07.S01 | Bound role/profile lifecycle, trusted versioned bootstrap skill and immutable snapshot/preloading compatibility implemented and previously verified; orchestration freezes current profile hashes | Native/deployed profile portability and dedicated-host runtime qualification; operational skill bundles belong to E09 |
+| E07.S02 | Runs correlation, streaming multi-turn chat, inert artifacts, platform-owned exact approval and bounded clarification implemented; clarification now creates a newly approved remaining-effectful continuation | Native vendor paused-tool clarification/approval protocol parity is not exposed; paid/remote provider cancellation and deployed autonomous operation remain unqualified |
+| E07.S03 | Foundation reservations/grants, scoped trusted data tools and isolated coding KVM, protective stop/fencing and unknown/no-replay recovery implemented; orchestration delegates through these controls | General native Hermes shell/build interface is not exposed; deployed I10/I11 containment, coordinated recovery and complete cross-provider acceptance remain open; full usage/pricing reconciliation belongs to E08 |
+| E07.S04 | Exact existing-plan inbox plus strict successful-current-Hermes pending proposals, bounded new plan approval/rejection and separate continuation approval complete and locally verified | Native broad/session approval remains denied by design; deployed source/provider qualification remains separate |
+| E07.S05 | Codex and Claude Code frozen-source repository tasks and patch/test evidence implemented; actual local Windows/Ubuntu WSL KVM CLI and Foundation composition previously verified | Native Linux/Proxmox and deployed runner qualification, real paid entitlement/accounting and separately authorized E05 preview/provider/connectors; no automatic deployment/publication |
+
+The coordinator stores child intent/identity before admission, never impersonates
+the owner and revalidates exact authority before effects and publication. Dependency
+output transfer requires explicit `includeDependencyOutputs`, bounded quoted inert
+context. Failure/unknown blocks dependents; read-only reconciliation never resubmits.
+Answering preserves the completed prefix on the original and creates a new pending
+remaining-effectful suffix plus inert answered-question provenance. Lifetime remains
+bounded by the original preparation deadline; expiry prevents new admission, active
+mutations and late logical success while allowing physical observation/cleanup.
+
+Final gates passed: 60 new focused ordinary cases, 656 disjoint relevant regression
+passes (one legacy opt-in skip), two desktop/mobile browser journeys, three selected
+mutation kills, independent security/source review with zero open findings,
+static/API checks and canonical build/smoke. The 716 related ordinary passes are
+not a whole-repository suite. The final [test strategy](../../tests/STRATEGY.md#local-e07-orchestration--2026-11-14)
+records exact durations, frozen inputs, scanner limits and preliminary mutation history. Earlier
+coding/tool counts above are historical evidence and are not reused as orchestration
+qualification. No paid calls, private binding changes or dedicated-server actions
+are required for this local software continuation.
+
+## Local E08 usage, observability and incidents — 2026-11-14
+
+[ADR-019](../adr/ADR-019-local-usage-and-observability.md) and the
+[operator guide](../development/usage-observability.md) define API `1.15.0` and
+migrations `0023_usage.sql`/`0024_observability.sql`. All three requested local
+software parts are complete and locally verified. Focused regressions, actual
+provider composition, browser, selected mutation and static/release gates passed.
+This does not certify deployed E08 or the complete V1 T26/T40 families.
+
+| Story | Completed and locally verified behavior | External/current-source qualification still required |
+|---|---|---|
+| E08.S01 | Exact source-bound structured events/metrics, scoped retention/cursors/freshness, actual local CPU/memory/filesystem samples, real job/decision/headroom/incident Overview and project journal timelines | AX41/guest/container metrics and deployed provider observation are unavailable; producer continuity remains unknown; no general raw-log ingestion |
+| E08.S02 | Acknowledged per-physical-request intents before POST, immutable outcomes/exclusive categories/vendor totals/cache TTL, frozen price revisions, separate estimates/conservative charge/invoice, atomic project/profile/runner rolling limits, scoped SQL pages/summaries and conservative retention; Hermes receipt refreshed and two actual provider compositions passed | Real vendor billing administration and invoice provenance unverified/unconfigured; paid usage not exercised; full current-source Coding/KVM qualification required after IPC/helper changes; installations retaining pre-E08 Hermes receipts must refresh them |
+| E08.S03 | Existing lifecycle extended to global/project scope, exact detector-owned clearing coverage, bounded durable notification outbox with physical slot/timeout uncertainty and explicit-failure retries; private injectable observer/notifier contracts | No real messages or independent live host-loss observer; dead-host self-detection impossible; operator integration and real delivery qualification remain open |
+
+The local request is not reduced to fixtures or UI: trusted brokers, Foundation
+admission/settlement and server-owned collection/evaluation/pruning are integrated.
+Measured native mechanism evidence and real adapter composition are tracked in the
+[test strategy](../../tests/STRATEGY.md#local-e08-usage-observability-and-incidents--2026-11-14),
+without extending historical E07 native proof to changed source closures.
+Unknown reporting does not hold a proven-terminal physical slot, but is charged at
+its conservative maximum. True physical uncertainty retains capacity/exposure.
+Invoices never refund monotone Foundation charges. Ninety-day usage evidence pruning
+preserves financial/unknown obligations; logs retain seven days and metrics thirty.
+No paid call, private binding disclosure, external message, server action or Git
+publication is authorized by this local implementation checkpoint.
