@@ -1,6 +1,11 @@
 import { z } from "zod";
 import { ACCESS_HTTP_ENDPOINTS } from "./access-endpoints.js";
+import { AGENT_CHAT_HTTP_ENDPOINTS } from "./agents-chat-endpoints.js";
+import { AGENT_CHAT_TRANSPORT_ENDPOINTS } from "./agents-chat-transport-endpoints.js";
+import { AGENT_HTTP_ENDPOINTS } from "./agents-endpoints.js";
+import { AGENT_TOOLS_HTTP_ENDPOINTS } from "./agents-tools-endpoints.js";
 import { BACKEND_HTTP_ENDPOINTS } from "./backend-endpoints.js";
+import { CODING_HTTP_ENDPOINTS } from "./coding-endpoints.js";
 import { LOCAL_DEFAULTS } from "./config.js";
 import { DATABASE_HTTP_ENDPOINTS } from "./database-endpoints.js";
 import { DELIVERY_HTTP_ENDPOINTS } from "./delivery-endpoints.js";
@@ -32,11 +37,14 @@ import {
 import { INFRASTRUCTURE_HTTP_ENDPOINTS } from "./infra-endpoints.js";
 import { JOBS_HTTP_ENDPOINTS } from "./jobs-endpoints.js";
 import { LIFECYCLE_HTTP_ENDPOINTS } from "./lifecycle-endpoints.js";
+import { OBSERVABILITY_HTTP_ENDPOINTS } from "./observability-endpoints.js";
+import { ORCHESTRATION_HTTP_ENDPOINTS } from "./orchestration-endpoints.js";
 import { OwnerSecurityResponse, OwnerStatusResponse } from "./owner.js";
 import { PROTECTION_HTTP_ENDPOINTS } from "./protection-endpoints.js";
 import { RECOVERY_HTTP_ENDPOINTS } from "./recovery-endpoints.js";
+import { USAGE_HTTP_ENDPOINTS } from "./usage-endpoints.js";
 
-export const CONTROL_API_VERSION = "1.9.0" as const;
+export const CONTROL_API_VERSION = "1.15.0" as const;
 export const CONTROL_API_HEADER = "x-godseye-api-version" as const;
 export interface ControlEndpoint {
   method: "GET" | "POST" | "PUT";
@@ -46,13 +54,23 @@ export interface ControlEndpoint {
   success: number;
   access: "public" | "owner" | "local-proof" | "github-signature";
   request?: z.ZodType;
+  query?: z.ZodType;
   idempotent?: true;
   textId?: true;
+  transport?: "sse" | "attachment";
 }
 const owner = "owner" as const;
 /** Relative paths are rooted at the versioned control API; the webhook is an explicit exception. */
 export const CONTROL_HTTP_ENDPOINTS = [
+  ...USAGE_HTTP_ENDPOINTS,
+  ...OBSERVABILITY_HTTP_ENDPOINTS,
+  ...AGENT_CHAT_TRANSPORT_ENDPOINTS,
   ...ACCESS_HTTP_ENDPOINTS,
+  ...CODING_HTTP_ENDPOINTS,
+  ...ORCHESTRATION_HTTP_ENDPOINTS,
+  ...AGENT_HTTP_ENDPOINTS,
+  ...AGENT_TOOLS_HTTP_ENDPOINTS,
+  ...AGENT_CHAT_HTTP_ENDPOINTS,
   ...BACKEND_HTTP_ENDPOINTS,
   ...DATABASE_HTTP_ENDPOINTS,
   ...DELIVERY_HTTP_ENDPOINTS,

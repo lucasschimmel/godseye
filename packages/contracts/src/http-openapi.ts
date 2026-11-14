@@ -22,7 +22,7 @@ interface InlineResponse {
   headers: {
     [CONTROL_API_HEADER]: { schema: { type: "string"; const: typeof CONTROL_API_VERSION } };
   };
-  content: { "application/json": { schema: JsonSchema } };
+  content: Record<string, { schema: JsonSchema }>;
 }
 type ApiResponse = InlineResponse | { $ref: string };
 interface Operation {
@@ -33,6 +33,7 @@ interface Operation {
   responses: Record<string, ApiResponse>;
   requestBody?: { required: true; content: { "application/json": { schema: JsonSchema } } };
   externalDocs?: { url: string; description: string };
+  "x-godseye-event-schema"?: JsonSchema;
 }
 function jsonSchema(schema: z.ZodType, io: "input" | "output" = "output") {
   const { $schema: _schema, ...result } = z.toJSONSchema(schema, { io });
@@ -52,6 +53,17 @@ function operation(endpoint: ControlEndpoint): Operation {
     required: true,
     schema: jsonSchema(schema, "input"),
   }));
+  if (endpoint.query) {
+    const query = jsonSchema(endpoint.query, "input");
+    const required = new Set(query.required ?? []);
+    for (const [name, schema] of Object.entries(query.properties ?? {}))
+      parameters.push({
+        name,
+        in: "query",
+        required: required.has(name),
+        schema: typeof schema === "boolean" ? {} : schema,
+      });
+  }
   parameters.push({
     name: CONTROL_API_HEADER,
     in: "header",
@@ -110,6 +122,28 @@ function operation(endpoint: ControlEndpoint): Operation {
       required: true,
       content: { "application/json": { schema: jsonSchema(endpoint.request, "input") } },
     };
+  if (endpoint.transport) {
+    const media = endpoint.transport === "sse" ? "text/event-stream" : "text/plain";
+    result.responses[endpoint.success] = {
+      ...response("Private bounded streaming or attachment response", { type: "string" }),
+      content: { [media]: { schema: { type: "string" } } },
+    };
+    if (endpoint.transport === "sse") {
+      result["x-godseye-event-schema"] = jsonSchema(endpoint.response);
+      parameters.push({
+        name: "after",
+        in: "query",
+        required: false,
+        schema: { type: "integer", minimum: 0, maximum: Number.MAX_SAFE_INTEGER },
+      });
+      parameters.push({
+        name: "Last-Event-ID",
+        in: "header",
+        required: false,
+        schema: { type: "string", pattern: "^(0|[1-9][0-9]{0,15})$" },
+      });
+    }
+  }
   if (endpoint.access === "local-proof") {
     parameters.push(
       {
