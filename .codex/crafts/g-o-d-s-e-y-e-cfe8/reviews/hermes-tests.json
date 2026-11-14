@@ -1,0 +1,189 @@
+{
+  "date": "2026-11-13",
+  "skill": "gauntlet",
+  "scope": "E07 local Hermes installation, immutable preparation profiles and versioned bootstrap skills",
+  "status": "passed-local-setup",
+  "ordinary": {
+    "command": "node node_modules/vitest/vitest.mjs run tests/hermes --reporter=default --reporter=junit --outputFile=artifacts/test-results/hermes-setup-final.xml",
+    "passed": 57,
+    "skipped": 2,
+    "failed": 0,
+    "filesPassed": 4,
+    "filesSkipped": 1,
+    "durationSeconds": 12.91,
+    "artifact": "artifacts/test-results/hermes-setup-final.xml",
+    "groups": {
+      "files": 9,
+      "installer": 19,
+      "profiles": 24,
+      "cli": 5
+    },
+    "skips": "The two actual-runtime native tests are opt-in and were separately executed successfully."
+  },
+  "native": {
+    "environment": "GODSEYE_HERMES_LAB=enabled",
+    "command": "node node_modules/vitest/vitest.mjs run tests/hermes-native.test.ts --reporter=default --reporter=junit --outputFile=artifacts/test-results/hermes-native-final.xml",
+    "passed": 2,
+    "failed": 0,
+    "skipped": 0,
+    "durationSeconds": 30.32,
+    "artifact": "artifacts/test-results/hermes-native-final.xml",
+    "cases": [
+      {
+        "name": "T-AC-702 imports pinned Hermes, Python and OpenAI SDK with network denied",
+        "durationMs": 16451,
+        "proof": "Actual installed Hermes0.23.1, CPython3.14.9 and OpenAI SDK2.54.0 imported; socket/DNS disabled; no model request."
+      },
+      {
+        "name": "T-AC-702 T-AC-705 resolves all three generated configurations in disposable mutable homes with one pinned skill and zero tools",
+        "durationMs": 13618,
+        "proof": "Actual upstream load_config, _get_platform_tools and find_all_skills resolve all three generated roles in isolated disposable probe homes. One godseye-context skill, zero CLI/API tools, curator/discovery/memory/MCP disabled; exact configuration/skill bytes and original immutable snapshots remain unchanged; final tool manifest verifies."
+      }
+    ]
+  },
+  "focusedAfterFinal": {
+    "reason": "Assert added explicit immutable-setup-snapshot homeKind and null runtimeHome metadata.",
+    "passed": 1,
+    "filtered": 23,
+    "durationSeconds": 0.775,
+    "artifact": "artifacts/test-results/hermes-profile-metadata-final.xml"
+  },
+  "mutations": {
+    "report": "hermes-mutations.json",
+    "command": "wsl -d Ubuntu --exec python3 -B /mnt/d/Developer/Projects/G.O.D.S.E.Y.E/tests/helpers/hermes-mutations.py",
+    "baseline": 7,
+    "mutants": 7,
+    "killed": 7,
+    "restored": 7,
+    "sourceUnchanged": true,
+    "durationSeconds": 2.57,
+    "method": "Production modules copied with public catalog/test helpers into disposable native ext4 roots; exact unique source replacements; all baselines and restored cases pass. No production edit/reset.",
+    "initialSurvivor": "First 6/7 run revealed catalog integrity test had invalid frontmatter, so disabling hash validation was masked by a second rejection. Strengthened fixture to retain valid frontmatter and append unreviewed instructions, then 7/7 killed."
+  },
+  "regressionHistory": [
+    {
+      "artifact": "artifacts/test-results/hermes-profiles.xml",
+      "classification": "fixture-mismatch",
+      "description": "Initial direct helper tests used account umask022; CLI uses077. Twelve setup errors and six valid refusal passes. Set test fixture umask077 with restoration, matching production CLI; not claimed as a production defect."
+    },
+    {
+      "artifact": "artifacts/test-results/hermes-profile-files.xml",
+      "classification": "confirmed-production-defect",
+      "description": "26 passed/1 failed. Refused promotion of missing revision created an empty directory through verification mkdir, making later inspect fail. Replaced read-only directory checks with existing-only guards in production; missing revision and missing profile inspections now preserve inspectability and state."
+    },
+    {
+      "artifact": "artifacts/test-results/hermes-setup.xml",
+      "classification": "fixture-schema-drift",
+      "description": "49 passed/1 failed while installer added immutable external identity stamp directory. Updated installer fixture to include identity directory; no production policy weakening."
+    },
+    {
+      "artifact": "artifacts/test-results/hermes-native.xml",
+      "classification": "interface-design-clarification",
+      "description": "Pinned import/version smoke passed. First generated-profile real config/toolset/skill assertions passed, but upstream created runtime files in immutable preparation snapshot, causing correct snapshot rejection."
+    },
+    {
+      "artifact": "artifacts/test-results/hermes-native-profile-diagnostic.xml",
+      "classification": "metadata-only-diagnosis",
+      "description": "Observed only path names auth.lock and backups/config/config.yaml.good.<timestamp>; no private contents read. Native test now materializes exact trusted recipe into disposable mutable probe home and rechecks immutable original. Public API explicitly labels immutable preparation snapshots; no live runtime-home implementation claimed."
+    }
+  ],
+  "trace": [
+    {
+      "criterion": "AC-701",
+      "tests": [
+        "tests/hermes-installer.test.ts"
+      ],
+      "native": "tests/hermes-native.test.ts"
+    },
+    {
+      "criterion": "AC-702",
+      "tests": [
+        "tests/hermes-native.test.ts"
+      ],
+      "nativeExecuted": true
+    },
+    {
+      "criterion": "AC-703",
+      "tests": [
+        "tests/hermes-profiles.test.ts"
+      ],
+      "property": "Three roles times three deterministic UUID scopes produce nine distinct profile IDs/homes; malformed scope/role/model corpus refused."
+    },
+    {
+      "criterion": "AC-704",
+      "tests": [
+        "tests/hermes-profiles.test.ts",
+        "tests/hermes-installer.test.ts"
+      ],
+      "mutationIds": [
+        "catalog-byte-integrity",
+        "snapshot-skill-integrity",
+        "unreviewed-catalog-additions"
+      ]
+    },
+    {
+      "criterion": "AC-705",
+      "tests": [
+        "tests/hermes-profiles.test.ts",
+        "tests/hermes-native.test.ts"
+      ],
+      "nativeExecuted": true
+    },
+    {
+      "criterion": "AC-706",
+      "tests": [
+        "tests/hermes-profiles.test.ts",
+        "tests/hermes-files.test.ts"
+      ],
+      "mutationIds": [
+        "promotion-stale-cas",
+        "readonly-missing-revision-write"
+      ]
+    },
+    {
+      "criterion": "AC-707",
+      "tests": [
+        "tests/hermes-files.test.ts",
+        "tests/hermes-profiles.test.ts",
+        "tests/hermes-installer.test.ts"
+      ],
+      "mutationIds": [
+        "actual-os-writer-exclusion"
+      ]
+    },
+    {
+      "criterion": "AC-708",
+      "tests": [
+        "tests/hermes-cli.test.ts",
+        "tests/hermes-files.test.ts",
+        "tests/hermes-profiles.test.ts",
+        "tests/hermes-installer.test.ts"
+      ],
+      "mutationIds": [
+        "false-run-readiness"
+      ]
+    }
+  ],
+  "limits": [
+    "No full E01-E06 or browser suite rerun by this satellite; shared architecture remains unchanged.",
+    "No real owner-store binding, project admission, model key, paid call, task run, gateway, scheduler, remote server, global package install or Git mutation.",
+    "Native probe proves configuration/skill compatibility in disposable mutable homes; immutable setup snapshots are not runnable Hermes homes.",
+    "No hostile-code containment, cross-account isolation, full dependency vulnerability audit, complete Agent Center, Runs API, grants/budgets/cancellation or learned skill promotion qualification.",
+    "Selected mutation kills are targeted evidence, not a full-project mutation score."
+  ],
+  "filesOwned": [
+    "tests/hermes-files.test.ts",
+    "tests/hermes-installer.test.ts",
+    "tests/hermes-profiles.test.ts",
+    "tests/hermes-cli.test.ts",
+    "tests/hermes-native.test.ts",
+    "tests/helpers/hermes-files.py",
+    "tests/helpers/hermes-installer.py",
+    "tests/helpers/hermes-profiles.py",
+    "tests/helpers/hermes-native.py",
+    "tests/helpers/hermes-mutations.py",
+    ".codex/crafts/g-o-d-s-e-y-e-cfe8/reviews/hermes-test-strategy.md",
+    ".codex/crafts/g-o-d-s-e-y-e-cfe8/reviews/hermes-tests.json",
+    ".codex/crafts/g-o-d-s-e-y-e-cfe8/reviews/hermes-mutations.json"
+  ]
+}

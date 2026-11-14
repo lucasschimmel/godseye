@@ -1,0 +1,276 @@
+{
+  "method": "scoped grep; full legacy repository graph remains historical",
+  "files": 10,
+  "symbols": [
+    {
+      "file": "scripts/hermes-local.mjs",
+      "line": 20,
+      "symbol": "export function parseArguments(args) {"
+    },
+    {
+      "file": "scripts/hermes-local.mjs",
+      "line": 34,
+      "symbol": "export function hostEnvironment(environment = process.env) {"
+    },
+    {
+      "file": "scripts/hermes_catalog.py",
+      "line": 18,
+      "symbol": "def exact(value: object, fields: set[str]) -> dict:"
+    },
+    {
+      "file": "scripts/hermes_catalog.py",
+      "line": 24,
+      "symbol": "def catalog(workspace: Path) -> tuple[dict, dict[str, bytes]]:"
+    },
+    {
+      "file": "scripts/hermes_catalog.py",
+      "line": 82,
+      "symbol": "def configuration(model: str | None) -> dict:"
+    },
+    {
+      "file": "scripts/hermes_files.py",
+      "line": 17,
+      "symbol": "class DurabilityUncertain(RuntimeError):"
+    },
+    {
+      "file": "scripts/hermes_files.py",
+      "line": 21,
+      "symbol": "def document(value: object) -> bytes:"
+    },
+    {
+      "file": "scripts/hermes_files.py",
+      "line": 26,
+      "symbol": "def digest(value: bytes) -> str:"
+    },
+    {
+      "file": "scripts/hermes_files.py",
+      "line": 30,
+      "symbol": "def runtime_root(workspace: Path) -> Path:"
+    },
+    {
+      "file": "scripts/hermes_files.py",
+      "line": 36,
+      "symbol": "def no_aliases(path: Path) -> None:"
+    },
+    {
+      "file": "scripts/hermes_files.py",
+      "line": 44,
+      "symbol": "def private_directory(path: Path) -> None:"
+    },
+    {
+      "file": "scripts/hermes_files.py",
+      "line": 51,
+      "symbol": "def existing_directory(path: Path) -> None:"
+    },
+    {
+      "file": "scripts/hermes_files.py",
+      "line": 59,
+      "symbol": "def regular(path: Path, private: bool = True) -> os.stat_result:"
+    },
+    {
+      "file": "scripts/hermes_files.py",
+      "line": 69,
+      "symbol": "def read_bytes(path: Path, private: bool = True) -> bytes:"
+    },
+    {
+      "file": "scripts/hermes_files.py",
+      "line": 83,
+      "symbol": "def read_json(path: Path, private: bool = True) -> object:"
+    },
+    {
+      "file": "scripts/hermes_files.py",
+      "line": 87,
+      "symbol": "def sync_directory(path: Path) -> None:"
+    },
+    {
+      "file": "scripts/hermes_files.py",
+      "line": 95,
+      "symbol": "def write_new(path: Path, content: bytes) -> None:"
+    },
+    {
+      "file": "scripts/hermes_files.py",
+      "line": 104,
+      "symbol": "def replace_json(path: Path, value: object) -> None:"
+    },
+    {
+      "file": "scripts/hermes_files.py",
+      "line": 130,
+      "symbol": "def exclusive(root: Path) -> Iterator[None]:"
+    },
+    {
+      "file": "scripts/hermes_install_files.py",
+      "line": 18,
+      "symbol": "def private_directory(path: Path) -> None:"
+    },
+    {
+      "file": "scripts/hermes_install_files.py",
+      "line": 32,
+      "symbol": "def regular_file(path: Path) -> None:"
+    },
+    {
+      "file": "scripts/hermes_install_files.py",
+      "line": 40,
+      "symbol": "def read_json(path: Path) -> dict:"
+    },
+    {
+      "file": "scripts/hermes_install_files.py",
+      "line": 48,
+      "symbol": "def write_json(path: Path, value: dict) -> None:"
+    },
+    {
+      "file": "scripts/hermes_install_files.py",
+      "line": 70,
+      "symbol": "def digest(path: Path) -> str:"
+    },
+    {
+      "file": "scripts/hermes_install_files.py",
+      "line": 77,
+      "symbol": "def download(url: str, target: Path, expected: str) -> None:"
+    },
+    {
+      "file": "scripts/hermes_install_files.py",
+      "line": 105,
+      "symbol": "def tree_hashes(root: Path, containment: Path) -> dict[str, str]:"
+    },
+    {
+      "file": "scripts/hermes_install_files.py",
+      "line": 129,
+      "symbol": "def detach_build_hardlinks(root: Path) -> None:"
+    },
+    {
+      "file": "scripts/hermes_install_files.py",
+      "line": 154,
+      "symbol": "def extract(archive: Path, target: Path, prefix: str, allow_links: bool) -> None:"
+    },
+    {
+      "file": "scripts/hermes_local.py",
+      "line": 25,
+      "symbol": "def owned_root(workspace: Path) -> Path:"
+    },
+    {
+      "file": "scripts/hermes_local.py",
+      "line": 43,
+      "symbol": "def execute(payload: dict) -> dict:"
+    },
+    {
+      "file": "scripts/hermes_local.py",
+      "line": 83,
+      "symbol": "def main() -> None:"
+    },
+    {
+      "file": "scripts/hermes_profiles.py",
+      "line": 27,
+      "symbol": "def identifier(value: object) -> str:"
+    },
+    {
+      "file": "scripts/hermes_profiles.py",
+      "line": 33,
+      "symbol": "def revision_id(value: object) -> str:"
+    },
+    {
+      "file": "scripts/hermes_profiles.py",
+      "line": 39,
+      "symbol": "def binding(workspace: Path, payload: dict) -> dict:"
+    },
+    {
+      "file": "scripts/hermes_profiles.py",
+      "line": 52,
+      "symbol": "def recipe(workspace: Path, payload: dict) -> tuple[dict, dict[str, bytes]]:"
+    },
+    {
+      "file": "scripts/hermes_profiles.py",
+      "line": 78,
+      "symbol": "def list_entries(root: Path) -> list[Path]:"
+    },
+    {
+      "file": "scripts/hermes_profiles.py",
+      "line": 98,
+      "symbol": "def read_binding(profile: Path, workspace: Path) -> dict:"
+    },
+    {
+      "file": "scripts/hermes_profiles.py",
+      "line": 107,
+      "symbol": "def active(profile: Path) -> str:"
+    },
+    {
+      "file": "scripts/hermes_profiles.py",
+      "line": 112,
+      "symbol": "def verify_snapshot(profile: Path, revision: str, identity: dict) -> dict:"
+    },
+    {
+      "file": "scripts/hermes_profiles.py",
+      "line": 150,
+      "symbol": "def view(profile: Path, workspace: Path, revision: str | None = None) -> dict:"
+    },
+    {
+      "file": "scripts/hermes_profiles.py",
+      "line": 163,
+      "symbol": "def publish_revision(profile: Path, files: dict[str, bytes], revision: str) -> None:"
+    },
+    {
+      "file": "scripts/hermes_profiles.py",
+      "line": 183,
+      "symbol": "def prepare(root: Path, workspace: Path, payload: dict) -> dict:"
+    },
+    {
+      "file": "scripts/hermes_profiles.py",
+      "line": 211,
+      "symbol": "def inspect(root: Path, workspace: Path, payload: dict) -> dict:"
+    },
+    {
+      "file": "scripts/hermes_profiles.py",
+      "line": 231,
+      "symbol": "def promote(root: Path, workspace: Path, payload: dict) -> dict:"
+    },
+    {
+      "file": "scripts/install-hermes.py",
+      "line": 29,
+      "symbol": "def resolve_root(workspace: str, create: bool) -> Path:"
+    },
+    {
+      "file": "scripts/install-hermes.py",
+      "line": 64,
+      "symbol": "def child_environment(root: Path) -> dict[str, str]:"
+    },
+    {
+      "file": "scripts/install-hermes.py",
+      "line": 82,
+      "symbol": "def execute(command: list[str], root: Path, timeout: int = 900) -> str:"
+    },
+    {
+      "file": "scripts/install-hermes.py",
+      "line": 95,
+      "symbol": "def offline_smoke(root: Path) -> dict:"
+    },
+    {
+      "file": "scripts/install-hermes.py",
+      "line": 99,
+      "symbol": "def refuse(*args, **kwargs):"
+    },
+    {
+      "file": "scripts/install-hermes.py",
+      "line": 119,
+      "symbol": "def immutable_files(root: Path) -> dict:"
+    },
+    {
+      "file": "scripts/install-hermes.py",
+      "line": 124,
+      "symbol": "def verify_install(root: Path) -> dict:"
+    },
+    {
+      "file": "scripts/install-hermes.py",
+      "line": 136,
+      "symbol": "def verify_extraction(target: Path, reference: Path, root: Path, name: str) -> None:"
+    },
+    {
+      "file": "scripts/install-hermes.py",
+      "line": 158,
+      "symbol": "def install(root: Path) -> dict:"
+    },
+    {
+      "file": "scripts/install-hermes.py",
+      "line": 224,
+      "symbol": "def main() -> None:"
+    }
+  ]
+}

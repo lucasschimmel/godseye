@@ -1,0 +1,16 @@
+{
+  "scope": "local Hermes installation and preparation only",
+  "date": "2026-11-13",
+  "files": {
+    "infra/hermes/catalog.json": "517e9db49f988e63720629048944d67cbd7f296ebd82fd4104185f0bbcc7cfaf",
+    "infra/hermes/skills/godseye-context/1.0.0/SKILL.md": "dc0cbf46bc1eae40e83c1af692eb6c7ffe640b494dd6da6164fd2e98bdc76245",
+    "scripts/hermes-local.mjs": "fd8833dc83c3c403dc8620e75e7890f314c06ad7dc6174a78964493682e984ce",
+    "scripts/hermes_catalog.py": "f8abd302a913d4f106b4fcb3b95665156d97437a49feaba2d1d8625718148b54",
+    "scripts/hermes_files.py": "a3d88547df9c0bc62a2a8d2247416858579decbfb30e58f8e4534d66df6e04ef",
+    "scripts/hermes_install_files.py": "b7c66724fa80b55f8077fd768d4fd1c94b5b0f425eb2e068674b7f7c6f3273d9",
+    "scripts/hermes_local.py": "e70b08eaa749bbb9e9f8554873290e075e1848712c3d34eb09707db58fe5b8ca",
+    "scripts/hermes_profiles.py": "48e72b4bbddece0ef03535b05fcd12cd31203411c868cb23d66c88f1692f6479",
+    "scripts/install-hermes.mjs": "8d077dbbbd3e23f9aef9f34ff1dbcc7b279ce7fbf153631452732437c8093090",
+    "scripts/install-hermes.py": "0bd7f110ba53501a0a19916a1ac758cc6985c3b59955ac4cd51dbcbee7c70083"
+  }
+}

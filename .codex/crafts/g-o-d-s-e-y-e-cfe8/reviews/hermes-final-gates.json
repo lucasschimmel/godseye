@@ -1,0 +1,102 @@
+{
+  "status": "passed-local-request",
+  "date": "2026-11-13",
+  "scope": "Hermes local installation and immutable non-runnable profile preparation only",
+  "tests": {
+    "ordinary": {
+      "passed": 57,
+      "skippedNative": 2,
+      "artifact": "artifacts/test-results/hermes-setup-final.xml"
+    },
+    "separateNative": {
+      "passed": 2,
+      "artifact": "artifacts/test-results/hermes-native-final.xml"
+    },
+    "curatedMutations": {
+      "killed": 7,
+      "total": 7,
+      "sourceUnchanged": true,
+      "report": "hermes-mutations.json"
+    },
+    "fullExistingAndBrowser": "not rerun for isolated script/config tranche; old counts historical"
+  },
+  "static": {
+    "lint": {
+      "files": 536,
+      "exitCode": 0
+    },
+    "typecheck": {
+      "exitCode": 0
+    },
+    "contracts": {
+      "exitCode": 0,
+      "controlVersion": "1.9.0"
+    }
+  },
+  "build": {
+    "command": "bun run build",
+    "exitCode": 0,
+    "components": [
+      "console",
+      "control API",
+      "browser SDK/declarations",
+      "backend template",
+      "jobs supervisor/worker/platform/guardian"
+    ]
+  },
+  "builtSmoke": {
+    "command": "bun run smoke:built",
+    "exitCode": 0,
+    "notes": "Initial unchanged canonical run exceeded its15s deadline; second unchanged run passed in9.70s. No production deadline raised or claimed root cause."
+  },
+  "nativeInstallation": {
+    "version": "0.23.1",
+    "commit": "3b421578588243f920886e6fe79a6faa87ea026e",
+    "python": "3.14.9",
+    "openaiSdk": "2.54.0",
+    "install": true,
+    "status": true,
+    "offlineSmoke": true,
+    "idempotentInstall": true,
+    "immutableEntries": 36386,
+    "modelCalls": 0,
+    "networkInSmoke": "denied",
+    "globalChanges": false
+  },
+  "trace": {
+    "criteria": 8,
+    "missing": 0
+  },
+  "review": {
+    "status": "pass",
+    "sourceFiles": 10,
+    "freeze": "hermes-source-freeze.json",
+    "report": "hermes-code-review.json"
+  },
+  "docs": {
+    "files": 9,
+    "relativeLinks": 147,
+    "missing": 0,
+    "report": "hermes-docs.json"
+  },
+  "security": "hermes-security.json",
+  "execution": {
+    "runEnabled": false,
+    "runtimeHome": null,
+    "scopeBinding": "declared-local",
+    "ownerDatabaseTouched": false,
+    "dedicatedServerTouched": false
+  },
+  "git": {
+    "branch": "develop",
+    "commitPerformed": false,
+    "pushPerformed": false,
+    "mainChanged": false
+  },
+  "limitations": [
+    "Partial E07.S01 only, full E07 incomplete",
+    "Real scope admission/Agent Center and mutable runtime homes pending",
+    "Runs API/chat/SSE, grants/budgets, scoped provider injection, cancellation/unknown recovery, approvals/coding runners pending",
+    "E09 business skills and E00 dedicated-host containment remain pending"
+  ]
+}

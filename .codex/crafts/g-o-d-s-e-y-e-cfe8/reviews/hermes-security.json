@@ -1,0 +1,32 @@
+{
+  "status": "passed-local-checks-with-degradations",
+  "date": "2026-11-13",
+  "gitleaks": {
+    "version": "8.30.1",
+    "scope": "10 exact production source/catalog files",
+    "findings": 0,
+    "artifact": "artifacts/security/hermes-gitleaks.json"
+  },
+  "nodeAudit": {
+    "tool": "Bun1.4.4 audit",
+    "packages": 495,
+    "advisories": 0
+  },
+  "python": {
+    "inventory": "artifacts/security/hermes-python-inventory.json",
+    "installedDistributions": 66,
+    "thirdPartyExactVersionOsvQueries": 65,
+    "findings": 0,
+    "completePagination": true,
+    "artifact": "artifacts/security/hermes-python-osv.json",
+    "source": "https://google.github.io/osv.dev/post-v1-querybatch/"
+  },
+  "sourceReview": "hermes-code-review.json",
+  "degradations": [
+    "Semgrep unavailable: fresh source review is llm-judged, not automated SAST",
+    "pip-audit unavailable: direct OSV name/version lookup used for65 installed third-party PyPI distributions; no full reachability/first-party CVE qualification",
+    "Syft/cdxgen unavailable: package inventory is not a full SBOM",
+    "No active pentest, API key, provider entitlement or execution containment qualification"
+  ],
+  "waiversAdded": 0
+}
