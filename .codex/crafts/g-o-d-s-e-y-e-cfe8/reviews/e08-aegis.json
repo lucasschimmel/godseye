@@ -1,0 +1,25 @@
+{
+  "scope": "E08 public-source security and dependencies",
+  "verdict": "pass-with-explicit-tool-coverage-limits",
+  "dependencies": {
+    "command": "project-local bun audit --json",
+    "exitCode": 0,
+    "advisories": 0,
+    "artifact": "artifacts/security/e08-audit.json",
+    "newDependencies": false
+  },
+  "credentials": {
+    "scanner": "Gitleaks 8.30.1 public source snapshot, redacted",
+    "artifact": "artifacts/security/e08-scan-summary.json",
+    "newFindings": 0,
+    "knownFinding": "Unchanged generic-api-key synthetic validation placeholder in packages/app-backend/src/local.ts:37; no waiver or suppression introduced",
+    "exclusions": "Protected basenames/private files/env files, generated dist and node_modules; no actual private credentials read"
+  },
+  "manualReview": "Independent security-auditor/FABER; reviews/e08-security.json PASS, four confirmed defects closed, zero open findings",
+  "degradation": [
+    "Semgrep unavailable: no scanner-backed SAST coverage claimed",
+    "Syft/cdxgen unavailable: no complete SBOM or native dependency vulnerability coverage claimed",
+    "No active external pentest, actual provider credentials, paid calls, real messages or target-host access"
+  ],
+  "sourceFreeze": "reviews/e08-build-source-freeze.json: 538 public production inputs match initial scan after final build and smoke"
+}
