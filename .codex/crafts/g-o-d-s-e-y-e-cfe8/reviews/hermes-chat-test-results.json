@@ -1,0 +1,174 @@
+{
+  "run": "godseye-local-hermes-chat",
+  "date": "2026-11-13",
+  "author": "gauntlet",
+  "scope": "Advanced local conversations, durable deltas, artifacts, existing-plan proposals and bounded owner SSE",
+  "status": "focused-gates-pass",
+  "ordinary": {
+    "uniquePassed": 31,
+    "files": 5,
+    "seconds": 129.35,
+    "artifact": "artifacts/test-results/hermes-chat-targeted-final.xml",
+    "breakdown": {
+      "domain": 13,
+      "proposals": 8,
+      "transport": 5,
+      "realOwnerHttp": 4,
+      "physicalStoreReopen": 1
+    },
+    "covered": [
+      "Exact scope/profile conversation identity, service refusal, admission idempotency/conflict and Foundation reservation",
+      "Explicit sequential successful history, bounded four-message context, unknown predecessor block",
+      "Visible durable partial text before controlled provider completion, cursor resume without model replay",
+      "Real owner history remains readable after profile reconfiguration while new turns refuse stale policy",
+      "Bounded 256-event retained suffix, exact cursor boundary, old/future reset and ordered replay",
+      "Environment revocation suppresses late partial and final publication",
+      "Exact UTF-8 artifact size/hash, safe generated names, unsafe name/oversized refusal and tamper detection",
+      "Existing same-scope immutable plan derivation, foreign/hash refusal, no preapproval/no automatic enqueue",
+      "Real Foundation approve/replay, rejection terminality, agent self-approval refusal, owner freshness/hash/expiry/hold gates and protective stale-owner rejection",
+      "Actual SSE capacity/abort/TTL/revocation and malformed cursor preheader refusal",
+      "Actual owner-session expiry closes waiting SSE without cancelling model work",
+      "Private inert attachment bytes/headers and authentication on every new route",
+      "Private audit boundaries and physically reopened unknown correlation with no second submission"
+    ]
+  },
+  "native": {
+    "uniquePassed": 3,
+    "externalPaidCalls": 0,
+    "loopbackModelPosts": 4,
+    "positive": {
+      "passed": 1,
+      "seconds": 76.686,
+      "artifact": "artifacts/test-results/hermes-chat-native.xml",
+      "actualRequests": 2,
+      "incrementalFrames": 2,
+      "partialBeforeExplicitUpstreamRelease": true,
+      "physicalRunActiveBeforeRelease": true,
+      "secondExplicitTurnContextHashesMatched": true,
+      "modelSkillNoToolsAndOutputCapVerified": true
+    },
+    "truncatedDone": {
+      "passed": 1,
+      "seconds": 61.994,
+      "artifact": "artifacts/test-results/hermes-chat-native-truncated.xml",
+      "actualRequests": 1,
+      "visibleTextButAuthoritativeFailure": true,
+      "stopped": true,
+      "finalOutputAbsent": true
+    },
+    "unsupportedTool": {
+      "passed": 1,
+      "seconds": 64.215,
+      "artifact": "artifacts/test-results/hermes-chat-native-tool-refusal.xml",
+      "actualRequests": 1,
+      "failedAndStopped": true,
+      "unauthorizedToolReplyRejected": true
+    },
+    "caveat": "Actual pinned Hermes/loopback transport qualification uses counted authorization callbacks; real Foundation composition is exercised separately by ordinary integration tests. No provider entitlement/billing or deployed confinement qualification. Root independently reported postqualification core installation status and execution manifest validation passed with no model calls; no before/after manifest pair is claimed here."
+  },
+  "browser": {
+    "uniquePassed": 3,
+    "actualBackendCases": 1,
+    "uiContractCases": 2,
+    "firstBatchPassed": 2,
+    "firstBatchSeconds": 56,
+    "retryRegressionPassed": 1,
+    "retryRegressionSeconds": 38.6,
+    "screenshot": "artifacts/hermes-chat-mobile.png",
+    "cases": [
+      "Real scoped conversation persists across reload with genuinely unavailable composer disabled",
+      "Labeled mobile UI contract consumes actual EventSource frames, shows partial text while running, reconnects without sending again, renders inert artifact text and exact proposal rejection without horizontal overflow",
+      "Labeled lost-response UI contract advances server revision then aborts first send response; after history refresh the verification send retains identical original revision/input/idempotency key"
+    ],
+    "caveat": "Model turn/artifact/proposal browser states are labeled response fixtures after real owner enrollment/project/profile/conversation creation; these do not prove a native run traverses the browser and HTTP end to end. Existing default e2e.xml is overwritten by each targeted run; command output and retained test source identify the distinct 2+1 successful cases.",
+    "finalVisualQa": {
+      "existingCaseRerunPassed": 1,
+      "seconds": 29,
+      "uniqueCaseCountUnchanged": true,
+      "screenshots": [
+        "artifacts/hermes-chat-mobile.png",
+        "artifacts/hermes-chat-desktop.png"
+      ],
+      "viewportSizes": [
+        {
+          "width": 390,
+          "height": 844
+        },
+        {
+          "width": 1440,
+          "height": 1000
+        }
+      ],
+      "unmodifiedViewportCapture": true,
+      "maskingUsedInFinalImages": false,
+      "focus": "BODY; skip link not focused",
+      "skipLinkComputed": {
+        "position": "fixed",
+        "top": "-100px",
+        "rect": {
+          "top": -100,
+          "bottom": -55,
+          "left": 16,
+          "right": 141.234375
+        }
+      },
+      "visualInspection": "Both final viewport screenshots inspected: no skip-link overlay; desktop shows chat before profile section; mobile controls and transcript remain within viewport.",
+      "limitation": "Tall-region element screenshot stitching had included an offscreen fixed skip link despite BODY focus. Final images use ordinary viewport screenshots without styles or masks; computed metadata is attached to the successful browser run."
+    }
+  },
+  "mutation": {
+    "selected": 4,
+    "killedByBehavioralAssertions": 4,
+    "baselinePassed": true,
+    "restoredPassed": true,
+    "productionHashesUnchanged": true,
+    "artifact": "artifacts/hermes-chat-mutation/summary.json",
+    "operators": [
+      "accept changed artifact digest/size",
+      "accept foreign existing plan scope",
+      "approve an expired proposal",
+      "disable cursor gap/future reset"
+    ],
+    "caveat": "Curated sensitivity only, not a whole-repository or touched-line mutation score. Copies use isolated Vitest aliases; shared production files were never edited. Vitest rejected-promise assertion failures carry Error rather than AssertionError and are explicitly classified as behavioral kills."
+  },
+  "checks": {
+    "typescript": "passed",
+    "ownedBiomeFiles": 11,
+    "ownedBiome": "passed",
+    "ordinaryAndBrowserTestFilesFrozen": true
+  },
+  "coverage": {
+    "line": "not measured",
+    "branch": "not measured"
+  },
+  "layers_run": [
+    "real-PGlite-Foundation-domain-integration",
+    "actual-owner-HTTP-integration",
+    "bounded-SSE-integration",
+    "physical-store-reopen",
+    "actual-pinned-native-loopback",
+    "browser-real-backend",
+    "browser-labeled-contract",
+    "isolated-curated-mutation"
+  ],
+  "flaky": [],
+  "redBeforeGreen": {
+    "missingFacadeScaffolding": "Initial sixteen missing-method failures in hermes-chat-domain-red.xml are not counted as behavioral regression evidence.",
+    "fixtureCorrections": "Duplicate profile, wrong artifact storage column and a browser fixture field placement were corrected without weakening production requirements.",
+    "behaviorSensitivity": "Four isolated mutants demonstrate green baseline, behavioral assertion failure and restored green. No claim that those faults existed in production."
+  },
+  "gaps": [
+    "Root coordinates complete ordinary regression, build, source/security review and final global acceptance; this report does not count those results.",
+    "No dedicated deterministic mid-transaction prune/read scheduling fault injection was added; ordinary retention boundary and serialized source-copy mutation sensitivity are measured.",
+    "No full coverage percentage, property-fuzz campaign or repository-wide mutation score was measured.",
+    "No actual paid provider, server deployment, hostile-code OS containment or broad operational tool execution was exercised."
+  ],
+  "legacyCompatibility": {
+    "passed": 2,
+    "separateFromNewNativeUniqueCount": true,
+    "artifact": "artifacts/test-results/hermes-chat-legacy-native-final.xml",
+    "report": "reviews/hermes-chat-legacy-native-results.json",
+    "seconds": 47.76,
+    "deadlinesUnchanged": true
+  }
+}
