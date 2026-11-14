@@ -15,9 +15,11 @@ import { Route as AgentsRouteImport } from './routes/agents'
 import { Route as DatabasesRouteImport } from './routes/databases'
 import { Route as InfrastructureRouteImport } from './routes/infrastructure'
 import { Route as JobsRouteImport } from './routes/jobs'
+import { Route as ObservabilityRouteImport } from './routes/observability'
 import { Route as OperationsRouteImport } from './routes/operations'
 import { Route as PipelinesRouteImport } from './routes/pipelines'
 import { Route as SecurityRouteImport } from './routes/security'
+import { Route as UsageRouteImport } from './routes/usage'
 import { Route as ProjectsIndexRouteImport } from './routes/projects.index'
 import { Route as ProjectsProjectIdRouteImport } from './routes/projects.$projectId'
 import { Route as ProjectsNewRouteImport } from './routes/projects.new'
@@ -52,6 +54,11 @@ const JobsRoute = JobsRouteImport.update({
   path: '/jobs',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ObservabilityRoute = ObservabilityRouteImport.update({
+  id: '/observability',
+  path: '/observability',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const OperationsRoute = OperationsRouteImport.update({
   id: '/operations',
   path: '/operations',
@@ -65,6 +72,11 @@ const PipelinesRoute = PipelinesRouteImport.update({
 const SecurityRoute = SecurityRouteImport.update({
   id: '/security',
   path: '/security',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UsageRoute = UsageRouteImport.update({
+  id: '/usage',
+  path: '/usage',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProjectsIndexRoute = ProjectsIndexRouteImport.update({
@@ -90,9 +102,11 @@ export interface FileRoutesByFullPath {
   '/databases': typeof DatabasesRoute
   '/infrastructure': typeof InfrastructureRoute
   '/jobs': typeof JobsRoute
+  '/observability': typeof ObservabilityRoute
   '/operations': typeof OperationsRoute
   '/pipelines': typeof PipelinesRoute
   '/security': typeof SecurityRoute
+  '/usage': typeof UsageRoute
   '/projects/$projectId': typeof ProjectsProjectIdRoute
   '/projects/new': typeof ProjectsNewRoute
   '/projects/': typeof ProjectsIndexRoute
@@ -104,9 +118,11 @@ export interface FileRoutesByTo {
   '/databases': typeof DatabasesRoute
   '/infrastructure': typeof InfrastructureRoute
   '/jobs': typeof JobsRoute
+  '/observability': typeof ObservabilityRoute
   '/operations': typeof OperationsRoute
   '/pipelines': typeof PipelinesRoute
   '/security': typeof SecurityRoute
+  '/usage': typeof UsageRoute
   '/projects/$projectId': typeof ProjectsProjectIdRoute
   '/projects/new': typeof ProjectsNewRoute
   '/projects': typeof ProjectsIndexRoute
@@ -119,9 +135,11 @@ export interface FileRoutesById {
   '/databases': typeof DatabasesRoute
   '/infrastructure': typeof InfrastructureRoute
   '/jobs': typeof JobsRoute
+  '/observability': typeof ObservabilityRoute
   '/operations': typeof OperationsRoute
   '/pipelines': typeof PipelinesRoute
   '/security': typeof SecurityRoute
+  '/usage': typeof UsageRoute
   '/projects/$projectId': typeof ProjectsProjectIdRoute
   '/projects/new': typeof ProjectsNewRoute
   '/projects/': typeof ProjectsIndexRoute
@@ -135,9 +153,11 @@ export interface FileRouteTypes {
     | '/databases'
     | '/infrastructure'
     | '/jobs'
+    | '/observability'
     | '/operations'
     | '/pipelines'
     | '/security'
+    | '/usage'
     | '/projects/$projectId'
     | '/projects/new'
     | '/projects/'
@@ -149,9 +169,11 @@ export interface FileRouteTypes {
     | '/databases'
     | '/infrastructure'
     | '/jobs'
+    | '/observability'
     | '/operations'
     | '/pipelines'
     | '/security'
+    | '/usage'
     | '/projects/$projectId'
     | '/projects/new'
     | '/projects'
@@ -163,9 +185,11 @@ export interface FileRouteTypes {
     | '/databases'
     | '/infrastructure'
     | '/jobs'
+    | '/observability'
     | '/operations'
     | '/pipelines'
     | '/security'
+    | '/usage'
     | '/projects/$projectId'
     | '/projects/new'
     | '/projects/'
@@ -178,9 +202,11 @@ export interface RootRouteChildren {
   DatabasesRoute: typeof DatabasesRoute
   InfrastructureRoute: typeof InfrastructureRoute
   JobsRoute: typeof JobsRoute
+  ObservabilityRoute: typeof ObservabilityRoute
   OperationsRoute: typeof OperationsRoute
   PipelinesRoute: typeof PipelinesRoute
   SecurityRoute: typeof SecurityRoute
+  UsageRoute: typeof UsageRoute
   ProjectsProjectIdRoute: typeof ProjectsProjectIdRoute
   ProjectsNewRoute: typeof ProjectsNewRoute
   ProjectsIndexRoute: typeof ProjectsIndexRoute
@@ -230,6 +256,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof JobsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/observability': {
+      id: '/observability'
+      path: '/observability'
+      fullPath: '/observability'
+      preLoaderRoute: typeof ObservabilityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/operations': {
       id: '/operations'
       path: '/operations'
@@ -249,6 +282,13 @@ declare module '@tanstack/react-router' {
       path: '/security'
       fullPath: '/security'
       preLoaderRoute: typeof SecurityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/usage': {
+      id: '/usage'
+      path: '/usage'
+      fullPath: '/usage'
+      preLoaderRoute: typeof UsageRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/projects/': {
@@ -282,9 +322,11 @@ const rootRouteChildren: RootRouteChildren = {
   DatabasesRoute: DatabasesRoute,
   InfrastructureRoute: InfrastructureRoute,
   JobsRoute: JobsRoute,
+  ObservabilityRoute: ObservabilityRoute,
   OperationsRoute: OperationsRoute,
   PipelinesRoute: PipelinesRoute,
   SecurityRoute: SecurityRoute,
+  UsageRoute: UsageRoute,
   ProjectsProjectIdRoute: ProjectsProjectIdRoute,
   ProjectsNewRoute: ProjectsNewRoute,
   ProjectsIndexRoute: ProjectsIndexRoute,

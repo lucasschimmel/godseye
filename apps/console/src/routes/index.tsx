@@ -1,16 +1,8 @@
 import type { Overview, ProjectView } from "@godseye/contracts";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import {
-  Activity,
-  ArrowRight,
-  ArrowUpRight,
-  Box,
-  Cpu,
-  GitBranch,
-  Plus,
-  Server,
-} from "lucide-react";
+import { Activity, ArrowUpRight, Box, GitBranch, Plus, Server } from "lucide-react";
+import { OperationalOverview } from "@/components/operational-overview";
 import { ProjectTable } from "@/components/project-table";
 import { Failure, Loading, PageHeading, SectionTitle, Status } from "@/components/shared";
 import { Button } from "@/components/ui/button";
@@ -39,36 +31,7 @@ function Dashboard() {
           </Button>
         }
       />
-      <section className="overview-banner">
-        <div>
-          <span className="eyebrow">VOTRE ESPACE EST PRÊT</span>
-          <h2>
-            Préparez ici.
-            <br />
-            Déployez chez vous.
-          </h2>
-          <p>
-            Enregistrez vos projets et associez vos dépôts. Le raccordement à votre AX41 viendra
-            après la validation du socle local.
-          </p>
-          <Link to="/projects/new" className="text-link">
-            Préparer un projet <ArrowRight size={15} />
-          </Link>
-        </div>
-        <div className="control-graphic" aria-hidden="true">
-          <div className="orbit orbit-outer" />
-          <div className="orbit orbit-inner" />
-          <div className="control-core">
-            <Cpu size={35} strokeWidth={1} />
-            <small>G.O.D.S.E.Y.E</small>
-          </div>
-          <span className="orbit-label label-top">PROJECTS</span>
-          <span className="orbit-label label-bottom">YOUR INFRASTRUCTURE</span>
-          <span className="orbit-node node-one" />
-          <span className="orbit-node node-two" />
-          <span className="orbit-node node-three" />
-        </div>
-      </section>
+      <OperationalOverview />
       <div className="metric-grid">
         {[
           {
@@ -80,7 +43,7 @@ function Dashboard() {
           {
             label: "Environnements prévus",
             value: data.environmentCount,
-            note: "Aucune ressource provisionnée",
+            note: "Environnements du registre",
             icon: Server,
           },
           {
@@ -142,7 +105,8 @@ function Dashboard() {
             ))}
           </div>
           <div className="panel-note">
-            Les consommations seront disponibles après connexion du serveur.
+            Les observations locales sont disponibles ci-dessus. Les métriques de l’hôte distant
+            restent indisponibles.
           </div>
         </section>
       </div>

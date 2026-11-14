@@ -25,6 +25,8 @@ const navigation = [
   { to: "/databases", label: "Bases de données", icon: Database },
   { to: "/pipelines", label: "CI / CD", icon: GitBranch },
   { to: "/jobs", label: "Jobs", icon: ListChecks },
+  { to: "/usage", label: "Consommation et budgets", icon: Activity },
+  { to: "/observability", label: "Observabilité et incidents", icon: Radio },
   { to: "/operations", label: "Opérations", icon: Activity },
   { to: "/infrastructure", label: "Infrastructure", icon: Server },
   { to: "/agents", label: "Hermes CORE", icon: Bot },

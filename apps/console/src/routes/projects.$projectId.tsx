@@ -4,6 +4,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft, CheckCheck, Database, GitBranch, Layers, ShieldCheck } from "lucide-react";
 import { BackendPanel } from "@/components/backend-panel";
 import { LifecyclePanel } from "@/components/lifecycle-panel";
+import { ProjectTimeline } from "@/components/observability-panel";
 import {
   EnvironmentMetadataForm,
   PreviewEnvironmentForm,
@@ -55,6 +56,7 @@ function ProjectDetail() {
           </Button>
         }
       />
+      <ProjectTimeline projectId={projectId} />
       <div className="project-summary">
         <Status value={project.status} />
         <span className="mono">Révision {project.revision}</span>
