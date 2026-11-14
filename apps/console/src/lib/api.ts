@@ -10,6 +10,21 @@ import { ownerAuthenticationRequired } from "./owner";
 const messages: Record<string, string> = {
   SLUG_CONFLICT: "Cet identifiant de projet est déjà utilisé.",
   INVALID_INPUT: "Vérifiez les champs du formulaire.",
+  AGENT_PROFILE_LIMIT: "La limite de profils Hermès est atteinte.",
+  AGENT_PROFILE_EXISTS: "Ce rôle possède déjà un profil dans cet environnement.",
+  AGENT_PROFILE_STALE:
+    "Le projet, l’environnement ou la politique ont changé. Reconfigurez le profil.",
+  AGENT_PROFILE_PAUSED: "Ce profil Hermès est en pause.",
+  AGENT_BUSY:
+    "Une tâche en cours ou incertaine conserve ce profil. Vérifiez son résultat avant de continuer.",
+  AGENT_TASK_LIMIT: "La capacité de l’historique des tâches est atteinte.",
+  CHAT_LIMIT: "La capacité des conversations ou des messages est atteinte.",
+  PROPOSAL_EXPIRED: "Cette demande a expiré. Préparez une nouvelle demande d’approbation.",
+  PROPOSAL_STALE: "Le plan ou son périmètre a changé. Préparez une nouvelle demande.",
+  APPROVAL_MISMATCH: "La demande ne correspond plus à l’empreinte du plan présenté.",
+  BUDGET_EXCEEDED:
+    "La réservation dépasse le budget disponible du projet. Vérifiez son plafond et les tâches en cours.",
+  BUDGET_IN_USE: "Le plafond doit conserver les dépenses et réservations déjà engagées.",
   BACKEND_HELD: "Cet environnement est suspendu ou protégé. Son backend ne peut pas être activé.",
   REVISION_CONFLICT: "Le projet a changé. Actualisez avant de réessayer.",
   CAPABILITY_UNAVAILABLE: "Ce service doit d’abord être connecté et qualifié.",

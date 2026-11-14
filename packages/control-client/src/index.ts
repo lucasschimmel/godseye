@@ -1,31 +1,57 @@
 import type {
   AcknowledgeIncidentInput,
   ActivationAssessment,
+  AdmitCodingTaskInput,
   AdmitDeliveryInput,
   AdmitRecoveryInput,
+  AgentOverviewView,
+  AgentProfileView,
+  AgentTaskDetailView,
+  AgentTaskToolsDetail,
+  AgentTaskView,
+  AnswerOrchestrationInput,
   BackendConfigurationDTO,
   BackupOverviewView,
+  CodingOverviewView,
+  CodingPreparationView,
+  CodingTaskDetailView,
+  CodingTaskView,
+  ConfigureAgentProfileInput,
   ConfigureBackendInput,
+  CreateAgentProfileInput,
   CreateDeliveryPolicyInput,
   CreateProjectExportInput,
   DeliveryOverviewView,
   DeliveryPolicyView,
   DeliveryPreparationView,
   DeliveryRunView,
+  ImportUsageInvoiceInput,
   IncidentOverviewView,
   IncidentView,
+  IngestTelemetryInput,
   JobDefinitionView,
   JobRunView,
   JobsOverviewView,
+  LaunchAgentTaskInput,
   MuteIncidentInput,
+  ObservabilityHealth,
+  ObservabilityQueryInput,
+  ObservabilityTimeline,
+  OperationalOverview,
+  OrchestrationDetailView,
+  OrchestrationOverviewView,
   OutboxIntentView,
   PrepareArchiveCheckInput,
   PrepareBackupInput,
+  PrepareCodingTaskInput,
   PrepareDeliveryInput,
+  PrepareOrchestrationInput,
   PrepareRestoreInput,
   ProjectExportView,
   ProjectLifecycleView,
   PurgeProjectInput,
+  PutUsageBudgetInput,
+  PutUsagePriceInput,
   QuarantineProjectInput,
   ReconcileJobRunInput,
   ReconcileOutboxInput,
@@ -33,13 +59,23 @@ import type {
   RecoveryPreparationView,
   RecoveryRunView,
   RegisterJobDefinitionInput,
+  RegisterTelemetrySourceInput,
   ReleaseQuarantineInput,
   ResumeProjectInput,
   RotateDatabaseRoleInput,
   RotationOverviewView,
   RotationRecordView,
   SuspendProjectInput,
+  TelemetryPage,
+  TelemetryRecordView,
+  TelemetrySourceView,
   TriggerJobInput,
+  UsageBudgetView,
+  UsageInvoiceView,
+  UsageOverviewView,
+  UsagePriceView,
+  UsageQueryInput,
+  UsageResourcesView,
 } from "@godseye/contracts";
 import {
   type AccessOperation,
@@ -102,6 +138,138 @@ const identityId = (value: string) => {
 export function createControlClient(options: ControlClientOptions = {}) {
   const request = controlTransport(options);
   return {
+    observabilityHealth: (query: ObservabilityQueryInput = {}) =>
+      request<z.infer<typeof ObservabilityHealth>>(
+        "GET",
+        `/observability/health${queryString(query)}`,
+      ),
+    observabilityLogs: (query: ObservabilityQueryInput = {}) =>
+      request<z.infer<typeof TelemetryPage>>("GET", `/observability/logs${queryString(query)}`),
+    observabilityMetrics: (query: ObservabilityQueryInput = {}) =>
+      request<z.infer<typeof TelemetryPage>>("GET", `/observability/metrics${queryString(query)}`),
+    observabilityTimeline: (query: ObservabilityQueryInput = {}) =>
+      request<z.infer<typeof ObservabilityTimeline>>(
+        "GET",
+        `/observability/timeline${queryString(query)}`,
+      ),
+    operationalOverview: () =>
+      request<z.infer<typeof OperationalOverview>>("GET", "/overview/operational"),
+    registerTelemetrySource: (input: RegisterTelemetrySourceInput, key: string) =>
+      request<TelemetrySourceView>("POST", "/observability/sources", input, key),
+    ingestTelemetry: (value: string, input: IngestTelemetryInput, key: string) =>
+      request<TelemetryRecordView>(
+        "POST",
+        `/observability/sources/${id(value)}/records`,
+        input,
+        key,
+      ),
+    usageResources: () => request<UsageResourcesView>("GET", "/usage/resources"),
+    usageOverview: (query: UsageQueryInput = {}) =>
+      request<UsageOverviewView>("GET", `/usage${queryString(query)}`),
+    putUsagePrice: (input: PutUsagePriceInput, key: string) =>
+      request<UsagePriceView>("POST", "/usage/prices", input, key),
+    putUsageBudget: (input: PutUsageBudgetInput, key: string) =>
+      request<UsageBudgetView>("PUT", "/usage/budgets", input, key),
+    importUsageInvoice: (input: ImportUsageInvoiceInput, key: string) =>
+      request<UsageInvoiceView>("POST", "/usage/invoices", input, key),
+    reconcileUsageInvoice: (value: string, key: string) =>
+      request<UsageInvoiceView>("POST", `/usage/invoices/${id(value)}/reconcile`, {}, key),
+    orchestrationOverview: () => request<OrchestrationOverviewView>("GET", "/agents/orchestration"),
+    orchestrationDetail: (value: string) =>
+      request<OrchestrationDetailView>("GET", `/agents/orchestration/plans/${id(value)}`),
+    prepareOrchestration: (input: PrepareOrchestrationInput, key: string) =>
+      request<OrchestrationDetailView>("POST", "/agents/orchestration/plans", input, key),
+    proposeOrchestration: (taskId: string, key: string) =>
+      request<OrchestrationDetailView>("POST", "/agents/orchestration/proposals", { taskId }, key),
+    approveOrchestration: (
+      value: string,
+      expectedHash: string | { expectedHash: string },
+      key: string,
+    ) =>
+      request<OrchestrationDetailView>(
+        "POST",
+        `/agents/orchestration/plans/${id(value)}/approve`,
+        typeof expectedHash === "string" ? { expectedHash } : expectedHash,
+        key,
+      ),
+    rejectOrchestration: (
+      value: string,
+      expectedHash: string | { expectedHash: string },
+      key: string,
+    ) =>
+      request<OrchestrationDetailView>(
+        "POST",
+        `/agents/orchestration/plans/${id(value)}/reject`,
+        typeof expectedHash === "string" ? { expectedHash } : expectedHash,
+        key,
+      ),
+    answerOrchestration: (value: string, input: AnswerOrchestrationInput, key: string) =>
+      request<OrchestrationDetailView>(
+        "POST",
+        `/agents/orchestration/plans/${id(value)}/answer`,
+        input,
+        key,
+      ),
+    cancelOrchestration: (value: string, key: string) =>
+      request<OrchestrationDetailView>(
+        "POST",
+        `/agents/orchestration/plans/${id(value)}/cancel`,
+        {},
+        key,
+      ),
+    reconcileOrchestration: (value: string, key: string) =>
+      request<OrchestrationDetailView>(
+        "POST",
+        `/agents/orchestration/plans/${id(value)}/reconcile`,
+        {},
+        key,
+      ),
+    codingOverview: () => request<CodingOverviewView>("GET", "/agents/coding"),
+    prepareCodingTask: (input: PrepareCodingTaskInput, key: string) =>
+      request<CodingPreparationView>("POST", "/agents/coding/preparations", input, key),
+    codingPreparation: (id: string) =>
+      request<CodingPreparationView>("GET", `/agents/coding/preparations/${HttpId.parse(id)}`),
+    admitCodingTask: (input: AdmitCodingTaskInput, key: string) =>
+      request<CodingTaskView>("POST", "/agents/coding/tasks", input, key),
+    codingTask: (id: string) =>
+      request<CodingTaskDetailView>("GET", `/agents/coding/tasks/${HttpId.parse(id)}`),
+    cancelCodingTask: (id: string, key: string) =>
+      request<CodingTaskView>("POST", `/agents/coding/tasks/${HttpId.parse(id)}/cancel`, {}, key),
+    reconcileCodingTask: (id: string, key: string) =>
+      request<CodingTaskView>(
+        "POST",
+        `/agents/coding/tasks/${HttpId.parse(id)}/reconcile`,
+        {},
+        key,
+      ),
+    agentsOverview: () => request<AgentOverviewView>("GET", "/agents"),
+    createAgentProfile: (input: CreateAgentProfileInput, key: string) =>
+      request<AgentProfileView>("POST", "/agents/profiles", input, key),
+    configureAgentProfile: (value: string, input: ConfigureAgentProfileInput, key: string) =>
+      request<AgentProfileView>("POST", `/agents/profiles/${id(value)}/configure`, input, key),
+    pauseAgentProfile: (value: string, expectedRevision: number, key: string) =>
+      request<AgentProfileView>(
+        "POST",
+        `/agents/profiles/${id(value)}/pause`,
+        { expectedRevision },
+        key,
+      ),
+    resumeAgentProfile: (value: string, expectedRevision: number, key: string) =>
+      request<AgentProfileView>(
+        "POST",
+        `/agents/profiles/${id(value)}/resume`,
+        { expectedRevision },
+        key,
+      ),
+    launchAgentTask: (input: LaunchAgentTaskInput, key: string) =>
+      request<AgentTaskView>("POST", "/agents/tasks", input, key),
+    agentTask: (value: string) => request<AgentTaskDetailView>("GET", `/agents/tasks/${id(value)}`),
+    agentTaskTools: (value: string) =>
+      request<AgentTaskToolsDetail>("GET", `/agents/tasks/${id(value)}/tools`),
+    cancelAgentTask: (value: string, key: string) =>
+      request<AgentTaskView>("POST", `/agents/tasks/${id(value)}/cancel`, {}, key),
+    reconcileAgentTask: (value: string, key: string) =>
+      request<AgentTaskView>("POST", `/agents/tasks/${id(value)}/reconcile`, {}, key),
     backendConfiguration: (projectId: string, environmentId: string) =>
       request<BackendConfigurationDTO>(
         "GET",
@@ -379,3 +547,11 @@ export function createControlClient(options: ControlClientOptions = {}) {
   };
 }
 export type ControlClient = ReturnType<typeof createControlClient>;
+
+function queryString(query: object) {
+  const p = new URLSearchParams();
+  for (const [key, value] of Object.entries(query))
+    if (value !== undefined) p.set(key, String(value));
+  const q = p.toString();
+  return q ? `?${q}` : "";
+}
