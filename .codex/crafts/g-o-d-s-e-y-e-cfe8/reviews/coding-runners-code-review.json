@@ -1,0 +1,69 @@
+{
+  "verdict": "fail",
+  "kind": "code",
+  "criticity": "production",
+  "findings": [
+    {
+      "id": "CR-CODE-01",
+      "criterion": "COR-01 / COR-03",
+      "status": "CONFIRMED",
+      "severity": "blocker",
+      "evidence": "packages/core/src/foundation-effects.ts:281-284 only propagates cancellation of an already unknown run to Hermes; packages/core/src/coding-execution.ts:124-129 and :159-164 determine publication from task cancellation, cleanup revocation, epoch, deadline and scope, without any generic Foundation cancellation marker.",
+      "refutation": "CodingEngine.cancel itself first marks cancel_requested and is safe. However, the existing owner Foundation cancellation API also accepts this run ID. On an unknown coding run that path revokes already-revoked grants without marking coding cancellation; reconciliation can then accept stopped-success output and settle succeeded.",
+      "refutation_survived": true,
+      "suggestion": "Propagate unknown-run cancellation for exact local.coding/coding.run into durable coding cancellation, then test unknown -> generic Foundation cancel -> stopped-success reconciliation retains cancelled state and suppresses result."
+    },
+    {
+      "id": "CR-CODE-02",
+      "criterion": "COR-01 / COR-02",
+      "status": "CONFIRMED",
+      "severity": "major",
+      "evidence": "packages/core/src/foundation-data.ts:242-250 and packages/core/src/foundation-effects.ts:179-181, :216-219, :233-236 exempt only Hermes from held/expired environment restrictions for read-only reconciliation. CodingEngine.reconcile delegates through those checks.",
+      "refutation": "Refusing dispatch into held or expired environments is required, and uncertain coding capacity stays retained safely. Read-only inspect is explicitly different: these gates block it before physical truth can be observed, so stopped coding resources cannot be reconciled after HOLD/expiry and the singleton pool remains occupied.",
+      "refutation_survived": true,
+      "suggestion": "Add exact local.coding/coding.run read-only recovery exemptions at all reconciliation gates, preserve late-output revocation checks, and test expired/HOLD stopped proof releases uncertainty without publishing results."
+    },
+    {
+      "id": "CR-CODE-03",
+      "criterion": "COR-01",
+      "status": "CONFIRMED",
+      "severity": "major",
+      "evidence": "apps/console/src/components/agents-coding.tsx:254-261 only renders retained patch bytes inside details/pre; coding-runners-design.md:67 AC-793 explicitly requires downloading an inert patch. Coding routes/endpoints have no download operation.",
+      "refutation": "The owner can inspect and manually copy inline bytes, and an additional server route is not mandatory because bytes are already owner-authorized. Manual copying still does not implement the requested download behavior.",
+      "refutation_survived": true,
+      "suggestion": "Provide a bounded inert text patch download using the retained bytes and a server-controlled filename, without applying it or navigating to a runner URL; verify exact downloaded bytes."
+    },
+    {
+      "id": "CR-CODE-04",
+      "criterion": "HYG-04",
+      "status": "CONFIRMED",
+      "severity": "minor",
+      "evidence": "packages/contracts/src/http-endpoints.ts:44 still declares CONTROL_API_VERSION 1.12.0 while coding-endpoints.ts adds the coding API surface; coding-runners-core-implementation.md explicitly flags the pending additive-version decision.",
+      "refutation_survived": true,
+      "suggestion": "Apply the coordinator's additive API policy (1.13.0), regenerate OpenAPI and verify checked-in contract output."
+    }
+  ],
+  "criteria_run": 13,
+  "criteria_passed": 9,
+  "not_reviewed": [
+    "Runtime/QEMU/guest/CLI implementation and qualification: actively being implemented in parallel and excluded from this snapshot. Actual KVM boot reported by orchestrator is not evidence of qualified vendor CLI/context execution.",
+    "Independent tests and mutations: tests worker is running expanded cases; reviewer did not execute or certify the suite.",
+    "Paid entitlement, actual model broker hard billing and real source authentication: no paid calls or protected reads permitted.",
+    "Physical resource enforcement including VMM overhead: inspected core admission checks only, not native containment.",
+    "Broad repository security/secrets audit: delegated security review owns it; no protected files read.",
+    "UI rendered browser behavior and download artifact bytes: not exercised by this review.",
+    "Edits landing after reviewed snapshot require focused closure verification."
+  ],
+  "closure_of_plan_findings": {
+    "CR-PLAN-01": "Strict CodingQualification schema, <=60-second observed expiry, exact preparation/source binding and finite capacity checks now exist. Schema handoff gap closed; physical/runtime enforcement remains unreviewed.",
+    "CR-PLAN-02": "All fourteen canonical T-AC-781..794 map explicitly to scenario groups in reviews/coding-runners-test-strategy.md:37-50; traceability handoff gap closed.",
+    "CR-PLAN-03": "Orchestrator reports KVM CREATE_VM and actual boot now passed before CLI qualification; feasibility ordering concern addressed at reported-progress level."
+  },
+  "review_notes": [
+    "Reviewer authored no implementation and changed only this review artifact.",
+    "Read coding contracts/core/store migration/API/client/UI and their Foundation lifecycle hooks; default unavailable behavior and conservative full-ceiling settlement are explicit.",
+    "Input/artifact UTF-8 bounds, actual SHA-256 checks, result worktree/source binding, failed-test evidence retention and post-await dispatch/deadline checks are present.",
+    "Admission uses serialized database writes and private server-minted task/worktree identities; unknown effects retain pool occupancy and are inspected rather than resubmitted.",
+    "Findings were immediately sent to orchestrator; confirmation means evidence/refutation review, not a claimed executable reproduction."
+  ]
+}

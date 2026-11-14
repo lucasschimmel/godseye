@@ -1,0 +1,33 @@
+{
+  "date": "2026-11-14",
+  "status": "local-scans-passed-with-explicit-degradations",
+  "gitleaks": {
+    "version": "8.30.1",
+    "publicPaths": 762,
+    "rawFindings": 1,
+    "newActualCredentialFindings": 0,
+    "classification": "Unchanged synthetic backend validation placeholder at packages/app-backend/src/local.ts:37; no ignore or waiver added",
+    "artifact": "artifacts/security/coding-runners-gitleaks.json",
+    "manifest": "artifacts/security/coding-runners-public-source-files.json",
+    "scope": "Public source/docs/tests snapshot; protected basenames, .env files, private runtime data, build output and dependencies excluded"
+  },
+  "nodeDependencies": {
+    "bunAuditJson": {},
+    "exitCode": 0,
+    "newNodeDependencies": false,
+    "qualification": "Existing Bun lockfile dependency audit; native downloads are outside this advisory result"
+  },
+  "nativeSupplyChain": {
+    "qualification": "Signed Ubuntu package indexes and pinned official npm/Node archives, recursively hashed runtime/CLI manifests; source installer reports retain exact provenance and notices",
+    "cliReport": "coding-runners-cli-report.json",
+    "notClaimed": "Complete OS/native vulnerability reachability or binary security certification"
+  },
+  "independentSecurityReview": "reviews/coding-runners-security-final.json",
+  "degradations": [
+    "Semgrep unavailable; independent source review is model judgment, not automated SAST",
+    "Syft/cdxgen unavailable; component/provenance inventories are not a complete SBOM",
+    "No paid vendor entitlement or invoice reconciliation, dedicated-host deployment or general hypervisor penetration-test claim"
+  ],
+  "waiversAdded": 0,
+  "finalSourceAndDocumentationDriftCheck": "Final77publicpathfreeze and762publicpathGitleaks pass after docs;0newfindings;compiled351/native13 match"
+}

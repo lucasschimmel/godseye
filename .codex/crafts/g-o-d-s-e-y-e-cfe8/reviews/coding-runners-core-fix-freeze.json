@@ -1,0 +1,41 @@
+{
+  "status": "core-frozen-for-review",
+  "files": {
+    "packages/contracts/src/coding.ts": "05c8cbfa2dbec7ddc9fad727d6fb35d8ece52b2defb41048de1e1e59ed55f9bc",
+    "packages/contracts/src/coding-endpoints.ts": "c26725bb80723ebedc77215e308c12bf9bf6593ff502cde8587326a327b0616f",
+    "packages/contracts/src/index.ts": "cdc2ec1b7a8e426a1c5ce0266085f12ddd9292edc660fe7f0ccae68209951d88",
+    "packages/contracts/src/foundations.ts": "2e66bcd7e277f39eb40459950a885e1896ee2e8730eb3006f8355c8a97ee3ca1",
+    "packages/contracts/src/http-endpoints.ts": "ffdf2708899234196c04c699eea540b4b00a484d60e92e051ce35cb441d92f52",
+    "packages/core/src/coding.ts": "fd60e144a52f89740a20d1b0b43ad836cb382f3e5720666df41ef02ed81b78a8",
+    "packages/core/src/coding-state.ts": "5c22d839f5045f9e12effbc107f78f1b364faedd4f5d9e17ff584f975804f370",
+    "packages/core/src/coding-preparation.ts": "7e36f52a374e3e515dad969386122bdc2d2a3ca3760645ddf044a097e18cdeec",
+    "packages/core/src/coding-execution.ts": "c2986573e58dcfc737129443778817778f6b3ef7e92bc8759d03d2425a88c084",
+    "packages/core/src/index.ts": "03a53a5d9d3e2c4645546b83410a0ca01093bbf5adb6d3cabb35638aa39aa7fd",
+    "packages/core/src/infrastructure.ts": "1f3e383ccfe0a3e1e0590f8e94701ed47532ea227ddc41d4358397e2666d45f4",
+    "packages/core/src/infra-heavy.ts": "8a82975041308de8238a01eca1ef8db1e222dbfd8aa13a122bd9d6564119355f",
+    "packages/core/src/foundation-data.ts": "0783cd9ef9f31f25c61f3338699e5ff9862ca500160db0925da9e6f34728bc2f",
+    "packages/core/src/foundation-effects.ts": "c3e9617d9888dd75db862b9ea12a0ba6388ea886e3401bc840237b470eca14e9",
+    "packages/store/src/coding-schema.ts": "0588f9360146295c86483e6987ae063105c2a81e9a04b44e02c8f9a8fe8f0f1f",
+    "packages/store/src/schema.ts": "5764402f00b44cd3afb0bf47f8559cbae7ba264711226b02d89cfa28614a3790",
+    "packages/store/migrations/0021_coding.sql": "46339160bd741b82501e9c7e8e541da1fdf77db9cd4a6a0d14093b0a361268c7",
+    "apps/control-api/src/coding-routes.ts": "ca7b1f7fadf494ff63a15eb2e8be253a3577c198e9d94a21c621fd31ad16d509",
+    "apps/control-api/src/app.ts": "f56066212fd5811e159ddff86e56b7936f91b9837d44fc3dd19b0347b5a97cdd",
+    "packages/control-client/src/index.ts": "599d9266f2691d7635ef0bc92642c050ee3dee4b296ee2321c86683ac9cd3c63",
+    "apps/console/src/components/agents-coding.tsx": "89b982286bec2baeca06fde7db371c7866c3a1d234cd8ca3d718def1dbc9125e",
+    "apps/console/src/components/agents-panel.tsx": "fc6c459cce7ed67f5745ef4293582ed2bca0bb55a2c0677e7d63dcc824d0695e",
+    "docs/contracts/control-openapi.json": "afb6046ba1546b7d4a2678351bdaa59c4a8b0d1c7400b014f40b646ad88d8c87"
+  },
+  "closure": {
+    "CR-CODE-01": "Exact local.coding/coding.run generic Foundation cancellation propagates unknown revocation; observation separately checks execution.cancel journal receipt and cancellation operation marker. Ordinary unknown does not imply user cancellation.",
+    "CR-CODE-02": "Exact first-party agent read-only recovery helper applied at every Foundation recovery/HOLD gate; dispatch gates remain unchanged; output eligibility retains cancellation/deadline/scope checks.",
+    "CR-CODE-03": "Inert UTF-8 Blob downloads use fixed coding-patch.txt and coding-test-log.txt names and text/plain MIME; no runner-provided URL or navigation.",
+    "CR-CODE-04": "CONTROL_API_VERSION 1.13.0; generated OpenAPI matches."
+  },
+  "validation": {
+    "focused": "61/61 across coding-contracts (22), coding-tasks (22), coding-protocol (17), including previously failing HOLD recovery regression",
+    "typecheck": "passed",
+    "targetedBiome": "6/6 files passed after final UI formatting",
+    "contractsCheck": "passed"
+  },
+  "pending": "GAUNTLET owns generic Foundation cancel regression, owner HTTP/browser/download checks. No claim of native CLI or paid execution qualification."
+}
