@@ -25,7 +25,11 @@ unclassified:
 jobs:
   - script: >
       pipelineJob('godseye-platform') {
-        description('Trusted owner develop branch (initial platform CI branch; main remains release presentation). Agent provisioning qualified on disposable work VM.')
+        description('Released platform source: follows main only. Every release PR from develop to main is verified here; schedules live in this job, not in the Jenkinsfile, so the candidate job never inherits them.')
+        triggers {
+          scm('H/10 * * * *')
+          cron('H H(2-4) * * *')
+        }
         definition {
           cpsScm {
             scm {
@@ -35,11 +39,36 @@ jobs:
                   def sourceReadCredential = System.getenv('GODSEYE_SOURCE_CREDENTIALS_ID')
                   if (sourceReadCredential) { credentials(sourceReadCredential) }
                 }
-                branch('*/develop')
+                branch('*/main')
               }
             }
             scriptPath('Jenkinsfile')
             lightweight(true)
+          }
+        }
+      }
+  - script: >
+      pipelineJob('godseye-platform-candidate') {
+        description('Manual pre-release verification of any branch (default develop) with the same Jenkinsfile. No schedule and no SCM polling: run it before opening the release PR into main.')
+        parameters {
+          stringParam('BRANCH', 'develop', 'Branch to verify before a release PR into main')
+        }
+        definition {
+          cpsScm {
+            scm {
+              git {
+                remote {
+                  url(System.getenv('GODSEYE_SOURCE_URL'))
+                  def sourceReadCredential = System.getenv('GODSEYE_SOURCE_CREDENTIALS_ID')
+                  if (sourceReadCredential) { credentials(sourceReadCredential) }
+                }
+                // `^${...}` keeps the expression literal: Configuration as Code would otherwise
+                // resolve it (to an empty string) before Jenkins expands the build parameter.
+                branch('*/^${BRANCH}')
+              }
+            }
+            scriptPath('Jenkinsfile')
+            lightweight(false)
           }
         }
       }
@@ -74,7 +103,7 @@ jobs:
                     steps {
                       deleteDir()
                       checkout([$class: 'GitSCM',
-                        userRemoteConfigs: [[url: "https://github.com/${params.REPOSITORY_FULL_NAME}.git",
+                        userRemoteConfigs: [[url: "https://github.com/^${params.REPOSITORY_FULL_NAME}.git",
                           credentialsId: 'godseye-github-app-read']],
                         branches: [[name: params.SOURCE_COMMIT]]])
                     }

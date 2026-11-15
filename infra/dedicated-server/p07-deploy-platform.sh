@@ -6,8 +6,8 @@ if ! id godseye >/dev/null 2>&1; then
 fi
 install -d -m 0700 -o godseye -g godseye /var/lib/godseye /var/lib/godseye/data /var/lib/godseye/state
 
-# Branch to deploy (default: the platform integration branch `develop`).
-REF="${GODSEYE_DEPLOY_REF:-develop}"
+# Branch to deploy (default: released code on `main`; override to test another branch).
+REF="${GODSEYE_DEPLOY_REF:-main}"
 export GIT_SSH_COMMAND="ssh -i /var/lib/jenkins/.ssh/id_ed25519_github -o UserKnownHostsFile=/var/lib/jenkins/.ssh/known_hosts"
 if [ ! -d /opt/godseye/.git ]; then
   git clone --branch "$REF" --single-branch git@github.com:lucasschimmel/godseye.git /opt/godseye

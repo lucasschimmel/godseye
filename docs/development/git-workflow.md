@@ -21,6 +21,11 @@ remaining qualification limits. Merge only with the owner's explicit release
 decision. Creating the repository or pushing `develop` is not that release decision.
 Tag and publish a GitHub release only when separately requested.
 
+Jenkins follows `main` only: the automatic job builds released code and nothing else. Before a release
+PR, run the manual `godseye-platform-candidate` job on `develop` and attach its result to the PR. The
+dedicated server's platform checkout deploys from `main` (`GODSEYE_DEPLOY_REF`, default `main`) so that it
+only runs verified releases.
+
 Request-based protection should prevent accidental direct updates, force pushes and
 deletion of `main` when the repository's GitHub plan supports it. Required check names
 must correspond to real connected checks. Prepared Jenkins files are not a running

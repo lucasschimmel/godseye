@@ -7,10 +7,11 @@ Status: local CI preparation and source-intake implementation, updated 2026-11-1
 The Jenkins post-build archive must retain `artifacts/playwright-results/**`, the actual Playwright
 trace/screenshot directory, before workspace cleanup. JUnit statuses and CI metadata do not replace
 those diagnostic files. The local regression verifies path compatibility; a real Jenkins artifact
-upload and runner execution remain qualification work. The prepared job follows release `main`;
-while that branch contains only the presentation README, it cannot run the development Jenkinsfile.
-An approved release or a separately configured trusted development-validation job is required before
-claiming automatic CI for `develop`.
+upload and runner execution remain qualification work. The `godseye-platform` job follows release
+`main` only (SCM polling and the nightly pass are defined on that job). `develop` is verified before a
+release by running the manual `godseye-platform-candidate` job (parameter `BRANCH`, default `develop`),
+then a release PR from `develop` to `main` is merged with the owner's explicit decision. Until the first
+release reaches `main`, the automatic job has nothing to build.
 
 | Artifact | Purpose |
 | --- | --- |
