@@ -14,6 +14,7 @@ import { createRuntimeAccess } from "./access-runtime.js";
 import { createApp } from "./app.js";
 import { codingStartupOptions } from "./coding-startup.js";
 import { loadConfiguration } from "./config.js";
+import { configuredDelivery } from "./delivery/startup.js";
 import { configuredHermesProvider, type ManagedHermesProvider } from "./hermes-provider.js";
 import {
   configuredHermesToolExecutor,
@@ -116,6 +117,7 @@ async function start() {
     hermes = configuredHermesProvider();
     hermesTools = configuredHermesToolExecutor(process.env);
     const infrastructure = new InfrastructureEngine(store, {
+      ...configuredDelivery(process.env),
       agents: { provider: hermes, toolExecutor: hermesTools },
       coding: await codingStartupOptions(),
       ...(config.jobsDetached

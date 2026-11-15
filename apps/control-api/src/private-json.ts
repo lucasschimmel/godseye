@@ -12,6 +12,10 @@ import { dirname, isAbsolute, join, parse, resolve } from "node:path";
 
 /** Reads an explicitly selected local binding without printing material or weakening its permissions. */
 export function readPrivateJson(path: string): unknown {
+  return JSON.parse(readPrivateText(path));
+}
+/** Same private-file checks as {@link readPrivateJson}, for non-JSON material such as PEM keys. */
+export function readPrivateText(path: string): string {
   if (!isAbsolute(path)) throw new Error("Private runtime bindings require an absolute file path");
   const absolute = resolve(path),
     root = parse(absolute).root;
@@ -72,7 +76,7 @@ export function readPrivateJson(path: string): unknown {
       current.size > 131072
     )
       throw new Error("Private runtime binding changed while opening");
-    return JSON.parse(readFileSync(descriptor, "utf8"));
+    return readFileSync(descriptor, "utf8");
   } finally {
     closeSync(descriptor);
   }
