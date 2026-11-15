@@ -1,0 +1,23 @@
+# pgBackRest differential backup for cell %i (daily, Monday to Saturday). TEMPLATE ONLY.
+# The runner records the outcome in /var/lib/godseye/pg-backup/%i.json for the E08 incident detector.
+[Unit]
+Description=G.O.D.S.E.Y.E pgBackRest differential backup for cell %i
+After=godseye-pg@%i.service
+Requires=godseye-pg@%i.service
+
+[Service]
+Type=oneshot
+User=postgres
+Group=postgres
+EnvironmentFile=/etc/godseye/pg/%i/archive.env
+ExecStart=/usr/local/sbin/godseye-pg-backup diff %i
+TimeoutStartSec=6h
+Nice=10
+IOSchedulingClass=idle
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+NoNewPrivileges=true
+ReadWritePaths=/srv/godseye/pg/%i /var/lib/godseye/pg-backup /run/godseye-pg/%i
+CapabilityBoundingSet=
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6

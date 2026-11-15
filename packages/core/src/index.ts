@@ -24,7 +24,10 @@ import { configureRepository, createProject, getProject, listProjects } from "./
 
 export * from "./access.js";
 export * from "./backend-configuration.js";
+export * from "./backup-schedule.js";
+export * from "./cell-host.js";
 export * from "./database.js";
+export * from "./database-server-transport.js";
 export * from "./delivery.js";
 export { DomainError } from "./errors.js";
 export * from "./foundations.js";
@@ -36,6 +39,7 @@ export * from "./jobs.js";
 export { appendAudit, existingRequest, fingerprint, verifyAudit, write } from "./journal.js";
 export { type Actor, assertProjectAccess, assertTransition } from "./policy.js";
 export * from "./recovery.js";
+export * from "./recovery-server-transport.js";
 
 /** Application boundary; no infrastructure credential or privileged execution capability. */
 export class ControlPlane {

@@ -93,32 +93,48 @@ systemctl start postgresql
 echo "[p06] Verifying recovered rows after restore..."
 su - postgres -c "psql -d godseye_p06_drill -Atc 'SELECT id, marker FROM drill_records ORDER BY id;'"
 
-# Clean up drill DB and install daily backup systemd timer
+# Clean up drill DB and install the backup schedule for the control database stanza (`main`):
+# weekly full (Sunday), daily differential (Monday to Saturday) and an hourly archive check.
+# Per-project cells use the same cadence through the godseye-pg-backup-*@ templates (see p10).
 su - postgres -c "psql -c 'DROP DATABASE godseye_p06_drill;'"
 
-cat > /etc/systemd/system/godseye-pgbackrest-backup.service <<'EOF'
+declare -A CALENDAR=(
+  [full]="Sun *-*-* 02:30:00 UTC"
+  [diff]="Mon..Sat *-*-* 03:30:00 UTC"
+  [check]="*-*-* *:17:00 UTC"
+)
+declare -A COMMAND=(
+  [full]="--type=full --no-expire-auto backup"
+  [diff]="--type=diff --no-expire-auto backup"
+  [check]="check"
+)
+rm -f /etc/systemd/system/godseye-pgbackrest-backup.service /etc/systemd/system/godseye-pgbackrest-backup.timer
+for kind in full diff check; do
+  cat > "/etc/systemd/system/godseye-pgbackrest-${kind}.service" <<EOF
 [Unit]
-Description=G.O.D.S.E.Y.E PostgreSQL encrypted pgBackRest backup to Backblaze B2
+Description=G.O.D.S.E.Y.E PostgreSQL encrypted pgBackRest ${kind} (stanza main)
 After=postgresql.service network-online.target
 
 [Service]
 Type=oneshot
 User=postgres
-ExecStart=/usr/local/bin/godseye-pgbackrest --stanza=main --type=diff backup
+ExecStart=/usr/local/bin/godseye-pgbackrest --stanza=main ${COMMAND[$kind]}
 EOF
-
-cat > /etc/systemd/system/godseye-pgbackrest-backup.timer <<'EOF'
+  cat > "/etc/systemd/system/godseye-pgbackrest-${kind}.timer" <<EOF
 [Unit]
-Description=Daily G.O.D.S.E.Y.E PostgreSQL pgBackRest backup
+Description=G.O.D.S.E.Y.E PostgreSQL pgBackRest ${kind} schedule (stanza main)
 
 [Timer]
-OnCalendar=*-*-* 03:30:00 UTC
+OnCalendar=${CALENDAR[$kind]}
+RandomizedDelaySec=10min
 Persistent=true
 
 [Install]
 WantedBy=timers.target
 EOF
+done
 
 systemctl daemon-reload
-systemctl enable --now godseye-pgbackrest-backup.timer
-systemctl list-timers godseye-pgbackrest-backup.timer --no-pager
+systemctl disable --now godseye-pgbackrest-backup.timer 2>/dev/null || true
+systemctl enable --now godseye-pgbackrest-full.timer godseye-pgbackrest-diff.timer godseye-pgbackrest-check.timer
+systemctl list-timers 'godseye-pgbackrest-*' --no-pager
