@@ -27,7 +27,7 @@ DB_URL="$(read_existing GODSEYE_DATABASE_URL)"
 [ -n "$DB_URL" ] || DB_URL="$(read_existing DATABASE_URL)"
 [ -n "$DB_URL" ] || { echo "No PostgreSQL URL found in $ENV_FILE" >&2; exit 1; }
 WEBHOOK_KEY="$(read_existing GODSEYE_GITHUB_WEBHOOK_KEY)"
-: "${GODSEYE_PUBLIC_ORIGIN:=https://godseye.lucasschimmel.fr}"
+: "${GODSEYE_PUBLIC_ORIGIN:=https://console.godseye.lucasschimmel.fr}"
 
 {
   cat <<ENVEOF

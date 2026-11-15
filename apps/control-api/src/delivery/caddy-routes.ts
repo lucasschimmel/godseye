@@ -24,8 +24,9 @@ export function parseRoute(content: string | null): RouteOwner | null {
     : null;
 }
 /**
- * One file per environment, imported inside the wildcard `*.apps.<domain>` site block. Swapping the
- * upstream is an atomic file replace plus a graceful reload; there is no admin-API mutation.
+ * One complete `https://<host>` site block per environment (per-host HTTP-01 certificate, no wildcard
+ * or DNS token), imported at the top level of the edge Caddyfile (`import /etc/caddy/apps.d/*.caddy`).
+ * Swapping the upstream is an atomic file replace plus a graceful reload; there is no admin-API mutation.
  */
 export function renderRoute(input: {
   environmentId: string;
@@ -36,11 +37,9 @@ export function renderRoute(input: {
   if (!UUID.test(input.environmentId)) throw new Error("Route environment identity is invalid");
   if (!/^[a-z0-9.-]{1,253}$/.test(input.host) || !/^[a-z0-9_.-]+:[0-9]{2,5}$/.test(input.upstream))
     throw new Error("Route host or upstream is invalid");
-  const matcher = `@h${input.environmentId.replaceAll("-", "")}`;
   return [
     `# godseye-route run=${input.owner.runId} ownership=${input.owner.ownership} digest=${input.owner.digest}`,
-    `${matcher} host ${input.host}`,
-    `handle ${matcher} {`,
+    `https://${input.host} {`,
     `\treverse_proxy ${input.upstream} {`,
     "\t\tflush_interval -1",
     "\t\ttransport http {",

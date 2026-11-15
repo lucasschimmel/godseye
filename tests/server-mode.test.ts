@@ -3,7 +3,7 @@ import { loadConfiguration } from "../apps/control-api/src/config.js";
 import { clientAddress } from "../apps/control-api/src/server-config.js";
 import { challengeCookie, type OwnerAuthFixture, ownerAuthFixture } from "./owner-auth-fixture.js";
 
-const httpsOrigin = "https://godseye.example.org";
+const httpsOrigin = "https://console.godseye.example.org";
 const serverEnv: NodeJS.ProcessEnv = {
   GODSEYE_MODE: "server",
   NODE_ENV: "production",
@@ -26,7 +26,7 @@ describe("server mode configuration", () => {
       mode: "server",
       ownerOrigin: httpsOrigin,
       origins: [httpsOrigin],
-      hosts: ["godseye.example.org", "127.0.0.1:4301"],
+      hosts: ["console.godseye.example.org", "127.0.0.1:4301"],
       host: "127.0.0.1",
       trustedProxies: ["127.0.0.1", "::1"],
     });
@@ -120,7 +120,7 @@ describe("https owner origin HTTP boundary", () => {
       headers: { host: "evil.example" },
     });
     const origin = await fixture.app.request(`${httpsOrigin}/api/v1/health`, {
-      headers: { host: "godseye.example.org", origin: "http://localhost:4300" },
+      headers: { host: "console.godseye.example.org", origin: "http://localhost:4300" },
     });
     expect([host.status, origin.status]).toEqual([403, 403]);
   });
@@ -131,7 +131,7 @@ describe("https owner origin HTTP boundary", () => {
       `/passkey/generate-register-options?context=${enrollment.ticket}`,
     );
     expect(response.status).toBe(200);
-    expect(await response.json()).toMatchObject({ rp: { id: "godseye.example.org" } });
+    expect(await response.json()).toMatchObject({ rp: { id: "console.godseye.example.org" } });
     const cookies = response.headers.getSetCookie();
     expect(cookies.length).toBeGreaterThan(0);
     for (const cookie of cookies) {

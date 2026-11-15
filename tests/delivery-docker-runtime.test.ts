@@ -13,7 +13,7 @@ import type { DeliveryManifest, DeliveryScope } from "../packages/core/src/deliv
 import { fingerprint } from "../packages/core/src/journal.js";
 import { deliveryLabArtifact, deliveryLabManifest } from "./delivery-lab-manifest.js";
 
-const CADDY = "caddy";
+const CADDY = "godseye-edge";
 const SAME_PROJECT = crypto.randomUUID();
 interface FakeContainer {
   args: string[];
@@ -258,6 +258,25 @@ describe("Docker runsc delivery runtime", () => {
     expect(docker.images.size).toBe(2);
     const state = await provider.inspect(b.scope, b.manifest);
     expect(state).toMatchObject({ active: true, url: `https://${env}.apps.example.test` });
+  });
+
+  it("renders a complete per-host site block and drives the godseye-edge container exactly", async () => {
+    const { docker, provider } = setup();
+    const env = crypto.randomUUID();
+    const r = release(env, digestOf("one"));
+    await provider.stage(r.scope, r.manifest, r.artifact, guard);
+    await provider.promote(r.scope, r.manifest, null, guard);
+    const route = docker.routes.get(env) as string;
+    expect(route).toContain(`https://${env}.apps.example.test {`);
+    const execs = docker.log
+      .filter((c) => c[1] === "exec" && c[2] === CADDY && c[3] === "caddy")
+      .map((c) => c.slice(3));
+    expect(execs.slice(0, 2)).toEqual([
+      ["caddy", "validate", "--config", "/etc/caddy/Caddyfile"],
+      ["caddy", "reload", "--config", "/etc/caddy/Caddyfile"],
+    ]);
+    const joined = docker.log.find((c) => c[1] === "network" && c[2] === "connect") as string[];
+    expect(joined.slice(3)).toEqual([`gdy-env-${env}`, CADDY]);
   });
 
   it("rolls back to a retained digest without pulling it again", async () => {

@@ -32,7 +32,7 @@ export interface DockerRuntimeConfig {
   run: CommandRunner;
   /** Name of the Caddy container that terminates TLS; it joins each per-environment network. */
   caddyContainer: string;
-  /** Wildcard preview/app domain, e.g. `apps.example.com`; hosts are `<environmentId>.<domain>`. */
+  /** App domain, e.g. `godseye.example.com`; hosts are `<environmentId>.<domain>`, one cert each. */
   appDomain: string;
   containerPort?: number;
   healthPath?: string;
