@@ -7,16 +7,14 @@ pipeline {
     buildDiscarder(logRotator(numToKeepStr: '30', artifactNumToKeepStr: '10'))
     timestamps()
   }
-  triggers {
-    cron('H H(2-4) * * *')
-    pollSCM('H/10 * * * *')
-  }
+  // Schedules and SCM polling are defined on the `godseye-platform` job (infra/jenkins/jenkins.yaml),
+  // so the manual `godseye-platform-candidate` job never inherits them.
   environment {
     CI = 'true'
     PLAYWRIGHT_BROWSERS_PATH = '0'
   }
   stages {
-    stage('Checkout trusted develop') {
+    stage('Checkout trusted source') {
       steps {
         deleteDir()
         checkout scm
