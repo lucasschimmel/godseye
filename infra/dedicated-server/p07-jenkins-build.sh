@@ -2,6 +2,7 @@
 # Trigger or inspect a Jenkins job on the private controller (run as root on godseye-pro).
 #   p07-jenkins-build.sh trigger <job> [PARAM=value ...]
 #   p07-jenkins-build.sh status  <job>
+#   p07-jenkins-build.sh stop    <job> <build number>
 #   p07-jenkins-build.sh jobs    -         (lists the jobs Jenkins has actually loaded)
 # Credentials come from the controller's root-only environment file and are never printed.
 set -euo pipefail
@@ -36,6 +37,14 @@ case "$ACTION" in
     curl -fsS -u "$AUTH" \
       "${JENKINS_URL}/job/${JOB}/lastBuild/api/json?tree=number,building,result,timestamp,duration,url"
     echo ""
+    ;;
+  stop)
+    # Usage: stop <job> <build number>
+    BUILD="${1:?build number}"
+    CRUMB="$(curl -fsS -c "$COOKIES" -u "$AUTH" \
+      "${JENKINS_URL}/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,%22:%22,//crumb)")"
+    curl -fsS -b "$COOKIES" -X POST -H "$CRUMB" -u "$AUTH" "${JENKINS_URL}/job/${JOB}/${BUILD}/stop" >/dev/null
+    echo "JENKINS_BUILD_STOPPED ${JOB} ${BUILD}"
     ;;
   jobs)
     curl -fsS -u "$AUTH" "${JENKINS_URL}/api/json?tree=jobs%5Bname,color,inQueue%5D"
