@@ -1,0 +1,12 @@
+# Weekly full backup of cell %i. TEMPLATE ONLY.
+[Unit]
+Description=G.O.D.S.E.Y.E weekly pgBackRest full backup for cell %i
+
+[Timer]
+OnCalendar=Sun *-*-* 02:30:00 UTC
+# Spread cells so they do not all hit the repository at once; catch up after downtime.
+RandomizedDelaySec=15min
+Persistent=true
+
+[Install]
+WantedBy=timers.target

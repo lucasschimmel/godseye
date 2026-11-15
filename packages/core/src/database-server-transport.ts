@@ -258,6 +258,7 @@ export class ServerPostgresTransport implements PostgresInstanceTransport {
     await this.run([this.host.systemctlExecutable, "enable", layout.unit]);
     await this.run([this.host.systemctlExecutable, "start", layout.unit]);
     const sleep = this.options.sleep ?? ((ms) => new Promise((done) => setTimeout(done, ms)));
+    let ready = false;
     for (let attempt = 0; attempt < (this.options.readyAttempts ?? 30); attempt++) {
       try {
         await this.run(
@@ -271,17 +272,30 @@ export class ServerPostgresTransport implements PostgresInstanceTransport {
           ],
           this.host.serviceUser,
         );
-        return;
+        ready = true;
+        break;
       } catch {
         await sleep(1000);
       }
     }
-    throw new Error("Cell PostgreSQL did not become ready");
+    if (!ready) throw new Error("Cell PostgreSQL did not become ready");
+    await this.schedule(layout, "enable");
+  }
+  /** Weekly full, daily differential and hourly archive-check timers exist only while the cell runs. */
+  private async schedule(layout: CellLayout, action: "enable" | "disable") {
+    for (const kind of ["full", "diff", "check"])
+      await this.run([
+        this.host.systemctlExecutable,
+        action,
+        "--now",
+        `godseye-pg-backup-${kind}@${layout.allocationId}.timer`,
+      ]);
   }
   async stop(scope: DatabaseProviderScope, providerRef: string) {
     const layout = cellLayout(this.host, scope.allocationId);
     if (providerRef !== layout.unit)
       throw new Error("Provider reference differs from the cell unit");
+    await this.schedule(layout, "disable");
     await this.run([this.host.systemctlExecutable, "stop", layout.unit]);
     await this.run([this.host.systemctlExecutable, "disable", layout.unit]);
   }

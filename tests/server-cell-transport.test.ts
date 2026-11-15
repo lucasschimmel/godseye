@@ -172,6 +172,22 @@ describe("ServerPostgresTransport", () => {
 
     expect(inspection?.quotaEnforced).toBe(false);
   });
+  it("enables weekly, daily and archive-check timers only after PostgreSQL is ready", async () => {
+    const host = new FakeHost();
+    const { scope, profile } = scopeFor();
+    const t = transport(host);
+    await t.create(scope, profile);
+    host.commands.length = 0;
+
+    await t.start(scope, null);
+
+    const order = host.commands.map((c) => c.at(-1) ?? "");
+    const readyAt = host.commands.findIndex((c) => c[0]?.endsWith("/pg_isready"));
+    expect(readyAt).toBeGreaterThan(-1);
+    expect(order.slice(readyAt + 1)).toEqual(
+      ["full", "diff", "check"].map((k) => `godseye-pg-backup-${k}@${scope.allocationId}.timer`),
+    );
+  });
   it("returns null for an unknown allocation", async () => {
     await expect(transport(new FakeHost()).inspect(scopeFor().scope, null)).resolves.toBeNull();
   });
@@ -181,8 +197,10 @@ describe("ServerPostgresTransport", () => {
 
     await transport(host).stop(scope, `godseye-pg@${scope.allocationId}.service`);
 
-    expect(host.commands.map((c) => c.at(-1))).toEqual(
-      Array(2).fill(`godseye-pg@${scope.allocationId}.service`),
+    const units = host.commands.map((c) => c.at(-1));
+    expect(units.slice(-2)).toEqual(Array(2).fill(`godseye-pg@${scope.allocationId}.service`));
+    expect(units.slice(0, 3)).toEqual(
+      ["full", "diff", "check"].map((k) => `godseye-pg-backup-${k}@${scope.allocationId}.timer`),
     );
     await expect(transport(host).stop(scope, "godseye-pg@other.service")).rejects.toThrow(
       "differs",

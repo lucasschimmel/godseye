@@ -12,6 +12,7 @@ import { openStore, type Store } from "@godseye/store";
 import { serve } from "@hono/node-server";
 import { createRuntimeAccess } from "./access-runtime.js";
 import { createApp } from "./app.js";
+import { configuredCellProviders } from "./cell-providers.js";
 import { codingStartupOptions } from "./coding-startup.js";
 import { loadConfiguration } from "./config.js";
 import { configuredHermesProvider, type ManagedHermesProvider } from "./hermes-provider.js";
@@ -115,7 +116,10 @@ async function start() {
     const fixtures = jobsOptions(config.jobsLocalFixtures);
     hermes = configuredHermesProvider();
     hermesTools = configuredHermesToolExecutor(process.env);
+    // Private per-cell PostgreSQL/pgBackRest providers; absent binding keeps everything unconfigured.
+    const cells = configuredCellProviders();
     const infrastructure = new InfrastructureEngine(store, {
+      ...cells,
       agents: { provider: hermes, toolExecutor: hermesTools },
       coding: await codingStartupOptions(),
       ...(config.jobsDetached
