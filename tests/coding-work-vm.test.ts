@@ -138,6 +138,7 @@ describe("coding work-VM transport and Linux profile states", () => {
         "BatchMode=yes",
         "UserKnownHostsFile=/run/godseye/known_hosts",
         "godseye@10.20.3.10",
+        "/srv/godseye/scripts/coding_work_vm_control.py",
         "readiness",
       ]),
     );

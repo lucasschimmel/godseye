@@ -89,7 +89,7 @@ export function sshArguments(
     "GODSEYE_CODING_PROFILE=work-vm",
     "/usr/bin/python3",
     "-I",
-    `${root}/scripts/coding_guest_control.py`,
+    `${root}/scripts/coding_work_vm_control.py`,
     root,
     action,
   ];

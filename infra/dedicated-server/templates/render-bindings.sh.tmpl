@@ -41,8 +41,13 @@ write_document() { # <kv path> <field> <target> <validate-as-json 1|0>
   mv -f "${stage}" "${out}/$3"
 }
 
-write_document bindings/hermes document hermes-bindings.json 1
-write_document bindings/coding document coding-bindings.json 1
+# Each provider document is optional: an absent one removes any stale file so only that provider stays
+# unavailable. A missing document is a deliberate "not configured", never a reason to block the others.
+present() { bao kv get -mount="${mount}" -field="$2" "$1" >/dev/null 2>&1; }
+if present bindings/hermes document; then write_document bindings/hermes document hermes-bindings.json 1
+else rm -f "${out}/hermes-bindings.json"; fi
+if present bindings/coding document; then write_document bindings/coding document coding-bindings.json 1
+else rm -f "${out}/coding-bindings.json" "${out}/work-vm-ssh-key"; fi
 # The SSH key is optional: absent on hosts that use the WSL2 adapter.
 if bao kv get -mount="${mount}" -field=work_vm_ssh_key bindings/coding >/dev/null 2>&1; then
   write_document bindings/coding work_vm_ssh_key work-vm-ssh-key 0

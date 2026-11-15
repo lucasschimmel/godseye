@@ -22,6 +22,7 @@ RuntimeDirectoryPreserve=no
 # AppRole secret-id is delivered as a credential file (never an environment variable or argument).
 LoadCredential=openbao-secret-id:/etc/godseye/openbao-secret-id
 Environment=BAO_ADDR=@@OPENBAO_ADDR@@
+Environment=BAO_CACERT=@@OPENBAO_CACERT@@
 Environment=GODSEYE_BAO_ROLE_ID_FILE=/etc/godseye/openbao-role-id
 Environment=GODSEYE_BAO_MOUNT=godseye
 ExecStart=/usr/local/libexec/godseye/render-bindings.sh
