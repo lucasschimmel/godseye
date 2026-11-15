@@ -1,6 +1,7 @@
 import { write } from "@godseye/core";
 import { type Store, schema } from "@godseye/store";
 import { eq } from "drizzle-orm";
+import { parsePublicOrigin } from "../server-config.js";
 import { buildOwnerAuth } from "./auth-config.js";
 import { flushIdentityEvents, prepareEnrollment, reserveOwner } from "./enrollment.js";
 import { consumeLocalProof } from "./local-admin.js";
@@ -33,12 +34,16 @@ function withoutSessionValues(value: unknown): unknown {
 
 export async function createOwnerIdentity(store: Store, options: IdentityOptions) {
   const origin = new URL(options.origin);
+  const local = origin.protocol === "http:" && origin.hostname === "localhost";
+  // Exactly one owner origin: plain-http localhost (local mode) or a bare https DNS origin (server).
   if (
-    origin.hostname !== "localhost" ||
-    origin.protocol !== "http:" ||
+    (!local && parsePublicOrigin(options.origin) !== options.origin) ||
+    origin.origin !== options.origin ||
     options.signingKey.length < 32
   )
-    throw new Error("Local owner identity requires a localhost origin and a private signing key");
+    throw new Error(
+      "Owner identity requires a localhost or https owner origin and a private signing key",
+    );
   const state: IdentityState = {
     store,
     ownerId: await reserveOwner(store),

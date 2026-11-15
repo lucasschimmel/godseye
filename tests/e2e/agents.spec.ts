@@ -73,7 +73,11 @@ test("T-AC-771 labeled lost-response contract preserves the exact nested tool gr
   await page.reload();
   const form = page.getByRole("form", { name: "Nouvelle tâche Hermès", exact: true });
   await form.getByRole("checkbox", { name: "Outils pour cette tâche", exact: true }).check();
-  await form.getByRole("checkbox", { name: "Écrire un fichier", exact: true }).uncheck();
+  // The tool catalog only renders after the refreshed /api/v1/agents reply; wait for it explicitly.
+  const writeTool = form.getByRole("checkbox", { name: "Écrire un fichier", exact: true });
+  await expect(writeTool).toBeVisible();
+  await expect(writeTool).toBeEnabled();
+  await writeTool.uncheck();
   await form.getByText("Copier un fichier texte pour cette tâche", { exact: true }).click();
   await form.getByLabel("Chemin du fichier copié", { exact: true }).fill("scratch/original.txt");
   await form
@@ -195,8 +199,14 @@ test("T-AC-730 shows real unavailable state without presenting a simulated runni
   await page.goto("/agents");
   await expect(page.getByRole("heading", { name: "Agent Center", exact: true })).toBeVisible();
   await expect(page.getByText("Aucune tâche lancée", { exact: true })).toBeVisible();
-  await expect(page.getByText(/aucun outil système/i).first()).toBeVisible();
-  await expect(page.getByRole("button", { name: "Lancer la tâche", exact: true })).toHaveCount(0);
+  await expect(
+    page.getByText(/ne donnent pas accès aux commandes système ni aux builds/i).first(),
+  ).toBeVisible();
+  // Earlier journeys in this isolated instance may have bound profiles, so the form can exist;
+  // what must never happen is an enabled launch control without a connected runtime.
+  await expect(
+    page.getByRole("button", { name: "Lancer la tâche", exact: true, disabled: false }),
+  ).toHaveCount(0);
 });
 
 test("T-AC-730 binds a real profile and preserves pause, reconfiguration and resume after reload", async ({

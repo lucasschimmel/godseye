@@ -1,4 +1,5 @@
 import { createConnection } from "node:net";
+import { connect as tlsConnect } from "node:tls";
 import pg from "pg";
 import { type ExternalStorage, localStorageUri } from "./config.js";
 
@@ -98,10 +99,14 @@ function encode(values: string[]) {
 }
 async function redisCommand(url: URL, command: string[]): Promise<RedisValue> {
   return new Promise((resolve, reject) => {
-    const socket = createConnection({
-      host: url.hostname === "[::1]" ? "::1" : url.hostname,
+    const secure = url.protocol === "rediss:";
+    const target = {
+      host: url.hostname.replace(/^\[|\]$/g, ""),
       port: Number(url.port),
-    });
+    };
+    const socket = secure
+      ? tlsConnect({ ...target, minVersion: "TLSv1.2", rejectUnauthorized: true })
+      : createConnection(target);
     let buffer = Buffer.alloc(0),
       authenticated = false,
       settled = false;
@@ -115,7 +120,8 @@ async function redisCommand(url: URL, command: string[]): Promise<RedisValue> {
     socket.setTimeout(5000, () => finish(new Error("Private Redis deadline exceeded")));
     socket.once("error", () => finish(new Error("Private Redis connection failed")));
     socket.once("end", () => finish(new Error("Private Redis response closed")));
-    socket.once("connect", () =>
+    // Verified TLS (CA chain + IP SAN) for per-cell bridge addresses; plaintext only on loopback.
+    socket.once(secure ? "secureConnect" : "connect", () =>
       socket.write(
         encode([
           "AUTH",

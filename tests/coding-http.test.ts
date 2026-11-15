@@ -176,7 +176,7 @@ describe("coding owner routes and typed client against real authenticated HTTP",
     expect((await client().codingOverview()).preparations).toHaveLength(0);
   });
   it("T-AC-787 default startup has no coding configuration lookup or executable provider", async () => {
-    expect(await codingStartupOptions({})).toEqual({});
+    expect(await codingStartupOptions({}, "win32")).toEqual({});
     expect(
       (await client().codingOverview()).capabilities.every((capability) => !capability.available),
     ).toBe(true);

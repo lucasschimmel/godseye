@@ -8,6 +8,7 @@ import { fileURLToPath } from "node:url";
 import { z } from "zod";
 import { privateDirectory } from "./identity/runtime.js";
 import type { LocalInngestCell } from "./inngest-config.js";
+import { workflowEndpoint } from "./workflow-endpoint.js";
 
 const Material = z
   .object({
@@ -50,24 +51,17 @@ export async function startNativeInngest(options: {
 }) {
   const cell = { ...options.cell };
   if (options.persistence) {
-    for (const [raw, protocol] of [
-      [options.persistence.postgresUri, "postgresql:"],
-      [options.persistence.redisUri, "redis:"],
+    for (const [raw, store] of [
+      [options.persistence.postgresUri, "postgresql"],
+      [options.persistence.redisUri, "redis"],
     ] as const) {
       let url: URL;
       try {
-        url = new URL(raw);
+        url = workflowEndpoint(raw, store).url;
       } catch {
-        throw new Error("Both private external workflow stores are required");
+        throw new Error("Both private authenticated workflow stores are required");
       }
-      if (
-        url.protocol !== protocol ||
-        !["localhost", "127.0.0.1", "[::1]"].includes(url.hostname) ||
-        !url.port ||
-        !url.password ||
-        url.hash
-      )
-        throw new Error("Both private authenticated loopback workflow stores are required");
+      if (!url.password) throw new Error("Both private authenticated workflow stores are required");
     }
   }
   await privateDirectory(options.directory);

@@ -69,8 +69,81 @@ The optional final distribution argument must remain `Ubuntu`, for example
 model fixture, not a paid vendor completion, and does not enable the provider.
 Read the command's result; a generated qualification file is not itself proof of
 current readiness. Guest RAM/headroom checks and missing KVM/systemd/cgroup access
-must fail closed. There is no host, TCG, container or gVisor fallback for repository
-commands.
+must fail closed. On the Windows/WSL2 KVM profile there is no host, TCG, container or
+gVisor fallback for repository commands; the only other isolation profile is the
+explicitly weaker server work-VM profile below, which is never selected implicitly.
+
+## Isolation profiles
+
+The capability `isolation` field is one of two literals, and the console labels them
+differently:
+
+| Literal | Boundary | Where | Strength |
+| --- | --- | --- | --- |
+| `disposable-kvm` | One QEMU/KVM microVM per task | Windows host driving x86_64 Ubuntu WSL2 | Qualified locally (2026-11-14) |
+| `disposable-vm-container` | The disposable work VM `godseye-work` (VM 300, `10.20.3.10`, Debian, **no nested KVM**) plus a per-task gVisor (`runsc --platform=systrap`) or rootless-container sandbox | Dedicated server | **Weaker than KVM; not qualified; `available: false`** |
+
+`disposable-vm-container` is an owner decision, not an equivalence claim. Tasks share the
+work VM's Linux kernel; gVisor interposes a user-space kernel and rootless containers rely
+on namespaces/seccomp, so a sandbox escape reaches the work VM rather than a per-task
+kernel. The outer containment is the VM itself: no production secrets, a strict
+NAT/proxy allowlist, ephemeral workspace and reset between uses. A qualification receipt
+must carry the same isolation literal as the adapter, otherwise preflight refuses it.
+
+**Linux with no transport.** A Linux control API without a private work-VM transport (no
+`GODSEYE_CODING_BINDINGS_FILE`, an absent rendered file while OpenBao is sealed, or a
+WSL-only configuration) reports `unavailable: not-configured-for-profile` for both
+runners and performs no probing. Owner administration, preparations and Hermes are
+unaffected.
+
+### Work-VM private configuration
+
+`CodingPrivateConfiguration` is a union. The WSL form keeps `workspace` and
+`distro: "Ubuntu"`. The work-VM form replaces them with a `transport` object:
+
+```json
+{ "version": 1, "capacity": { "...": "as before" }, "bindings": [ "..." ],
+  "transport": { "kind": "work-vm", "host": "10.20.3.10", "port": 22, "user": "godseye",
+    "hostKey": "ssh-ed25519 AAAA...", "hostKeyFingerprint": "SHA256:...",
+    "remoteWorkspace": "/opt/godseye", "identityFile": "/run/godseye-bindings/work-vm-ssh-key" } }
+```
+
+The host key is **pinned**, never trusted on first use: the fingerprint must match the
+supplied public key at parse time and the SSH client runs with `StrictHostKeyChecking=yes`,
+key-only auth, no agent/port forwarding and a fixed remote argv. `identityFile` must be an
+absolute path outside the repository (the renderer places it on tmpfs). The same JSON-line
+control protocol, authorization frames and attempt accounting run over SSH stdio; tests
+inject the spawner and never open a connection.
+
+### Debian guest profile and install template
+
+`scripts/coding_guest_profile.py` replaces the KVM/WSL probes when the SSH transport sets
+`GODSEYE_CODING_PROFILE=work-vm`: Debian 12/13, x86_64, systemd as init, unified cgroup v2
+with `cpu memory pids`, unprivileged user, and a `runsc` binary matching the pinned digest
+(or user namespaces for the rootless sandbox). It never reports availability by itself:
+readiness stays `false` until a sandbox runner and qualification evidence exist, and `run`
+is refused in this profile. `infra/dedicated-server/templates/work-vm-coding-host-install.sh.tmpl`
+is an **unexecuted** template with pinned runsc provenance (the tarball digest from
+`scripts/install-runsc.mjs`) and `@@PLACEHOLDER@@` values for the extracted-binary digest,
+the Debian snapshot timestamp and package versions, which the owner fills after verifying them.
+
+### Bindings from OpenBao
+
+`render-bindings.sh.tmpl` and `godseye-bindings-render.service.tmpl` render the Hermes and
+coding binding documents (and the work-VM SSH key) from OpenBao onto tmpfs
+(`/run/godseye-bindings`, directory `0700`, files `0600`) using a credential-delivered
+AppRole secret-id. A sealed or unreachable OpenBao removes any previous files and exits
+`75`; the control API then starts with both providers unavailable. Restart the control API
+after an unseal. Nothing is written to persistent disk and no value is printed.
+
+### Qualification still required before `available: true`
+
+1. Implement the sandbox task runner (runsc systrap / rootless) in the work-VM profile.
+2. Record runsc binary digest, Debian snapshot and package versions from the install run.
+3. Real CLI chains for both runners with a scripted model, plus the five adversarial cases
+   and physical stop/revocation evidence inside the sandbox.
+4. Egress proof that only the broker endpoint is reachable from `godseye-work`.
+5. Owner acceptance of the weaker boundary; real vendor CLI egress/auth stays off until then.
 
 Pinned assets are Codex `0.167.0-alpha.4.1`, Claude Code `2.1.215`, Node `24.22.1`,
 Git `2.53.0`, QEMU `10.2.1` and Linux `7.0.0-30`. The 19 CLI assets include signed

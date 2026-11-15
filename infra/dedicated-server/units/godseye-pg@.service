@@ -1,0 +1,75 @@
+# Per-cell PostgreSQL 18 instance. Instance name = cell allocation UUID (godseye-pg@<alloc>.service).
+# TEMPLATE ONLY: installed by p10-install-pg-cells.sh; nothing here is executed by the repository.
+#
+# Isolation notes
+# - All cells share the `postgres` UID, so filesystem separation is enforced by the mount namespace:
+#   every other cell's datasets, configuration and sockets are invisible to this instance.
+# - PGDATA and WAL live on dedicated ZFS child datasets with hard quotas (created by the control
+#   transport, see packages/core/src/database-server-transport.ts); this unit never creates storage.
+[Unit]
+Description=G.O.D.S.E.Y.E PostgreSQL 18 cell %i
+Documentation=file:///opt/godseye/docs/development/project-databases.md
+After=network-online.target zfs-mount.service
+Wants=network-online.target
+RequiresMountsFor=/srv/godseye/pg/%i/data /srv/godseye/pg/%i/wal
+ConditionPathExists=/etc/godseye/pg/%i/cell.env
+# Cells that listen on a private bridge need that address to exist first.
+StartLimitIntervalSec=300
+StartLimitBurst=5
+
+[Service]
+Type=notify
+User=postgres
+Group=postgres
+EnvironmentFile=/etc/godseye/pg/%i/cell.env
+# Optional: the WAL archive cipher passphrase (root-owned, read by systemd, never by the cell files).
+EnvironmentFile=-/etc/godseye/pg/%i/archive.env
+RuntimeDirectory=godseye-pg/%i
+RuntimeDirectoryMode=0750
+ExecStart=/usr/lib/postgresql/18/bin/postgres -D /srv/godseye/pg/%i/data -c config_file=/etc/godseye/pg/%i/postgresql.conf
+ExecReload=/bin/kill -HUP $MAINPID
+KillMode=mixed
+KillSignal=SIGINT
+TimeoutStartSec=infinity
+TimeoutStopSec=120
+OOMScoreAdjust=-900
+Restart=on-failure
+RestartSec=2s
+RestartSteps=5
+RestartMaxDelaySec=60s
+
+# Mount namespace: only this cell's own paths are visible.
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+PrivateDevices=true
+TemporaryFileSystem=/srv/godseye/pg:ro /etc/godseye/pg:ro /run/godseye-pg:ro /var/lib/godseye/pg-backup:ro
+BindPaths=/srv/godseye/pg/%i /run/godseye-pg/%i
+BindReadOnlyPaths=/etc/godseye/pg/%i
+InaccessiblePaths=/etc/godseye/secrets /etc/openbao /var/lib/openbao
+# pgBackRest repository log/lock live in the cell directory, already bound read-write above.
+NoNewPrivileges=true
+CapabilityBoundingSet=
+AmbientCapabilities=
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectKernelLogs=true
+ProtectControlGroups=true
+ProtectClock=true
+ProtectHostname=true
+LockPersonality=true
+RestrictRealtime=true
+RestrictSUIDSGID=true
+RestrictNamespaces=true
+MemoryDenyWriteExecute=false
+SystemCallArchitectures=native
+SystemCallFilter=@system-service
+SystemCallFilter=~@privileged @resources
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+UMask=0077
+# Per-cell CPU/memory ceilings are applied by the control transport with `systemctl set-property`
+# from the admitted profile (cpuMilliCores / memoryMiB); they are intentionally not hardcoded here.
+Slice=godseye-pg.slice
+
+[Install]
+WantedBy=multi-user.target

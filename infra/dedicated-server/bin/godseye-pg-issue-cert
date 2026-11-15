@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+# Issues one per-cell server certificate signed by the private cell CA.
+# Usage: godseye-pg-issue-cert <allocation-uuid> <servername> <target-directory>
+# TEMPLATE ONLY: installed to /usr/local/sbin by p10-install-pg-cells.sh and invoked by the control
+# transport as root. The CA key stays in /etc/godseye/pki (root-only); the cell receives only its own
+# key, certificate and the CA certificate. SANs cover the verified server name and the bind address,
+# so clients that connect by private IP literal still verify the certificate (verify-full).
+set -euo pipefail
+
+ALLOCATION="${1:?allocation required}"
+SERVERNAME="${2:?servername required}"
+TARGET="${3:?target directory required}"
+[[ "${ALLOCATION}" =~ ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$ ]] || { echo "invalid allocation" >&2; exit 64; }
+[[ "${SERVERNAME}" =~ ^[a-z0-9.-]+$ ]] || { echo "invalid servername" >&2; exit 64; }
+GROUP="${4:-postgres}"
+case "${GROUP}:${TARGET}" in
+  "postgres:/etc/godseye/pg/${ALLOCATION}/tls") ;;
+  "godseye-redis:/etc/godseye/redis/${ALLOCATION}/tls") ;;
+  *) echo "unexpected target" >&2; exit 64 ;;
+esac
+
+PKI="/etc/godseye/pki"
+# shellcheck disable=SC1091
+. /etc/godseye/pg/host.env # BIND_ADDRESS=<loopback or private bridge address>
+[[ "${BIND_ADDRESS}" =~ ^[0-9a-fA-F:.]+$ ]] || { echo "invalid bind address" >&2; exit 64; }
+[ ! -e "${TARGET}/server.key" ] || { echo "certificate already exists" >&2; exit 73; }
+
+install -d -m 0750 -o root -g "${GROUP}" "${TARGET}"
+WORK="$(mktemp -d)"
+trap 'rm -rf "${WORK}"' EXIT
+cat >"${WORK}/req.cnf" <<EOF
+[req]
+distinguished_name=dn
+prompt=no
+req_extensions=ext
+[dn]
+CN=${SERVERNAME}
+O=G.O.D.S.E.Y.E cell ${ALLOCATION}
+[ext]
+subjectAltName=DNS:${SERVERNAME},IP:${BIND_ADDRESS}
+extendedKeyUsage=serverAuth
+keyUsage=digitalSignature,keyEncipherment
+basicConstraints=CA:FALSE
+EOF
+openssl genpkey -algorithm EC -pkeyopt ec_paramgen_curve:P-256 -out "${WORK}/server.key"
+openssl req -new -key "${WORK}/server.key" -out "${WORK}/server.csr" -config "${WORK}/req.cnf"
+openssl x509 -req -in "${WORK}/server.csr" -CA "${PKI}/cells-ca.crt" -CAkey "${PKI}/cells-ca.key" \
+  -CAcreateserial -out "${WORK}/server.crt" -days 397 -sha256 \
+  -extfile "${WORK}/req.cnf" -extensions ext
+install -m 0640 -o root -g "${GROUP}" "${WORK}/server.key" "${TARGET}/server.key"
+install -m 0644 -o root -g "${GROUP}" "${WORK}/server.crt" "${TARGET}/server.crt"
+install -m 0644 -o root -g "${GROUP}" "${PKI}/cells-ca.crt" "${TARGET}/ca.crt"

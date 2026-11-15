@@ -32,7 +32,11 @@ export const LocalCommandResponse = z
   .strict();
 export const RevocationResponse = z.object({ revoked: z.literal(true) }).strict();
 export const HealthResponse = z
-  .object({ status: z.literal("ok"), mode: z.literal("local"), serverConnected: z.literal(false) })
+  .object({
+    status: z.literal("ok"),
+    mode: z.enum(["local", "server"]),
+    serverConnected: z.boolean(),
+  })
   .strict();
 export const EnvironmentResponse = z
   .object({

@@ -13,6 +13,10 @@ import { Failure, Loading } from "./shared";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 
+const ISOLATION_LABELS = {
+  "disposable-kvm": "KVM jetable",
+  "disposable-vm-container": "VM de travail jetable + conteneur (garantie plus faible que KVM)",
+} as const;
 const dispositionLabels = {
   planned: "prévu",
   active: "actif",
@@ -96,13 +100,14 @@ export function AgentsCoding({
         </div>
       </div>
       <p>
-        Préparez une tâche sur un commit précis du dépôt lié. Chaque exécution nécessite un invité
-        KVM jetable, un accès fournisseur limité et un budget réservé.
+        Préparez une tâche sur un commit précis du dépôt lié. Chaque exécution nécessite un
+        environnement jetable isolé, un accès fournisseur limité et un budget réservé.
       </p>
       {data.capabilities.map((capability) => (
         <p key={capability.runner}>
           <strong>{capability.runner}</strong> ·{" "}
           {capability.available ? "Disponible" : "Indisponible"} ·{" "}
+          {ISOLATION_LABELS[capability.isolation]} ·{" "}
           {capability.reason === "Disposable KVM and bounded vendor API broker are not qualified"
             ? "L’invité KVM et l’accès fournisseur avec plafond de dépenses restent à qualifier."
             : capability.reason === "Coding resource pool including VMM overhead is not configured"

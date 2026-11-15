@@ -3,6 +3,7 @@ import { z } from "zod";
 import { identityPaths } from "./identity/runtime.js";
 import { parseInngestCells } from "./inngest-config.js";
 import { readPrivateJson } from "./private-json.js";
+import { hostPort, serverSettings } from "./server-config.js";
 
 function port(value: string | undefined, fallback: number): number {
   if (value === undefined) return fallback;
@@ -16,11 +17,14 @@ export function loadConfiguration(
   env: NodeJS.ProcessEnv = process.env,
   options: { purpose?: "runtime" | "administration" } = {},
 ) {
-  if (env.GODSEYE_MODE !== "local" || env.NODE_ENV === "production") {
+  const mode = env.GODSEYE_MODE;
+  if (mode !== "local" && mode !== "server")
+    throw new Error("GODSEYE_MODE must be explicitly set to local or server");
+  // Production is admitted only by a fully validated server configuration, never by a mode flag.
+  if (mode === "local" && env.NODE_ENV === "production")
     throw new Error(
-      "Only explicit local mode is available; remote private-network admission is not qualified",
+      "Local mode is refused in production; configure and validate GODSEYE_MODE=server",
     );
-  }
   const apiPort = port(env.GODSEYE_API_PORT, LOCAL_DEFAULTS.apiPort);
   const consolePort = port(env.GODSEYE_CONSOLE_PORT, LOCAL_DEFAULTS.consolePort);
   if (env.GODSEYE_DATABASE_URL && env.GODSEYE_JOBS_CONTROL_FILE)
@@ -31,6 +35,9 @@ export function loadConfiguration(
         .strict()
         .parse(readPrivateJson(env.GODSEYE_JOBS_CONTROL_FILE)).databaseUrl
     : env.GODSEYE_DATABASE_URL;
+  const server = mode === "server" ? serverSettings(env, databaseUrl) : undefined;
+  const host = server?.host ?? LOCAL_DEFAULTS.host;
+  const ownerOrigin = server?.ownerOrigin ?? `http://localhost:${consolePort}`;
   // Recovery and private administration never start cell engines. Broken unrelated job settings
   // must not disable those paths; runtime listeners retain the full strict validation below.
   const inngestCells =
@@ -54,14 +61,20 @@ export function loadConfiguration(
   return {
     apiPort,
     consolePort,
-    host: LOCAL_DEFAULTS.host,
-    origins: [`http://127.0.0.1:${consolePort}`, `http://localhost:${consolePort}`],
-    hosts: [
-      `127.0.0.1:${apiPort}`,
-      `localhost:${apiPort}`,
-      `127.0.0.1:${consolePort}`,
-      `localhost:${consolePort}`,
-    ],
+    mode,
+    host,
+    /** The single owner origin: WebAuthn relying party, cookies, Host/Origin allowlists, enrollment links. */
+    ownerOrigin,
+    trustedProxies: server?.trustedProxies ?? [],
+    origins: server ? [ownerOrigin] : [`http://127.0.0.1:${consolePort}`, ownerOrigin],
+    hosts: server
+      ? [new URL(ownerOrigin).host, hostPort(host, apiPort)]
+      : [
+          `127.0.0.1:${apiPort}`,
+          `localhost:${apiPort}`,
+          `127.0.0.1:${consolePort}`,
+          new URL(ownerOrigin).host,
+        ],
     databaseUrl,
     /** Opt-in only: GODSEYE_JOBS_LOCAL_FIXTURES=enabled registers the simulated local handlers. */
     jobsLocalFixtures: env.GODSEYE_JOBS_LOCAL_FIXTURES === "enabled",

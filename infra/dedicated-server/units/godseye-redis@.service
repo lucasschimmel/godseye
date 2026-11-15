@@ -1,0 +1,57 @@
+# Per-cell workflow Redis (Inngest state). Instance name = cell environment UUID.
+# TEMPLATE ONLY: installed by p10-install-jobs.sh; configuration is rendered per cell into
+# /etc/godseye/redis/%i/redis.conf by the same installer (never by hand, never committed).
+#
+# Required cell settings (the jobs runtime verifies AOF and noeviction at startup):
+#   requirepass via `include` of a root-owned 0640 secret file, appendonly yes, appendfsync always,
+#   maxmemory-policy noeviction, protected-mode yes, bind to the cell's private bridge address only,
+#   port 0 + tls-port <cell port> with tls-auth-clients no (server identity verified by clients).
+[Unit]
+Description=G.O.D.S.E.Y.E workflow Redis cell %i
+After=network-online.target
+Wants=network-online.target
+ConditionPathExists=/etc/godseye/redis/%i/redis.conf
+StartLimitIntervalSec=300
+StartLimitBurst=5
+
+[Service]
+Type=notify
+User=godseye-redis
+Group=godseye-redis
+ExecStart=/usr/bin/redis-server /etc/godseye/redis/%i/redis.conf --supervised systemd --daemonize no
+Restart=on-failure
+RestartSec=2s
+RestartSteps=5
+RestartMaxDelaySec=60s
+WorkingDirectory=/var/lib/godseye-redis/%i
+
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+PrivateDevices=true
+# Only this cell's configuration and data are visible.
+TemporaryFileSystem=/etc/godseye/redis:ro /var/lib/godseye-redis:ro
+BindReadOnlyPaths=/etc/godseye/redis/%i
+BindPaths=/var/lib/godseye-redis/%i
+NoNewPrivileges=true
+CapabilityBoundingSet=
+AmbientCapabilities=
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectKernelLogs=true
+ProtectControlGroups=true
+LockPersonality=true
+RestrictRealtime=true
+RestrictSUIDSGID=true
+RestrictNamespaces=true
+SystemCallArchitectures=native
+SystemCallFilter=@system-service
+SystemCallFilter=~@privileged @resources
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+UMask=0077
+# Cell memory ceiling is set from the admitted resource profile with `systemctl set-property`.
+OOMScoreAdjust=-500
+LimitNOFILE=65535
+
+[Install]
+WantedBy=multi-user.target

@@ -12,8 +12,10 @@ import { openStore, type Store } from "@godseye/store";
 import { serve } from "@hono/node-server";
 import { createRuntimeAccess } from "./access-runtime.js";
 import { createApp } from "./app.js";
+import { configuredCellProviders } from "./cell-providers.js";
 import { codingStartupOptions } from "./coding-startup.js";
 import { loadConfiguration } from "./config.js";
+import { configuredDelivery } from "./delivery/startup.js";
 import { configuredHermesProvider, type ManagedHermesProvider } from "./hermes-provider.js";
 import {
   configuredHermesToolExecutor,
@@ -103,7 +105,7 @@ async function start() {
     const signingKey = await loadIdentityMaterial(config.identityDir);
     store = await openStore({ dataDir: config.dataDir, databaseUrl: config.databaseUrl });
     const identity = await createOwnerIdentity(store, {
-      origin: `http://localhost:${config.consolePort}`,
+      origin: config.ownerOrigin,
       signingKey,
     });
     inngest = await prepareLocalInngest({
@@ -115,7 +117,11 @@ async function start() {
     const fixtures = jobsOptions(config.jobsLocalFixtures);
     hermes = configuredHermesProvider();
     hermesTools = configuredHermesToolExecutor(process.env);
+    // Private per-cell PostgreSQL/pgBackRest providers; absent binding keeps everything unconfigured.
+    const cells = configuredCellProviders();
     const infrastructure = new InfrastructureEngine(store, {
+      ...configuredDelivery(process.env),
+      ...cells,
       agents: { provider: hermes, toolExecutor: hermesTools },
       coding: await codingStartupOptions(),
       ...(config.jobsDetached
@@ -174,7 +180,9 @@ async function start() {
     );
     server = serve({ fetch: app.fetch, port: config.apiPort, hostname: config.host }, () => {
       console.info(
-        `G.O.D.S.E.Y.E owner console: http://localhost:${config.consolePort} (local only)`,
+        config.mode === "server"
+          ? `G.O.D.S.E.Y.E control API (server mode) on ${config.host}:${config.apiPort}; owner origin ${config.ownerOrigin} (private network only)`
+          : `G.O.D.S.E.Y.E owner console: ${config.ownerOrigin} (local only)`,
       );
       console.info(
         "Initial enrollment: bun run owner:setup. Management always requires an owner passkey.",

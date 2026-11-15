@@ -47,8 +47,6 @@ echo "OPENBAO_APPROLE_LOGIN_OK"
 # 2. Create PostgreSQL role and database for godseye control plane
 if [ ! -f /etc/godseye/control-api.env ]; then
   DB_PASS="$(openssl rand -hex 24)"
-  SESSION_SECRET="$(openssl rand -hex 32)"
-  INTERNAL_TOKEN="$(openssl rand -hex 32)"
 
   su - postgres -c "psql -v ON_ERROR_STOP=1" <<SQL
 DO \$\$
@@ -65,13 +63,7 @@ SQL
     su - postgres -c "createdb -O godseye godseye"
 
   cat >/etc/godseye/control-api.env <<EOF
-NODE_ENV=production
-DATABASE_URL=postgresql://godseye:${DB_PASS}@127.0.0.1:5432/godseye
-REDIS_URL=redis://127.0.0.1:6379
-OPENBAO_ADDR=https://127.0.0.1:8200
-OPENBAO_CACERT=/etc/openbao/bao.crt
-GODSEYE_SESSION_SECRET=${SESSION_SECRET}
-GODSEYE_INTERNAL_TOKEN=${INTERNAL_TOKEN}
+GODSEYE_DATABASE_URL=postgresql://godseye:${DB_PASS}@127.0.0.1:5432/godseye
 EOF
   chmod 0600 /etc/godseye/control-api.env
 fi

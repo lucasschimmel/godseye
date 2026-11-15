@@ -14,6 +14,7 @@ import {
   assertPrivateTarget,
   loadIdentityMaterial,
   privateDirectory,
+  processStartToken,
 } from "../apps/control-api/src/identity/runtime.js";
 import { owner, projectInput } from "./helpers.js";
 
@@ -322,6 +323,37 @@ describe("private local owner runtime", () => {
 
     await expect(acquireInstance(directory)).rejects.toThrow("already running");
     await release();
+  });
+
+  it("T37b reclaims a lock whose live PID was recycled by a different process incarnation", async (context) => {
+    const own = await processStartToken(process.pid);
+    if (!own) {
+      context.skip("This platform cannot report process start times");
+      return;
+    }
+    const directory = join(fixtureRoot, "recycled-pid-state");
+    await privateDirectory(directory);
+    const lock = join(directory, "instance.lock");
+    // Same PID, different recorded start: the original holder died and the OS reused its PID.
+    await writeFile(
+      lock,
+      JSON.stringify({ pid: process.pid, id: randomUUID(), start: `${own}-old` }),
+      {
+        mode: 0o600,
+      },
+    );
+    const release = await acquireInstance(directory);
+    await expect(acquireInstance(directory)).rejects.toThrow("already running");
+    await release();
+
+    // The genuine incarnation (matching start) and legacy locks without a start stay held.
+    for (const marker of [{ start: own }, {}]) {
+      await writeFile(lock, JSON.stringify({ pid: process.pid, id: randomUUID(), ...marker }), {
+        mode: 0o600,
+      });
+      await expect(acquireInstance(directory)).rejects.toThrow("already running");
+      await unlink(lock);
+    }
   });
 
   it("T01 refuses shared roots without changing the workspace permission descriptor", async () => {

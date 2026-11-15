@@ -1,0 +1,13 @@
+# TEMPLATE drop-in: /etc/systemd/system/godseye-control-api.service.d/hermes-coding.conf
+# Wires the rendered tmpfs bindings and readiness gates into the existing control API unit. The files below
+# are produced by godseye-bindings-render.service; while OpenBao is sealed they do not exist, so the
+# providers start unavailable (owner administration is unaffected).
+[Unit]
+Wants=godseye-hermes-gateway-ready.service godseye-hermes-tools-ready.service godseye-bindings-render.service
+After=godseye-hermes-gateway-ready.service godseye-hermes-tools-ready.service godseye-bindings-render.service
+
+[Service]
+Environment=GODSEYE_HERMES_BINDINGS_FILE=/run/godseye-bindings/hermes-bindings.json
+Environment=GODSEYE_CODING_BINDINGS_FILE=/run/godseye-bindings/coding-bindings.json
+# Owner opt-in for the fixed gVisor data tools (off by default):
+# Environment=GODSEYE_HERMES_TOOLS_ENABLED=true

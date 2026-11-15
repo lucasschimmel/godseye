@@ -10,6 +10,7 @@ import { APPLICATION_JOBS_MIGRATION } from "./jobs-migration.js";
 import { APPLICATION_MIGRATION } from "./migration.js";
 import { protectApplicationDirectory } from "./private-files.js";
 import * as schema from "./schema.js";
+import { type ApplicationTlsOptions, applicationPoolConfig } from "./store-connection.js";
 
 export type ApplicationDatabase = PgliteDatabase<typeof schema> | NodePgDatabase<typeof schema>;
 export type ApplicationAccess = Pick<
@@ -35,10 +36,33 @@ export function serialApplicationLane() {
     return current;
   };
 }
+const migrationHash = () => createHash("sha256").update(APPLICATION_MIGRATION).digest("hex");
+async function seedScope(tx: ApplicationAccess, scope: Readonly<ApplicationScopeInput>) {
+  await tx
+    .insert(schema.appScope)
+    .values({
+      id: 1,
+      ...scope,
+      migrationHash: migrationHash(),
+      recoveryHold: false,
+      storeId: randomUUID(),
+    })
+    .onConflictDoNothing();
+}
+async function applyJobsMigration(tx: ApplicationAccess) {
+  for (const statement of APPLICATION_JOBS_MIGRATION.split(";").filter((value) => value.trim()))
+    await tx.execute(statement);
+}
 export async function openApplicationStore(options: {
   scope: ApplicationScopeInput;
   dataDir?: string;
   databaseUrl?: string;
+  /**
+   * Optional separate DDL-capable identity (the cell `migration` role). When set, only it runs
+   * migrations and seeds the scope row; the runtime identity in `databaseUrl` then needs DML only.
+   */
+  migrationDatabaseUrl?: string;
+  tls?: ApplicationTlsOptions;
 }): Promise<ApplicationStore> {
   const scope = Object.freeze(ApplicationScope.parse(options.scope));
   if (options.databaseUrl && options.dataDir)
@@ -49,8 +73,21 @@ export async function openApplicationStore(options: {
     options.dataDir && options.dataDir !== "memory://"
       ? await acquireApplicationInstance(`${options.dataDir}.runtime`)
       : undefined;
+  if ((options.migrationDatabaseUrl || options.tls) && !options.databaseUrl)
+    throw new ApplicationError(
+      "INVALID_CONFIGURATION",
+      "Role and TLS options need a database URL",
+      422,
+    );
+  if (options.migrationDatabaseUrl && options.migrationDatabaseUrl === options.databaseUrl)
+    throw new ApplicationError(
+      "INVALID_CONFIGURATION",
+      "Migration and runtime identities must differ",
+      422,
+    );
+  const separateMigration = Boolean(options.migrationDatabaseUrl);
   const client = options.databaseUrl
-    ? new pg.Pool({ connectionString: options.databaseUrl, max: 5 })
+    ? new pg.Pool(applicationPoolConfig(options.databaseUrl, options.tls, 5))
     : new PGlite(options.dataDir ?? "memory://");
   const db =
     client instanceof PGlite
@@ -78,27 +115,30 @@ export async function openApplicationStore(options: {
         healthy = false;
       });
     }
-    const hash = createHash("sha256").update(APPLICATION_MIGRATION).digest("hex");
-    if (client instanceof PGlite) await client.exec(APPLICATION_MIGRATION);
+    const hash = migrationHash();
+    if (options.migrationDatabaseUrl) {
+      // Separate DDL identity: it migrates and seeds the scope row, then is closed before runtime use.
+      const migrator = new pg.Pool(
+        applicationPoolConfig(options.migrationDatabaseUrl, options.tls, 1),
+      );
+      try {
+        await migrator.query(APPLICATION_MIGRATION);
+        await postgresDrizzle(migrator, { schema }).transaction(async (tx) => {
+          await seedScope(tx, scope);
+          await applyJobsMigration(tx);
+        });
+      } finally {
+        await migrator.end();
+      }
+    } else if (client instanceof PGlite) await client.exec(APPLICATION_MIGRATION);
     else await client.query(APPLICATION_MIGRATION);
     let recoveryHeld = false;
     let storeId = "";
     await db.transaction(async (tx) => {
-      await tx
-        .insert(schema.appScope)
-        .values({
-          id: 1,
-          ...scope,
-          migrationHash: hash,
-          recoveryHold: false,
-          storeId: randomUUID(),
-        })
-        .onConflictDoNothing();
-      const [existing] = await tx
-        .select()
-        .from(schema.appScope)
-        .where(eq(schema.appScope.id, 1))
-        .for("update");
+      if (!separateMigration) await seedScope(tx, scope);
+      const scopeQuery = tx.select().from(schema.appScope).where(eq(schema.appScope.id, 1));
+      // The runtime identity only needs SELECT when it does not own the schema.
+      const [existing] = await (separateMigration ? scopeQuery : scopeQuery.for("update"));
       if (
         existing?.projectId !== scope.projectId ||
         existing?.environmentId !== scope.environmentId ||
@@ -111,8 +151,7 @@ export async function openApplicationStore(options: {
         );
       recoveryHeld = existing.recoveryHold;
       storeId = existing.storeId;
-      for (const statement of APPLICATION_JOBS_MIGRATION.split(";").filter((value) => value.trim()))
-        await tx.execute(statement);
+      if (!separateMigration) await applyJobsMigration(tx);
     });
     const exclusive = serialApplicationLane();
     let closed = false;

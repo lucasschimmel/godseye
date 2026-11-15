@@ -2,6 +2,8 @@ import { z } from "zod";
 import { RepositoryConfiguration } from "./http-domain.js";
 
 export const CODING_RUNNERS = ["codex", "claude-code"] as const;
+export const CODING_ISOLATIONS = ["disposable-kvm", "disposable-vm-container"] as const;
+export type CodingIsolation = (typeof CODING_ISOLATIONS)[number];
 export const CODING_RUNNER_DEFAULT_COST_MICROS = {
   codex: 500000,
   "claude-code": 100000,
@@ -167,7 +169,7 @@ export const CodingCapability = z
     available: z.boolean(),
     version: z.string().max(100).nullable(),
     reason: z.string().max(512),
-    isolation: z.literal("disposable-kvm"),
+    isolation: z.enum(CODING_ISOLATIONS),
     billing: z.enum(["bounded-api", "unavailable"]),
     auth: z.literal("task-scoped-broker"),
   })
@@ -231,7 +233,7 @@ export const CodingQualification = z
     runnerVersion: z.string().min(1).max(100),
     pinnedRuntimeHash: Hash,
     guestImageHash: Hash,
-    isolation: z.literal("disposable-kvm"),
+    isolation: z.enum(CODING_ISOLATIONS),
     preparationHash: Hash,
     repositoryHash: Hash,
     commitSha: Sha,

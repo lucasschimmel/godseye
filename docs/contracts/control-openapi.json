@@ -6954,7 +6954,10 @@
                           },
                           "isolation": {
                             "type": "string",
-                            "const": "disposable-kvm"
+                            "enum": [
+                              "disposable-kvm",
+                              "disposable-vm-container"
+                            ]
                           },
                           "billing": {
                             "type": "string",
@@ -41369,11 +41372,13 @@
                     },
                     "mode": {
                       "type": "string",
-                      "const": "local"
+                      "enum": [
+                        "local",
+                        "server"
+                      ]
                     },
                     "serverConnected": {
-                      "type": "boolean",
-                      "const": false
+                      "type": "boolean"
                     }
                   },
                   "required": [
@@ -49335,11 +49340,13 @@
           },
           "mode": {
             "type": "string",
-            "const": "local"
+            "enum": [
+              "local",
+              "server"
+            ]
           },
           "serverConnected": {
-            "type": "boolean",
-            "const": false
+            "type": "boolean"
           }
         },
         "required": [

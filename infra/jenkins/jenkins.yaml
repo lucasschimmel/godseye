@@ -43,3 +43,51 @@ jobs:
           }
         }
       }
+  - script: |
+      // Per-project delivery build template. The control API is the only expected caller: it submits
+      // with IDEMPOTENCY_TOKEN (deterministic per delivery scope) and reads the job's api/json to
+      // reconcile, so the parameter value must stay visible in the build record. The job never runs
+      // repository-authored scripts; /opt/godseye/build-app.sh on the isolated agent is server-owned.
+      pipelineJob('godseye-app-build') {
+        description('Parameterized, server-owned image build for delivered applications (Docker + Trivy).')
+        parameters {
+          stringParam('IDEMPOTENCY_TOKEN', '', '64-hex submission token (control API)')
+          stringParam('SOURCE_COMMIT', '', 'Verified 40-hex commit SHA')
+          stringParam('REPOSITORY_FULL_NAME', '', 'owner/repository')
+          choiceParam('RECIPE_KIND', ['static', 'node'], 'Server-owned recipe')
+          stringParam('RECIPE_CONTEXT', '.', 'Relative context directory')
+          stringParam('RUN_ID', '', 'Delivery run UUID')
+          stringParam('SCOPE_HASH', '', 'Fingerprint of the delivery scope')
+          stringParam('IMAGE_NAME', '', 'Registry image name below apps/')
+          stringParam('REQUIRED_CHECKS', '', 'Comma-separated check names (informational)')
+          stringParam('MAX_ARTIFACT_MIB', '512', 'Artifact ceiling')
+        }
+        definition {
+          cps {
+            sandbox(true)
+            script('''
+              pipeline {
+                agent { label 'godseye-app-build' }
+                options { skipDefaultCheckout(true); timeout(time: 20, unit: 'MINUTES'); timestamps() }
+                stages {
+                  stage('Checkout verified commit') {
+                    steps {
+                      deleteDir()
+                      checkout([$class: 'GitSCM',
+                        userRemoteConfigs: [[url: "https://github.com/${params.REPOSITORY_FULL_NAME}.git",
+                          credentialsId: 'godseye-github-app-read']],
+                        branches: [[name: params.SOURCE_COMMIT]]])
+                    }
+                  }
+                  stage('Build, push and scan') {
+                    steps { sh '/opt/godseye/build-app.sh' }
+                  }
+                }
+                post {
+                  success { archiveArtifacts artifacts: 'evidence.json,trivy.json', allowEmptyArchive: false }
+                }
+              }
+            '''.stripIndent())
+          }
+        }
+      }

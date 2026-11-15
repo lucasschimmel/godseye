@@ -127,6 +127,51 @@ export async function loadIdentityMaterial(identityDir: string) {
   return key;
 }
 
+/**
+ * Identity of one process incarnation, so a recycled PID is not mistaken for the lock holder.
+ * Linux: boot id plus /proc starttime (a reboot also changes the boot id). macOS: `ps` start date.
+ * Windows: process creation time. Returns undefined when it cannot be proven.
+ */
+export async function processStartToken(pid: number): Promise<string | undefined> {
+  try {
+    if (process.platform === "linux") {
+      const boot = (await readFile("/proc/sys/kernel/random/boot_id", "utf8")).trim();
+      const stat = await readFile(`/proc/${pid}/stat`, "utf8");
+      // Field 2 (comm) may contain spaces and parentheses; fields after the last ")" are positional.
+      const fields = stat.slice(stat.lastIndexOf(")") + 2).split(" ");
+      const start = fields[19]; // field 22 (starttime), counted from field 3 at index 0
+      return start && /^\d+$/.test(start) ? `${boot}:${start}` : undefined;
+    }
+    if (process.platform === "win32") {
+      const system = join(process.env.SystemRoot ?? "C:\\Windows", "System32");
+      const { stdout } = await execute(
+        join(system, "WindowsPowerShell", "v1.0", "powershell.exe"),
+        [
+          "-NoProfile",
+          "-NonInteractive",
+          "-Command",
+          "(Get-Process -Id ([int][Environment]::GetEnvironmentVariable('GODSEYE_PROBE_PID'))).StartTime.ToUniversalTime().ToString('o')",
+        ],
+        {
+          env: {
+            ...process.env,
+            PSModulePath: join(system, "WindowsPowerShell", "v1.0", "Modules"),
+            GODSEYE_PROBE_PID: String(pid),
+          },
+        },
+      );
+      return stdout.trim() || undefined;
+    }
+    const { stdout } = await execute("ps", ["-o", "lstart=", "-p", String(pid)], {
+      env: { ...process.env, LC_ALL: "C" },
+    });
+    return stdout.trim() || undefined;
+  } catch {
+    // The process is gone or the platform cannot report it; the caller then stays conservative.
+    return undefined;
+  }
+}
+
 /** A local database/identity state directory has one process, including offline recovery. */
 export async function acquireInstance(stateDir: string) {
   await mkdir(stateDir, { recursive: true });
@@ -134,16 +179,28 @@ export async function acquireInstance(stateDir: string) {
   const guard = await open(guardPath, "wx", 0o600);
   try {
     const path = join(stateDir, "instance.lock");
-    const marker = { pid: process.pid, id: randomUUID() };
+    const marker = {
+      pid: process.pid,
+      id: randomUUID(),
+      start: await processStartToken(process.pid),
+    };
     try {
-      const existing = JSON.parse(await readFile(path, "utf8")) as { pid: number };
+      const existing = JSON.parse(await readFile(path, "utf8")) as { pid: number; start?: string };
       if (!Number.isInteger(existing.pid) || existing.pid <= 0)
         throw new Error("Invalid local process lock; verify it before removal");
+      let alive = true;
       try {
         process.kill(existing.pid, 0);
-        throw new Error("The local API or an offline recovery process is already running");
       } catch (error) {
         if (!(error instanceof Error && "code" in error && error.code === "ESRCH")) throw error;
+        alive = false;
+      }
+      if (alive) {
+        // A live PID only holds the lock when it is the same incarnation that wrote it. Locks from
+        // before this field existed, or unreadable process times, stay conservative (still held).
+        const current = existing.start ? await processStartToken(existing.pid) : undefined;
+        if (!existing.start || !current || current === existing.start)
+          throw new Error("The local API or an offline recovery process is already running");
       }
       await unlink(path);
     } catch (error) {
