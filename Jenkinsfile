@@ -16,7 +16,7 @@ pipeline {
     PLAYWRIGHT_BROWSERS_PATH = '0'
   }
   stages {
-    stage('Checkout trusted main') {
+    stage('Checkout trusted develop') {
       steps {
         deleteDir()
         checkout scm

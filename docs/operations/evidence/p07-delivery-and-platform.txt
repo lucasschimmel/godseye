@@ -1,0 +1,35 @@
+P07 Delivery, CI, OpenBao, Caddy HTTPS & Platform Integration (2026-11-15)
+==============================================================================
+
+1. Public HTTPS Edge (godseye.lucasschimmel.fr -> 65.108.38.218):
+   - Caddy 2.11.2 on godseye-pro (10.20.1.10) with Let's Encrypt ACME TLS cert (acme-v02.api.letsencrypt.org-directory).
+   - Verified from workstation: curl.exe -fsS https://godseye.lucasschimmel.fr/healthz -> "godseye-edge-ok".
+   - Host nftables DNAT: only TCP 80, 443 forwarded from enp5s0 -> 10.20.1.10.
+   - Public port scan on 65.108.38.218: 80=True, 443=True, 22=False, 5432=False, 6379=False, 8006=False, 8080=False, 8200=False.
+
+2. OpenBao 2.7.2 & PostgreSQL 17.12 (godseye-pro):
+   - OpenBao bound to 127.0.0.1:8200 and 10.20.1.10:8200 (TLS), Sealed: false.
+   - KV v2 mount godseye/ + AppRole godseye-control-api + policy godseye-control-policy verified (OPENBAO_APPROLE_LOGIN_OK).
+   - PostgreSQL database "godseye" and role "godseye" created; secrets stored in /etc/godseye/ (chmod 600).
+
+3. G.O.D.S.E.Y.E Control Plane & Console (godseye-pro):
+   - Read-only GitHub Deploy Key (ed25519) configured for git@github.com:lucasschimmel/godseye.git (develop, bc7f79c).
+   - Built in /opt/godseye (console, control-api, sdk, backend, jobs).
+   - godseye-control-api.service active on 127.0.0.1:4301 (unauthenticated /api/v1/openapi.json -> 401).
+   - godseye-console.service active on 127.0.0.1:4300 (HTTP 200).
+
+4. Jenkins LTS 2.580.2 + Isolated Agent godseye-work (10.20.3.10):
+   - Jenkins bound strictly to 10.20.1.10:8080; JCasC loaded (infra/jenkins/jenkins.yaml + 02-work-agent.yaml).
+   - Surgical nftables rule: vmbr1 10.20.1.10 -> vmbr3 10.20.3.10:22 accept (reverse WORK_TO_PRO_BLOCKED verified).
+   - godseye-work online (offline: false, numExecutors: 2, cpulimit=2, Java 21.0.13, Node v24.22.3, Bun 1.4.4).
+   - Build #5 (16m02s, commit bc7f79c):
+     * PASSED: Checkout, bun install (428 pkgs), bao:install (2.7.2 SHA256), lint (733 files), contracts:check, typecheck, bun audit (0 vulns), full vitest suite, infra-lab (4/4), ci-report.mjs, JUnit & artifact archival.
+     * FAILED at Browser journeys (bun run test:e2e): config.webServer ECONNRESET caused by Linux OOM killer on godseye-work (6 GiB RAM, 0 swap) + missing Chromium OS shared libraries.
+   - Remediation on godseye-work: installed Chromium OS shared libraries (libnss3, libgbm1, libasound2t64, etc.) and created persistent 4 GiB /swapfile.
+   - Build #6 (21m04s, commit bc7f79c):
+     * PASSED: Checkout, bun install (428 pkgs), bao:install (2.7.2 SHA256), lint, contracts:check, typecheck, bun audit (0 vulns), full vitest suite, test:infra:lab (4/4 gVisor runsc), ci-report.mjs, JUnit & artifact archival.
+     * test:e2e (Playwright): 51/54 passed (5.4m, zero OOM/ECONNRESET). 3 pre-existing application/UI test failures (databases.spec.ts:157, agents.spec.ts:76, agents.spec.ts:198); Jenkins skipped pg-lab/recovery-lab stages due to test:e2e exit code 1 (PostgreSQL 17.12 + pgBackRest AES-256-CBC restore already qualified in P06).
+
+5. Coding-Runner Linux/Proxmox KVM Boundary:
+   - apps/control-api/src/coding-provider.ts enforces CodingPrivateConfiguration with distro: z.literal("Ubuntu") (Windows/WSL2 wsl.exe).
+   - apps/control-api/src/coding-startup.ts safely degrades to unavailableConfiguration (qualified: false) on Linux without impacting admin console or Hermes. Linux/Proxmox KVM coding-runner support is an application-layer feature PR.

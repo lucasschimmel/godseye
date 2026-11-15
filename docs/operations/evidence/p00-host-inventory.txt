@@ -1,0 +1,426 @@
+
+=== [TIMESTAMP_AND_OS] ===
+2026-11-14T19:04:09Z
+Linux Ubuntu-resolute-latest-amd64-base.zst 7.0.0-22-generic #22-Ubuntu SMP PREEMPT_DYNAMIC Mon May 25 15:54:34 UTC 2026 x86_64 GNU/Linux
+PRETTY_NAME="Ubuntu 26.04.1 LTS"
+NAME="Ubuntu"
+VERSION_ID="26.04"
+VERSION="26.04.1 LTS (Resolute Raccoon)"
+ID=ubuntu
+BOOT_MODE=UEFI
+BootCurrent: 0002
+Timeout: 1 seconds
+BootOrder: 0001,0002,0003
+Boot0001* UEFI: PXE IPv4 Realtek PCIe 2.5GBE Family Controller	PciRoot(0x0)/Pci(0x1c,0x2)/Pci(0x0,0x0)/MAC(c87f54705bfe,0)/IPv4(0.0.0.0,0,DHCP,0.0.0.0,0.0.0.0,0.0.0.0)0000424f
+Boot0002* ubuntu	HD(1,GPT,91bf9cb2-8121-4e24-9620-b572e4eb2123,0x1000,0x80000)/\EFI\ubuntu\shimx64.efi0000424f
+Boot0003* ubuntu	HD(1,GPT,747a04e1-6bb6-4024-b557-dc7ab6a471e0,0x1000,0x80000)/\EFI\ubuntu\shimx64.efi0000424f
+ 20:04:09 up 3 days,  8:16,  2 users,  load average: 0.01, 0.04, 0.00
+
+=== [CPU_AND_VIRTUALIZATION] ===
+Architecture:                            x86_64
+CPU op-mode(s):                          32-bit, 64-bit
+Address sizes:                           46 bits physical, 48 bits virtual
+Byte Order:                              Little Endian
+CPU(s):                                  20
+On-line CPU(s) list:                     0-19
+Vendor ID:                               GenuineIntel
+Model name:                              13th Gen Intel(R) Core(TM) i5-13500
+CPU family:                              6
+Model:                                   191
+Thread(s) per core:                      2
+Core(s) per socket:                      14
+Socket(s):                               1
+Stepping:                                2
+CPU(s) scaling MHz:                      19%
+CPU max MHz:                             4800.0000
+CPU min MHz:                             800.0000
+BogoMIPS:                                4992.00
+Flags:                                   fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf tsc_known_freq pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch cpuid_fault epb ssbd ibrs ibpb stibp ibrs_enhanced tpr_shadow flexpriority ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid rdseed adx smap clflushopt clwb intel_pt sha_ni xsaveopt xsavec xgetbv1 xsaves split_lock_detect user_shstk avx_vnni dtherm ida arat pln pts hwp hwp_notify hwp_act_window hwp_epp hwp_pkg_req hfi vnmi umip pku ospke waitpkg gfni vaes vpclmulqdq rdpid movdiri movdir64b fsrm md_clear serialize pconfig arch_lbr ibt flush_l1d arch_capabilities
+Virtualization:                          VT-x
+L1d cache:                               544 KiB (14 instances)
+L1i cache:                               704 KiB (14 instances)
+L2 cache:                                11.5 MiB (8 instances)
+L3 cache:                                24 MiB (1 instance)
+NUMA node(s):                            1
+NUMA node0 CPU(s):                       0-19
+Vulnerability Gather data sampling:      Not affected
+Vulnerability Ghostwrite:                Not affected
+Vulnerability Indirect target selection: Not affected
+Vulnerability Itlb multihit:             Not affected
+Vulnerability L1tf:                      Not affected
+Vulnerability Mds:                       Not affected
+Vulnerability Meltdown:                  Not affected
+Vulnerability Mmio stale data:           Not affected
+Vulnerability Old microcode:             Not affected
+Vulnerability Reg file data sampling:    Mitigation; Clear Register File
+Vulnerability Retbleed:                  Not affected
+Vulnerability Spec rstack overflow:      Not affected
+Vulnerability Spec store bypass:         Mitigation; Speculative Store Bypass disabled via prctl
+Vulnerability Spectre v1:                Mitigation; usercopy/swapgs barriers and __user pointer sanitization
+Vulnerability Spectre v2:                Mitigation; Enhanced / Automatic IBRS; IBPB conditional; PBRSB-eIBRS SW sequence; BHI BHI_DIS_S
+Vulnerability Srbds:                     Not affected
+Vulnerability Tsa:                       Not affected
+Vulnerability Tsx async abort:           Not affected
+Vulnerability Vmscape:                   Mitigation; IBPB before exit to userspace
+--- lscpu -e ---
+CPU NODE SOCKET CORE L1d:L1i:L2:L3 ONLINE    MAXMHZ   MINMHZ       MHZ
+  0    0      0    0 0:0:0:0          yes 4800.0000 800.0000  800.0000
+  1    0      0    0 0:0:0:0          yes 4800.0000 800.0000  800.0000
+  2    0      0    1 4:4:1:0          yes 4800.0000 800.0000  802.2790
+  3    0      0    1 4:4:1:0          yes 4800.0000 800.0000  800.0000
+  4    0      0    2 8:8:2:0          yes 4800.0000 800.0000  801.2510
+  5    0      0    2 8:8:2:0          yes 4800.0000 800.0000  800.0000
+  6    0      0    3 12:12:3:0        yes 4800.0000 800.0000  800.5220
+  7    0      0    3 12:12:3:0        yes 4800.0000 800.0000  800.0000
+  8    0      0    4 16:16:4:0        yes 4800.0000 800.0000  800.0000
+  9    0      0    4 16:16:4:0        yes 4800.0000 800.0000  800.0000
+ 10    0      0    5 20:20:5:0        yes 4800.0000 800.0000  800.0000
+ 11    0      0    5 20:20:5:0        yes 4800.0000 800.0000  800.0000
+ 12    0      0    6 24:24:6:0        yes 3500.0000 800.0000  800.0000
+ 13    0      0    7 25:25:6:0        yes 3500.0000 800.0000  800.0000
+ 14    0      0    8 26:26:6:0        yes 3500.0000 800.0000 1293.7010
+ 15    0      0    9 27:27:6:0        yes 3500.0000 800.0000  800.0000
+ 16    0      0   10 28:28:7:0        yes 3500.0000 800.0000  800.0000
+ 17    0      0   11 29:29:7:0        yes 3500.0000 800.0000  797.3330
+ 18    0      0   12 30:30:7:0        yes 3500.0000 800.0000  800.0000
+ 19    0      0   13 31:31:7:0        yes 3500.0000 800.0000  800.0000
+VIRT_FLAGS_COUNT=40
+crw-rw---- 1 root kvm 10, 232 Nov 13 06:05 /dev/kvm
+
+=== [MEMORY_AND_SWAP] ===
+               total        used        free      shared  buff/cache   available
+Mem:     67189080064  1252278272 62943510528     1306624  3708268544 65936801792
+Swap:    34325131264           0 34325131264
+MemTotal:       65614336 kB
+MemFree:        61468272 kB
+MemAvailable:   64391408 kB
+SwapTotal:      33520636 kB
+SwapFree:       33520636 kB
+HugePages_Total:       0
+
+=== [BLOCK_DEVICES_AND_LAYOUT] ===
+NAME        KNAME     PATH           TYPE          SIZE MODEL                      SERIAL         WWN                  ROTA DISC-GRAN FSTYPE            MOUNTPOINTS
+nvme1n1     nvme1n1   /dev/nvme1n1   disk  512110190592 SAMSUNG MZVL2512HCJQ-00B00 S675NU0W263148 eui.002538b231a3afc5    0       512                   
+|-nvme1n1p1 nvme1n1p1 /dev/nvme1n1p1 part     268435456                                           eui.002538b231a3afc5    0       512 vfat              
+|-nvme1n1p2 nvme1n1p2 /dev/nvme1n1p2 part   34359738368                                           eui.002538b231a3afc5    0       512 linux_raid_member 
+| `-md0     md0       /dev/md0       raid1  34325135360                                                                   0       512 swap              [SWAP]
+|-nvme1n1p3 nvme1n1p3 /dev/nvme1n1p3 part    1073741824                                           eui.002538b231a3afc5    0       512 linux_raid_member 
+| `-md1     md1       /dev/md1       raid1   1071644672                                                                   0       512 ext3              /boot
+`-nvme1n1p4 nvme1n1p4 /dev/nvme1n1p4 part  476406160896                                           eui.002538b231a3afc5    0       512 linux_raid_member 
+  `-md2     md2       /dev/md2       raid1 476270886912                                                                   0       512 ext4              /
+nvme0n1     nvme0n1   /dev/nvme0n1   disk  512110190592 SAMSUNG MZVL2512HCJQ-00B00 S675NU0W263145 eui.002538b231a3afc2    0       512                   
+|-nvme0n1p1 nvme0n1p1 /dev/nvme0n1p1 part     268435456                                           eui.002538b231a3afc2    0       512 vfat              /boot/efi
+|-nvme0n1p2 nvme0n1p2 /dev/nvme0n1p2 part   34359738368                                           eui.002538b231a3afc2    0       512 linux_raid_member 
+| `-md0     md0       /dev/md0       raid1  34325135360                                                                   0       512 swap              [SWAP]
+|-nvme0n1p3 nvme0n1p3 /dev/nvme0n1p3 part    1073741824                                           eui.002538b231a3afc2    0       512 linux_raid_member 
+| `-md1     md1       /dev/md1       raid1   1071644672                                                                   0       512 ext3              /boot
+`-nvme0n1p4 nvme0n1p4 /dev/nvme0n1p4 part  476406160896                                           eui.002538b231a3afc2    0       512 linux_raid_member 
+  `-md2     md2       /dev/md2       raid1 476270886912                                                                   0       512 ext4              /
+--- /dev/disk/by-id ---
+total 0
+drwxr-xr-x 2 root root 760 Nov 11 11:47 .
+drwxr-xr-x 7 root root 140 Nov 11 11:47 ..
+lrwxrwxrwx 1 root root   9 Nov 11 11:47 md-name-rescue:0 -> ../../md0
+lrwxrwxrwx 1 root root   9 Nov 11 11:47 md-name-rescue:1 -> ../../md1
+lrwxrwxrwx 1 root root   9 Nov 11 11:47 md-name-rescue:2 -> ../../md2
+lrwxrwxrwx 1 root root   9 Nov 11 11:47 md-uuid-12199bbd:2450f459:3307a138:8b03f5af -> ../../md2
+lrwxrwxrwx 1 root root   9 Nov 11 11:47 md-uuid-2e986ca4:9deb9ea8:73c012c3:8022ed9f -> ../../md1
+lrwxrwxrwx 1 root root   9 Nov 11 11:47 md-uuid-7d523dc3:fb84b221:bfd3892b:6b7fdf8d -> ../../md0
+lrwxrwxrwx 1 root root  13 Nov 11 11:47 nvme-SAMSUNG_MZVL2512HCJQ-00B00_S675NU0W263145 -> ../../nvme0n1
+lrwxrwxrwx 1 root root  15 Nov 11 11:47 nvme-SAMSUNG_MZVL2512HCJQ-00B00_S675NU0W263145-part1 -> ../../nvme0n1p1
+lrwxrwxrwx 1 root root  15 Nov 11 11:47 nvme-SAMSUNG_MZVL2512HCJQ-00B00_S675NU0W263145-part2 -> ../../nvme0n1p2
+lrwxrwxrwx 1 root root  15 Nov 11 11:47 nvme-SAMSUNG_MZVL2512HCJQ-00B00_S675NU0W263145-part3 -> ../../nvme0n1p3
+lrwxrwxrwx 1 root root  15 Nov 11 11:47 nvme-SAMSUNG_MZVL2512HCJQ-00B00_S675NU0W263145-part4 -> ../../nvme0n1p4
+lrwxrwxrwx 1 root root  13 Nov 11 11:47 nvme-SAMSUNG_MZVL2512HCJQ-00B00_S675NU0W263145_1 -> ../../nvme0n1
+lrwxrwxrwx 1 root root  15 Nov 11 11:47 nvme-SAMSUNG_MZVL2512HCJQ-00B00_S675NU0W263145_1-part1 -> ../../nvme0n1p1
+lrwxrwxrwx 1 root root  15 Nov 11 11:47 nvme-SAMSUNG_MZVL2512HCJQ-00B00_S675NU0W263145_1-part2 -> ../../nvme0n1p2
+lrwxrwxrwx 1 root root  15 Nov 11 11:47 nvme-SAMSUNG_MZVL2512HCJQ-00B00_S675NU0W263145_1-part3 -> ../../nvme0n1p3
+lrwxrwxrwx 1 root root  15 Nov 11 11:47 nvme-SAMSUNG_MZVL2512HCJQ-00B00_S675NU0W263145_1-part4 -> ../../nvme0n1p4
+lrwxrwxrwx 1 root root  13 Nov 11 11:47 nvme-SAMSUNG_MZVL2512HCJQ-00B00_S675NU0W263148 -> ../../nvme1n1
+lrwxrwxrwx 1 root root  15 Nov 11 11:47 nvme-SAMSUNG_MZVL2512HCJQ-00B00_S675NU0W263148-part1 -> ../../nvme1n1p1
+lrwxrwxrwx 1 root root  15 Nov 11 11:47 nvme-SAMSUNG_MZVL2512HCJQ-00B00_S675NU0W263148-part2 -> ../../nvme1n1p2
+lrwxrwxrwx 1 root root  15 Nov 11 11:47 nvme-SAMSUNG_MZVL2512HCJQ-00B00_S675NU0W263148-part3 -> ../../nvme1n1p3
+lrwxrwxrwx 1 root root  15 Nov 11 11:47 nvme-SAMSUNG_MZVL2512HCJQ-00B00_S675NU0W263148-part4 -> ../../nvme1n1p4
+lrwxrwxrwx 1 root root  13 Nov 11 11:47 nvme-SAMSUNG_MZVL2512HCJQ-00B00_S675NU0W263148_1 -> ../../nvme1n1
+lrwxrwxrwx 1 root root  15 Nov 11 11:47 nvme-SAMSUNG_MZVL2512HCJQ-00B00_S675NU0W263148_1-part1 -> ../../nvme1n1p1
+lrwxrwxrwx 1 root root  15 Nov 11 11:47 nvme-SAMSUNG_MZVL2512HCJQ-00B00_S675NU0W263148_1-part2 -> ../../nvme1n1p2
+lrwxrwxrwx 1 root root  15 Nov 11 11:47 nvme-SAMSUNG_MZVL2512HCJQ-00B00_S675NU0W263148_1-part3 -> ../../nvme1n1p3
+lrwxrwxrwx 1 root root  15 Nov 11 11:47 nvme-SAMSUNG_MZVL2512HCJQ-00B00_S675NU0W263148_1-part4 -> ../../nvme1n1p4
+lrwxrwxrwx 1 root root  13 Nov 11 11:47 nvme-eui.002538b231a3afc2 -> ../../nvme0n1
+lrwxrwxrwx 1 root root  15 Nov 11 11:47 nvme-eui.002538b231a3afc2-part1 -> ../../nvme0n1p1
+lrwxrwxrwx 1 root root  15 Nov 11 11:47 nvme-eui.002538b231a3afc2-part2 -> ../../nvme0n1p2
+lrwxrwxrwx 1 root root  15 Nov 11 11:47 nvme-eui.002538b231a3afc2-part3 -> ../../nvme0n1p3
+lrwxrwxrwx 1 root root  15 Nov 11 11:47 nvme-eui.002538b231a3afc2-part4 -> ../../nvme0n1p4
+lrwxrwxrwx 1 root root  13 Nov 11 11:47 nvme-eui.002538b231a3afc5 -> ../../nvme1n1
+lrwxrwxrwx 1 root root  15 Nov 11 11:47 nvme-eui.002538b231a3afc5-part1 -> ../../nvme1n1p1
+lrwxrwxrwx 1 root root  15 Nov 11 11:47 nvme-eui.002538b231a3afc5-part2 -> ../../nvme1n1p2
+lrwxrwxrwx 1 root root  15 Nov 11 11:47 nvme-eui.002538b231a3afc5-part3 -> ../../nvme1n1p3
+lrwxrwxrwx 1 root root  15 Nov 11 11:47 nvme-eui.002538b231a3afc5-part4 -> ../../nvme1n1p4
+--- df -B1 ---
+Filesystem     Type        1B-blocks       Used    Available Use% Mounted on
+/dev/md2       ext4     467645579264 3601858560 440213401600   1% /
+efivarfs       efivarfs       196608     162801        28687  86% /sys/firmware/efi/efivars
+/dev/md1       ext3       1036726272  291414016    691732480  30% /boot
+/dev/nvme0n1p1 vfat        268152832    6602752    261550080   3% /boot/efi
+--- /proc/mdstat ---
+Personalities : [raid1] 
+md1 : active raid1 nvme1n1p3[1] nvme0n1p3[0]
+      1046528 blocks super 1.2 [2/2] [UU]
+      bitmap: 0/1 pages [0KB], 65536KB chunk
+
+md0 : active raid1 nvme1n1p2[1] nvme0n1p2[0]
+      33520640 blocks super 1.2 [2/2] [UU]
+      bitmap: 0/1 pages [0KB], 65536KB chunk
+
+md2 : active raid1 nvme1n1p4[1] nvme0n1p4[0]
+      465108288 blocks super 1.2 [2/2] [UU]
+      bitmap: 3/4 pages [12KB], 65536KB chunk
+
+unused devices: <none>
+--- LVM pvs/vgs/lvs ---
+
+=== [SMART_AND_NVME_HEALTH] ===
+{
+  "/dev/nvme0": {
+    "model": "SAMSUNG MZVL2512HCJQ-00B00",
+    "serial": "S675NU0W263145",
+    "firmware_rev": "GXA7801Q",
+    "state": "live",
+    "smart": {
+      "critical_warning": 0,
+      "temperature_c": 28.9,
+      "available_spare_pct": 100,
+      "spare_threshold_pct": 10,
+      "percentage_used": 57,
+      "data_units_read": 39504849,
+      "data_units_written": 664688019,
+      "power_on_hours": 13745,
+      "unsafe_shutdowns": 6,
+      "media_errors": 0,
+      "num_err_log_entries": 0
+    }
+  },
+  "/dev/nvme1": {
+    "model": "SAMSUNG MZVL2512HCJQ-00B00",
+    "serial": "S675NU0W263148",
+    "firmware_rev": "GXA7801Q",
+    "state": "live",
+    "smart": {
+      "critical_warning": 4,
+      "temperature_c": 32.9,
+      "available_spare_pct": 100,
+      "spare_threshold_pct": 10,
+      "percentage_used": 126,
+      "data_units_read": 42409476,
+      "data_units_written": 730721444,
+      "power_on_hours": 13679,
+      "unsafe_shutdowns": 6,
+      "media_errors": 0,
+      "num_err_log_entries": 0
+    }
+  }
+}
+
+=== [NETWORK_INTERFACES_AND_ROUTES] ===
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN mode DEFAULT group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00 promiscuity 0 allmulti 0 minmtu 0 maxmtu 0 netns-immutable addrgenmode eui64 numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 524280 tso_max_segs 65535 gro_max_size 65536 gso_ipv4_max_size 65536 gro_ipv4_max_size 65536 
+2: enp5s0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP mode DEFAULT group default qlen 1000
+    link/ether c8:7f:54:70:5b:fe brd ff:ff:ff:ff:ff:ff promiscuity 0 allmulti 0 minmtu 68 maxmtu 16362 addrgenmode eui64 numtxqueues 1 numrxqueues 1 gso_max_size 64000 gso_max_segs 64 tso_max_size 64000 tso_max_segs 64 gro_max_size 65536 gso_ipv4_max_size 64000 gro_ipv4_max_size 65536 parentbus pci parentdev 0000:05:00.0 
+    altname enxc87f54705bfe
+lo               UNKNOWN        127.0.0.1/8 ::1/128 
+enp5s0           UP             65.108.38.218/32 2a01:4f9:3080:344e::2/64 fe80::ca7f:54ff:fe70:5bfe/64 
+--- IPv4 routes ---
+default via 65.108.38.193 dev enp5s0 proto static onlink 
+local 65.108.38.218 dev enp5s0 table local proto kernel scope host src 65.108.38.218 
+local 127.0.0.0/8 dev lo table local proto kernel scope host src 127.0.0.1 
+local 127.0.0.1 dev lo table local proto kernel scope host src 127.0.0.1 
+broadcast 127.255.255.255 dev lo table local proto kernel scope link src 127.0.0.1 
+--- IPv6 routes ---
+2a01:4f9:3080:344e::/64 dev enp5s0 proto kernel metric 256 pref medium
+fe80::/64 dev enp5s0 proto kernel metric 256 pref medium
+default via fe80::1 dev enp5s0 proto static metric 1024 pref medium
+local ::1 dev lo table local proto kernel metric 0 pref medium
+local 2a01:4f9:3080:344e::2 dev enp5s0 table local proto kernel metric 0 pref medium
+local fe80::ca7f:54ff:fe70:5bfe dev enp5s0 table local proto kernel metric 0 pref medium
+multicast ff00::/8 dev enp5s0 table local proto kernel metric 256 pref medium
+--- Neighbor / Gateway table ---
+65.108.38.193 dev enp5s0 lladdr d4:5a:3f:73:67:bf REACHABLE 
+fe80::1 dev enp5s0 lladdr d4:5a:3f:73:67:bf router STALE 
+--- Resolver configuration ---
+nameserver 127.0.0.53
+options edns0 trust-ad
+search .
+
+=== [FIREWALL_AND_PACKET_FILTER_BACKEND] ===
+nftables v1.1.6 (Commodore Bullmoose #7)
+iptables v1.8.11 (nf_tables)
+-P INPUT ACCEPT
+-P FORWARD ACCEPT
+-P OUTPUT ACCEPT
+-P INPUT ACCEPT
+-P FORWARD ACCEPT
+-P OUTPUT ACCEPT
+
+=== [ACCOUNTS_AND_SSH_PUBLIC_KEYS] ===
+root:0:/root:/bin/bash
+nobody:65534:/nonexistent:/usr/sbin/nologin
+port 22
+permitrootlogin yes
+pubkeyauthentication yes
+passwordauthentication yes
+kbdinteractiveauthentication no
+--- Fingerprints in /root/.ssh/authorized_keys ---
+256 SHA256:hisiyHciFHxp8qE1YKqUuyhYNFBtjyMgM/vQR8F+hjc godseye-workstation-admin (ED25519)
+256 SHA256:+RMqYQflL5TR4dEkDDpByqifbXZ8kQIk6jjoAjEpyg4 godseye-emergency-rescue (ED25519)
+
+=== [RUNNING_SERVICES_AND_LISTENERS] ===
+Netid State  Recv-Q Send-Q Local Address:Port Peer Address:PortProcess                                                  
+udp   UNCONN 0      0         127.0.0.54:53        0.0.0.0:*    users:(("systemd-resolve",pid=66603,fd=19))             
+udp   UNCONN 0      0      127.0.0.53%lo:53        0.0.0.0:*    users:(("systemd-resolve",pid=66603,fd=17))             
+udp   UNCONN 0      0          127.0.0.1:323       0.0.0.0:*    users:(("chronyd",pid=66561,fd=4))                      
+udp   UNCONN 0      0              [::1]:323          [::]:*    users:(("chronyd",pid=66561,fd=5))                      
+tcp   LISTEN 0      4096      127.0.0.54:53        0.0.0.0:*    users:(("systemd-resolve",pid=66603,fd=20))             
+tcp   LISTEN 0      4096   127.0.0.53%lo:53        0.0.0.0:*    users:(("systemd-resolve",pid=66603,fd=18))             
+tcp   LISTEN 0      4096         0.0.0.0:22        0.0.0.0:*    users:(("sshd",pid=66560,fd=3),("systemd",pid=1,fd=196))
+tcp   LISTEN 0      4096            [::]:22           [::]:*    users:(("sshd",pid=66560,fd=4),("systemd",pid=1,fd=199))
+  atd.service                 loaded active running Deferred execution scheduler
+  chrony.service              loaded active running chrony, an NTP client/server
+  cron.service                loaded active running Regular background program processing daemon
+  dbus.service                loaded active running D-Bus System Message Bus
+  getty@tty1.service          loaded active running Getty on tty1
+  mdmonitor.service           loaded active running MD array monitor
+  multipathd.service          loaded active running Device-Mapper Multipath Device Controller
+  networkd-dispatcher.service loaded active running Dispatcher daemon for systemd-networkd
+  polkit.service              loaded active running Authorization Manager
+  rsyslog.service             loaded active running System Logging Service
+  ssh.service                 loaded active running OpenBSD Secure Shell server
+  systemd-journald.service    loaded active running Journal Service
+  systemd-logind.service      loaded active running User Login Management
+  systemd-networkd.service    loaded active running Network Management
+  systemd-resolved.service    loaded active running Network Name Resolution
+  systemd-udevd.service       loaded active running Rule-based Manager for Device Events and Files
+  thermald.service            loaded active running Thermal Daemon Service
+  unattended-upgrades.service loaded active running Unattended Upgrades Shutdown
+  user@0.service              loaded active running User Manager for UID 0
+
+=== [CANDIDATE_DATA_DIRECTORIES] ===
+/home:
+total 8
+drwxr-xr-x  2 root root 4096 Jun  7 06:30 .
+drwxr-xr-x 20 root root 4096 Nov 11 11:47 ..
+
+/opt:
+total 8
+drwxr-xr-x  2 root root 4096 Apr 20  2026 .
+drwxr-xr-x 20 root root 4096 Nov 11 11:47 ..
+
+/root:
+total 28
+drwx------  4 root root 4096 Nov 11 16:07 .
+drwxr-xr-x 20 root root 4096 Nov 11 11:47 ..
+-rw-------  1 root root   47 Nov 11 16:07 .bash_history
+-rw-r--r--  1 root root 3919 Jun  7 06:28 .bashrc
+drwx------  2 root root 4096 Jun  7 06:24 .cache
+-rw-r--r--  1 root root    0 Jun  7 06:29 .cloud-locale-test.skip
+-rw-r--r--  1 root root  132 Apr 20  2026 .profile
+drwx------  2 root root 4096 Nov 14 19:59 .ssh
+
+/srv:
+total 8
+drwxr-xr-x  2 root root 4096 Apr 20  2026 .
+drwxr-xr-x 20 root root 4096 Nov 11 11:47 ..
+
+/var/lib:
+total 184
+drwxr-xr-x 45 root      root      4096 Nov 12 01:06 .
+drwxr-xr-x 13 root      root      4096 Jun  7 06:26 ..
+drwxr-xr-x  2 root      root      4096 Jun  7 06:27 PackageKit
+lrwxrwxrwx  1 root      root        18 Apr 20  2026 app-info -> /var/lib/swcatalog
+drwxr-xr-x  3 root      root      4096 Apr 20  2026 apport
+drwxr-xr-x  5 root      root      4096 Nov 13 06:04 apt
+drwxr-x---  2 _chrony   _chrony   4096 Nov 14 19:43 chrony
+drwxr-xr-x  8 root      root      4096 Jun  7 06:24 cloud
+drwxr-xr-x  2 root      root      4096 Nov 11 11:53 command-not-found
+drwxr-xr-x  2 root      root      4096 Nov 11 11:45 dbus
+drwxr-xr-x  2 root      root      4096 Jan  6  2026 dhcpcd
+drwxr-xr-x  7 root      root      4096 Nov 13 06:05 dpkg
+drwxr-xr-x  3 root      root      4096 Nov 12 06:17 dracut
+drwxr-xr-x  2 root      root      4096 Apr 20  2026 git
+drwxr-xr-x  4 root      root      4096 Apr 20  2026 grub
+drwxr-xr-x  2 root      root      4096 Apr 20  2026 ieee-data
+drwxr-xr-x  2 root      root      4096 Mar 12  2026 iscsi
+drwxr-xr-x  2 landscape landscape 4096 Apr 20  2026 landscape
+drwxrwsr-x  2 uuidd     uuidd     4096 Apr 20  2026 libuuid
+drwxr-xr-x  2 root      root      4096 Nov 14 00:46 logrotate
+drwxr-xr-x  2 root      root      4096 Apr 20  2026 man-db
+drwxr-xr-x  2 root      root      4096 Nov 13 11:05 mdcheck
+drwxr-xr-x  2 root      root      4096 Apr 20  2026 misc
+drwxr-xr-x  2 root      root      4096 Nov 11 11:56 pam
+drwxr-xr-x  2 root      root      4096 Apr 20  2026 plymouth
+drwx------  2 root      root      4096 Apr 20  2026 private
+drwxr-xr-x  2 root      root      4096 Apr 20  2026 python
+drwxr-xr-x  2 root      root      4096 Nov 11 11:56 sgml-base
+-rw-r--r--  1 root      root       114 Nov 11 11:56 shells.state
+drwxr-xr-x  3 root      root      4096 Jun  7 06:18 shim-signed
+drwxr-xr-x 18 root      root      4096 Nov 11 11:57 snapd
+drwxr-xr-x  3 root      root      4096 Apr 20  2026 sudo
+drwxr-xr-x 12 root      root      4096 Jun  7 06:25 systemd
+drwxr-xr-x  2 tss       tss       4096 Apr 20  2026 tpm
+drwxr-xr-x  3 root      root      4096 Apr 20  2026 tpm2-tss
+drwxr-xr-x  3 root      root      4096 Jun  7 06:24 ubuntu-advantage
+drwxr-xr-x  2 root      root      4096 Mar 11  2026 ubuntu-drivers-common
+drwxr-xr-x  2 root      root      4096 Nov 14 19:59 ubuntu-release-upgrader
+drwxr-xr-x  3 root      root      4096 Nov 11 11:56 ucf
+drwx------  2 root      root      4096 Jun  7 06:24 udisks2
+drwxr-xr-x  2 root      root      4096 Mar 27  2026 unattended-upgrades
+drwxr-xr-x  2 root      root      4096 Nov 14 19:59 update-manager
+drwxr-xr-x  4 root      root      4096 Nov 14 13:17 update-notifier
+drwxr-xr-x  2 root      root      4096 Feb 12  2026 upower
+drwxr-xr-x  3 root      root      4096 Apr 20  2026 vim
+drwxr-xr-x  2 root      root      4096 Jan 29  2026 xfsprogs
+drwxr-xr-x  2 root      root      4096 Nov 11 11:56 xml-core
+36K	/var/lib/PackageKit
+0	/var/lib/app-info
+8.0K	/var/lib/apport
+298M	/var/lib/apt
+12K	/var/lib/chrony
+216K	/var/lib/cloud
+3.6M	/var/lib/command-not-found
+8.0K	/var/lib/dbus
+4.0K	/var/lib/dhcpcd
+24M	/var/lib/dpkg
+156K	/var/lib/dracut
+4.0K	/var/lib/git
+16K	/var/lib/grub
+4.0K	/var/lib/ieee-data
+4.0K	/var/lib/iscsi
+8.0K	/var/lib/landscape
+4.0K	/var/lib/libuuid
+8.0K	/var/lib/logrotate
+4.0K	/var/lib/man-db
+4.0K	/var/lib/mdcheck
+4.0K	/var/lib/misc
+28K	/var/lib/pam
+4.0K	/var/lib/plymouth
+4.0K	/var/lib/private
+4.0K	/var/lib/python
+12K	/var/lib/sgml-base
+4.0K	/var/lib/shells.state
+8.0K	/var/lib/shim-signed
+380K	/var/lib/snapd
+8.0K	/var/lib/sudo
+816K	/var/lib/systemd
+4.0K	/var/lib/tpm
+12K	/var/lib/tpm2-tss
+5.5M	/var/lib/ubuntu-advantage
+4.0K	/var/lib/ubuntu-drivers-common
+4.0K	/var/lib/ubuntu-release-upgrader
+120K	/var/lib/ucf
+4.0K	/var/lib/udisks2
+4.0K	/var/lib/unattended-upgrades
+36K	/var/lib/update-manager
+20K	/var/lib/update-notifier
+4.0K	/var/lib/upower
+8.0K	/var/lib/vim
+4.0K	/var/lib/xfsprogs
+16K	/var/lib/xml-core

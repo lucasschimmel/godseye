@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "phase": "P00",
+  "subphase": "local-preflight-and-robot-panel-observation",
+  "recordedAt": "2026-11-14T19:50:45+01:00",
+  "repository": {
+    "branch": "develop",
+    "upstream": "origin/develop",
+    "headCommit": "bc7f79c",
+    "preservedWorkingTree": [
+      "M docs/development/handoff.md",
+      "?? docs/development/gemini-server-handoff.md"
+    ],
+    "ownerApiVersion": "1.15.0",
+    "applicationApiVersion": "1.0.0"
+  },
+  "robotPanelObservations": {
+    "serverModelAndId": "EX44-1-LTD #3097071",
+    "modelDiscrepancyNote": "Owner spec referred to AX41; Robot panel identifies EX44-1-LTD #3097071 in HEL1-DC8. Actual CPU/RAM/disk topology will be verified via P00 SSH probe.",
+    "datacenter": "HEL1-DC8 (Finland)",
+    "primaryIpv4": "65.108.38.218",
+    "primaryIpv4ReverseDns": "static.218.38.108.65.clients.your-server.de",
+    "separateMacConfigured": false,
+    "routedIpv6Subnet": "2a01:4f9:3080:344e::/64",
+    "ownerAccountAuthorityConfirmed": true,
+    "ownerDataPreservationDecision": "Ubuntu 26.04 fresh reset with no data to retain (still subject to P00 factual read-only inspection before P02 formatting)"
+  },
+  "workstationTools": {
+    "os": "windows",
+    "nodeVersion": "v24.22.1",
+    "bunVersion": "1.4.4",
+    "opensshVersion": "9.5.6.4",
+    "wireguardCliInPath": false,
+    "wslDistributions": [
+      { "name": "Ubuntu", "version": 2, "state": "Stopped" },
+      { "name": "docker-desktop", "version": 2, "state": "Stopped" }
+    ]
+  },
+  "sshPublicMetadata": {
+    "windowsSshConfigAlias": "godseye-host",
+    "targetHost": "65.108.38.218",
+    "observedRemoteHostKeys": [
+      "256 SHA256:+zyufcC50moSr655cNc8Ggidd6gLO8kThniLVg8hnRs 65.108.38.218 (ED25519)",
+      "3072 SHA256:/1MLAGNpzTn75QAkc7LAbBP4SmJoU84KS+xAJyauBqU 65.108.38.218 (RSA)",
+      "256 SHA256:VNSWcTkoHK3GVv0O8aOWkQu7FZZpAa/Re0rDxBFdLJY 65.108.38.218 (ECDSA)"
+    ],
+    "publicKeys": [
+      {
+        "path": "~/.ssh/godseye_hetzner_admin_ed25519.pub",
+        "type": "ED25519",
+        "bits": 256,
+        "fingerprint": "SHA256:hisiyHciFHxp8qE1YKqUuyhYNFBtjyMgM/vQR8F+hjc",
+        "comment": "godseye-workstation-admin",
+        "purpose": "Primary workstation administration key for Hetzner host and Rescue"
+      },
+      {
+        "path": "~/.ssh/godseye_hetzner_emergency_ed25519.pub",
+        "type": "ED25519",
+        "bits": 256,
+        "fingerprint": "SHA256:+RMqYQflL5TR4dEkDDpByqifbXZ8kQIk6jjoAjEpyg4",
+        "comment": "godseye-emergency-rescue",
+        "purpose": "Separate emergency / break-glass key for secondary custody and Rescue"
+      },
+      {
+        "path": "~/.ssh/id_ed25519.pub",
+        "type": "ED25519",
+        "bits": 256,
+        "fingerprint": "SHA256:bPbMrm0n0JQ1ORPFenQo5q99mLtktoaMeQsOjglALgc",
+        "comment": "windows-vers-hermes",
+        "purpose": "Pre-existing workstation key"
+      }
+    ]
+  },
+  "softwareQualificationStatus": {
+    "e01_e02": "local_verified_remote_unqualified",
+    "e03": "local_verified_remote_partial_unqualified",
+    "e04": "local_verified_remote_unqualified",
+    "e05": "local_verified_remote_partial_unqualified",
+    "e06": "local_complete_remote_unqualified",
+    "e07": "local_complete_portability_and_remote_unqualified",
+    "e08": "local_complete_remote_unqualified",
+    "e09_e12": "pending_product_and_release_work"
+  },
+  "missingExecutionInputs": [
+    "authorize_godseye_workstation_admin_pubkey_on_server_or_rescue",
+    "owned_domains_and_dns_provider",
+    "off_host_backup_destination_and_approval",
+    "personal_vm_games_and_port_requirements"
+  ]
+}

@@ -16,9 +16,6 @@ jenkins:
             name: "${JENKINS_OWNER_ID}"
             permissions:
               - "Overall/Administer"
-  crumbIssuer:
-    standard:
-      excludeClientIPFromCrumb: false
 security:
   gitHostKeyVerificationConfiguration:
     sshHostKeyVerificationStrategy: "knownHostsFileVerificationStrategy"
@@ -28,7 +25,7 @@ unclassified:
 jobs:
   - script: >
       pipelineJob('godseye-platform') {
-        description('Trusted owner main branch only. No pull request discovery. Agent provisioning must be qualified separately.')
+        description('Trusted owner develop branch (initial platform CI branch; main remains release presentation). Agent provisioning qualified on disposable work VM.')
         definition {
           cpsScm {
             scm {
@@ -38,7 +35,7 @@ jobs:
                   def sourceReadCredential = System.getenv('GODSEYE_SOURCE_CREDENTIALS_ID')
                   if (sourceReadCredential) { credentials(sourceReadCredential) }
                 }
-                branch('*/main')
+                branch('*/develop')
               }
             }
             scriptPath('Jenkinsfile')

@@ -1,0 +1,260 @@
+[p06] Installing PostgreSQL and pgBackRest...
+Get:1 file:/etc/apt/mirrors/debian.list Mirrorlist [30 B]
+Get:2 file:/etc/apt/mirrors/debian-security.list Mirrorlist [39 B]
+Hit:7 https://download.docker.com/linux/debian trixie InRelease
+Hit:8 https://storage.googleapis.com/gvisor/releases release InRelease
+Hit:3 https://deb.debian.org/debian trixie InRelease
+Hit:4 https://deb.debian.org/debian trixie-updates InRelease
+Hit:5 https://deb.debian.org/debian trixie-backports InRelease
+Hit:6 https://deb.debian.org/debian-security trixie-security InRelease
+Reading package lists...
+Reading package lists...
+Building dependency tree...
+Reading state information...
+The following additional packages will be installed:
+  libcommon-sense-perl libicu76 libio-pty-perl libipc-run-perl libjson-perl
+  libjson-xs-perl libllvm19 libpq5 libsensors-config libsensors5
+  libtypes-serialiser-perl libxslt1.1 libz3-4 logrotate postgresql-17
+  postgresql-client-17 postgresql-client-common postgresql-common
+  postgresql-common-dev ssl-cert sysstat
+Suggested packages:
+  lm-sensors bsd-mailx | mailx pgbackrest-doc check-pgbackrest postgresql-doc
+  postgresql-doc-17 isag
+The following NEW packages will be installed:
+  libcommon-sense-perl libicu76 libio-pty-perl libipc-run-perl libjson-perl
+  libjson-xs-perl libllvm19 libpq5 libsensors-config libsensors5
+  libtypes-serialiser-perl libxslt1.1 libz3-4 logrotate pgbackrest postgresql
+  postgresql-17 postgresql-client-17 postgresql-client-common
+  postgresql-common postgresql-common-dev ssl-cert sysstat
+0 upgraded, 23 newly installed, 0 to remove and 0 not upgraded.
+Need to get 65.4 MB of archives.
+After this operation, 274 MB of additional disk space will be used.
+Get:1 file:/etc/apt/mirrors/debian.list Mirrorlist [30 B]
+Get:22 file:/etc/apt/mirrors/debian-security.list Mirrorlist [39 B]
+Get:2 https://deb.debian.org/debian trixie/main amd64 libjson-perl all 4.10000-1 [87.5 kB]
+Get:3 https://deb.debian.org/debian trixie/main amd64 postgresql-client-common all 278 [47.1 kB]
+Get:4 https://deb.debian.org/debian trixie/main amd64 libio-pty-perl amd64 1:1.20-1+b3 [34.3 kB]
+Get:5 https://deb.debian.org/debian trixie/main amd64 libipc-run-perl all 20231003.0-2 [101 kB]
+Get:6 https://deb.debian.org/debian trixie/main amd64 postgresql-common-dev all 278 [72.4 kB]
+Get:7 https://deb.debian.org/debian trixie/main amd64 ssl-cert all 1.1.3 [16.8 kB]
+Get:8 https://deb.debian.org/debian trixie/main amd64 postgresql-common all 278 [112 kB]
+Get:9 https://deb.debian.org/debian trixie/main amd64 logrotate amd64 3.22.0-1 [62.0 kB]
+Get:10 https://deb.debian.org/debian trixie/main amd64 libcommon-sense-perl amd64 3.75-3+b5 [22.9 kB]
+Get:11 https://deb.debian.org/debian trixie/main amd64 libicu76 amd64 76.1-4 [9722 kB]
+Get:12 https://deb.debian.org/debian trixie/main amd64 libtypes-serialiser-perl all 1.01-1 [12.2 kB]
+Get:13 https://deb.debian.org/debian trixie/main amd64 libjson-xs-perl amd64 4.040-1~deb13u1 [91.0 kB]
+Get:14 https://deb.debian.org/debian trixie/main amd64 libz3-4 amd64 4.13.3-1 [8560 kB]
+Get:15 https://deb.debian.org/debian trixie/main amd64 libllvm19 amd64 1:19.1.7-3+b1 [26.0 MB]
+Get:16 https://deb.debian.org/debian trixie/main amd64 libsensors-config all 1:3.6.2-2 [16.2 kB]
+Get:17 https://deb.debian.org/debian trixie/main amd64 libsensors5 amd64 1:3.6.2-2 [37.5 kB]
+Get:18 https://deb.debian.org/debian trixie/main amd64 libxslt1.1 amd64 1.1.35-1.2+deb13u3 [233 kB]
+Get:19 https://deb.debian.org/debian trixie/main amd64 pgbackrest amd64 2.55.1-1 [481 kB]
+Get:20 https://deb.debian.org/debian trixie/main amd64 postgresql all 17+278 [16.7 kB]
+Get:21 https://deb.debian.org/debian trixie/main amd64 sysstat amd64 12.7.5-2 [623 kB]
+Get:23 https://deb.debian.org/debian-security trixie-security/main amd64 libpq5 amd64 17.12-0+deb13u1 [236 kB]
+Get:24 https://deb.debian.org/debian-security trixie-security/main amd64 postgresql-client-17 amd64 17.12-0+deb13u1 [2067 kB]
+Get:25 https://deb.debian.org/debian-security trixie-security/main amd64 postgresql-17 amd64 17.12-0+deb13u1 [16.8 MB]
+Preconfiguring packages ...
+/var/cache/debconf/tmp.ci/postgresql.config.97kXef: 12: pg_lsclusters: not found
+Fetched 65.4 MB in 1s (84.2 MB/s)
+Selecting previously unselected package libjson-perl.
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 26072 files and directories currently installed.)
+Preparing to unpack .../00-libjson-perl_4.10000-1_all.deb ...
+Unpacking libjson-perl (4.10000-1) ...
+Selecting previously unselected package postgresql-client-common.
+Preparing to unpack .../01-postgresql-client-common_278_all.deb ...
+Unpacking postgresql-client-common (278) ...
+Selecting previously unselected package libio-pty-perl.
+Preparing to unpack .../02-libio-pty-perl_1%3a1.20-1+b3_amd64.deb ...
+Unpacking libio-pty-perl (1:1.20-1+b3) ...
+Selecting previously unselected package libipc-run-perl.
+Preparing to unpack .../03-libipc-run-perl_20231003.0-2_all.deb ...
+Unpacking libipc-run-perl (20231003.0-2) ...
+Selecting previously unselected package postgresql-common-dev.
+Preparing to unpack .../04-postgresql-common-dev_278_all.deb ...
+Unpacking postgresql-common-dev (278) ...
+Selecting previously unselected package ssl-cert.
+Preparing to unpack .../05-ssl-cert_1.1.3_all.deb ...
+Unpacking ssl-cert (1.1.3) ...
+Selecting previously unselected package postgresql-common.
+Preparing to unpack .../06-postgresql-common_278_all.deb ...
+Adding 'diversion of /usr/bin/pg_config to /usr/bin/pg_config.libpq-dev by postgresql-common'
+Unpacking postgresql-common (278) ...
+Selecting previously unselected package logrotate.
+Preparing to unpack .../07-logrotate_3.22.0-1_amd64.deb ...
+Unpacking logrotate (3.22.0-1) ...
+Selecting previously unselected package libcommon-sense-perl:amd64.
+Preparing to unpack .../08-libcommon-sense-perl_3.75-3+b5_amd64.deb ...
+Unpacking libcommon-sense-perl:amd64 (3.75-3+b5) ...
+Selecting previously unselected package libicu76:amd64.
+Preparing to unpack .../09-libicu76_76.1-4_amd64.deb ...
+Unpacking libicu76:amd64 (76.1-4) ...
+Selecting previously unselected package libtypes-serialiser-perl.
+Preparing to unpack .../10-libtypes-serialiser-perl_1.01-1_all.deb ...
+Unpacking libtypes-serialiser-perl (1.01-1) ...
+Selecting previously unselected package libjson-xs-perl.
+Preparing to unpack .../11-libjson-xs-perl_4.040-1~deb13u1_amd64.deb ...
+Unpacking libjson-xs-perl (4.040-1~deb13u1) ...
+Selecting previously unselected package libz3-4:amd64.
+Preparing to unpack .../12-libz3-4_4.13.3-1_amd64.deb ...
+Unpacking libz3-4:amd64 (4.13.3-1) ...
+Selecting previously unselected package libllvm19:amd64.
+Preparing to unpack .../13-libllvm19_1%3a19.1.7-3+b1_amd64.deb ...
+Unpacking libllvm19:amd64 (1:19.1.7-3+b1) ...
+Selecting previously unselected package libpq5:amd64.
+Preparing to unpack .../14-libpq5_17.12-0+deb13u1_amd64.deb ...
+Unpacking libpq5:amd64 (17.12-0+deb13u1) ...
+Selecting previously unselected package libsensors-config.
+Preparing to unpack .../15-libsensors-config_1%3a3.6.2-2_all.deb ...
+Unpacking libsensors-config (1:3.6.2-2) ...
+Selecting previously unselected package libsensors5:amd64.
+Preparing to unpack .../16-libsensors5_1%3a3.6.2-2_amd64.deb ...
+Unpacking libsensors5:amd64 (1:3.6.2-2) ...
+Selecting previously unselected package libxslt1.1:amd64.
+Preparing to unpack .../17-libxslt1.1_1.1.35-1.2+deb13u3_amd64.deb ...
+Unpacking libxslt1.1:amd64 (1.1.35-1.2+deb13u3) ...
+Selecting previously unselected package pgbackrest.
+Preparing to unpack .../18-pgbackrest_2.55.1-1_amd64.deb ...
+Unpacking pgbackrest (2.55.1-1) ...
+Selecting previously unselected package postgresql-client-17.
+Preparing to unpack .../19-postgresql-client-17_17.12-0+deb13u1_amd64.deb ...
+Unpacking postgresql-client-17 (17.12-0+deb13u1) ...
+Selecting previously unselected package postgresql-17.
+Preparing to unpack .../20-postgresql-17_17.12-0+deb13u1_amd64.deb ...
+Unpacking postgresql-17 (17.12-0+deb13u1) ...
+Selecting previously unselected package postgresql.
+Preparing to unpack .../21-postgresql_17+278_all.deb ...
+Unpacking postgresql (17+278) ...
+Selecting previously unselected package sysstat.
+Preparing to unpack .../22-sysstat_12.7.5-2_amd64.deb ...
+Unpacking sysstat (12.7.5-2) ...
+Setting up logrotate (3.22.0-1) ...
+Created symlink '/etc/systemd/system/timers.target.wants/logrotate.timer' → '/usr/lib/systemd/system/logrotate.timer'.
+logrotate.service is a disabled or a static unit, not starting it.
+Setting up postgresql-client-common (278) ...
+Setting up libio-pty-perl (1:1.20-1+b3) ...
+Setting up libsensors-config (1:3.6.2-2) ...
+Setting up libpq5:amd64 (17.12-0+deb13u1) ...
+Setting up libcommon-sense-perl:amd64 (3.75-3+b5) ...
+Setting up libz3-4:amd64 (4.13.3-1) ...
+Setting up ssl-cert (1.1.3) ...
+Setting up libipc-run-perl (20231003.0-2) ...
+Setting up libsensors5:amd64 (1:3.6.2-2) ...
+Setting up libtypes-serialiser-perl (1.01-1) ...
+Setting up libjson-perl (4.10000-1) ...
+Setting up libxslt1.1:amd64 (1.1.35-1.2+deb13u3) ...
+Setting up libicu76:amd64 (76.1-4) ...
+Setting up sysstat (12.7.5-2) ...
+Creating config file /etc/default/sysstat with new version
+update-alternatives: using /usr/bin/sar.sysstat to provide /usr/bin/sar (sar) in auto mode
+Created symlink '/etc/systemd/system/sysstat.service.wants/sysstat-collect.timer' → '/usr/lib/systemd/system/sysstat-collect.timer'.
+Created symlink '/etc/systemd/system/sysstat.service.wants/sysstat-rotate.timer' → '/usr/lib/systemd/system/sysstat-rotate.timer'.
+Created symlink '/etc/systemd/system/sysstat.service.wants/sysstat-summary.timer' → '/usr/lib/systemd/system/sysstat-summary.timer'.
+Created symlink '/etc/systemd/system/multi-user.target.wants/sysstat.service' → '/usr/lib/systemd/system/sysstat.service'.
+Setting up postgresql-common-dev (278) ...
+Setting up libjson-xs-perl (4.040-1~deb13u1) ...
+Setting up libllvm19:amd64 (1:19.1.7-3+b1) ...
+Setting up postgresql-client-17 (17.12-0+deb13u1) ...
+update-alternatives: using /usr/share/postgresql/17/man/man1/psql.1.gz to provide /usr/share/man/man1/psql.1.gz (psql.1.gz) in auto mode
+Setting up postgresql-common (278) ...
+Creating config file /etc/postgresql-common/createcluster.conf with new version
+Building PostgreSQL dictionaries from installed myspell/hunspell packages...
+Removing obsolete dictionary files:
+Created symlink '/etc/systemd/system/multi-user.target.wants/postgresql.service' → '/usr/lib/systemd/system/postgresql.service'.
+Setting up postgresql-17 (17.12-0+deb13u1) ...
+Creating new PostgreSQL cluster 17/main ...
+/usr/lib/postgresql/17/bin/initdb -D /var/lib/postgresql/17/main --auth-local peer --auth-host scram-sha-256 --no-instructions
+The files belonging to this database system will be owned by user "postgres".
+This user must also own the server process.
+
+The database cluster will be initialized with locale "C.UTF-8".
+The default database encoding has accordingly been set to "UTF8".
+The default text search configuration will be set to "english".
+
+Data page checksums are disabled.
+
+fixing permissions on existing directory /var/lib/postgresql/17/main ... ok
+creating subdirectories ... ok
+selecting dynamic shared memory implementation ... posix
+selecting default "max_connections" ... 100
+selecting default "shared_buffers" ... 128MB
+selecting default time zone ... Etc/UTC
+creating configuration files ... ok
+running bootstrap script ... ok
+performing post-bootstrap initialization ... ok
+syncing data to disk ... ok
+Setting up pgbackrest (2.55.1-1) ...
+Setting up postgresql (17+278) ...
+Processing triggers for man-db (2.13.1-1) ...
+Processing triggers for libc-bin (2.41-12+deb13u4) ...
+[p06] Detected PostgreSQL 17 cluster 'main' at /var/lib/postgresql/17/main
+[p06] Creating stanza and seeding drill database...
+2026-11-15 00:33:09.576 P00   INFO: stanza-create command begin 2.55.1: --config=/etc/pgbackrest/pgbackrest.conf --exec-id=10003-dbb5aea3 --log-level-console=info --log-level-file=detail --pg1-path=/var/lib/postgresql/17/main --repo1-cipher-pass=<redacted> --repo1-cipher-type=aes-256-cbc --repo1-path=/pgbackrest --repo1-s3-bucket=godseye-backups-dab6e7328bfc --repo1-s3-endpoint=s3.eu-central-003.backblazeb2.com --repo1-s3-key=<redacted> --repo1-s3-key-secret=<redacted> --repo1-s3-region=eu-central-003 --repo1-s3-uri-style=path --repo1-type=s3 --stanza=main
+2026-11-15 00:33:09.582 P00   INFO: stanza-create for stanza 'main' on repo1
+2026-11-15 00:33:12.464 P00   INFO: stanza-create command end: completed successfully (2889ms)
+2026-11-15 00:33:12.477 P00   INFO: check command begin 2.55.1: --config=/etc/pgbackrest/pgbackrest.conf --exec-id=10011-0a260b12 --log-level-console=info --log-level-file=detail --pg1-path=/var/lib/postgresql/17/main --repo1-cipher-pass=<redacted> --repo1-cipher-type=aes-256-cbc --repo1-path=/pgbackrest --repo1-s3-bucket=godseye-backups-dab6e7328bfc --repo1-s3-endpoint=s3.eu-central-003.backblazeb2.com --repo1-s3-key=<redacted> --repo1-s3-key-secret=<redacted> --repo1-s3-region=eu-central-003 --repo1-s3-uri-style=path --repo1-type=s3 --stanza=main
+2026-11-15 00:33:12.481 P00   INFO: check repo1 configuration (primary)
+2026-11-15 00:33:12.666 P00   INFO: check repo1 archive for WAL (primary)
+2026-11-15 00:33:13.922 P00   INFO: WAL segment 000000010000000000000001 successfully archived to '/pgbackrest/archive/main/17-1/0000000100000000/000000010000000000000001-066c01eab445cd688d1fea5a789fa7b315e20bd5.gz' on repo1
+2026-11-15 00:33:13.922 P00   INFO: check command end: completed successfully (1446ms)
+DROP DATABASE
+NOTICE:  database "godseye_p06_drill" does not exist, skipping
+CREATE DATABASE
+You are now connected to database "godseye_p06_drill" as user "postgres".
+CREATE TABLE
+INSERT 0 2
+[p06] Taking full encrypted backup to Backblaze B2...
+2026-11-15 00:33:14.022 P00   INFO: backup command begin 2.55.1: --config=/etc/pgbackrest/pgbackrest.conf --exec-id=10030-a81e38fd --log-level-console=info --log-level-file=detail --pg1-path=/var/lib/postgresql/17/main --process-max=2 --repo1-cipher-pass=<redacted> --repo1-cipher-type=aes-256-cbc --repo1-path=/pgbackrest --repo1-retention-diff=7 --repo1-retention-full=4 --repo1-s3-bucket=godseye-backups-dab6e7328bfc --repo1-s3-endpoint=s3.eu-central-003.backblazeb2.com --repo1-s3-key=<redacted> --repo1-s3-key-secret=<redacted> --repo1-s3-region=eu-central-003 --repo1-s3-uri-style=path --repo1-type=s3 --stanza=main --start-fast --type=full
+2026-11-15 00:33:14.290 P00   INFO: execute non-exclusive backup start: backup begins after the requested immediate checkpoint completes
+2026-11-15 00:33:14.371 P00   INFO: backup start archive = 000000010000000000000003, lsn = 0/3000028
+2026-11-15 00:33:14.371 P00   INFO: check archive for prior segment 000000010000000000000002
+2026-11-15 00:39:16.562 P00   INFO: execute non-exclusive backup stop and wait for all WAL segments to archive
+2026-11-15 00:39:16.580 P00   INFO: backup stop archive = 000000010000000000000003, lsn = 0/3043890
+2026-11-15 00:39:17.800 P00   INFO: check archive for segment(s) 000000010000000000000003:000000010000000000000003
+2026-11-15 00:39:18.309 P00   INFO: new backup label = 20261115-003314F
+2026-11-15 00:39:22.053 P00   INFO: full backup size = 29.6MB, file total = 1266
+2026-11-15 00:39:22.053 P00   INFO: backup command end: completed successfully (368032ms)
+2026-11-15 00:39:22.053 P00   INFO: expire command begin 2.55.1: --config=/etc/pgbackrest/pgbackrest.conf --exec-id=10030-a81e38fd --log-level-console=info --log-level-file=detail --repo1-cipher-pass=<redacted> --repo1-cipher-type=aes-256-cbc --repo1-path=/pgbackrest --repo1-retention-diff=7 --repo1-retention-full=4 --repo1-s3-bucket=godseye-backups-dab6e7328bfc --repo1-s3-endpoint=s3.eu-central-003.backblazeb2.com --repo1-s3-key=<redacted> --repo1-s3-key-secret=<redacted> --repo1-s3-region=eu-central-003 --repo1-s3-uri-style=path --repo1-type=s3 --stanza=main
+2026-11-15 00:39:22.383 P00   INFO: expire command end: completed successfully (330ms)
+stanza: main
+    status: ok
+    cipher: aes-256-cbc
+
+    db (current)
+        wal archive min/max (17): 000000010000000000000001/000000010000000000000003
+
+        full backup: 20261115-003314F
+            timestamp start/stop: 2026-11-15 00:33:14+00 / 2026-11-15 00:39:16+00
+            wal start/stop: 000000010000000000000003 / 000000010000000000000003
+            database size: 29.6MB, database backup size: 29.6MB
+            repo1: backup set size: 3.9MB, backup size: 3.9MB
+[p06] Simulating destructive database loss (stop PostgreSQL & wipe data dir)...
+[p06] Executing full restore from Backblaze B2 encrypted repository...
+2026-11-15 00:39:22.811 P00   INFO: restore command begin 2.55.1: --config=/etc/pgbackrest/pgbackrest.conf --exec-id=10080-8a003ac3 --log-level-console=info --log-level-file=detail --pg1-path=/var/lib/postgresql/17/main --process-max=2 --repo1-cipher-pass=<redacted> --repo1-cipher-type=aes-256-cbc --repo1-path=/pgbackrest --repo1-s3-bucket=godseye-backups-dab6e7328bfc --repo1-s3-endpoint=s3.eu-central-003.backblazeb2.com --repo1-s3-key=<redacted> --repo1-s3-key-secret=<redacted> --repo1-s3-region=eu-central-003 --repo1-s3-uri-style=path --repo1-type=s3 --stanza=main
+2026-11-15 00:39:23.153 P00   INFO: repo1: restore backup set 20261115-003314F, recovery will start at 2026-11-15 00:33:14
+2026-11-15 00:41:01.652 P00   INFO: write updated /var/lib/postgresql/17/main/postgresql.auto.conf
+2026-11-15 00:41:01.694 P00   INFO: restore global/pg_control (performed last to ensure aborted restores cannot be started)
+2026-11-15 00:41:01.698 P00   INFO: restore size = 29.6MB, file total = 1266
+2026-11-15 00:41:01.698 P00   INFO: restore command end: completed successfully (98888ms)
+[p06] Verifying recovered rows after restore...
+psql: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: No such file or directory
+	Is the server running locally and accepting connections on that socket?
+[ p 0 6 ]   P o s t g r e S Q L   r e a d y .   V e r i f y i n g   r e c o v e r e d   r o w s :  
+ [ p 0 6 ]   R e - r u n n i n g   r e s t o r e   w i t h   s e l f - c o n t a i n e d   / e t c / p g b a c k r e s t / p g b a c k r e s t . c o n f . . .  
+ 2 0 2 6 - 1 1 - 1 5   0 0 : 4 2 : 1 0 . 2 4 4   P 0 0       I N F O :   r e s t o r e   c o m m a n d   b e g i n   2 . 5 5 . 1 :   - - d e l t a   - - e x e c - i d = 1 0 4 0 5 - 6 e 2 c 4 1 5 e   - - l o g - l e v e l - c o n s o l e = i n f o   - - l o g - l e v e l - f i l e = d e t a i l   - - p g 1 - p a t h = / v a r / l i b / p o s t g r e s q l / 1 7 / m a i n   - - p r o c e s s - m a x = 2   - - r e p o 1 - c i p h e r - p a s s = < r e d a c t e d >   - - r e p o 1 - c i p h e r - t y p e = a e s - 2 5 6 - c b c   - - r e p o 1 - p a t h = / p g b a c k r e s t   - - r e p o 1 - s 3 - b u c k e t = g o d s e y e - b a c k u p s - d a b 6 e 7 3 2 8 b f c   - - r e p o 1 - s 3 - e n d p o i n t = s 3 . e u - c e n t r a l - 0 0 3 . b a c k b l a z e b 2 . c o m   - - r e p o 1 - s 3 - k e y = < r e d a c t e d >   - - r e p o 1 - s 3 - k e y - s e c r e t = < r e d a c t e d >   - - r e p o 1 - s 3 - r e g i o n = e u - c e n t r a l - 0 0 3   - - r e p o 1 - s 3 - u r i - s t y l e = p a t h   - - r e p o 1 - t y p e = s 3   - - s t a n z a = m a i n  
+ 2 0 2 6 - 1 1 - 1 5   0 0 : 4 2 : 1 0 . 6 5 6   P 0 0       I N F O :   r e p o 1 :   r e s t o r e   b a c k u p   s e t   2 0 2 6 1 1 1 5 - 0 0 3 3 1 4 F ,   r e c o v e r y   w i l l   s t a r t   a t   2 0 2 6 - 1 1 - 1 5   0 0 : 3 3 : 1 4  
+ 2 0 2 6 - 1 1 - 1 5   0 0 : 4 2 : 1 0 . 6 7 0   P 0 0       I N F O :   r e m o v e   i n v a l i d   f i l e s / l i n k s / p a t h s   f r o m   ' / v a r / l i b / p o s t g r e s q l / 1 7 / m a i n '  
+ 2 0 2 6 - 1 1 - 1 5   0 0 : 4 2 : 1 1 . 1 1 9   P 0 0       I N F O :   w r i t e   u p d a t e d   / v a r / l i b / p o s t g r e s q l / 1 7 / m a i n / p o s t g r e s q l . a u t o . c o n f  
+ 2 0 2 6 - 1 1 - 1 5   0 0 : 4 2 : 1 1 . 1 4 3   P 0 0       I N F O :   r e s t o r e   g l o b a l / p g _ c o n t r o l   ( p e r f o r m e d   l a s t   t o   e n s u r e   a b o r t e d   r e s t o r e s   c a n n o t   b e   s t a r t e d )  
+ 2 0 2 6 - 1 1 - 1 5   0 0 : 4 2 : 1 1 . 1 4 6   P 0 0       I N F O :   r e s t o r e   s i z e   =   2 9 . 6 M B ,   f i l e   t o t a l   =   1 2 6 6  
+ 2 0 2 6 - 1 1 - 1 5   0 0 : 4 2 : 1 1 . 1 4 6   P 0 0       I N F O :   r e s t o r e   c o m m a n d   e n d :   c o m p l e t e d   s u c c e s s f u l l y   ( 9 0 3 m s )  
+ [ p 0 6 ]   R e c o v e r e d   r o w s   f r o m   B a c k b l a z e   B 2   e n c r y p t e d   b a c k u p :  
+ 1 | P 0 6 _ R E S T O R E _ D R I L L _ R O W _ 1  
+ 2 | P 0 6 _ R E S T O R E _ D R I L L _ R O W _ 2  
+ D R O P   D A T A B A S E  
+ N E X T                                                         L E F T   L A S T   P A S S E D   U N I T                                                         A C T I V A T E S  
+ S u n   2 0 2 6 - 1 1 - 1 5   0 3 : 3 0 : 0 0   U T C   2 h   4 7 m i n   -                   -   g o d s e y e - p g b a c k r e s t - b a c k u p . t i m e r   g o d s e y e - p g b a c k r e s t - b a c k u p . s e r v i c e  
+  
+ 1   t i m e r s   l i s t e d .  
+ P a s s   - - a l l   t o   s e e   l o a d e d   b u t   i n a c t i v e   t i m e r s ,   t o o .  
+ 

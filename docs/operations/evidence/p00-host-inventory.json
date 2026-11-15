@@ -1,0 +1,150 @@
+{
+  "schemaVersion": 1,
+  "phase": "P00",
+  "gate": "DS01",
+  "status": "observed_complete_pending_disk_wear_decision",
+  "collectedAtUtc": "2026-11-14T19:01:02Z",
+  "hostIdentity": {
+    "provider": "Hetzner Online GmbH",
+    "datacenter": "HEL1-DC8 (Finland)",
+    "robotServerId": "EX44-1-LTD #3097071",
+    "hostname": "Ubuntu-resolute-latest-amd64-base.zst",
+    "os": "Ubuntu 26.04.1 LTS (Resolute Raccoon)",
+    "kernel": "7.0.0-22-generic x86_64",
+    "bootMode": "UEFI",
+    "efiBootEntries": [
+      "Boot0001* UEFI: PXE IPv4 Realtek PCIe 2.5GBE Family Controller (MAC c8:7f:54:70:5b:fe)",
+      "Boot0002* ubuntu (nvme0n1p1 GPT 91bf9cb2-8121-4e24-9620-b572e4eb2123 \\EFI\\ubuntu\\shimx64.efi)",
+      "Boot0003* ubuntu (nvme1n1p1 GPT 747a04e1-6bb6-4024-b557-dc7ab6a471e0 \\EFI\\ubuntu\\shimx64.efi)"
+    ]
+  },
+  "cpu": {
+    "vendor": "GenuineIntel",
+    "modelName": "13th Gen Intel(R) Core(TM) i5-13500",
+    "architecture": "x86_64 (hybrid P-core / E-core)",
+    "sockets": 1,
+    "physicalCoresTotal": 14,
+    "performanceCores": { "cores": "0-5", "count": 6, "logicalCpus": "0-11", "maxMhz": 4800 },
+    "efficientCores": { "cores": "6-13", "count": 8, "logicalCpus": "12-19", "maxMhz": 3500 },
+    "logicalThreadsTotal": 20,
+    "virtualization": "VT-x (vmx, ept, vpid)",
+    "devKvmPresent": true
+  },
+  "memory": {
+    "memTotalBytes": 67189080064,
+    "memTotalKiB": 65614336,
+    "memTotalMiB": 64076.5,
+    "memTotalGiB": 62.57,
+    "memAvailableBytes": 65932365824,
+    "swapTotalBytes": 34325131264
+  },
+  "storage": {
+    "disks": [
+      {
+        "device": "/dev/nvme0n1",
+        "byId": "nvme-SAMSUNG_MZVL2512HCJQ-00B00_S675NU0W263145",
+        "eui": "nvme-eui.002538b231a3afc2",
+        "model": "SAMSUNG MZVL2512HCJQ-00B00",
+        "serial": "S675NU0W263145",
+        "firmware": "GXA7801Q",
+        "sizeBytes": 512110190592,
+        "sizeGiB": 476.94,
+        "smartHealth": {
+          "criticalWarning": 0,
+          "temperatureCelsius": 28.9,
+          "availableSparePct": 100,
+          "spareThresholdPct": 10,
+          "percentageUsed": 57,
+          "dataUnitsRead": 39504837,
+          "dataUnitsWritten": 664688011,
+          "approxTerabytesWritten": 340.3,
+          "powerOnHours": 13745,
+          "unsafeShutdowns": 6,
+          "mediaErrors": 0,
+          "errorLogEntries": 0,
+          "assessment": "healthy_moderate_wear"
+        }
+      },
+      {
+        "device": "/dev/nvme1n1",
+        "byId": "nvme-SAMSUNG_MZVL2512HCJQ-00B00_S675NU0W263148",
+        "eui": "nvme-eui.002538b231a3afc5",
+        "model": "SAMSUNG MZVL2512HCJQ-00B00",
+        "serial": "S675NU0W263148",
+        "firmware": "GXA7801Q",
+        "sizeBytes": 512110190592,
+        "sizeGiB": 476.94,
+        "smartHealth": {
+          "criticalWarning": 4,
+          "criticalWarningMeaning": "Bit 2 (0x04): NVM subsystem reliability degraded (endurance threshold exceeded)",
+          "temperatureCelsius": 32.9,
+          "availableSparePct": 100,
+          "spareThresholdPct": 10,
+          "percentageUsed": 126,
+          "dataUnitsRead": 42409468,
+          "dataUnitsWritten": 730721436,
+          "approxTerabytesWritten": 374.1,
+          "powerOnHours": 13679,
+          "unsafeShutdowns": 6,
+          "mediaErrors": 0,
+          "errorLogEntries": 0,
+          "assessment": "warning_endurance_exceeded_126_pct_critical_warning_0x04"
+        }
+      }
+    ],
+    "currentLayout": {
+      "raidType": "Linux mdadm RAID1 across nvme0n1 and nvme1n1",
+      "partitions": [
+        { "part": "p1", "sizeBytes": 268435456, "fsType": "vfat", "mount": "/boot/efi (nvme0n1p1)" },
+        { "part": "p2", "sizeBytes": 34359738368, "raidDevice": "/dev/md0", "fsType": "swap" },
+        { "part": "p3", "sizeBytes": 1073741824, "raidDevice": "/dev/md1", "fsType": "ext3", "mount": "/boot" },
+        { "part": "p4", "sizeBytes": 476406160896, "raidDevice": "/dev/md2", "fsType": "ext4", "mount": "/" }
+      ]
+    }
+  },
+  "network": {
+    "interface": "enp5s0",
+    "altname": "enxc87f54705bfe",
+    "pciAddress": "0000:05:00.0",
+    "macAddress": "c8:7f:54:70:5b:fe",
+    "mtu": 1500,
+    "ipv4": {
+      "address": "65.108.38.218/32",
+      "gateway": "65.108.38.193",
+      "gatewayMac": "d4:5a:3f:73:67:bf",
+      "routeScope": "proto static onlink",
+      "outboundPingTest": "1.1.1.1 reachable (0% loss, avg 1.71 ms)"
+    },
+    "ipv6": {
+      "assignedSubnet": "2a01:4f9:3080:344e::/64",
+      "currentHostAddress": "2a01:4f9:3080:344e::2/64",
+      "linkLocalAddress": "fe80::ca7f:54ff:fe70:5bfe/64",
+      "gateway": "fe80::1",
+      "gatewayMac": "d4:5a:3f:73:67:bf",
+      "outboundPingTest": "2606:4700:4700::1111 reachable (0% loss, avg 1.46 ms)"
+    },
+    "packetFilter": {
+      "nftablesVersion": "v1.1.6",
+      "iptablesVersion": "v1.8.11 (nf_tables)",
+      "currentPolicy": "ACCEPT all (unconfigured stock install)"
+    }
+  },
+  "accountsAndData": {
+    "users": ["root (0)", "nobody (65534)"],
+    "authorizedKeyFingerprints": [
+      "256 SHA256:hisiyHciFHxp8qE1YKqUuyhYNFBtjyMgM/vQR8F+hjc godseye-workstation-admin (ED25519)",
+      "256 SHA256:+RMqYQflL5TR4dEkDDpByqifbXZ8kQIk6jjoAjEpyg4 godseye-emergency-rescue (ED25519)"
+    ],
+    "listeningPorts": [
+      "0.0.0.0:22 / [::]:22 (sshd)",
+      "127.0.0.53:53 / 127.0.0.54:53 (systemd-resolved)",
+      "127.0.0.1:323 / [::1]:323 (chronyd)"
+    ],
+    "userDataDirectories": {
+      "/home": "empty",
+      "/srv": "empty",
+      "/opt": "empty"
+    },
+    "preservationDecision": "Verified empty stock Ubuntu 26.04.1 LTS reset; owner confirmed zero data to retain."
+  }
+}

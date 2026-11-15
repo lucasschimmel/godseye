@@ -1,0 +1,26 @@
+[p07-bao] Downloading OpenBao v2.7.2 and verifying SHA256 digest...
+openbao_2.7.2_linux_amd64.tar.gz: OK
+OpenBao v2.7.2 (9e0a0d3c3504a0a00b45e61355afac5e35c78379), committed 2026-10-26T20:32:27Z
+...............+...+++++++++++++++++++++++++++++++++++++++++++++*..+..+....+..+++++++++++++++++++++++++++++++++++++++++++++*......+.........+.+...+...+...............+...............+...+.................+..........+........+.+...+.....+.+......+......+.........+........+..................+............+.+..+.........+....+.....+.+........+.............+..................+...........+......+.........+......+.......+............+.........+..+....+......+..+...+............+......+.+......+.........+...........+....+..............+....+..+.+..+.......+.....+......+.............+..............+.+......+........+++++
+.+...+..+....+.....+.+...........+...+++++++++++++++++++++++++++++++++++++++++++++*..........+..+.+...........+.............+......+..............+.......+...+...........+++++++++++++++++++++++++++++++++++++++++++++*...........+.......+......+.................+...+....+.....+++++
+-----
+Created symlink '/etc/systemd/system/multi-user.target.wants/openbao.service' → '/etc/systemd/system/openbao.service'.
+[p07-bao] Initialized OpenBao (3 shares, threshold 2). Recovery JSON stored ONLY at /root/openbao-init-DO-NOT-COMMIT.json
+Key                     Value
+---                     -----
+Seal Type               shamir
+Initialized             true
+Sealed                  false
+Total Shares            3
+Threshold               2
+Version                 2.7.2
+Commit Date             2026-10-26T20:32:27Z
+Storage Type            raft
+Cluster Name            vault-cluster-eed6335e
+Cluster ID              c7e9904b-9913-2247-7ac3-4051906f631e
+HA Enabled              true
+HA Cluster              https://10.20.1.10:8201
+HA Mode                 active
+Active Since            2026-11-15T08:59:00.097832882Z
+Raft Committed Index    29
+Raft Applied Index      29
