@@ -47,6 +47,22 @@ describe("edge Caddy container install template", () => {
     expect(install).toContain("console.godseye.lucasschimmel.fr");
     expect(install).toContain("handle /api/v1/owner/local-command");
   });
+  it("answers 404 for unknown hosts on both public ports and keeps the console certificate untouched", () => {
+    const caddyfile = install.slice(install.indexOf('cat >"${CADDYFILE_DIR}/Caddyfile"'));
+    const unknown = caddyfile.slice(caddyfile.indexOf("# --- UNKNOWN HOSTS"));
+    expect(unknown).toMatch(/http:\/\/ \{\n\trespond "Not found" 404\n\}/);
+    expect(unknown).toMatch(/https:\/\/ \{\n\trespond "Not found" 404\n\}/);
+    // The catch-all comes after the app-host import, and never requests certificates on demand.
+    expect(caddyfile.indexOf("import /etc/caddy/apps.d/*.caddy")).toBeLessThan(
+      caddyfile.indexOf("# --- UNKNOWN HOSTS"),
+    );
+    expect(unknown).not.toContain("on_demand");
+    expect(caddyfile).toContain("https://${CONSOLE_HOST}:8443 {\n\t${CONSOLE_TLS_DIRECTIVE}");
+  });
+  it("only issues on-demand certificates for hosts the control API approves through ask", () => {
+    expect(install).toContain("on_demand_tls {");
+    expect(install).toContain("ask http://${EDGE_GATEWAY}:4300/api/v1/domains/ask");
+  });
   it("leaves the old host-systemd Caddy script as a non-executing stub", () => {
     expect(read("p07-caddy-https.sh")).toContain("exit 1");
   });

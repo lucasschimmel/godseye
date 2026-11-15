@@ -1,0 +1,72 @@
+# External uptime observer (spec DS11 / E08). It runs OUTSIDE the server's failure domain so a dead
+# host can still be noticed. It is not a build system (Jenkins stays that) and uses no secrets, no
+# third-party actions and no repository checkout: every check is a plain shell step against public
+# endpoints. A failed run notifies the repository owner through GitHub's own notification email.
+# GitHub only runs scheduled workflows from the default branch (main).
+name: external-observer
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: external-observer
+  cancel-in-progress: true
+
+env:
+  SITE_HOST: godseye.lucasschimmel.fr
+  EXPECTED_BODY: godseye-edge-ok
+  MIN_CERT_DAYS: "14"
+  # Admin ports that must never answer on the public IPv4: SSH, Proxmox, Jenkins, OpenBao, PostgreSQL, Redis.
+  CLOSED_PORTS: "22 8006 8080 8200 5432 6379"
+
+jobs:
+  observe:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Edge health answers 200 with the expected body
+        run: |
+          body="$(curl --silent --show-error --fail --max-time 20 --retry 2 --retry-delay 3 \
+            "https://${SITE_HOST}/healthz")"
+          if [ "${body}" != "${EXPECTED_BODY}" ]; then
+            echo "::error::Unexpected /healthz body"
+            exit 1
+          fi
+          echo "healthz ok"
+
+      - name: Certificate stays valid for the minimum number of days
+        run: |
+          cert="$(openssl s_client -connect "${SITE_HOST}:443" -servername "${SITE_HOST}" </dev/null 2>/dev/null \
+            | openssl x509 2>/dev/null)"
+          if [ -z "${cert}" ]; then
+            echo "::error::No TLS certificate presented"
+            exit 1
+          fi
+          echo "${cert}" | openssl x509 -noout -enddate
+          if ! echo "${cert}" | openssl x509 -noout -checkend "$((MIN_CERT_DAYS * 86400))"; then
+            echo "::error::Certificate expires in under ${MIN_CERT_DAYS} days"
+            exit 1
+          fi
+
+      - name: No admin port answers on the public IPv4
+        run: |
+          ip="$(getent ahostsv4 "${SITE_HOST}" | awk 'NR==1 {print $1}')"
+          if [ -z "${ip}" ]; then
+            echo "::error::Public IPv4 does not resolve"
+            exit 1
+          fi
+          open=""
+          for port in ${CLOSED_PORTS}; do
+            if timeout 5 bash -c "exec 3<>/dev/tcp/${ip}/${port}" 2>/dev/null; then
+              open="${open} ${port}"
+            fi
+          done
+          if [ -n "${open}" ]; then
+            echo "::error::Admin ports answer on the public IPv4:${open}"
+            exit 1
+          fi
+          echo "admin ports closed"

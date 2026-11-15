@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft, CheckCheck, Database, GitBranch, Layers, ShieldCheck } from "lucide-react";
 import { BackendPanel } from "@/components/backend-panel";
+import { DomainsPanel } from "@/components/domains-panel";
 import { LifecyclePanel } from "@/components/lifecycle-panel";
 import { ProjectTimeline } from "@/components/observability-panel";
 import {
@@ -139,6 +140,7 @@ function ProjectDetail() {
           </section>
         ))}
       </div>
+      <DomainsPanel project={project} />
       <LifecyclePanel project={project} />
       <Link to="/databases" className="text-link">
         Gérer les bases de données indépendantes

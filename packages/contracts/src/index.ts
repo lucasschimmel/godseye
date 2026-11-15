@@ -8,6 +8,7 @@ export * from "./coding.js";
 export { LOCAL_DEFAULTS } from "./config.js";
 export * from "./database.js";
 export * from "./delivery.js";
+export * from "./domains.js";
 export * from "./foundations.js";
 export * from "./http.js";
 export * from "./http-domain.js";

@@ -4,6 +4,12 @@ import { z } from "zod";
 import { imageName } from "./build-backend.js";
 import { parseRoute, type RouteStore, reloadCaddy, renderRoute } from "./caddy-routes.js";
 import type { CommandRunner } from "./command-runner.js";
+import {
+  parseDomainRoutes,
+  renderDomainRoutes,
+  retargetDomainRoutes,
+  routeUpstream,
+} from "./domain-routes.js";
 import type { RegistryClient } from "./registry-client.js";
 
 const LABEL = "godseye";
@@ -29,6 +35,8 @@ const NetworkInspect = z.array(
 export interface DockerRuntimeConfig {
   registry: RegistryClient;
   routes: RouteStore;
+  /** Optional store for the per-environment custom-domain file; absent keeps domains unpublishable. */
+  domainRoutes?: RouteStore;
   run: CommandRunner;
   /** Name of the Caddy container that terminates TLS; it joins each per-environment network. */
   caddyContainer: string;
@@ -38,6 +46,10 @@ export interface DockerRuntimeConfig {
   healthPath?: string;
   runtime?: string;
   caddyConfigPath?: string;
+}
+interface DomainChange {
+  before: string | null;
+  next: string | null;
 }
 export const containerName = (scope: DeliveryScope) => `gdy-${scope.runId}`;
 export const networkName = (scope: DeliveryScope) => `gdy-env-${scope.environmentId}`;
@@ -267,8 +279,41 @@ export class DockerRuntime {
         upstream: `${containerName(scope)}:${this.port}`,
         owner: { runId: scope.runId, ownership: scope.ownership, digest: manifest.artifactDigest },
       });
-      await this.swap(scope.environmentId, before, next);
+      // Custom-domain blocks of the environment follow the same upstream in the same reload.
+      const domain = await this.domainChange(scope.environmentId, (content) =>
+        retargetDomainRoutes(content, `${containerName(scope)}:${this.port}`),
+      );
+      await this.swap(scope.environmentId, before, next, domain);
       if (previous && previous.runId !== scope.runId) await this.retire(previous);
+    });
+  }
+  private async domainChange(
+    environmentId: string,
+    transform: (before: string) => string,
+  ): Promise<DomainChange | undefined> {
+    const store = this.config.domainRoutes;
+    if (!store) return undefined;
+    const before = await store.read(environmentId);
+    if (before === null) return undefined;
+    return { before, next: transform(before) };
+  }
+  /**
+   * Replaces the complete custom-domain set of an environment (an empty set removes the file). The
+   * blocks proxy to the environment's current route upstream, or answer 503 while it has none.
+   */
+  async publishDomains(environmentId: string, hostnames: readonly string[]) {
+    const store = this.config.domainRoutes;
+    if (!store) throw new Error("Custom domain routes are not configured");
+    return this.serialized(environmentId, async () => {
+      const before = await store.read(environmentId);
+      if (before !== null && !parseDomainRoutes(before))
+        throw new Error("Domain route file is not platform-owned");
+      const upstream = routeUpstream(await this.config.routes.read(environmentId));
+      const next = hostnames.length
+        ? renderDomainRoutes({ environmentId, upstream, hostnames: [...hostnames] })
+        : null;
+      if (next === before) return;
+      await this.swap(environmentId, undefined, undefined, { before, next });
     });
   }
   private reloadCommands() {
@@ -280,14 +325,24 @@ export class DockerRuntime {
     };
   }
   /** Replace or remove the route; on any failure restore the previous bytes and reload them. */
-  private async swap(environmentId: string, before: string | null, next: string | null) {
+  private async swap(
+    environmentId: string,
+    before: string | null | undefined,
+    next: string | null | undefined,
+    domain?: DomainChange,
+  ) {
+    const put = async (store: RouteStore, content: string | null) => {
+      if (content === null) await store.remove(environmentId);
+      else await store.write(environmentId, content);
+    };
+    const domains = this.config.domainRoutes;
     try {
-      if (next === null) await this.config.routes.remove(environmentId);
-      else await this.config.routes.write(environmentId, next);
+      if (next !== undefined) await put(this.config.routes, next);
+      if (domain && domains) await put(domains, domain.next);
       await reloadCaddy(this.config.run, this.reloadCommands());
     } catch (error) {
-      if (before === null) await this.config.routes.remove(environmentId);
-      else await this.config.routes.write(environmentId, before);
+      if (before !== undefined) await put(this.config.routes, before);
+      if (domain && domains) await put(domains, domain.before);
       await reloadCaddy(this.config.run, this.reloadCommands()).catch(() => undefined);
       throw error;
     }
@@ -301,7 +356,13 @@ export class DockerRuntime {
     return this.serialized(scope.environmentId, async () => {
       const before = await this.config.routes.read(scope.environmentId);
       const holder = parseRoute(before);
-      if (holder?.ownership === scope.ownership) await this.swap(scope.environmentId, before, null);
+      if (holder?.ownership === scope.ownership) {
+        // Verified custom domains keep their file but answer 503 until the next deployment.
+        const domain = await this.domainChange(scope.environmentId, (content) =>
+          retargetDomainRoutes(content, null),
+        );
+        await this.swap(scope.environmentId, before, null, domain);
+      }
       const listing = await this.dockerOk(
         [
           "ps",

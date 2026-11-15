@@ -1,10 +1,13 @@
-import { ManagedDeliveryProvider } from "@godseye/core";
+import type { InfrastructureOptions } from "@godseye/core";
+import { type DomainTarget, ManagedDeliveryProvider } from "@godseye/core";
 import { z } from "zod";
 import { readPrivateJson, readPrivateText } from "../private-json.js";
 import { JenkinsBuildBackend } from "./build-backend.js";
 import { FileRouteStore } from "./caddy-routes.js";
 import { execCommandRunner } from "./command-runner.js";
+import { createDnsResolver } from "./dns-resolver.js";
 import { DockerRuntime } from "./docker-runtime.js";
+import { DOMAIN_ROUTE_SUFFIX } from "./domain-routes.js";
 import { createGithubSourceProvider } from "./github-app-auth.js";
 import { JenkinsClient } from "./jenkins-client.js";
 import { RegistryClient } from "./registry-client.js";
@@ -40,6 +43,18 @@ const Delivery = z
         credentialsPath: Path.optional(),
       })
       .strict(),
+    /** Where owners point custom names: a CNAME target and/or the public IPv4 of the edge. */
+    domains: z
+      .object({
+        cnameTarget: Host,
+        publicIpv4: z.array(z.ipv4()).min(1).max(4),
+        resolvers: z
+          .array(z.union([z.ipv4(), z.ipv6()]))
+          .max(4)
+          .optional(),
+      })
+      .strict()
+      .optional(),
     runtime: z
       .object({
         caddyContainer: z.string().regex(/^[A-Za-z0-9][A-Za-z0-9_.-]{0,63}$/),
@@ -54,6 +69,8 @@ const RegistryCredentials = z.object({ user: z.string(), password: z.string() })
 export interface ConfiguredDelivery {
   sourceProvider?: ReturnType<typeof createGithubSourceProvider>;
   deliveryProvider?: ManagedDeliveryProvider;
+  /** Present only when the binding declares `domains`; otherwise custom domains stay unconfigured. */
+  domains?: NonNullable<InfrastructureOptions["domains"]>;
 }
 /**
  * Optional private adapters. Without GODSEYE_GITHUB_APP_BINDING / GODSEYE_DELIVERY_BINDING (absolute
@@ -88,11 +105,27 @@ export function configuredDelivery(env: NodeJS.ProcessEnv): ConfiguredDelivery {
     const runtime = new DockerRuntime({
       registry,
       routes: new FileRouteStore(binding.runtime.routeDirectory),
+      domainRoutes: new FileRouteStore(binding.runtime.routeDirectory, DOMAIN_ROUTE_SUFFIX),
       run: execCommandRunner,
       caddyContainer: binding.runtime.caddyContainer,
       appDomain: binding.provider.appDomain,
       ...(binding.runtime.containerPort ? { containerPort: binding.runtime.containerPort } : {}),
     });
+    if (binding.domains) {
+      const target: DomainTarget = {
+        cname: binding.domains.cnameTarget,
+        ipv4: binding.domains.publicIpv4,
+        platformDomain: binding.provider.appDomain,
+      };
+      result.domains = {
+        resolver: createDnsResolver(binding.domains.resolvers),
+        target,
+        publisher: {
+          publish: ({ environmentId, hostnames }) =>
+            runtime.publishDomains(environmentId, hostnames),
+        },
+      };
+    }
     const { appDomain, ...provider } = binding.provider;
     result.deliveryProvider = new ManagedDeliveryProvider(
       { ...provider, previewDomain: appDomain },

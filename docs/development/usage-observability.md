@@ -145,7 +145,12 @@ workers and expired mute/ack state cannot justify duplicate uncertain effects.
 
 The notifier and independent uptime observer are trusted private injected adapters,
 unconfigured by default. There is no public arbitrary notification/observer URL,
-remote plugin integration or actual message delivery in this checkpoint. A dead
+remote plugin integration or actual message delivery in this checkpoint.
+The repository also carries an external uptime observer, `.github/workflows/external-observer.yml`
+(see [CI](ci.md#external-uptime-observer-github-actions)). It checks public edge health, certificate
+lifetime and closed admin ports from GitHub's runners and relies on GitHub's own failure email. It is
+independent of the notification outbox: the outbox adapter is still unconfigured and real message
+delivery remains unqualified. A dead
 host cannot detect itself: separate external observation and real notification
 qualification remain operator work. Server-owned bounded collection, evaluation,
 delivery and pruning stop with the server and isolate expected source faults.

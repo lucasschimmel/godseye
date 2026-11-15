@@ -18,6 +18,18 @@ import { listOperations, operationView, requestOperation } from "./operations.js
 import { type Actor, assertOwner, assertProjectAccess } from "./policy.js";
 import { createEnvironment, updateEnvironment, updateProject } from "./project-management.js";
 
+export type {
+  DomainResolver,
+  DomainRoutePublisher,
+  DomainTarget,
+} from "./project-domain-policy.js";
+export {
+  evaluateChallenge,
+  evaluateRouting,
+  isApexDomain,
+  isPlatformHostname,
+} from "./project-domain-policy.js";
+export { ProjectDomainEngine } from "./project-domains.js";
 export { ProjectLifecycleEngine } from "./project-lifecycle.js";
 
 import { configureRepository, createProject, getProject, listProjects } from "./projects.js";

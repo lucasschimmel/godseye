@@ -44,6 +44,7 @@ import { JobEngine, type JobOptions } from "./jobs.js";
 import { ObservabilityEngine, type ObservabilityOptions } from "./observability.js";
 import { OrchestrationEngine } from "./orchestration.js";
 import type { Actor } from "./policy.js";
+import { ProjectDomainEngine, type ProjectDomainOptions } from "./project-domains.js";
 import { ProjectLifecycleEngine } from "./project-lifecycle.js";
 import { RECOVERY_ADAPTER_ID, RecoveryEngine, type RecoveryProvider } from "./recovery.js";
 import { UsageEngine } from "./usage.js";
@@ -73,6 +74,8 @@ export interface InfrastructureOptions {
   jobs?: Partial<Omit<JobOptions, "now">>;
   agents?: AgentOptions;
   coding?: CodingOptions;
+  /** Resolver, edge route publisher and public DNS target; omitting them leaves custom domains unconfigured. */
+  domains?: Omit<ProjectDomainOptions, "now">;
   /** Overrides the bounded heavy-task class (tests and tuning); defaults come from the contracts. */
   heavyTasks?: Partial<HeavyTaskPolicy>;
 }
@@ -91,6 +94,7 @@ export class InfrastructureEngine {
   readonly coding: CodingEngine;
   readonly orchestration: OrchestrationEngine;
   readonly lifecycle: ProjectLifecycleEngine;
+  readonly domains: ProjectDomainEngine;
   private readonly state: InfrastructureState;
   private readonly heavy: HeavyTaskPolicy;
   constructor(store: Store, options: InfrastructureOptions = {}) {
@@ -157,6 +161,7 @@ export class InfrastructureEngine {
     this.coding = new CodingEngine(store, { ...options.coding, now });
     this.orchestration = new OrchestrationEngine(store, now);
     this.lifecycle = new ProjectLifecycleEngine(store, { now });
+    this.domains = new ProjectDomainEngine(store, { ...options.domains, now });
     this.foundation = new FoundationEngine(store, {
       dispatchGate: async (tx, plan, runId) => {
         if (!(await this.usage.claimGate(tx, plan, runId)))

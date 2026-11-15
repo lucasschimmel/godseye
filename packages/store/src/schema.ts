@@ -167,6 +167,7 @@ export * from "./backend-schema.js";
 export * from "./coding-schema.js";
 export * from "./database-schema.js";
 export * from "./delivery-schema.js";
+export * from "./domains-schema.js";
 export * from "./infra-admission-schema.js";
 export * from "./infra-schema.js";
 export * from "./jobs-schema.js";

@@ -9,6 +9,7 @@ import { CODING_HTTP_ENDPOINTS } from "./coding-endpoints.js";
 import { LOCAL_DEFAULTS } from "./config.js";
 import { DATABASE_HTTP_ENDPOINTS } from "./database-endpoints.js";
 import { DELIVERY_HTTP_ENDPOINTS } from "./delivery-endpoints.js";
+import { DOMAIN_HTTP_ENDPOINTS } from "./domains-endpoints.js";
 import { CreateExecutionPlan, RegisterResource } from "./foundations.js";
 import { CreateProject, OperationRequest } from "./http-domain.js";
 import {
@@ -44,7 +45,7 @@ import { PROTECTION_HTTP_ENDPOINTS } from "./protection-endpoints.js";
 import { RECOVERY_HTTP_ENDPOINTS } from "./recovery-endpoints.js";
 import { USAGE_HTTP_ENDPOINTS } from "./usage-endpoints.js";
 
-export const CONTROL_API_VERSION = "1.15.0" as const;
+export const CONTROL_API_VERSION = "1.16.0" as const;
 export const CONTROL_API_HEADER = "x-godseye-api-version" as const;
 export interface ControlEndpoint {
   method: "GET" | "POST" | "PUT";
@@ -74,6 +75,7 @@ export const CONTROL_HTTP_ENDPOINTS = [
   ...BACKEND_HTTP_ENDPOINTS,
   ...DATABASE_HTTP_ENDPOINTS,
   ...DELIVERY_HTTP_ENDPOINTS,
+  ...DOMAIN_HTTP_ENDPOINTS,
   ...JOBS_HTTP_ENDPOINTS,
   ...LIFECYCLE_HTTP_ENDPOINTS,
   ...RECOVERY_HTTP_ENDPOINTS,
