@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# godseye-reboot-if-required: weekly, staggered, guarded guest reboot (never run on the pro VM).
+#
+# A reboot happens only when the kernel/libc update flagged /var/run/reboot-required AND the
+# guest is idle (1-minute load below the threshold). Otherwise it logs why and retries at the
+# next window. Timers are staggered per guest (games Monday, work Tuesday) so no two VMs
+# restart in the same window; the host and the pro VM are only rebooted by hand.
+set -euo pipefail
+
+MAX_LOAD="${GODSEYE_REBOOT_MAX_LOAD:-1.0}"
+ROLE="${1:-unknown}"
+
+if [ "$ROLE" = "pro" ]; then
+  echo "refusing: the pro VM is rebooted manually (OpenBao unseal) in the documented window" >&2
+  exit 64
+fi
+if [ ! -e /var/run/reboot-required ]; then
+  logger -t godseye-reboot "no reboot required"
+  exit 0
+fi
+LOAD="$(cut -d' ' -f1 /proc/loadavg)"
+if awk -v l="$LOAD" -v m="$MAX_LOAD" 'BEGIN{exit !(l > m)}'; then
+  logger -t godseye-reboot "reboot required but load $LOAD > $MAX_LOAD; retrying next window"
+  exit 0
+fi
+logger -t godseye-reboot "rebooting $ROLE (reboot-required set, load $LOAD)"
+sync
+systemctl reboot

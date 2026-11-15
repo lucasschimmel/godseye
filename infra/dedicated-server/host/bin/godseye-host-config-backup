@@ -1,0 +1,103 @@
+#!/usr/bin/env bash
+# godseye-host-config-backup: archive the Proxmox host configuration (DS09/DS14).
+#
+# The archive contains private material (WireGuard server key, SSH host keys,
+# pmxcfs private keys) so it is root-only (umask 077), stays on the local
+# backup dataset and is only ever copied off-host through the encrypted restic
+# repository (godseye-offhost-backup). Never copy an archive into a repository.
+set -euo pipefail
+umask 077
+
+DEST_DIR="${GODSEYE_HOST_CONFIG_DIR:-/rpool/backup/host-config}"
+STATUS_DIR="${GODSEYE_STATUS_DIR:-/var/lib/godseye/status}"
+KEEP="${GODSEYE_HOST_CONFIG_KEEP:-14}"
+TS="$(date -u +%Y%m%dT%H%M%SZ)"
+WORK="$(mktemp -d /run/godseye-hostcfg.XXXXXX)"
+trap 'rm -rf "$WORK"' EXIT
+
+mkdir -p "$DEST_DIR" "$STATUS_DIR"
+chmod 700 "$DEST_DIR"
+
+# Facts that make a rebuild reproducible without being secrets.
+FACTS="$WORK/facts"
+mkdir -p "$FACTS"
+{
+  pveversion -v
+  uname -a
+} >"$FACTS/versions.txt" 2>&1 || true
+dpkg --get-selections >"$FACTS/dpkg-selections.txt" 2>&1 || true
+zpool status -v >"$FACTS/zpool-status.txt" 2>&1 || true
+zpool get all rpool >"$FACTS/zpool-props.txt" 2>&1 || true
+zfs get -r -s local,received all rpool >"$FACTS/zfs-local-props.txt" 2>&1 || true
+nft list ruleset >"$FACTS/nft-ruleset-live.txt" 2>&1 || true
+ip -d addr >"$FACTS/ip-addr.txt" 2>&1 || true
+ip route >"$FACTS/ip-route4.txt" 2>&1 || true
+ip -6 route >"$FACTS/ip-route6.txt" 2>&1 || true
+proxmox-boot-tool status >"$FACTS/boot-tool.txt" 2>&1 || true
+efibootmgr -v >"$FACTS/efibootmgr.txt" 2>&1 || true
+lsblk -o NAME,SIZE,TYPE,MOUNTPOINT,SERIAL >"$FACTS/lsblk.txt" 2>&1 || true
+wg show wg0 >"$FACTS/wg-show-no-keys.txt" 2>&1 || true
+sed -i 's/^\(\s*private key:\).*/\1 (hidden)/' "$FACTS/wg-show-no-keys.txt" || true
+for vmid in $(qm list | awk 'NR>1{print $1}'); do
+  qm config "$vmid" >"$FACTS/qm-$vmid.conf" 2>&1 || true
+done
+
+CANDIDATES=(
+  /etc/pve
+  /var/lib/pve-cluster/config.db
+  /etc/network
+  /etc/nftables.conf
+  /etc/wireguard
+  /etc/ssh
+  /etc/sysctl.d
+  /etc/modprobe.d
+  /etc/systemd/system
+  /etc/systemd/journald.conf.d
+  /etc/chrony
+  /etc/apt
+  /etc/hosts
+  /etc/hostname
+  /etc/resolv.conf
+  /etc/vzdump.conf
+  /etc/default/grub
+  /etc/kernel
+  /etc/godseye
+  /usr/local/sbin
+  /var/lib/godseye
+  /root/.ssh/authorized_keys
+)
+EXISTING=()
+for p in "${CANDIDATES[@]}"; do
+  [ -e "$p" ] && EXISTING+=("$p")
+done
+
+OUT="$DEST_DIR/host-config-$TS.tar.zst"
+# /etc/godseye holds the restic password and B2 credentials: they are part of
+# the archive on purpose (local, root-only) and are escrowed by the owner.
+tar --zstd --warning=no-file-changed --ignore-failed-read \
+  -cf "$OUT.partial" -C "$WORK" facts "${EXISTING[@]}" 2>"$WORK/tar.err" || {
+  rc=$?
+  # exit 1 = files changed while reading (acceptable for pmxcfs), >1 is fatal.
+  if [ "$rc" -gt 1 ]; then
+    cat "$WORK/tar.err" >&2
+    exit "$rc"
+  fi
+}
+mv "$OUT.partial" "$OUT"
+(cd "$DEST_DIR" && sha256sum "$(basename "$OUT")" >"$(basename "$OUT").sha256")
+
+# Verify the archive is readable before pruning older generations.
+tar --zstd -tf "$OUT" >/dev/null
+
+# Keep only the newest $KEEP generations.
+mapfile -t OLD < <(ls -1t "$DEST_DIR"/host-config-*.tar.zst 2>/dev/null | tail -n +"$((KEEP + 1))")
+for f in "${OLD[@]:-}"; do
+  [ -n "$f" ] && rm -f -- "$f" "$f.sha256"
+done
+
+SIZE="$(stat -c %s "$OUT")"
+printf '{"ts":"%s","archive":"%s","bytes":%s,"ok":true}\n' \
+  "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$(basename "$OUT")" "$SIZE" >"$STATUS_DIR/host-config-backup.json.tmp"
+chmod 644 "$STATUS_DIR/host-config-backup.json.tmp"
+mv "$STATUS_DIR/host-config-backup.json.tmp" "$STATUS_DIR/host-config-backup.json"
+echo "HOST_CONFIG_BACKUP_OK $(basename "$OUT") $SIZE bytes"

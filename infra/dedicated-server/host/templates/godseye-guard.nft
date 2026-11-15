@@ -1,0 +1,44 @@
+#!/usr/sbin/nft -f
+# godseye_guard: additive, drop-only hardening that sits in front of the main godseye_filter table
+# (N04/N08, DS04). It never accepts anything the main table drops: in nftables an "accept" in one
+# base chain does not override a "drop" in another, so this table can only make the policy stricter.
+# It lives in its own table so other changes to /etc/nftables.conf (e.g. new published ports) neither
+# need to know about it nor can be broken by it. Removal: nft delete table inet godseye_guard.
+
+table inet godseye_guard
+delete table inet godseye_guard
+
+table inet godseye_guard {
+	# Addresses a guest may use as source. Public IPv6 are the routed /128s; ULA/private ranges are
+	# only meaningful toward the WireGuard side (the main table already drops ULA toward the uplink).
+	chain forward {
+		type filter hook forward priority -10; policy accept;
+
+		# Anti-spoofing: each bridge may only emit its own subnet.
+		iifname "vmbr1" ip saddr != 10.20.1.0/24 counter drop comment "spoof v4 vmbr1"
+		iifname "vmbr2" ip saddr != 10.20.2.0/24 counter drop comment "spoof v4 vmbr2"
+		iifname "vmbr3" ip saddr != 10.20.3.0/24 counter drop comment "spoof v4 vmbr3"
+		iifname "vmbr1" ip6 saddr != { 2a01:4f9:3080:344e::100, fc00::/7 } counter drop comment "spoof v6 vmbr1"
+		iifname "vmbr2" ip6 saddr != { 2a01:4f9:3080:344e::200, fc00::/7 } counter drop comment "spoof v6 vmbr2"
+		iifname "vmbr3" ip6 saddr != fc00::/7 counter drop comment "spoof v6 vmbr3 (no public IPv6)"
+
+		# ICMPv6 from the Internet toward guests: error messages (PMTUD needs packet-too-big),
+		# echo only, with a rate limit. Neighbor/router discovery and redirects are link-local only.
+		iifname "enp5s0" meta l4proto ipv6-icmp icmpv6 type { destination-unreachable, packet-too-big, time-exceeded, parameter-problem, echo-reply } return
+		iifname "enp5s0" meta l4proto ipv6-icmp icmpv6 type echo-request limit rate 10/second burst 20 packets return
+		iifname "enp5s0" meta l4proto ipv6-icmp counter drop comment "other inbound ICMPv6 to guests"
+		meta l4proto ipv6-icmp icmpv6 type { nd-router-advert, nd-router-solicit, nd-redirect, nd-neighbor-solicit, nd-neighbor-advert } counter drop comment "link-local ICMPv6 must never be forwarded"
+	}
+
+	chain input {
+		type filter hook input priority -10; policy accept;
+
+		# Public ICMPv4/ICMPv6 to the host: only what diagnostics and PMTUD need, echo rate limited.
+		# Neighbor discovery with the Hetzner gateway (fe80::1) is deliberately left untouched.
+		iifname "enp5s0" icmp type { echo-request, destination-unreachable, time-exceeded, parameter-problem } limit rate 10/second burst 20 packets return
+		iifname "enp5s0" meta l4proto icmp counter drop comment "other or excess public ICMPv4"
+		iifname "enp5s0" meta l4proto ipv6-icmp icmpv6 type { destination-unreachable, packet-too-big, time-exceeded, parameter-problem, echo-reply, nd-neighbor-solicit, nd-neighbor-advert, mld-listener-query, mld-listener-report, mld2-listener-report } return
+		iifname "enp5s0" meta l4proto ipv6-icmp icmpv6 type echo-request limit rate 10/second burst 20 packets return
+		iifname "enp5s0" meta l4proto ipv6-icmp counter drop comment "other or excess public ICMPv6 (router adverts, redirects)"
+	}
+}
