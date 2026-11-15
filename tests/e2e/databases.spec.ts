@@ -152,9 +152,7 @@ test("T-AC-28 T-AC-33 prepares a bounded profile for the selected preview and ke
     page.getByRole("heading", { name: "Rotation des secrets à connecter", exact: true }),
   ).toBeVisible();
   await expect(page.getByText(/Aucun canal de notification externe n’est configuré/)).toBeVisible();
-  await expect(
-    page.getByRole("heading", { name: "Incidents de protection des données", exact: true }),
-  ).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Incidents", exact: true })).toBeVisible();
   await expect(
     page.getByText(/Activation bloquée : fichiers, authentification, configuration/),
   ).toBeVisible();
