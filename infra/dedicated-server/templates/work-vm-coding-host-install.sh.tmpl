@@ -1,0 +1,94 @@
+#!/usr/bin/env bash
+# TEMPLATE - NOT EXECUTED by CI, `bun run` setup commands or any agent. Owner review and an explicit
+# run on godseye-work (VM 300, 10.20.3.10, Debian 13, no nested KVM) are required.
+#
+# Purpose: prepare the disposable work VM as the coding-runner boundary. Each task later runs in a
+# gVisor (runsc --platform=systrap) or rootless-container sandbox INSIDE this VM.
+#
+# HONEST SECURITY NOTE: this is weaker than the KVM microVM profile. Tasks share the work VM's Linux
+# kernel (gVisor interposes a user-space kernel; rootless containers rely on namespaces/seccomp), and a
+# sandbox escape reaches the work VM, not a per-task kernel. The VM boundary (no secrets, strict NAT
+# allowlist, reset between uses) is the outer containment. The runner stays available:false until the
+# qualification evidence listed in docs/development/coding-runners.md exists.
+#
+# Placeholders (@@NAME@@) must be filled by the owner after verifying provenance. Nothing here is a
+# secret; no API key, deploy key or token is ever written by this script.
+set -euo pipefail
+
+SERVICE_USER="godseye"          # must be uid 1000: the Hermes tools runtime pins uid 1000
+SERVICE_UID="1000"
+WORKSPACE="/opt/godseye"        # remote workspace, matches transport.remoteWorkspace
+EXPECTED_DEBIAN="13"
+
+# --- Provenance -------------------------------------------------------------------------------
+# gVisor runsc: release-20261102.0 tarball digest is the one pinned by scripts/install-runsc.mjs
+# (source: github.com/google/gvisor releases). The extracted binary digest below is recorded by the owner
+# after the first verified extraction; the host profile (scripts/coding_guest_profile.py) compares it.
+RUNSC_URL="https://github.com/google/gvisor/releases/download/release-20261102.0/gvisor-x86_64.tar.bz2"
+RUNSC_TARBALL_SHA256="6f6b1a8f0f4665a403238135167d0d990bfaeaff5544abf68f5e0d822b35484a"
+RUNSC_BINARY_SHA256="@@RUNSC_BINARY_SHA256@@"
+# Debian packages are installed from a dated snapshot so versions are reproducible. The owner records
+# the snapshot timestamp and each resolved version in the qualification evidence.
+DEBIAN_SNAPSHOT="@@DEBIAN_SNAPSHOT_TIMESTAMP@@"   # e.g. 20261110T000000Z from snapshot.debian.org
+PKG_SYSTEMD="systemd=@@SYSTEMD_VERSION@@"
+PKG_PYTHON="python3=@@PYTHON3_VERSION@@"
+PKG_GIT="git=@@GIT_VERSION@@"
+PKG_CA="ca-certificates=@@CA_CERTIFICATES_VERSION@@"
+PKG_UIDMAP="uidmap=@@UIDMAP_VERSION@@"            # only needed for the rootless-container sandbox
+
+fail() { echo "work-vm-install: $*" >&2; exit 1; }
+
+[ "$(id -u)" = "0" ] || fail "run as root on godseye-work"
+. /etc/os-release
+[ "${ID}" = "debian" ] && [ "${VERSION_ID}" = "${EXPECTED_DEBIAN}" ] || fail "Debian ${EXPECTED_DEBIAN} required"
+[ "$(uname -m)" = "x86_64" ] || fail "x86_64 required"
+[ "$(cat /proc/1/comm)" = "systemd" ] || fail "systemd required as init"
+[ -f /sys/fs/cgroup/cgroup.controllers ] || fail "unified cgroup v2 required"
+for controller in cpu memory pids; do
+  grep -qw "${controller}" /sys/fs/cgroup/cgroup.controllers || fail "cgroup controller ${controller} missing"
+done
+case "${RUNSC_BINARY_SHA256}${DEBIAN_SNAPSHOT}${PKG_SYSTEMD}" in *@@*) fail "fill every @@PLACEHOLDER@@ first" ;; esac
+
+# 1. Packages (pinned versions, dated snapshot, no recommends).
+install -d -m 0755 /etc/apt/sources.list.d
+cat >/etc/apt/sources.list.d/godseye-snapshot.sources <<SNAPSHOT
+Types: deb
+URIs: https://snapshot.debian.org/archive/debian/${DEBIAN_SNAPSHOT}/
+Suites: trixie
+Components: main
+Signed-By: /usr/share/keyrings/debian-archive-keyring.pgp
+Check-Valid-Until: no
+SNAPSHOT
+apt-get update
+apt-get install --no-install-recommends -y "${PKG_SYSTEMD}" "${PKG_PYTHON}" "${PKG_GIT}" "${PKG_CA}" "${PKG_UIDMAP}"
+
+# 2. Service user: uid 1000, no login, lingering so the per-user systemd manager (cgroup delegation
+#    for task scopes) survives without an operator session.
+id -u "${SERVICE_USER}" >/dev/null 2>&1 || useradd --uid "${SERVICE_UID}" --create-home --shell /usr/sbin/nologin "${SERVICE_USER}"
+[ "$(id -u "${SERVICE_USER}")" = "${SERVICE_UID}" ] || fail "${SERVICE_USER} must be uid ${SERVICE_UID}"
+loginctl enable-linger "${SERVICE_USER}"
+install -d -m 0755 /etc/systemd/system/user@.service.d
+cat >/etc/systemd/system/user@.service.d/godseye-delegate.conf <<'DELEGATE'
+[Service]
+Delegate=cpu memory pids
+DELEGATE
+systemctl daemon-reload
+
+# 3. gVisor runsc (systrap), digest-verified before install.
+work="$(mktemp -d)"; trap 'rm -rf "${work}"' EXIT
+curl -fsSL -o "${work}/runsc.tar.bz2" "${RUNSC_URL}"
+echo "${RUNSC_TARBALL_SHA256}  ${work}/runsc.tar.bz2" | sha256sum -c -
+tar -xjf "${work}/runsc.tar.bz2" -C "${work}"
+runsc_bin="$(find "${work}" -type f -name runsc | head -n1)"
+[ -n "${runsc_bin}" ] || fail "runsc not found in archive"
+echo "${RUNSC_BINARY_SHA256}  ${runsc_bin}" | sha256sum -c -
+install -m 0755 "${runsc_bin}" /usr/local/bin/runsc
+
+# 4. Workspace and bounded task state, owned by the service user. No repository source lives here.
+install -d -m 0750 -o "${SERVICE_USER}" -g "${SERVICE_USER}" "${WORKSPACE}" "${WORKSPACE}/scripts" "${WORKSPACE}/artifacts"
+
+# 5. Outbound policy is NOT configured here: the strict NAT/proxy allowlist for 10.20.3.0/24 is owned by
+#    the Proxmox host nftables (P01/P04) and must permit only the task-scoped broker endpoint.
+
+echo "work-vm-install: complete. Next (owner): record versions, run the qualification checklist, and set"
+echo "GODSEYE_RUNSC_SHA256=${RUNSC_BINARY_SHA256} for the SSH-side host profile. Runner remains unavailable."

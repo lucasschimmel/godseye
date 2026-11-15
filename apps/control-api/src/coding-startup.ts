@@ -1,58 +1,34 @@
-import type { CodingProvider } from "@godseye/contracts";
+import { existsSync } from "node:fs";
+import { isAbsolute } from "node:path";
 import type { CodingOptions } from "@godseye/core";
 import { configuredCodingProvider } from "./coding-provider.js";
+import { NOT_CONFIGURED_FOR_PROFILE, unavailableCodingProvider } from "./coding-transport.js";
 
-const unavailableConfiguration: CodingProvider = {
-  qualified: false,
-  capabilities: () =>
-    (["codex", "claude-code"] as const).map((runner) => ({
-      runner,
-      available: false,
-      version: null,
-      reason:
-        "Private coding configuration is invalid or unavailable; owner administration remains available",
-      isolation: "disposable-kvm",
-      billing: "unavailable",
-      auth: "task-scoped-broker",
-    })),
-  verifySource: async () => {
-    throw new Error("Coding configuration unavailable");
-  },
-  preflight: async () => {
-    throw new Error("Coding configuration unavailable");
-  },
-  submit: async () => ({
-    state: "unknown",
-    stopped: false,
-    grantsRevoked: false,
-    workspace: "quarantined",
-  }),
-  inspect: async () => ({
-    state: "unknown",
-    stopped: false,
-    grantsRevoked: false,
-    workspace: "quarantined",
-  }),
-  stop: async () => ({
-    state: "unknown",
-    stopped: false,
-    grantsRevoked: false,
-    workspace: "quarantined",
-  }),
-};
+const INVALID_CONFIGURATION = "Private coding runtime configuration is unavailable or invalid";
 
-/** Coding setup is optional; failure never disables independent owner administration or recovery. */
+/**
+ * Coding setup is optional; failure never disables independent owner administration or recovery.
+ * A Linux host without any private transport configuration reports the explicit
+ * `unavailable: not-configured-for-profile` state instead of probing for a local boundary.
+ */
 export async function codingStartupOptions(
   environment: NodeJS.ProcessEnv = process.env,
+  platform: NodeJS.Platform = process.platform,
 ): Promise<CodingOptions> {
+  const file = environment.GODSEYE_CODING_BINDINGS_FILE;
+  // A tmpfs-rendered file is absent while OpenBao is sealed; treat it exactly as unconfigured.
+  if (!file || (isAbsolute(file) && !existsSync(file)))
+    return platform === "win32"
+      ? {}
+      : { provider: unavailableCodingProvider(NOT_CONFIGURED_FOR_PROFILE) };
   try {
-    return await configuredCodingProvider(environment);
+    return await configuredCodingProvider(environment, { platform });
   } catch (error) {
-    if (
-      !(error instanceof Error) ||
-      error.message !== "Private coding runtime configuration is unavailable or invalid"
-    )
-      throw error;
-    return { provider: unavailableConfiguration };
+    if (!(error instanceof Error) || error.message !== INVALID_CONFIGURATION) throw error;
+    return {
+      provider: unavailableCodingProvider(
+        "Private coding configuration is invalid or unavailable; owner administration remains available",
+      ),
+    };
   }
 }

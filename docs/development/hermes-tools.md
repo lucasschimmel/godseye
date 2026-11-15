@@ -17,7 +17,20 @@ bun run hermes:tools:local
 ```
 
 The installer stages a sealed public Python/helper rootfs; it does not copy a project
-or private provider material. Windows uses Ubuntu WSL by default. The foreground
+or private provider material. Windows uses Ubuntu WSL by default.
+
+**Native Linux (any distribution).** The bootstrap and installers also run directly on a
+non-root Linux x64 host with no WSL: commands execute without `wsl.exe`, no distribution
+argument is accepted, and the bootstrap never escalates to root. The service user must be
+uid 1000 (the gVisor user mapping and `/run/user/1000` are pinned). Instead of the
+foreground holder, enable lingering once as an administrator
+(`loginctl enable-linger godseye`) and use the optional systemd readiness gates in
+`infra/dedicated-server/templates/` (the gateway and tools worker are request-scoped
+children of the control API, so the units gate on prerequisites rather than run them).
+`--start-user-manager` is WSL-only; on Linux it reports that an administrator action is
+required. These templates are unexecuted and nothing here is qualified on the server yet.
+
+The foreground
 bootstrap verifies the uid-1000 user manager, delegated cpu/memory/pids controllers
 and user bus. Keep that terminal open while using tools. Its default and maximum
 lifetime is eight hours; `--lifetime-seconds=3600` selects a shorter interval.
@@ -92,8 +105,8 @@ systemd user-service cgroup: 512 MiB aggregate RAM, zero swap, 500 millicores an
 128 tasks. Root is read-only; the guest is nonroot with no capabilities,
 no-new-privileges and no network. Native Hermes and model transport remain outside
 this sandbox; only the fixed typed data helper runs inside it. General shell/build
-and hostile project-code execution still require the unqualified I10 disposable KVM
-boundary. These tools do not relax that requirement.
+and hostile project-code execution still require a separately qualified coding isolation boundary (KVM, or the weaker server work-VM profile, which is unqualified)
+These tools do not relax that requirement.
 
 Foundation persists each call intention, model call/input digest and immutable
 allocation identity before dispatch. Changed duplicate calls conflict. A known

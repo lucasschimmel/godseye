@@ -1,4 +1,5 @@
 import { type ChildProcessWithoutNullStreams, spawn } from "node:child_process";
+import { existsSync } from "node:fs";
 import { resolve } from "node:path";
 import { AgentToolCall, AttemptIntent, AttemptOutcome } from "@godseye/contracts";
 import { z } from "zod";
@@ -463,6 +464,8 @@ export function configuredHermesProvider(
 ): ManagedHermesProvider | undefined {
   const path = environment.GODSEYE_HERMES_BINDINGS_FILE;
   if (!path) return undefined;
+  // A tmpfs-rendered file is absent while OpenBao is sealed: Hermes is then simply unavailable.
+  if (!existsSync(path)) return undefined;
   try {
     return createHermesProvider({
       bindings: z.array(Binding).parse(readPrivateJson(path)),

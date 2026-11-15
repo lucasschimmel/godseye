@@ -6954,7 +6954,10 @@
                           },
                           "isolation": {
                             "type": "string",
-                            "const": "disposable-kvm"
+                            "enum": [
+                              "disposable-kvm",
+                              "disposable-vm-container"
+                            ]
                           },
                           "billing": {
                             "type": "string",

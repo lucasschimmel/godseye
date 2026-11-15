@@ -102,7 +102,8 @@ export async function prepareBinding(metadataPath, environment = process.env) {
     import.meta.url,
   );
   const configuration = CodingPrivateConfiguration.parse({ ...raw, bindings });
-  if (!isAbsolute(configuration.workspace)) throw new Error("Coding workspace must be absolute");
+  if ("workspace" in configuration && !isAbsolute(configuration.workspace))
+    throw new Error("Coding workspace must be absolute");
   if (
     new Set(
       configuration.bindings.map(

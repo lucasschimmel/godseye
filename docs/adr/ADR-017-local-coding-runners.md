@@ -67,3 +67,14 @@ Three actual Foundation/provider/controller/production-broker/KVM composition
 cases passed independently (Claude, Codex and epoch fencing), with only upstream
 HTTPS replaced by a trusted fixture and no paid calls. The local adapter and
 qualification do not authorize dedicated-server execution or paid entitlement.
+
+## Addendum 2026-11-15: server work-VM profile
+
+The server has no nested KVM. By owner decision the coding runner may use the disposable
+work VM `godseye-work` as the boundary, with a per-task gVisor (`runsc` systrap) or
+rootless-container sandbox, reported as `disposable-vm-container`. This is weaker than the
+KVM microVM (shared VM kernel) and deviates from spec I10 only on the server (I10a). It is
+an adapter/profile addition: the SSH transport, pinned host key and Debian profile checks
+are in the [operator guide](../development/coding-runners.md). The runner stays
+`available:false` until sandbox qualification evidence exists; no qualification claim in
+this ADR extends to it.

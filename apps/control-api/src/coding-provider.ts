@@ -1,10 +1,11 @@
-import { spawn } from "node:child_process";
+import { type ChildProcessWithoutNullStreams, spawn } from "node:child_process";
 import { createHash } from "node:crypto";
 import { isAbsolute, resolve, win32 } from "node:path";
 import {
   AttemptIntent,
   AttemptOutcome,
   type CodingCapabilityView,
+  type CodingIsolation,
   type CodingObservation,
   CodingPreparation,
   type CodingPreparationView,
@@ -16,6 +17,14 @@ import {
 } from "@godseye/contracts";
 import { z } from "zod";
 import { CodingProtocolParser } from "./coding-protocol.js";
+import {
+  assertIdentityOutsideRepository,
+  materializeKnownHosts,
+  NOT_CONFIGURED_FOR_PROFILE,
+  sshArguments,
+  sshExecutable,
+  unavailableCodingProvider,
+} from "./coding-transport.js";
 import { readPrivateJson } from "./private-json.js";
 
 const Hash = z.string().regex(/^[a-f0-9]{64}$/);
@@ -51,23 +60,58 @@ const Binding = z
       value.broker.model === (value.runner === "codex" ? "gpt-5.4-mini" : "claude-haiku-5-5"),
     "Broker runner differs",
   );
-export const CodingPrivateConfiguration = z
+const Capacity = z
   .object({
-    version: z.literal(1),
-    workspace: z.string().min(1).max(4096),
-    distro: z.literal("Ubuntu"),
-    capacity: z
-      .object({
-        memoryMiB: z.number().int().positive().max(65536),
-        cpuMilliCores: z.number().int().positive().max(64000),
-        maxProcesses: z.number().int().positive().max(4096),
-        diskMiB: z.number().int().positive().max(262144),
-        vmmOverheadMiB: z.number().int().positive().max(32768),
-      })
-      .strict(),
-    bindings: z.array(Binding).min(1).max(64),
+    memoryMiB: z.number().int().positive().max(65536),
+    cpuMilliCores: z.number().int().positive().max(64000),
+    maxProcesses: z.number().int().positive().max(4096),
+    diskMiB: z.number().int().positive().max(262144),
+    vmmOverheadMiB: z.number().int().positive().max(32768),
   })
   .strict();
+const SharedConfiguration = {
+  version: z.literal(1),
+  capacity: Capacity,
+  bindings: z.array(Binding).min(1).max(64),
+};
+/** Windows host driving the qualified x86_64 Ubuntu WSL2 KVM adapter. */
+const WslConfiguration = z
+  .object({
+    ...SharedConfiguration,
+    workspace: z.string().min(1).max(4096),
+    distro: z.literal("Ubuntu"),
+  })
+  .strict();
+const HostName = z.string().regex(/^[A-Za-z0-9]([A-Za-z0-9.-]{0,251}[A-Za-z0-9])?$/);
+const RemotePath = z.string().regex(/^\/[A-Za-z0-9_./-]{0,4095}$/);
+const HostKey = z.string().regex(/^(ssh-ed25519|ecdsa-sha2-nistp256) [A-Za-z0-9+/]{40,400}={0,2}$/);
+/** OpenSSH-style SHA256 fingerprint of a public key line ("type base64"). */
+export function hostKeyFingerprint(hostKey: string): string {
+  const blob = Buffer.from(hostKey.split(" ")[1] ?? "", "base64");
+  return `SHA256:${createHash("sha256").update(blob).digest("base64").replace(/=+$/, "")}`;
+}
+/** SSH stdio transport to the disposable work VM; the host key is pinned, never trusted on first use. */
+export const WorkVmTransport = z
+  .object({
+    kind: z.literal("work-vm"),
+    host: HostName,
+    port: z.number().int().min(1).max(65535).default(22),
+    user: z.string().regex(/^[a-z_][a-z0-9_-]{0,31}$/),
+    hostKey: HostKey,
+    hostKeyFingerprint: z.string().regex(/^SHA256:[A-Za-z0-9+/]{43}$/),
+    remoteWorkspace: RemotePath,
+    identityFile: z.string().min(1).max(4096),
+  })
+  .strict()
+  .refine((value) => hostKeyFingerprint(value.hostKey) === value.hostKeyFingerprint, {
+    message: "Pinned host key does not match its fingerprint",
+  });
+export type WorkVmTransportView = z.infer<typeof WorkVmTransport>;
+const WorkVmConfiguration = z
+  .object({ ...SharedConfiguration, transport: WorkVmTransport })
+  .strict();
+/** Private adapter configuration: WSL2 KVM (`distro`) or the disposable work VM over SSH (`transport`). */
+export const CodingPrivateConfiguration = z.union([WslConfiguration, WorkVmConfiguration]);
 export type CodingPrivateConfigurationView = z.infer<typeof CodingPrivateConfiguration>;
 type Context = {
   signal: AbortSignal;
@@ -136,10 +180,27 @@ function windowsWslExecutable(): string {
     throw new Error("Coding Windows system directory unavailable");
   return win32.join(systemRoot, "System32", "wsl.exe");
 }
-async function localPath(path: string, distro: string): Promise<string> {
-  if (process.platform !== "win32") return path;
+/** Injectable child launcher; tests replace it, production uses node:child_process. */
+export type CodingSpawner = (
+  command: string,
+  args: string[],
+  options: { env: NodeJS.ProcessEnv; windowsHide: boolean },
+) => ChildProcessWithoutNullStreams;
+export interface CodingProviderOptions {
+  spawner?: CodingSpawner;
+  platform?: NodeJS.Platform;
+  /** Pinned known_hosts file for the work-VM transport; written to a private temp file when absent. */
+  knownHostsFile?: string;
+}
+async function localPath(
+  path: string,
+  distro: string,
+  platform: NodeJS.Platform,
+  launch: CodingSpawner,
+): Promise<string> {
+  if (platform !== "win32") return path;
   return await new Promise((accept, reject) => {
-    const child = spawn(
+    const child = launch(
       windowsWslExecutable(),
       ["-d", distro, "--exec", "/usr/bin/wslpath", "-u", path],
       {
@@ -169,15 +230,30 @@ async function localPath(path: string, distro: string): Promise<string> {
 /** Strict private KVM adapter. It never launches CLI, Git or project code on the host. */
 export async function createCodingProvider(
   raw: CodingPrivateConfigurationView,
+  options: CodingProviderOptions = {},
 ): Promise<CodingProvider> {
   const config = CodingPrivateConfiguration.parse(raw);
-  if (!isAbsolute(config.workspace)) throw new Error("Coding workspace must be absolute");
+  const platform = options.platform ?? process.platform;
+  const launch: CodingSpawner = options.spawner ?? ((c, a, o) => spawn(c, a, o));
+  const transport = "transport" in config ? config.transport : undefined;
+  // WSL2 is a Windows-host adapter; a Linux host without a work-VM transport has no isolation boundary.
+  if (!transport && platform !== "win32")
+    return unavailableCodingProvider(NOT_CONFIGURED_FOR_PROFILE);
+  if (transport) assertIdentityOutsideRepository(transport.identityFile);
+  const isolation: CodingIsolation = transport ? "disposable-vm-container" : "disposable-kvm";
+  const knownHostsFile = transport
+    ? (options.knownHostsFile ?? materializeKnownHosts(transport))
+    : undefined;
+  const wsl = "distro" in config ? config : undefined;
+  if (wsl && !isAbsolute(wsl.workspace)) throw new Error("Coding workspace must be absolute");
   const identities = config.bindings.map(
     (b) => `${b.projectId}:${b.environmentId}:${b.repositoryHash}:${b.runner}`,
   );
   if (new Set(identities).size !== identities.length)
     throw new Error("Duplicate coding private binding");
-  const workspace = await localPath(resolve(config.workspace), config.distro);
+  const workspace = transport
+    ? transport.remoteWorkspace
+    : await localPath(resolve(wsl?.workspace ?? ""), wsl?.distro ?? "Ubuntu", platform, launch);
   let ready = false;
   let versions: Record<string, string> = {};
   function binding(preparation: CodingPreparationView) {
@@ -203,16 +279,16 @@ export async function createCodingProvider(
     return await new Promise((accept, reject) => {
       const argv = ["-I", `${workspace}/scripts/coding_guest_control.py`, workspace, action];
       const child =
-        process.platform === "win32"
-          ? spawn(
+        transport && knownHostsFile
+          ? launch(sshExecutable(platform), sshArguments(transport, knownHostsFile, action), {
+              env: hostEnvironment(),
+              windowsHide: true,
+            })
+          : launch(
               windowsWslExecutable(),
-              ["-d", config.distro, "--exec", "/usr/bin/python3", ...argv],
-              {
-                env: hostEnvironment(),
-                windowsHide: true,
-              },
-            )
-          : spawn("/usr/bin/python3", argv, { env: hostEnvironment(), windowsHide: true });
+              ["-d", "Ubuntu", "--exec", "/usr/bin/python3", ...argv],
+              { env: hostEnvironment(), windowsHide: true },
+            );
       let bytes = 0,
         pending = "",
         authorizations = 0,
@@ -364,7 +440,7 @@ export async function createCodingProvider(
   async function preflight(preparation: CodingPreparationView, signal: AbortSignal) {
     CodingPreparation.parse(preparation);
     await refresh();
-    if (!ready || signal.aborted) throw new Error("Coding KVM chain unavailable");
+    if (!ready || signal.aborted) throw new Error("Coding isolation chain unavailable");
     const q = CodingQualification.parse(
       await command(
         "preflight",
@@ -378,6 +454,7 @@ export async function createCodingProvider(
       q.repositoryHash !== preparation.repositoryHash ||
       q.commitSha !== preparation.commitSha ||
       q.runner !== preparation.runner ||
+      q.isolation !== isolation ||
       q.network !== "broker-only" ||
       Date.parse(q.observedAt) > now ||
       Date.parse(q.expiresAt) <= now ||
@@ -476,9 +553,9 @@ export async function createCodingProvider(
           available: ready && config.bindings.some((b) => b.runner === runner),
           version: versions[runner] ?? null,
           reason: ready
-            ? "API broker configured; each task requires fresh source, KVM and budget checks"
-            : "Complete native KVM/CLI/broker chain unavailable",
-          isolation: "disposable-kvm",
+            ? "API broker configured; each task requires fresh source, isolation and budget checks"
+            : "Complete native isolation/CLI/broker chain unavailable",
+          isolation,
           billing: ready ? "bounded-api" : "unavailable",
           auth: "task-scoped-broker",
         }),
@@ -549,13 +626,14 @@ export async function createCodingProvider(
 /** Opt-in only. No vendor key, source directory or proof is inferred from global CLI homes. */
 export async function configuredCodingProvider(
   environment: NodeJS.ProcessEnv = process.env,
+  options: CodingProviderOptions = {},
 ): Promise<{ provider?: CodingProvider; capacity?: CodingPrivateConfigurationView["capacity"] }> {
   if (!environment.GODSEYE_CODING_BINDINGS_FILE) return {};
   try {
     const config = CodingPrivateConfiguration.parse(
       readPrivateJson(environment.GODSEYE_CODING_BINDINGS_FILE),
     );
-    return { provider: await createCodingProvider(config), capacity: config.capacity };
+    return { provider: await createCodingProvider(config, options), capacity: config.capacity };
   } catch {
     throw new Error("Private coding runtime configuration is unavailable or invalid");
   }
