@@ -64,25 +64,42 @@ export function bootstrapEnvironment(platform, source) {
   return platform === "win32" ? picked : { PATH: "/usr/bin:/bin", LC_ALL: "C" };
 }
 
-/**
- * The tools runtime pins the service user to uid 1000 (gVisor user mapping, per-user runtime
- * directory), so the Linux service user must be uid 1000 too; another uid is refused here rather
- * than failing later inside a task.
- */
-export const SERVICE_UID = 1000;
-export const USER_MANAGER_UNIT = `user@${SERVICE_UID}.service`;
+/** Default service uid for the WSL2 adapter (first interactive user). Linux derives it from the process. */
+export const WSL_DEFAULT_UID = 1000;
 
-export function inspectProgram() {
+/**
+ * Resolve the service uid: the running user on native Linux (an optional GODSEYE_SERVICE_UID
+ * declaration must match it), the WSL default on Windows. Root is refused.
+ */
+export function resolveServiceUid(platform, environment = {}, getuid = () => process.getuid?.()) {
+  const declared = environment.GODSEYE_SERVICE_UID;
+  const actual = platform === "linux" ? getuid() : WSL_DEFAULT_UID;
+  if (!Number.isInteger(actual) || actual <= 0)
+    throw new Error("The tools bootstrap requires an unprivileged service user");
+  if (
+    declared !== undefined &&
+    declared !== "" &&
+    (!/^[0-9]+$/.test(declared) || Number(declared) !== actual)
+  )
+    throw new Error("Declared service uid differs from the running user");
+  return actual;
+}
+
+export function userManagerUnit(uid) {
+  return `user@${uid}.service`;
+}
+
+export function inspectProgram(uid) {
   return (
-    `import json,os,pathlib,subprocess; assert os.getuid()==${SERVICE_UID}; ` +
-    "p=pathlib.Path('/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service'); " +
+    `import json,os,pathlib,subprocess; assert os.getuid()==${uid}; ` +
+    `p=pathlib.Path('/sys/fs/cgroup/user.slice/user-${uid}.slice/user@${uid}.service'); ` +
     "assert p.is_dir() and os.access(p,os.W_OK); " +
     "assert {'cpu','memory','pids'}<=set((p/'cgroup.controllers').read_text().split()); " +
-    "assert pathlib.Path('/run/user/1000/bus').is_socket(); " +
-    "print(json.dumps({'state':'available','uid':1000,'delegatedControllers':['cpu','memory','pids']}))"
+    `assert pathlib.Path('/run/user/${uid}/bus').is_socket(); ` +
+    `print(json.dumps({'state':'available','uid':${uid},'delegatedControllers':['cpu','memory','pids']}))`
   );
 }
 
-export function holderProgram(lifetimeSeconds) {
-  return `import os,select,sys; assert os.getuid()==${SERVICE_UID}; print('READY',flush=True); select.select([sys.stdin],[],[],${lifetimeSeconds})`;
+export function holderProgram(lifetimeSeconds, uid) {
+  return `import os,select,sys; assert os.getuid()==${uid}; print('READY',flush=True); select.select([sys.stdin],[],[],${lifetimeSeconds})`;
 }

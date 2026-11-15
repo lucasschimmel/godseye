@@ -7,7 +7,8 @@ import {
   holderProgram,
   inspectProgram,
   parseBootstrapOptions,
-  USER_MANAGER_UNIT,
+  resolveServiceUid,
+  userManagerUnit,
 } from "./hermes-tools-bootstrap-lib.mjs";
 
 const commandTimeoutMs = 10_000;
@@ -15,6 +16,8 @@ const settings = parseBootstrapOptions(process.argv.slice(2), process.platform);
 const { repair, lifetimeSeconds } = settings;
 const maximumLifetimeMs = lifetimeSeconds * 1000;
 const environment = bootstrapEnvironment(settings.platform, process.env);
+const serviceUid = resolveServiceUid(settings.platform, process.env);
+const USER_MANAGER_UNIT = userManagerUnit(serviceUid);
 
 function command(spec) {
   return new Promise((accept, reject) => {
@@ -44,7 +47,7 @@ function command(spec) {
 // A private inherited pipe is a lifetime capability: closing this CLI also releases
 // the foreground holder. No retained numeric PID is read or killed.
 const holderSpec = commandSpec(settings, {
-  argv: ["/usr/bin/python3", "-I", "-B", "-c", holderProgram(lifetimeSeconds)],
+  argv: ["/usr/bin/python3", "-I", "-B", "-c", holderProgram(lifetimeSeconds, serviceUid)],
 });
 const holder = spawn(holderSpec.command, holderSpec.args, {
   env: environment,
@@ -105,7 +108,9 @@ async function main() {
     );
   }
   const metadata = await command(
-    commandSpec(settings, { argv: ["/usr/bin/python3", "-I", "-B", "-c", inspectProgram()] }),
+    commandSpec(settings, {
+      argv: ["/usr/bin/python3", "-I", "-B", "-c", inspectProgram(serviceUid)],
+    }),
   );
   if (holderExited) throw new Error("Foreground holder stopped during bootstrap");
   console.log(metadata);

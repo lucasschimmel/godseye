@@ -22,7 +22,10 @@ or private provider material. Windows uses Ubuntu WSL by default.
 **Native Linux (any distribution).** The bootstrap and installers also run directly on a
 non-root Linux x64 host with no WSL: commands execute without `wsl.exe`, no distribution
 argument is accepted, and the bootstrap never escalates to root. The service user must be
-uid 1000 (the gVisor user mapping and `/run/user/1000` are pinned). Instead of the
+unprivileged; its uid is derived from the running user (for example 994 on the dedicated
+server) and drives `/run/user/<uid>`, `user@<uid>.service` and the delegated cgroup path.
+`GODSEYE_SERVICE_UID`, if set, must equal it; root is refused. The in-sandbox identity stays
+uid 1000, independent of the host uid. Instead of the
 foreground holder, enable lingering once as an administrator
 (`loginctl enable-linger godseye`) and use the optional systemd readiness gates in
 `infra/dedicated-server/templates/` (the gateway and tools worker are request-scoped
@@ -31,12 +34,12 @@ children of the control API, so the units gate on prerequisites rather than run 
 required. These templates are unexecuted and nothing here is qualified on the server yet.
 
 The foreground
-bootstrap verifies the uid-1000 user manager, delegated cpu/memory/pids controllers
+bootstrap verifies the service-uid user manager, delegated cpu/memory/pids controllers
 and user bus. Keep that terminal open while using tools. Its default and maximum
 lifetime is eight hours; `--lifetime-seconds=3600` selects a shorter interval.
 If the manager is inactive, the default command refuses. An operator can explicitly
 request activation with `bun run hermes:tools:local --start-user-manager`.
-That flag may start/reset the exact `user@1000.service` through root; ordinary task
+That flag may start/reset the exact `user@<uid>.service` through root; ordinary task
 admission never repairs the manager. No linger, persistent service, system
 configuration or distro restart is created. Bootstrap availability is distinct from
 actual per-allocation admission checks.

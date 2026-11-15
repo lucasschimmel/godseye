@@ -12,12 +12,13 @@ import sys
 import threading
 import time
 import uuid
+from hermes_service_identity import SANDBOX_UID, environment, runtime_directory, service_uid, user_manager_cgroup
 from hermes_files import document, private_directory, read_json, replace_json, runtime_root
 from hermes_tools_install import verify, location
 from hermes_tools_policy import validate
 
-ENVIRONMENT = {'PATH': '/usr/bin:/bin', 'LC_ALL': 'C', 'XDG_RUNTIME_DIR': '/run/user/1000',
-               'DBUS_SESSION_BUS_ADDRESS': 'unix:path=/run/user/1000/bus'}
+UID = service_uid()
+ENVIRONMENT = environment(UID)
 
 
 def send(value: dict) -> None:
@@ -50,7 +51,7 @@ def retained(workspace: Path, request: dict) -> tuple[Path, dict]:
     container = 'gse-tools-' + request['taskId']
     if value.get('ociId') != container or value.get('runsc') != str(installed / 'payload/runsc'):
         raise ValueError('Retained native executable identity differs')
-    if value.get('cgroup') and value['cgroup'] != '/user.slice/user-1000.slice/user@1000.service/app.slice/' + unit:
+    if value.get('cgroup') and value['cgroup'] != user_manager_cgroup(UID) + '/app.slice/' + unit:
         raise ValueError('Retained cgroup identity differs')
     receipt = value.get('receipt')
     if receipt is not None and (receipt.get('ociId') != container or receipt.get('profileHash') != request['profileHash']
@@ -111,7 +112,7 @@ def stop_owned(workspace: Path, request: dict) -> dict:
 
 def configuration(rootfs: Path) -> dict:
     return {'ociVersion': '1.2.0', 'root': {'path': str(rootfs), 'readonly': True},
-            'hostname': 'godseye-task', 'process': {'terminal': False, 'user': {'uid': 1000, 'gid': 1000},
+            'hostname': 'godseye-task', 'process': {'terminal': False, 'user': {'uid': SANDBOX_UID, 'gid': SANDBOX_UID},
             'args': ['/python/bin/python3.14', '-I', '-S', '-B', '/worker.py'],
             'env': ['PATH=/python/bin', 'LC_ALL=C.UTF-8', 'PYTHONDONTWRITEBYTECODE=1'], 'cwd': '/',
             'noNewPrivileges': True, 'capabilities': {name: [] for name in ('bounding', 'effective', 'inheritable', 'permitted', 'ambient')},
@@ -137,7 +138,7 @@ def launch(workspace: Path, request: dict) -> None:
         return
     try:
         installed = verify(workspace)
-        if not Path('/run/user/1000/bus').is_socket():
+        if not Path(runtime_directory(UID) + '/bus').is_socket():
             raise ValueError('Explicit operator tools bootstrap is unavailable')
     except (OSError, ValueError, RuntimeError):
         # Exact new task directory does not yet exist, no unit/OCI start was
@@ -264,7 +265,7 @@ def main() -> None:
     os.umask(0o077)
     payload = json.loads(sys.stdin.buffer.readline(262145))
     workspace = Path(payload['workspace'])
-    if os.getuid() != 1000 or workspace.resolve(strict=True) != workspace:
+    if os.getuid() != UID or workspace.resolve(strict=True) != workspace:
         raise ValueError('Invalid native runtime owner')
     request = payload['request']
     validate(request['grant'])
