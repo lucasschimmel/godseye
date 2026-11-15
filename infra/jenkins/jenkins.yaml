@@ -62,7 +62,9 @@ jobs:
                   def sourceReadCredential = System.getenv('GODSEYE_SOURCE_CREDENTIALS_ID')
                   if (sourceReadCredential) { credentials(sourceReadCredential) }
                 }
-                branch('*/${BRANCH}')
+                // `^${...}` keeps the expression literal: Configuration as Code would otherwise
+                // resolve it (to an empty string) before Jenkins expands the build parameter.
+                branch('*/^${BRANCH}')
               }
             }
             scriptPath('Jenkinsfile')
@@ -101,7 +103,7 @@ jobs:
                     steps {
                       deleteDir()
                       checkout([$class: 'GitSCM',
-                        userRemoteConfigs: [[url: "https://github.com/${params.REPOSITORY_FULL_NAME}.git",
+                        userRemoteConfigs: [[url: "https://github.com/^${params.REPOSITORY_FULL_NAME}.git",
                           credentialsId: 'godseye-github-app-read']],
                         branches: [[name: params.SOURCE_COMMIT]]])
                     }
