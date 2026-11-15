@@ -80,6 +80,15 @@ Preparation intents are `build`, `release`, `rollback` and `cleanup`. A build ca
 - **Usage.** Providers may report CPU milliseconds, peak memory, disk and duration, stored per run (`delivery_usage`) and shown per run and preview with `costMicros` fixed at 0, labelled "non facturé en local".
 - Builder evidence lacking `scanner` or `migration`, including artifacts retained before this change, is rejected (fail closed).
 
+## Private server adapters (unqualified)
+
+`apps/control-api/src/delivery/` holds optional adapters, enabled only by absolute paths to private files (rendered by OpenBao): `GODSEYE_GITHUB_APP_BINDING` (`{ issuer, privateKeyPath }`; the PEM is read through the same private-file checks) and `GODSEYE_DELIVERY_BINDING` (provider identity and `appDomain`, Jenkins URL/user/token path/job, private registry URL/prefix/optional credentials path, Caddy container and route directory). Without them the engine stays unconfigured. The adapters never self-qualify (`qualification()` is `null`).
+
+- **GitHub:** RS256 App JWT (60 s backdated `iat`, 9 minute lifetime) and cached read-only installation tokens feed the existing allowlisted source verifier, which denies forks.
+- **Build:** the per-project `godseye-app-build` job in `infra/jenkins/jenkins.yaml` runs the server-owned `build-app.sh` on an isolated agent, pushes a tag per build and archives `evidence.json`. The controller submits with a deterministic idempotency token, reconciles lost submissions from the Jenkins queue/build record, re-reads the build's recorded parameters, recomputes digest and size from registry bytes and derives `BuildEvidence` (including provenance hash). Trivy counts come from the job and are gated by the policy threshold. Only the checks the job really ran (`build`, `image-scan`) can satisfy a policy; others fail closed.
+- **Runtime:** Docker with `--runtime=runsc`, an `--internal` network per environment, read-only rootfs, `--cap-drop ALL`, `no-new-privileges`, memory/CPU/pids limits and no published ports. State is derived from container labels and the Caddy route file (`apps.d/<environmentId>.caddy`), so every step is idempotent and `inspect` reconciles unknown results. Promotion validates then reloads Caddy and restores the previous route on failure; rollback restages a retained digest. Images are never removed by the adapter.
+- **Owner inputs:** GitHub App creation/installation and private key, registry credentials, DNS provider token for DNS-01 wildcard certificates, digest-pinned base images, the Caddy edge running as a container (so it can join internal networks), and the independent qualification. Install templates (not executed) are `infra/dedicated-server/p10-*.sh`.
+
 ## Actual local laboratory and qualification limits
 
 ```sh
