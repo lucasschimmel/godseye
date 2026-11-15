@@ -1,0 +1,132 @@
+#!/usr/bin/env bash
+# Rendered from templates/work-vm-coding-host-install.sh.tmpl with the provenance values verified
+# on 2026-11-15 (docs/operations/evidence/work-vm-coding.md). Run as root ON godseye-work only
+# (VM 300, 10.20.3.10, Debian 13, no nested KVM); it is idempotent and never run by CI or `bun run`.
+#
+# Purpose: prepare the disposable work VM as the coding-runner boundary. Each task later runs in a
+# gVisor (runsc --platform=systrap) sandbox INSIDE this VM, owned by a dedicated service user.
+#
+# HONEST SECURITY NOTE: this is weaker than the KVM microVM profile. Tasks share the work VM's Linux
+# kernel (gVisor interposes a user-space kernel) and a sandbox escape reaches the work VM, not a
+# per-task kernel. The VM boundary (no secrets, strict NAT allowlist, reset between uses) is the outer
+# containment. The runner stays available:false until the qualification evidence listed in
+# docs/development/coding-runners.md is complete.
+#
+# Non-interference: godseye-work is also the Jenkins CI agent (jenkins-agent, uid 1000). This script
+# never touches that user, its home, its sshd keys, the system apt sources or any running build. APT
+# runs against private source/state/cache directories, and the service user is a different uid.
+set -euo pipefail
+
+SERVICE_USER="godseye"
+SERVICE_UID="994"      # not 1000: that uid belongs to jenkins-agent on this VM
+WORKSPACE="/opt/godseye"           # remote workspace, matches transport.remoteWorkspace
+EXPECTED_DEBIAN="13"
+APT_HOME="/var/lib/godseye-coding-apt"
+
+# --- Provenance -------------------------------------------------------------------------------
+# gVisor runsc: the same release the pro VM runs (apt package runsc 20261109.0). The .deb digest equals
+# the SHA256 in the signed gVisor apt index and in the pro VM's retained package; the extracted binary
+# digest is what scripts/coding_guest_profile.py compares at runtime.
+RUNSC_VERSION="20261109.0"
+RUNSC_DEB_URL="https://storage.googleapis.com/gvisor/releases/pool/${RUNSC_VERSION}/binary-amd64/runsc.deb"
+RUNSC_DEB_SHA256="44a1c843b12e47956fe3e5d9d1684ad83550b050c578a63e950197ffaef1619b"
+RUNSC_BINARY_SHA256="c58f1dc2a3855487bf3bedc2edf074123ad433f1d98fb7f451f56790e87b5c9f"
+GVISOR_KEY_URL="https://gvisor.dev/archive.key"
+GVISOR_KEY_FINGERPRINT="6F1DF85E3A71C24918E727D56FC6D554E32BD943"
+# Debian packages come from a dated snapshot so the versions are reproducible. They are already
+# installed on the work VM; this script only verifies them and installs from the snapshot if absent.
+DEBIAN_SNAPSHOT="20261114T000000Z"   # snapshot.debian.org timestamp for both archives
+PKG_SYSTEMD="systemd=257.13-1~deb13u1"
+PKG_PYTHON="python3=3.13.5-1"
+PKG_GIT="git=1:2.47.3-0+deb13u1"
+PKG_CA="ca-certificates=20250419+deb13u1"
+
+fail() { echo "work-vm-install: $*" >&2; exit 1; }
+
+[ "$(id -u)" = "0" ] || fail "run as root on godseye-work"
+. /etc/os-release
+[ "${ID}" = "debian" ] && [ "${VERSION_ID}" = "${EXPECTED_DEBIAN}" ] || fail "Debian ${EXPECTED_DEBIAN} required"
+[ "$(uname -m)" = "x86_64" ] || fail "x86_64 required"
+[ "$(cat /proc/1/comm)" = "systemd" ] || fail "systemd required as init"
+[ -f /sys/fs/cgroup/cgroup.controllers ] || fail "unified cgroup v2 required"
+for controller in cpu memory pids; do
+  grep -qw "${controller}" /sys/fs/cgroup/cgroup.controllers || fail "cgroup controller ${controller} missing"
+done
+case "${SERVICE_UID}${RUNSC_DEB_SHA256}${RUNSC_BINARY_SHA256}${DEBIAN_SNAPSHOT}${PKG_SYSTEMD}${GVISOR_KEY_FINGERPRINT}${RUNSC_VERSION}" in
+  *@@*) fail "fill every @@PLACEHOLDER@@ first" ;;
+esac
+[ "${SERVICE_UID}" != "1000" ] || fail "uid 1000 is reserved for the Jenkins agent on this VM"
+if id jenkins-agent >/dev/null 2>&1 && [ "$(id -u jenkins-agent)" = "${SERVICE_UID}" ]; then
+  fail "service uid collides with jenkins-agent"
+fi
+
+# 1. Packages: verify the pinned versions; install from the dated snapshot only when one is missing.
+#    APT uses private lists/cache/sources, so the system apt configuration is never modified.
+missing=()
+for pin in "${PKG_SYSTEMD}" "${PKG_PYTHON}" "${PKG_GIT}" "${PKG_CA}"; do
+  name="${pin%%=*}"; want="${pin#*=}"
+  have="$(dpkg-query -W -f '${Version}' "${name}" 2>/dev/null || true)"
+  if [ "${have}" = "${want}" ]; then echo "work-vm-install: ${name} ${have} verified"; else missing+=("${pin}"); fi
+done
+install -d -m 0755 "${APT_HOME}/sources" "${APT_HOME}/lists/partial" "${APT_HOME}/cache/archives/partial"
+cat >"${APT_HOME}/sources/godseye-snapshot.sources" <<SNAPSHOT
+Types: deb
+URIs: https://snapshot.debian.org/archive/debian/${DEBIAN_SNAPSHOT}/
+Suites: trixie
+Components: main
+Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
+Check-Valid-Until: no
+
+Types: deb
+URIs: https://snapshot.debian.org/archive/debian-security/${DEBIAN_SNAPSHOT}/
+Suites: trixie-security
+Components: main
+Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
+Check-Valid-Until: no
+SNAPSHOT
+APT_PRIVATE=(-o "Dir::Etc::SourceList=/dev/null" -o "Dir::Etc::SourceParts=${APT_HOME}/sources"
+  -o "Dir::State::Lists=${APT_HOME}/lists" -o "Dir::Cache=${APT_HOME}/cache")
+if [ "${#missing[@]}" -gt 0 ]; then
+  apt-get "${APT_PRIVATE[@]}" update
+  apt-get "${APT_PRIVATE[@]}" install --no-install-recommends -y "${missing[@]}"
+fi
+
+# 2. Service user: not uid 1000, key-only SSH, lingering so the per-user systemd manager (cgroup
+#    delegation for task units) survives without an operator session.
+getent group "${SERVICE_USER}" >/dev/null || groupadd --system "${SERVICE_USER}"
+id -u "${SERVICE_USER}" >/dev/null 2>&1 || useradd --uid "${SERVICE_UID}" --gid "${SERVICE_USER}" \
+  --create-home --home-dir "/var/lib/${SERVICE_USER}" --shell /bin/bash "${SERVICE_USER}"
+[ "$(id -u "${SERVICE_USER}")" = "${SERVICE_UID}" ] || fail "${SERVICE_USER} must be uid ${SERVICE_UID}"
+passwd -l "${SERVICE_USER}" >/dev/null
+loginctl enable-linger "${SERVICE_USER}"
+install -d -m 0755 "/etc/systemd/system/user@${SERVICE_UID}.service.d"
+cat >"/etc/systemd/system/user@${SERVICE_UID}.service.d/godseye-delegate.conf" <<'DELEGATE'
+[Service]
+Delegate=cpu memory pids
+DELEGATE
+systemctl daemon-reload
+systemctl start "user@${SERVICE_UID}.service"
+
+# 3. gVisor runsc, same release as the pro VM. The signing key fingerprint, the .deb digest and the
+#    extracted binary digest are all checked before and after installation.
+work="$(mktemp -d)"; trap 'rm -rf "${work}"' EXIT
+curl -fsSL -o "${work}/gvisor.key" "${GVISOR_KEY_URL}"
+actual_fpr="$(gpg --show-keys --with-colons "${work}/gvisor.key" | awk -F: '$1=="fpr"{print $10; exit}')"
+[ "${actual_fpr}" = "${GVISOR_KEY_FINGERPRINT}" ] || fail "gVisor signing key fingerprint differs"
+if [ "$(dpkg-query -W -f '${Version}' runsc 2>/dev/null || true)" != "${RUNSC_VERSION}" ]; then
+  curl -fsSL -o "${work}/runsc.deb" "${RUNSC_DEB_URL}"
+  echo "${RUNSC_DEB_SHA256}  ${work}/runsc.deb" | sha256sum -c -
+  dpkg -i "${work}/runsc.deb"
+fi
+echo "${RUNSC_BINARY_SHA256}  /usr/bin/runsc" | sha256sum -c -
+
+# 4. Workspace and bounded task state, owned by the service user. No repository source lives here.
+install -d -m 0750 -o "${SERVICE_USER}" -g "${SERVICE_USER}" "${WORKSPACE}" "${WORKSPACE}/scripts" \
+  "${WORKSPACE}/artifacts" "${WORKSPACE}/artifacts/work-vm"
+install -d -m 0700 -o "${SERVICE_USER}" -g "${SERVICE_USER}" "/var/lib/${SERVICE_USER}/.ssh"
+
+# 5. Outbound policy is NOT configured here: the strict NAT/proxy allowlist for 10.20.3.0/24 is owned by
+#    the Proxmox host nftables (P01/P04) and must permit only the task-scoped broker endpoint. Until
+#    that exists the VM can reach the internet, which is why the runner stays available:false.
+
+echo "work-vm-install: complete (uid ${SERVICE_UID}, runsc ${RUNSC_VERSION}). Runner remains unavailable."
