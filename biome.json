@@ -8,6 +8,7 @@
       "!tests/STRATEGY.md",
       "!.codex",
       "!.crafts",
+      "!.claude",
       "!**/routeTree.gen.ts",
       "!**/dist",
       "!**/.output",

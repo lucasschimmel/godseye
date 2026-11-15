@@ -38,3 +38,6 @@ blob-report/
 Thumbs.db
 *.swp
 *.swo
+
+# Agent worktrees and local assistant state
+.claude/
