@@ -88,6 +88,13 @@ cat >"${CADDYFILE_DIR}/Caddyfile" <<CADDYEOF
 {
 	# The admin API stays on the container-internal localhost:2019 and is never published; the
 	# control API reaches it only through \`docker exec ${EDGE_CONTAINER} caddy reload\`.
+
+	# Custom application domains use on-demand HTTP-01 (their route files carry \`tls { on_demand }\`).
+	# Caddy asks the control API first and only obtains a certificate on a 2xx answer, which the API
+	# gives solely for hosts whose DNS ownership was verified (GET ?domain=<host>).
+	on_demand_tls {
+		ask http://${EDGE_GATEWAY}:4300/api/v1/domains/ask
+	}
 }
 
 # --- PUBLIC (published on ${PUBLIC_BIND}:443): signed webhook + health only ---------------------
@@ -127,7 +134,17 @@ https://${CONSOLE_HOST}:8443 {
 }
 
 # --- APP HOSTS: one complete site block per environment, written atomically by the control API ---
+# A file may also hold the custom-domain blocks of one environment (<environmentId>.domains.caddy).
 import /etc/caddy/apps.d/*.caddy
+
+# --- UNKNOWN HOSTS: Caddy answers an empty 200 for a Host header no site block claims; refuse it. ---
+# Explicit hosts above and the automatic HTTP->HTTPS redirects stay more specific than these.
+http:// {
+	respond "Not found" 404
+}
+https:// {
+	respond "Not found" 404
+}
 CADDYEOF
 chmod 0644 "${CADDYFILE_DIR}/Caddyfile"
 
@@ -239,4 +256,8 @@ curl -fsS --resolve "${SITE_HOST}:443:${PUBLIC_BIND}" "https://${SITE_HOST}/heal
 echo ""
 echo "Public listener must NOT serve the console certificate/host:"
 curl -sS -o /dev/null -w "%{http_code}\n" --resolve "${CONSOLE_HOST}:443:${PUBLIC_BIND}" "https://${CONSOLE_HOST}/" || true
+echo "Unknown host over HTTP must be 404 (not an empty 200):"
+curl -sS -o /dev/null -w "%{http_code}\n" --resolve "unknown.invalid:80:${PUBLIC_BIND}" "http://unknown.invalid/" || true
+echo "Known host over HTTP must still redirect to HTTPS (308):"
+curl -sS -o /dev/null -w "%{http_code}\n" --resolve "${SITE_HOST}:80:${PUBLIC_BIND}" "http://${SITE_HOST}/" || true
 echo "Retire the host Caddy once verified: systemctl disable --now caddy"
