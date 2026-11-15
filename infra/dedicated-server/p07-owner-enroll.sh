@@ -20,4 +20,11 @@ trap restart_api EXIT
 systemctl stop godseye-control-api
 cd /opt/godseye
 # Same environment as the service (server mode, public origin, database URL) without printing it.
-runuser -u godseye -- bash -c 'set -a; . "$1"; set +a; exec node --import tsx apps/control-api/src/owner-cli.ts setup' _ "$ENV_FILE"
+# The config directory is root-only (systemd reads it as root), so root loads the file and hands the
+# variables to the CLI, which then runs as the service user (`runuser -m` keeps the environment).
+(
+  set -a
+  . "$ENV_FILE"
+  set +a
+  exec runuser -u godseye -m -- node --import tsx apps/control-api/src/owner-cli.ts setup
+)
