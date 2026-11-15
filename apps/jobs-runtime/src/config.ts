@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { LocalInngestCell, parseInngestCells } from "../../control-api/src/inngest-config.js";
+import { workflowEndpoint } from "../../control-api/src/workflow-endpoint.js";
 
 export const ExternalStorage = z
   .object({
@@ -16,8 +17,10 @@ export function validateExternalStorage(raw: unknown, controlDatabaseUrl?: strin
     redis = new Set<string>(),
     scopes = new Set<string>();
   for (const entry of entries) {
-    const pg = localStorageUri(entry.postgresUri, "postgresql:"),
-      rd = localStorageUri(entry.redisUri, "redis:");
+    const pgEndpoint = workflowEndpoint(entry.postgresUri, "postgresql"),
+      rdEndpoint = workflowEndpoint(entry.redisUri, "redis"),
+      pg = pgEndpoint.url,
+      rd = rdEndpoint.url;
     if (
       !pg.username ||
       !pg.password ||
@@ -29,8 +32,8 @@ export function validateExternalStorage(raw: unknown, controlDatabaseUrl?: strin
         "Private external workflow storage requires independent authenticated endpoints",
       );
     const scope = `${entry.projectId}:${entry.environmentId}`,
-      pgId = `${pg.port}${pg.pathname}`,
-      rdId = rd.port;
+      pgId = `${pgEndpoint.hostKey}:${pg.port}${pg.pathname}`,
+      rdId = `${rdEndpoint.hostKey}:${rd.port}`;
     if (scopes.has(scope) || postgres.has(pgId) || redis.has(rdId))
       throw new Error("Workflow cells cannot reuse scope, PostgreSQL databases or Redis instances");
     if (controlDatabaseUrl) {
@@ -49,25 +52,7 @@ export function validateExternalStorage(raw: unknown, controlDatabaseUrl?: strin
   return entries;
 }
 export function localStorageUri(raw: string, protocol: "postgresql:" | "redis:") {
-  let url: URL;
-  try {
-    url = new URL(raw);
-  } catch {
-    throw new Error("Invalid private storage endpoint");
-  }
-  if (
-    url.protocol !== protocol ||
-    !["localhost", "127.0.0.1", "[::1]"].includes(url.hostname) ||
-    !url.port ||
-    url.hash ||
-    (protocol === "redis:" && url.search) ||
-    (protocol === "postgresql:" &&
-      [...url.searchParams].some(([key, value]) => key !== "sslmode" || value !== "disable"))
-  )
-    throw new Error(
-      "External local workflow storage requires an explicit authenticated loopback endpoint",
-    );
-  return url;
+  return workflowEndpoint(raw, protocol === "postgresql:" ? "postgresql" : "redis").url;
 }
 export function autonomousCells(raw: string | undefined, reservedPorts: number[] = []) {
   return parseInngestCells(raw, reservedPorts);
