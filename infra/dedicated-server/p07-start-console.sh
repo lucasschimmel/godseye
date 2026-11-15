@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-cat >/etc/systemd/system/godseye-console.service <<'EOF'
+# The console needs only the ports and its owner hostname (vite preview allowedHosts); it must not
+# receive the API's database or OpenBao settings.
+: "${GODSEYE_PUBLIC_ORIGIN:=https://godseye.lucasschimmel.fr}"
+
+cat >/etc/systemd/system/godseye-console.service <<EOF
 [Unit]
 Description=G.O.D.S.E.Y.E Web Console
 After=network-online.target godseye-control-api.service
@@ -12,9 +16,10 @@ Type=simple
 User=godseye
 Group=godseye
 WorkingDirectory=/opt/godseye/apps/console
-Environment=GODSEYE_MODE=local
+Environment=GODSEYE_API_HOST=127.0.0.1
 Environment=GODSEYE_API_PORT=4301
 Environment=GODSEYE_CONSOLE_PORT=4300
+Environment=GODSEYE_PUBLIC_ORIGIN=${GODSEYE_PUBLIC_ORIGIN}
 ExecStart=/usr/bin/node /opt/godseye/node_modules/vite/bin/vite.js preview --config /opt/godseye/apps/console/vite.config.ts --host 127.0.0.1 --port 4300
 Restart=always
 RestartSec=3

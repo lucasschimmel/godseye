@@ -25,7 +25,7 @@ Set variables in the launching process. The launcher does not load dotenv files.
 
 | Variable | Default or behavior |
 | --- | --- |
-| `GODSEYE_MODE` | Launcher selects `local`; direct API startup requires it. |
+| `GODSEYE_MODE` | Launcher selects `local`; direct API startup requires an explicit `local` or `server`. Server mode has its own required variables: see [owner access](owner-access.md#server-mode-dedicated-server). |
 | `GODSEYE_CONSOLE_PORT` | `4300`; integer from 1024 to 65535. The owner WebAuthn origin uses localhost at this port. |
 | `GODSEYE_API_PORT` | `4301`; integer from 1024 to 65535. |
 | `GODSEYE_DATA_DIR` | `.local/control`, resolved from the repository root. |

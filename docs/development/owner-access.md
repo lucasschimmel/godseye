@@ -64,3 +64,17 @@ The default database is `.local/control`; separate identity/process state is `.l
 This recovery route depends on trusted local filesystem/database access. It does not repair a lost or corrupt control database, protect against the machine administrator, or demonstrate off-host recovery. Server deployment must separately qualify private access, state/key backup protection, the management origin and the hardware authenticator/recovery procedure. A localhost passkey is not an automatic credential migration to a future server domain.
 
 Service identities and their private proof files are a separate boundary from owner passkeys/sessions. The owner manages their metadata at `/access`; material import and proof issuance use the explicit offline procedures in [service access and OpenBao](service-access.md). A service proof cannot authenticate as the owner.
+
+## Server mode (dedicated server)
+
+`GODSEYE_MODE=server` is admitted only when the configuration validates; it is never a label. Required variables: `GODSEYE_PUBLIC_ORIGIN` (bare `https://` DNS origin), `GODSEYE_DATABASE_URL` (PostgreSQL), `GODSEYE_TRUSTED_PROXIES` (fixed comma-separated loopback/private IPs, no wildcard), `GODSEYE_API_HOST` (loopback or private-bridge IP, never `0.0.0.0`), `GODSEYE_BAO_ADDRESS` (https) and `GODSEYE_BAO_MOUNT`. Local mode refuses `NODE_ENV=production`.
+
+`GODSEYE_PUBLIC_ORIGIN` is the single owner origin. The WebAuthn rpID and origin, the `__Host-godseye-owner.*` cookies (Secure, SameSite=Strict, Path=/, no Domain), the allowed Host/Origin headers and the `owner:setup`/`owner:recover` enrollment link base all derive from it. Changing its hostname invalidates every enrolled passkey (the rpID changes), so fix the domain before enrolling.
+
+Exposure: console and API are reachable only over WireGuard (the edge binds them to the WireGuard address; see `infra/dedicated-server/p07-caddy-https.sh`). Only the signed `POST /hooks/github` (configure the GitHub webhook content type as `application/json`) and `/healthz` are public. `/api/v1/owner/local-command` is refused for any proxied or non-loopback caller, so run `owner:setup`/`owner:recover` on the server itself, as the service user, with the service environment loaded.
+
+### Backup requirement
+
+`identity.key` (in `<GODSEYE_STATE_DIR>/owner/`) derives the session secret and the local-administration proof key and is not stored in PostgreSQL. Back up the whole state directory (including `owner/identity.key` and `owner/bao.auth`) together with the database, protected at rest and off-host, and restore both together. A restored database with a lost or regenerated key invalidates all owner sessions and requires `owner:recover --offline`.
+
+The instance lock records the PID plus the boot id and process start time, so a PID recycled after a crash or reboot no longer blocks startup. Locks written by older versions (PID only) still require the recorded process to be absent.

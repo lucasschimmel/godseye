@@ -19,27 +19,38 @@ bun install --frozen-lockfile
 bun run build
 chown -R godseye:godseye /opt/godseye
 
-# Build control-api.env cleanly from existing DB/secrets without printing them
-DB_URL="$(grep '^DATABASE_URL=' /etc/godseye/control-api.env | cut -d= -f2-)"
-SESSION_SEC="$(grep '^GODSEYE_SESSION_SECRET=' /etc/godseye/control-api.env | cut -d= -f2-)"
-INTERNAL_TOK="$(grep '^GODSEYE_INTERNAL_TOKEN=' /etc/godseye/control-api.env | cut -d= -f2-)"
+# Rebuild control-api.env from validated server-mode settings without printing secrets.
+# Unused legacy variables (REDIS_URL, GODSEYE_SESSION_SECRET, GODSEYE_INTERNAL_TOKEN) are dropped.
+ENV_FILE=/etc/godseye/control-api.env
+read_existing() { grep -m1 "^$1=" "$ENV_FILE" | cut -d= -f2- || true; }
+DB_URL="$(read_existing GODSEYE_DATABASE_URL)"
+[ -n "$DB_URL" ] || DB_URL="$(read_existing DATABASE_URL)"
+[ -n "$DB_URL" ] || { echo "No PostgreSQL URL found in $ENV_FILE" >&2; exit 1; }
+WEBHOOK_KEY="$(read_existing GODSEYE_GITHUB_WEBHOOK_KEY)"
+: "${GODSEYE_PUBLIC_ORIGIN:=https://godseye.lucasschimmel.fr}"
 
-cat >/etc/godseye/control-api.env <<EOF
-GODSEYE_MODE=local
+{
+  cat <<ENVEOF
+GODSEYE_MODE=server
+NODE_ENV=production
+GODSEYE_PUBLIC_ORIGIN=${GODSEYE_PUBLIC_ORIGIN}
+GODSEYE_API_HOST=127.0.0.1
 GODSEYE_API_PORT=4301
 GODSEYE_CONSOLE_PORT=4300
+GODSEYE_TRUSTED_PROXIES=127.0.0.1,::1
 GODSEYE_DATABASE_URL=${DB_URL}
-REDIS_URL=redis://127.0.0.1:6379
 GODSEYE_BAO_ADDRESS=https://127.0.0.1:8200
 GODSEYE_BAO_MOUNT=godseye
 NODE_EXTRA_CA_CERTS=/etc/openbao/bao.crt
 GODSEYE_DATA_DIR=/var/lib/godseye/data
 GODSEYE_STATE_DIR=/var/lib/godseye/state
-GODSEYE_SESSION_SECRET=${SESSION_SEC}
-GODSEYE_INTERNAL_TOKEN=${INTERNAL_TOK}
-EOF
-chown godseye:godseye /etc/godseye/control-api.env
-chmod 0600 /etc/godseye/control-api.env
+ENVEOF
+  # Signed webhook intake stays disabled until the owner provisions the key out of band.
+  [ -z "$WEBHOOK_KEY" ] || echo "GODSEYE_GITHUB_WEBHOOK_KEY=${WEBHOOK_KEY}"
+} >"$ENV_FILE.new"
+chown godseye:godseye "$ENV_FILE.new"
+chmod 0600 "$ENV_FILE.new"
+mv "$ENV_FILE.new" "$ENV_FILE"
 
 cat >/etc/systemd/system/godseye-control-api.service <<'EOF'
 [Unit]
