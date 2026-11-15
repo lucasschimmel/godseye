@@ -67,7 +67,9 @@ RestrictNamespaces=true
 MemoryDenyWriteExecute=false
 SystemCallArchitectures=native
 SystemCallFilter=@system-service
-SystemCallFilter=~@privileged @resources
+# @privileged is not denied: PostgreSQL needs chown for unix_socket_group; with an empty capability set
+# and NoNewPrivileges the privileged calls cannot succeed anyway.
+SystemCallFilter=~@resources @mount @swap @reboot @module @raw-io @obsolete @cpu-emulation @debug @clock
 RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
 UMask=0077
 # Per-cell CPU/memory ceilings are applied from the admitted profile (cpuMilliCores / memoryMiB);
