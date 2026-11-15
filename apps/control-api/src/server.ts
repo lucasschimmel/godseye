@@ -103,7 +103,7 @@ async function start() {
     const signingKey = await loadIdentityMaterial(config.identityDir);
     store = await openStore({ dataDir: config.dataDir, databaseUrl: config.databaseUrl });
     const identity = await createOwnerIdentity(store, {
-      origin: `http://localhost:${config.consolePort}`,
+      origin: config.ownerOrigin,
       signingKey,
     });
     inngest = await prepareLocalInngest({
@@ -174,7 +174,9 @@ async function start() {
     );
     server = serve({ fetch: app.fetch, port: config.apiPort, hostname: config.host }, () => {
       console.info(
-        `G.O.D.S.E.Y.E owner console: http://localhost:${config.consolePort} (local only)`,
+        config.mode === "server"
+          ? `G.O.D.S.E.Y.E control API (server mode) on ${config.host}:${config.apiPort}; owner origin ${config.ownerOrigin} (private network only)`
+          : `G.O.D.S.E.Y.E owner console: ${config.ownerOrigin} (local only)`,
       );
       console.info(
         "Initial enrollment: bun run owner:setup. Management always requires an owner passkey.",

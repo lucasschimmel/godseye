@@ -6,10 +6,12 @@ import { loadConfiguration } from "./config.js";
 import { createOwnerIdentity } from "./identity/index.js";
 import { LOCAL_COMMAND_PATH, localProof } from "./identity/local-admin.js";
 import { acquireInstance, loadIdentityMaterial, privateDirectory } from "./identity/runtime.js";
+import { hostPort } from "./server-config.js";
 
 async function run() {
+  // Server hosts run this with the service environment (GODSEYE_MODE=server); a bare invocation is local.
   const config = loadConfiguration(
-    { ...process.env, GODSEYE_MODE: "local" },
+    { ...process.env, GODSEYE_MODE: process.env.GODSEYE_MODE ?? "local" },
     { purpose: "administration" },
   );
   const intent = process.argv.includes("recover") ? "recover" : "setup";
@@ -25,7 +27,7 @@ async function run() {
       try {
         enrollment = await (
           await createOwnerIdentity(store, {
-            origin: `http://localhost:${config.consolePort}`,
+            origin: config.ownerOrigin,
             signingKey,
           })
         ).prepareEnrollment("recover");
@@ -40,16 +42,19 @@ async function run() {
     const body = JSON.stringify({ intent });
     const timestamp = Date.now().toString();
     const nonce = randomBytes(16).toString("hex");
-    const response = await fetch(`http://${config.host}:${config.apiPort}${LOCAL_COMMAND_PATH}`, {
-      method: "POST",
-      body,
-      headers: {
-        "content-type": "application/json",
-        "x-godseye-time": timestamp,
-        "x-godseye-nonce": nonce,
-        "x-godseye-proof": localProof(signingKey, body, timestamp, nonce),
+    const response = await fetch(
+      `http://${hostPort(config.host, config.apiPort)}${LOCAL_COMMAND_PATH}`,
+      {
+        method: "POST",
+        body,
+        headers: {
+          "content-type": "application/json",
+          "x-godseye-time": timestamp,
+          "x-godseye-nonce": nonce,
+          "x-godseye-proof": localProof(signingKey, body, timestamp, nonce),
+        },
       },
-    });
+    );
     if (!response.ok)
       throw new Error(
         "Local owner administration was refused; verify the API and the selected state directory",
@@ -58,7 +63,7 @@ async function run() {
   }
   // Displayed only by an explicit local CLI invocation; never written into logs or configuration.
   console.info(
-    `Open this single-use enrollment link before ${enrollment.expiresAt}:\nhttp://localhost:${config.consolePort}/#enroll=${enrollment.ticket}`,
+    `Open this single-use enrollment link before ${enrollment.expiresAt}:\n${config.ownerOrigin}/#enroll=${enrollment.ticket}`,
   );
   if (process.argv.includes("--offline"))
     console.info("Restart the local API before using the link.");

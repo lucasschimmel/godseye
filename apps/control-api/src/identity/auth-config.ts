@@ -6,8 +6,25 @@ import { betterAuth } from "better-auth";
 import { APIError, createAuthMiddleware } from "better-auth/api";
 import { type IdentityState, OWNER_DEFAULTS, requireFresh, ticketIdentifier } from "./shared.js";
 
+/**
+ * Everything browser-facing derives from the single owner origin: the WebAuthn relying party and the
+ * cookie names/attributes. An https origin uses a __Host- cookie (Secure, Path=/, no Domain); Better
+ * Auth only prepends __Secure-, so its own prefix is disabled and Secure is set explicitly.
+ */
+export function ownerOriginSettings(origin: string) {
+  const url = new URL(origin);
+  const secure = url.protocol === "https:";
+  return {
+    rpID: url.hostname,
+    secure,
+    cookiePrefix: secure ? "__Host-godseye-owner" : "godseye-owner",
+    cookieAttributes: { httpOnly: true, sameSite: "strict", path: "/", secure } as const,
+  };
+}
+
 /** Built once per store. The pre-created fixed identity is the only authentication principal. */
 export function buildOwnerAuth(state: IdentityState) {
+  const settings = ownerOriginSettings(state.options.origin);
   const fixedOwner = { id: state.ownerId, kind: "owner" as const, projectIds: [] };
   return betterAuth({
     baseURL: state.options.origin,
@@ -30,9 +47,9 @@ export function buildOwnerAuth(state: IdentityState) {
       cookieCache: { enabled: false },
     },
     advanced: {
-      cookiePrefix: "godseye-owner",
+      cookiePrefix: settings.cookiePrefix,
       useSecureCookies: false,
-      defaultCookieAttributes: { httpOnly: true, sameSite: "strict", path: "/" },
+      defaultCookieAttributes: settings.cookieAttributes,
       ipAddress: { disableIpTracking: true },
     },
     verification: { storeIdentifier: "plain" },
@@ -79,7 +96,7 @@ export function buildOwnerAuth(state: IdentityState) {
     },
     plugins: [
       passkey({
-        rpID: "localhost",
+        rpID: settings.rpID,
         rpName: "G.O.D.S.E.Y.E",
         origin: state.options.origin,
         authenticatorSelection: { residentKey: "required", userVerification: "required" },

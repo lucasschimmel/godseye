@@ -22,6 +22,7 @@ import { HTTPException } from "hono/http-exception";
 import { secureHeaders } from "hono/secure-headers";
 import { z } from "zod";
 import { registerAccessRoutes } from "./access-routes.js";
+import { assertLoopbackAdministration } from "./admin-guard.js";
 import { registerAgentChatRoutes } from "./agent-chat-routes.js";
 import { registerAgentChatTransport } from "./agent-chat-transport.js";
 import { registerAgentRoutes } from "./agent-routes.js";
@@ -48,7 +49,10 @@ const RepositoryUpdate = z
   .object({ repository: RepositoryConfiguration, expectedRevision: z.number().int().nonnegative() })
   .strict();
 
-/** Local development boundary only. Never mount this owner adapter on a public listener. */
+/**
+ * Owner adapter for the loopback (local) or private-network (server) listener. In server mode the
+ * public edge may forward only the signed webhook and health; this app never faces the Internet.
+ */
 export function createApp(
   core: ControlPlane,
   config: Configuration,
@@ -57,6 +61,8 @@ export function createApp(
   broker?: AccessBroker,
   infrastructure?: InfrastructureEngine,
 ) {
+  if (config.mode === "server" && (!identity || !config.ownerOrigin.startsWith("https://")))
+    throw new Error("Server mode requires owner identity and an https owner origin");
   const app = new Hono<ControlEnvironment>();
   // Route registration is below the shared authentication and response-validation middleware.
   app.use("*", secureHeaders());
@@ -141,11 +147,7 @@ export function createApp(
   app.get(`${base}/owner/session`, async (c) =>
     identity
       ? identity.exclusive(async () => c.json(await identity.status(c.req.raw.headers)))
-      : c.json({
-          authenticated: false,
-          configured: false,
-          origin: `http://localhost:${config.consolePort}`,
-        }),
+      : c.json({ authenticated: false, configured: false, origin: config.ownerOrigin }),
   );
   app.get(`${base}/owner/security`, (c) => {
     if (!identity)
@@ -153,6 +155,7 @@ export function createApp(
     return identity.security(c.req.raw.headers).then((result) => c.json(result));
   });
   app.post(`${base}/owner/local-command`, async (c) => {
+    assertLoopbackAdministration(c, config);
     if (!identity) throw new DomainError("UNAUTHENTICATED", "Owner identity is unavailable", 401);
     const raw = await c.req.text();
     const input = z
@@ -173,7 +176,13 @@ export function createApp(
         await method(c.req.raw.headers, c.req.param("id"), c.req.header("idempotency-key") ?? ""),
       );
     });
-  app.get(`${base}/health`, (c) => c.json({ status: "ok", mode: "local", serverConnected: false }));
+  app.get(`${base}/health`, (c) =>
+    c.json({
+      status: "ok",
+      mode: config.mode,
+      serverConnected: config.mode === "server",
+    }),
+  );
   app.get(`${base}/overview`, async (c) => c.json(await core.overview(c.get("actor"))));
   app.get(`${base}/projects`, async (c) => c.json(await core.listProjects(c.get("actor"))));
   app.post(`${base}/projects`, async (c) =>

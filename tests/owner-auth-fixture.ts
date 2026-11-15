@@ -13,7 +13,7 @@ export const ownerOrigin = "http://localhost:4300";
 export const authPath = "/api/auth";
 
 /** Every fixture owns an ephemeral database and an unrelated signing key. */
-export async function ownerAuthFixture(origin = ownerOrigin) {
+export async function ownerAuthFixture(origin = ownerOrigin, env?: NodeJS.ProcessEnv) {
   const store = await openStore();
   const signingKey = randomBytes(48).toString("base64url");
   let clockOffset = 0;
@@ -26,10 +26,9 @@ export async function ownerAuthFixture(origin = ownerOrigin) {
     const core = new ControlPlane(store);
     const app = createApp(
       core,
-      loadConfiguration({
-        GODSEYE_MODE: "local",
-        GODSEYE_CONSOLE_PORT: new URL(origin).port,
-      }),
+      loadConfiguration(
+        env ?? { GODSEYE_MODE: "local", GODSEYE_CONSOLE_PORT: new URL(origin).port },
+      ),
       identity,
     );
 

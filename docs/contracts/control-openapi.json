@@ -41369,11 +41369,13 @@
                     },
                     "mode": {
                       "type": "string",
-                      "const": "local"
+                      "enum": [
+                        "local",
+                        "server"
+                      ]
                     },
                     "serverConnected": {
-                      "type": "boolean",
-                      "const": false
+                      "type": "boolean"
                     }
                   },
                   "required": [
@@ -49335,11 +49337,13 @@
           },
           "mode": {
             "type": "string",
-            "const": "local"
+            "enum": [
+              "local",
+              "server"
+            ]
           },
           "serverConnected": {
-            "type": "boolean",
-            "const": false
+            "type": "boolean"
           }
         },
         "required": [
