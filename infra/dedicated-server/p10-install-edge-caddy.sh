@@ -45,7 +45,11 @@ case "$GODSEYE_CADDY_IMAGE" in
       || { echo "GODSEYE_CADDY_IMAGE is not an image built by p10-build-edge-caddy-image.sh" >&2; exit 1; } ;;
   *) echo "GODSEYE_CADDY_IMAGE must be pinned by sha256 digest or local image id" >&2; exit 1 ;;
 esac
-WG_UNIT="${GODSEYE_WG_UNIT:-wg-quick@wg0.service}"
+# WireGuard terminates on the Proxmox host, not in this guest: depend on the guest network, whose eth0
+# carries the private console address (GODSEYE_WG_BIND). Override only if the guest itself runs wg-quick.
+WG_UNIT="${GODSEYE_WG_UNIT:-network-online.target}"
+# Caddy's file capability (cap_net_bind_service) makes exec fail with EPERM under a bare `--cap-drop ALL`,
+# so that single capability stays in the bounding set (verified on the guest, 2026-11-15).
 EDGE_CONTAINER="${GODSEYE_EDGE_CONTAINER:-godseye-edge}"
 EDGE_NETWORK="${GODSEYE_EDGE_NETWORK:-godseye-edge-net}"
 EDGE_SUBNET="${GODSEYE_EDGE_SUBNET:-172.30.0.0/24}"
@@ -190,7 +194,7 @@ docker run -d --name "${EDGE_CONTAINER}" --restart on-failure:5 \\
   --network "${EDGE_NETWORK}" \\
   --env-file "${ENV_FILE}" \\
   --user "${SERVICE_UID}:${SERVICE_GID}" \\
-  --cap-drop ALL --security-opt no-new-privileges --read-only --tmpfs /tmp \\
+  --cap-drop ALL --cap-add NET_BIND_SERVICE --security-opt no-new-privileges --read-only --tmpfs /tmp \\
   --sysctl net.ipv4.ip_unprivileged_port_start=0 \\
   -p "${PUBLIC_BIND}:80:80" -p "${PUBLIC_BIND}:443:443" -p "${GODSEYE_WG_BIND}:443:8443" \\
   -v "${CADDYFILE_DIR}:/etc/caddy:ro" -v "${ROUTE_DIR}:/etc/caddy/apps.d:ro" \\
