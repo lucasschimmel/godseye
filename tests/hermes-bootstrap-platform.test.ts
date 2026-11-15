@@ -2,7 +2,11 @@ import { describe, expect, it } from "vitest";
 import {
   bootstrapEnvironment,
   commandSpec,
+  holderProgram,
+  inspectProgram,
   parseBootstrapOptions,
+  resolveServiceUid,
+  userManagerUnit,
 } from "../scripts/hermes-tools-bootstrap-lib.mjs";
 
 describe("Hermes tools bootstrap on native Linux and WSL2", () => {
@@ -45,6 +49,26 @@ describe("Hermes tools bootstrap on native Linux and WSL2", () => {
       PATH: "/usr/bin:/bin",
       LC_ALL: "C",
     });
+  });
+  it("derives the service uid from the running Linux user", () => {
+    expect(resolveServiceUid("linux", {}, () => 994)).toBe(994);
+    expect(resolveServiceUid("linux", { GODSEYE_SERVICE_UID: "1000" }, () => 1000)).toBe(1000);
+    expect(resolveServiceUid("win32", {}, () => 5)).toBe(1000);
+  });
+  it("refuses root and a mismatched declared uid", () => {
+    expect(() => resolveServiceUid("linux", {}, () => 0)).toThrow(/unprivileged/);
+    expect(() => resolveServiceUid("linux", { GODSEYE_SERVICE_UID: "1000" }, () => 994)).toThrow(
+      /differs/,
+    );
+    expect(() => resolveServiceUid("linux", { GODSEYE_SERVICE_UID: "x" }, () => 994)).toThrow();
+  });
+  it("renders uid-specific manager unit and programs", () => {
+    expect(userManagerUnit(994)).toBe("user@994.service");
+    expect(inspectProgram(994)).toContain("user-994.slice/user@994.service");
+    expect(inspectProgram(994)).toContain("/run/user/994/bus");
+    expect(inspectProgram(994)).not.toContain("1000");
+    expect(inspectProgram(1000)).toContain("os.getuid()==1000");
+    expect(holderProgram(60, 994)).toContain("os.getuid()==994");
   });
   it("refuses relative bootstrap programs", () => {
     const settings = parseBootstrapOptions([], "linux");

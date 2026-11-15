@@ -1,6 +1,11 @@
 export const MAX_LIFETIME_SECONDS: number;
-export const SERVICE_UID: number;
-export const USER_MANAGER_UNIT: string;
+export const WSL_DEFAULT_UID: number;
+export function resolveServiceUid(
+  platform: string,
+  environment?: Record<string, string | undefined>,
+  getuid?: () => number | undefined,
+): number;
+export function userManagerUnit(uid: number): string;
 export interface BootstrapSettings {
   platform: "win32" | "linux";
   distro: string | null;
@@ -16,5 +21,5 @@ export function bootstrapEnvironment(
   platform: string,
   source: Record<string, string | undefined>,
 ): Record<string, string | undefined>;
-export function inspectProgram(): string;
-export function holderProgram(lifetimeSeconds: number): string;
+export function inspectProgram(uid: number): string;
+export function holderProgram(lifetimeSeconds: number, uid: number): string;

@@ -150,6 +150,7 @@ def main() -> None:
     global policy, output
     manifest = json.loads(sys.stdin.buffer.readline(131073))
     policy = manifest['policy']
+    # Sandbox-internal identity (OCI process.user, SANDBOX_UID); independent of the host service uid.
     if os.getuid() != 1000 or not Path('/proc/gvisor/kernel_is_gvisor').exists():
         raise RuntimeError('Worker is not an admitted nonroot gVisor sandbox')
     (root / 'scratch').mkdir()

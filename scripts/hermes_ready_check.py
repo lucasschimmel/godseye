@@ -8,25 +8,27 @@ from pathlib import Path
 import stat
 import sys
 
-SERVICE_UID = 1000  # The tools runtime pins the gVisor user mapping and runtime directory to uid 1000.
+sys.path.insert(0, str(Path(__file__).resolve().parent))  # run with -I, which omits the script directory
+from hermes_service_identity import runtime_directory, service_uid, user_manager_cgroup
 
 
 def check(kind: str, workspace: Path) -> None:
-    if sys.platform != 'linux' or os.getuid() != SERVICE_UID:
-        raise ValueError('Hermes readiness requires native Linux and the uid-1000 service user')
+    if sys.platform != 'linux':
+        raise ValueError('Hermes readiness requires native Linux')
+    uid = service_uid()
     if not workspace.is_absolute() or workspace.resolve(strict=True) != workspace:
         raise ValueError('Workspace must be an unlinked absolute directory')
     private = workspace / '.local'
-    if private.exists() and (private.stat().st_uid != SERVICE_UID or stat.S_IMODE(private.stat().st_mode) & 0o077):
+    if private.exists() and (private.stat().st_uid != uid or stat.S_IMODE(private.stat().st_mode) & 0o077):
         raise ValueError('Private workspace state is not owner-only')
     if not (workspace / f'scripts/hermes_{"gateway" if kind == "gateway" else "tools_worker"}.py').is_file():
         raise ValueError('Hermes helper script is missing')
     if kind == 'tools':
-        group = Path('/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service')
+        group = Path('/sys/fs/cgroup' + user_manager_cgroup(uid))
         controllers = set((group / 'cgroup.controllers').read_text().split()) if group.is_dir() else set()
         if not {'cpu', 'memory', 'pids'} <= controllers or not os.access(group, os.W_OK):
             raise ValueError('Delegated user cgroup controllers are unavailable')
-        if not Path('/run/user/1000/bus').is_socket():
+        if not Path(runtime_directory(uid) + '/bus').is_socket():
             raise ValueError('User bus is unavailable')
 
 

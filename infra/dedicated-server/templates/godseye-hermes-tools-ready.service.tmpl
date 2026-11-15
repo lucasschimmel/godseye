@@ -4,7 +4,7 @@
 # Native Linux replacement for the foreground `hermes-tools-bootstrap` holder: lingering for the service
 # user (`loginctl enable-linger godseye`, done once by work-vm-coding-host-install / the P08 runbook)
 # keeps user@1000.service and its delegated cgroup alive; this unit orders after it and verifies the
-# prerequisites. The service user must be uid 1000 (the tools runtime pins it).
+# prerequisites. The service user may have any unprivileged uid (the tools runtime derives it).
 #
 # Replace @@WORKSPACE@@ with the absolute, unlinked workspace (e.g. /opt/godseye).
 [Unit]
