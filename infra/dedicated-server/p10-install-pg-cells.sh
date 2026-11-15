@@ -71,6 +71,14 @@ if grep -q '^#\?create_main_cluster' /etc/postgresql-common/createcluster.conf 2
 else
   echo 'create_main_cluster = false' >>/etc/postgresql-common/createcluster.conf
 fi
+# postgresql-client-18 needs libpq5 >= 18; with PGDG pinned low, apt will not pick it by itself.
+# libpq5 is backward compatible with the running PG17 processes (no restart is triggered).
+export NEEDRESTART_MODE=l
+LIBPQ_PGDG="$(apt-cache madison libpq5 | awk -F'|' '$3 ~ /pgdg/ {gsub(/ /, "", $2); print $2; exit}')"
+[ -n "${LIBPQ_PGDG}" ] || { echo "PGDG libpq5 not found" >&2; exit 66; }
+if ! dpkg-query -W -f='${Version}\n' libpq5 | grep -q pgdg; then
+  apt-get install -y -qq --no-install-recommends "libpq5=${LIBPQ_PGDG}"
+fi
 SIMULATION="$(apt-get -s install --no-install-recommends postgresql-18 postgresql-client-18 xfsprogs jq)"
 if grep -E '^(Remv|Inst) (postgresql-17|postgresql-client-17|postgresql-common|postgresql-client-common)' <<<"${SIMULATION}" >/dev/null; then
   echo "refusing: the install would change PostgreSQL 17 or common packages" >&2
