@@ -326,6 +326,17 @@ async function seed(label: string) {
   );
   await digest(label);
 }
+/** Rows written after the backup: the restore must replay them from the WAL archive. */
+async function extra(label: string) {
+  const state = await load(label);
+  const factory = await connection(state, "migration");
+  await attempt(
+    factory,
+    state.profile.applicationDatabase,
+    "INSERT INTO drill_records SELECT g, 'DRILL_ROW_' || g, md5(g::text) FROM generate_series(5001, 5003) g",
+  );
+  await digest(label);
+}
 async function digest(label: string) {
   const state = await load(label);
   const rows = await query<{ n: string; d: string }>(
@@ -406,6 +417,7 @@ async function main() {
   if (command === "restart") return restart(a);
   if (command === "seed") return seed(a);
   if (command === "digest") return digest(a);
+  if (command === "extra") return extra(a);
   if (command === "pgbackrest") return pgbackrest(a, b);
   throw new Error("Unknown command");
 }

@@ -581,7 +581,10 @@ export class CellHelper {
   /** Validates every pgBackRest argument against the exact shapes the recovery policy emits. */
   private pgBackRestArguments(layout: CellLayout, args: readonly string[]) {
     const mount = this.host.mountRoot.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    const destination = (kind: "data" | "wal") => new RegExp(`^${mount}/[0-9a-f-]{36}/${kind}$`);
+    const destination = (kind: "data" | "wal", path: string) => {
+      const found = new RegExp(`^${mount}/([0-9a-f-]{36})/${kind}$`).exec(path);
+      return found !== null && UUID.test(found[1] ?? "");
+    };
     const command = args.at(-1) ?? "";
     if (!PGBACKREST_COMMANDS.has(command)) fail(EXIT.usage, "unsupported pgBackRest command");
     for (const arg of args.slice(0, -1)) {
@@ -592,13 +595,10 @@ export class CellHelper {
         arg === `--config=${layout.pgBackRestConfig}` ||
         arg === `--config-include-path=${layout.pgBackRestInclude}` ||
         arg === `--stanza=g_${layout.suffix}` ||
-        (name === "--pg1-path" &&
-          UUID.test(value.split("/")[4] ?? "") &&
-          destination("data").test(value)) ||
+        (name === "--pg1-path" && destination("data", value)) ||
         (name === "--link-map" &&
           value.startsWith("pg_wal=") &&
-          UUID.test(value.split("/")[4] ?? "") &&
-          destination("wal").test(value.slice(7))) ||
+          destination("wal", value.slice(7))) ||
         (name === "--set" && /^\d{8}-\d{6}F(?:_\d{8}-\d{6}[DI])?$/.test(value)) ||
         (name === "--target" &&
           /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}(?:\.\d+)?\+00$/.test(value)) ||
