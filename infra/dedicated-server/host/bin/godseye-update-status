@@ -1,0 +1,78 @@
+#!/usr/bin/env python3
+"""godseye-update-status: print one JSON line describing patch state (host or guest).
+
+Read-only: simulates apt (no lock taken, nothing installed) and reads logs. The output has
+no secrets, so it can be copied into the shared status file the external observer reads.
+"""
+import datetime
+import glob
+import json
+import os
+import re
+import subprocess
+
+UU_LOG = "/var/log/unattended-upgrades/unattended-upgrades.log"
+UU_DPKG = "/var/log/unattended-upgrades/unattended-upgrades-dpkg.log"
+
+
+def sh(command: str) -> str:
+    return subprocess.run(
+        command, shell=True, capture_output=True, text=True, check=False
+    ).stdout
+
+
+def last_matching_timestamp(path: str, needle: str):
+    """Return the timestamp (UTC string) of the last log line containing needle."""
+    found = None
+    try:
+        with open(path, encoding="utf-8", errors="replace") as handle:
+            for line in handle:
+                if needle in line:
+                    found = line[:19]
+    except OSError:
+        return None
+    return found
+
+
+def main() -> None:
+    simulated = sh("apt-get -s -o Debug::NoLocking=1 dist-upgrade").splitlines()
+    pending = [line.split()[1] for line in simulated if line.startswith("Inst ")]
+    security = [
+        line.split()[1]
+        for line in simulated
+        if line.startswith("Inst ") and "-security" in line
+    ]
+    running = os.uname().release
+    kernels = sorted(
+        (os.path.basename(p) for p in glob.glob("/boot/vmlinuz-*")),
+        key=lambda name: [int(part) if part.isdigit() else part for part in re.split(r"(\d+)", name)],
+    )
+    newest_kernel = kernels[-1].replace("vmlinuz-", "") if kernels else None
+    report = {
+        "ts": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "host": os.uname().nodename,
+        "running_kernel": running,
+        "newest_installed_kernel": newest_kernel,
+        "reboot_required": os.path.exists("/var/run/reboot-required"),
+        "reboot_required_since": (
+            datetime.datetime.fromtimestamp(
+                os.path.getmtime("/var/run/reboot-required"), datetime.timezone.utc
+            ).strftime("%Y-%m-%dT%H:%M:%SZ")
+            if os.path.exists("/var/run/reboot-required")
+            else None
+        ),
+        "pending_total": len(pending),
+        "pending_security": len(security),
+        "pending_packages": pending[:20],
+        "unattended_last_run": last_matching_timestamp(UU_LOG, "Starting unattended upgrades script"),
+        "unattended_last_install": last_matching_timestamp(UU_LOG, "All upgrades installed"),
+        "unattended_enabled": "APT::Periodic::Unattended-Upgrade \"1\""
+        in sh("apt-config dump"),
+        "ntp_synchronized": sh("timedatectl show -p NTPSynchronized --value").strip() == "yes",
+        "uptime_days": round(float(open("/proc/uptime").read().split()[0]) / 86400, 2),
+    }
+    print(json.dumps(report))
+
+
+if __name__ == "__main__":
+    main()
