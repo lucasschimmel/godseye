@@ -8,8 +8,8 @@ const workflow = readFileSync(
 );
 
 describe("external uptime observer workflow", () => {
-  it("runs every five minutes and on demand only", () => {
-    expect(workflow).toContain('cron: "*/5 * * * *"');
+  it("runs every thirty minutes and on demand only", () => {
+    expect(workflow).toContain('cron: "*/30 * * * *"');
     expect(workflow).toContain("workflow_dispatch:");
     expect(workflow).not.toMatch(/pull_request|push:/);
   });
