@@ -3,7 +3,7 @@ set -euo pipefail
 
 # The console needs only the ports and its owner hostname (vite preview allowedHosts); it must not
 # receive the API's database or OpenBao settings.
-: "${GODSEYE_PUBLIC_ORIGIN:=https://godseye.lucasschimmel.fr}"
+: "${GODSEYE_PUBLIC_ORIGIN:=https://console.godseye.lucasschimmel.fr}"
 
 cat >/etc/systemd/system/godseye-console.service <<EOF
 [Unit]

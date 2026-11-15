@@ -6,12 +6,15 @@ if ! id godseye >/dev/null 2>&1; then
 fi
 install -d -m 0700 -o godseye -g godseye /var/lib/godseye /var/lib/godseye/data /var/lib/godseye/state
 
+# Branch to deploy (default: the platform integration branch `develop`).
+REF="${GODSEYE_DEPLOY_REF:-develop}"
+export GIT_SSH_COMMAND="ssh -i /var/lib/jenkins/.ssh/id_ed25519_github -o UserKnownHostsFile=/var/lib/jenkins/.ssh/known_hosts"
 if [ ! -d /opt/godseye/.git ]; then
-  GIT_SSH_COMMAND="ssh -i /var/lib/jenkins/.ssh/id_ed25519_github -o UserKnownHostsFile=/var/lib/jenkins/.ssh/known_hosts" \
-    git clone --branch develop --single-branch git@github.com:lucasschimmel/godseye.git /opt/godseye
+  git clone --branch "$REF" --single-branch git@github.com:lucasschimmel/godseye.git /opt/godseye
 else
-  GIT_SSH_COMMAND="ssh -i /var/lib/jenkins/.ssh/id_ed25519_github -o UserKnownHostsFile=/var/lib/jenkins/.ssh/known_hosts" \
-    git -C /opt/godseye fetch origin develop && git -C /opt/godseye checkout develop && git -C /opt/godseye reset --hard origin/develop
+  # The clone is single-branch, so fetch with an explicit refspec to get a remote-tracking ref.
+  git -c safe.directory=/opt/godseye -C /opt/godseye fetch origin "+refs/heads/${REF}:refs/remotes/origin/${REF}"
+  git -c safe.directory=/opt/godseye -C /opt/godseye checkout -B "$REF" "origin/${REF}"
 fi
 
 cd /opt/godseye
