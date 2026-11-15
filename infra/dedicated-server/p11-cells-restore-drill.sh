@@ -60,7 +60,7 @@ runuser -u postgres -- env "PGBACKREST_REPO1_CIPHER_PASS=${PGBACKREST_REPO1_CIPH
   "PGBACKREST_REPO1_S3_KEY_SECRET=${PGBACKREST_REPO1_S3_KEY_SECRET}" \
   "${PGBIN}/pg_ctl" -D "${MOUNT}/${DEST}/data" -w -t 600 \
   -o "-p ${PORT} -c listen_addresses= -c unix_socket_directories=${SOCK} -c archive_mode=off -c archive_command=/bin/true -c max_connections=20 -c shared_buffers=64MB" \
-  start >/dev/null
+  -l "${SOCK}/pg.log" start >/dev/null || { tail -25 "${SOCK}/pg.log" >&2; exit 3; }
 SQL="SELECT count(*)::text || ' ' || coalesce(md5(string_agg(id || marker || payload, ',' ORDER BY id)), '') FROM ${TABLE}"
 GOT="$("${PGBIN}/psql" -X -At -h "${SOCK}" -p "${PORT}" -U "g_${SUFFIX}_admin" -d "${DB}" -c "${SQL}")"
 IN_RECOVERY="$("${PGBIN}/psql" -X -At -h "${SOCK}" -p "${PORT}" -U "g_${SUFFIX}_admin" -d "${DB}" -c 'SELECT pg_is_in_recovery()')"
