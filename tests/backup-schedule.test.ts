@@ -4,7 +4,11 @@ import {
   evaluateBackupStatus,
   parseBackupStatus,
 } from "../packages/core/src/backup-schedule.js";
-import { type CellHostExecutor, parseCellHost } from "../packages/core/src/cell-host.js";
+import {
+  type CellHostExecutor,
+  HELPER_NOT_FOUND,
+  HelperError,
+} from "../packages/core/src/cell-host.js";
 
 const NOW = new Date("2026-11-15T12:00:00Z");
 const ago = (hours: number) => new Date(NOW.getTime() - hours * 3_600_000).toISOString();
@@ -45,34 +49,22 @@ describe("evaluateBackupStatus", () => {
 
 describe("backupScheduleDetector", () => {
   const files = new Map<string, string>();
+  const ids = ["aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa", "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb"];
   const executor: CellHostExecutor = {
-    run: async () => "",
-    writeFile: async () => {},
-    readFile: async (path) => files.get(path) ?? null,
-    listDirectory: async () => [
-      "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
-      "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb",
-    ],
-    removeFile: async () => {},
+    call: async (verb, args) => {
+      if (verb === "cells-list") return ids.join("\n");
+      const content = files.get(`${args[0]}/${args[1]}`);
+      if (content === undefined) throw new HelperError("missing", HELPER_NOT_FOUND);
+      return content;
+    },
   };
-  const host = parseCellHost({
-    zfsParent: "tank/godseye/pg",
-    mountRoot: "/srv/godseye/pg",
-    bindAddress: "127.0.0.1",
-    servername: "pg.cells.internal",
-    portRange: [15432, 15440],
-  });
   it("emits findings for overdue cells and covers healthy ones", async () => {
-    const [a, b] = ["aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa", "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb"];
-    for (const id of [a, b])
-      files.set(`/etc/godseye/pg/${id}/cell.env`, `PROJECT=p-${id}\nENVIRONMENT=e-${id}\n`);
-    files.set(`/var/lib/godseye/pg-backup/${a}.json`, JSON.stringify(healthy));
-    files.set(
-      `/var/lib/godseye/pg-backup/${b}.json`,
-      JSON.stringify({ ...healthy, fullAt: ago(400) }),
-    );
+    const [a, b] = ids as [string, string];
+    for (const id of ids) files.set(`${id}/cell-env`, `PROJECT=p-${id}\nENVIRONMENT=e-${id}\n`);
+    files.set(`${a}/backup-status`, JSON.stringify(healthy));
+    files.set(`${b}/backup-status`, JSON.stringify({ ...healthy, fullAt: ago(400) }));
 
-    const result = await backupScheduleDetector({ host, executor, now: () => NOW })();
+    const result = await backupScheduleDetector({ executor, now: () => NOW })();
 
     expect(result.coveredKeys).toEqual([`archive-lag:e-${a}:${a}`]);
     expect(result.findings.map((f) => [f.key, f.reason])).toEqual([

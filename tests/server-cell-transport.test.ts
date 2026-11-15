@@ -1,6 +1,12 @@
 import { randomUUID } from "node:crypto";
 import { describe, expect, it } from "vitest";
-import { type CellHostExecutor, parseCellHost } from "../packages/core/src/cell-host.js";
+import {
+  type CellHostExecutor,
+  HELPER_NOT_FOUND,
+  HelperError,
+  type HelperVerb,
+  parseCellHost,
+} from "../packages/core/src/cell-host.js";
 import { compileDatabaseProfile } from "../packages/core/src/database-policy.js";
 import {
   hostQualification,
@@ -9,42 +15,51 @@ import {
 import { ServerPgBackRestTransport } from "../packages/core/src/recovery-server-transport.js";
 import { fixtureProfile } from "./pg-helpers.js";
 
+const HEALTHY_PROBE = [
+  "FILESYSTEM=xfs",
+  "PRJQUOTA=on",
+  "UNIT=ok",
+  "CERTIFICATE_HELPER=ok",
+  "POSTGRES=postgres (PostgreSQL) 18.7 (Debian 18.7-1.pgdg13+2)",
+  "PGBACKREST=pgBackRest 2.60.0",
+  "",
+].join("\n");
+
 class FakeHost implements CellHostExecutor {
-  readonly commands: string[][] = [];
+  readonly calls: { verb: HelperVerb; args: string[] }[] = [];
   readonly files = new Map<string, string>();
-  readonly outputs = new Map<string, string>();
-  poolHealth = "ONLINE";
-  async run(argv: readonly string[]) {
-    this.commands.push([...argv]);
-    const key = argv.join(" ");
-    if (argv.includes("list") && argv.includes("health")) return `${this.poolHealth}\n`;
-    if (argv.at(-1) === "--version") return "postgres (PostgreSQL) 18.6\n";
-    if (argv.at(-1) === "version") return "pgBackRest 2.60\n";
-    for (const [needle, output] of this.outputs) if (key.includes(needle)) return output;
+  probe = HEALTHY_PROBE;
+  controlData = "Database system identifier:           7400000000000001\n";
+  unitState = "active\n";
+  storage = "";
+  async call(verb: HelperVerb, args: readonly string[], options?: { stdin?: string }) {
+    this.calls.push({ verb, args: [...args] });
+    const [allocation = "", kind = ""] = args;
+    if (verb === "file-write") this.files.set(`${allocation}/${kind}`, options?.stdin ?? "");
+    if (verb === "file-read") {
+      const content = this.files.get(`${allocation}/${kind}`);
+      if (content === undefined) throw new HelperError("missing", HELPER_NOT_FOUND);
+      return content;
+    }
+    if (verb === "cells-list")
+      return [...this.files.keys()]
+        .filter((key) => key.endsWith("/cell-env"))
+        .map((key) => key.split("/")[0])
+        .join("\n");
+    if (verb === "host-probe") return this.probe;
+    if (verb === "pg-controldata") return this.controlData;
+    if (verb === "storage-inspect") return this.storage;
+    if (verb === "unit" && kind === "state") return this.unitState;
     return "";
   }
-  async writeFile(path: string, content: string) {
-    this.files.set(path, content);
+  verbs() {
+    return this.calls.map((c) => c.verb);
   }
-  async readFile(path: string) {
-    return this.files.get(path) ?? null;
-  }
-  async listDirectory(path: string) {
-    const prefix = `${path}/`;
-    return [
-      ...new Set(
-        [...this.files.keys()]
-          .filter((f) => f.startsWith(prefix))
-          .map((f) => f.slice(prefix.length).split("/")[0] ?? ""),
-      ),
-    ];
-  }
-  async removeFile(path: string) {
-    this.files.delete(path);
+  file(allocation: string, kind: string) {
+    return this.files.get(`${allocation}/${kind}`) ?? "";
   }
 }
 const hostConfig = parseCellHost({
-  zfsParent: "tank/godseye/pg",
   mountRoot: "/srv/godseye/pg",
   bindAddress: "10.77.0.1",
   clientIpv4Cidr: "10.77.0.0/24",
@@ -73,23 +88,39 @@ const transport = (host: FakeHost) =>
     archiveCipher: async () => "c".repeat(43),
     sleep: async () => {},
   });
+const gib = (n: number) => n * 1024 ** 3;
 
 describe("ServerPostgresTransport", () => {
-  it("creates independent quota-bound datasets and a private-bridge listener", async () => {
+  it("requests hard-limited data and WAL storage plus the local repository limit", async () => {
     const host = new FakeHost();
     const { scope, profile } = scopeFor();
 
     await transport(host).create(scope, profile);
 
-    const zfs = host.commands.filter((c) => c.includes("create"));
-    expect(zfs.map((c) => c.find((a) => a.startsWith("quota=")))).toEqual([
-      `quota=${profile.storage.dataQuotaGiB}G`,
-      `quota=${profile.storage.walQuotaGiB}G`,
-      "quota=16G",
+    expect(host.calls.find((c) => c.verb === "storage-create")?.args).toEqual([
+      scope.allocationId,
+      String(profile.storage.dataQuotaGiB),
+      String(profile.storage.walQuotaGiB),
+      "16",
     ]);
-    const initdb = host.commands.find((c) => c[0]?.endsWith("/initdb"));
-    expect(initdb).toContain("-X");
-    const conf = host.files.get(`/etc/godseye/pg/${scope.allocationId}/postgresql.conf`) ?? "";
+  });
+  it("initialises the cluster only after storage and configuration exist", async () => {
+    const host = new FakeHost();
+    const { scope, profile } = scopeFor();
+
+    await transport(host).create(scope, profile);
+
+    const verbs = host.verbs();
+    expect(verbs.indexOf("storage-create")).toBeLessThan(verbs.indexOf("file-write"));
+    expect(verbs.indexOf("file-write")).toBeLessThan(verbs.indexOf("initdb"));
+  });
+  it("binds the listener to the private bridge address", async () => {
+    const host = new FakeHost();
+    const { scope, profile } = scopeFor();
+
+    await transport(host).create(scope, profile);
+
+    const conf = host.file(scope.allocationId, "config");
     expect(conf).toContain("listen_addresses = '10.77.0.1'");
     expect(conf).toContain("archive_mode = 'on'");
   });
@@ -99,9 +130,20 @@ describe("ServerPostgresTransport", () => {
 
     await transport(host).create(scope, profile);
 
-    const hba = host.files.get(`/etc/godseye/pg/${scope.allocationId}/pg_hba.conf`) ?? "";
+    const hba = host.file(scope.allocationId, "hba");
     expect(hba).toContain("hostssl");
     expect(hba).not.toMatch(/\btrust\b/);
+  });
+  it("keeps the archive cipher in the root-only environment file and out of other files", async () => {
+    const host = new FakeHost();
+    const { scope, profile } = scopeFor();
+
+    await transport(host).create(scope, profile);
+
+    const leaked = [...host.files]
+      .filter(([key]) => !key.endsWith("/archive-env"))
+      .some(([, content]) => content.includes("c".repeat(43)));
+    expect(leaked).toBe(false);
   });
   it("assigns distinct ports to successive cells", async () => {
     const host = new FakeHost();
@@ -111,8 +153,7 @@ describe("ServerPostgresTransport", () => {
     await transport(host).create(first.scope, first.profile);
     await transport(host).create(second.scope, second.profile);
 
-    const port = (id: string) =>
-      host.files.get(`/etc/godseye/pg/${id}/cell.env`)?.match(/PORT=(\d+)/)?.[1];
+    const port = (id: string) => host.file(id, "cell-env").match(/PORT=(\d+)/)?.[1];
     expect([port(first.scope.allocationId), port(second.scope.allocationId)]).toEqual([
       "15432",
       "15433",
@@ -131,22 +172,17 @@ describe("ServerPostgresTransport", () => {
 
     await expect(transport(host).create(scopeFor().scope, profile)).rejects.toThrow("differs");
   });
-  it("reports quota and ownership from ZFS rather than from names", async () => {
+  it("reports quota and ownership from XFS project quotas rather than from names", async () => {
     const host = new FakeHost();
     const { scope, profile } = scopeFor();
     const t = transport(host);
     await t.create(scope, profile);
-    const gib = (n: number) => n * 1024 ** 3;
-    host.outputs.set("pg_controldata", "Database system identifier:           7400000000000001\n");
-    host.outputs.set("ActiveState", "active\n");
-    host.outputs.set(
-      `${scope.allocationId}/data`,
-      `quota\t${gib(profile.storage.dataQuotaGiB)}\nmountpoint\t/srv/godseye/pg/${scope.allocationId}/data\ngodseye:volume\t${profile.dataVolume}\n`,
-    );
-    host.outputs.set(
-      `${scope.allocationId}/wal`,
-      `quota\t${gib(profile.storage.walQuotaGiB)}\nmountpoint\t/srv/godseye/pg/${scope.allocationId}/wal\ngodseye:volume\t${profile.walVolume}\n`,
-    );
+    const base = `/srv/godseye/pg/${scope.allocationId}`;
+    host.storage = [
+      `${profile.dataVolume}\t${base}/data\t${gib(profile.storage.dataQuotaGiB)}\t4096`,
+      `${profile.walVolume}\t${base}/wal\t${gib(profile.storage.walQuotaGiB)}\t4096`,
+      "",
+    ].join("\n");
 
     const inspection = await t.inspect(scope, null);
 
@@ -159,50 +195,61 @@ describe("ServerPostgresTransport", () => {
       systemIdentifier: "7400000000000001",
     });
   });
-  it("reports an unenforced quota when ZFS has none", async () => {
+  it("reports an unenforced quota when the project limit is zero", async () => {
     const host = new FakeHost();
     const { scope, profile } = scopeFor();
     const t = transport(host);
     await t.create(scope, profile);
-    host.outputs.set("pg_controldata", "Database system identifier:           1\n");
-    host.outputs.set("ActiveState", "inactive\n");
-    host.outputs.set(scope.allocationId, "quota\t0\nmountpoint\t/x\ngodseye:volume\tv\n");
+    host.unitState = "inactive\n";
+    const base = `/srv/godseye/pg/${scope.allocationId}`;
+    host.storage = `${profile.dataVolume}\t${base}/data\t0\t0\n${profile.walVolume}\t${base}/wal\t0\t0\n`;
 
     const inspection = await t.inspect(scope, null);
 
     expect(inspection?.quotaEnforced).toBe(false);
+  });
+  it("does not claim ownership of a volume mounted somewhere unexpected", async () => {
+    const host = new FakeHost();
+    const { scope, profile } = scopeFor();
+    const t = transport(host);
+    await t.create(scope, profile);
+    host.storage = `${profile.dataVolume}\t/elsewhere/data\t${gib(profile.storage.dataQuotaGiB)}\t0\n${profile.walVolume}\t/elsewhere/wal\t${gib(profile.storage.walQuotaGiB)}\t0\n`;
+
+    const inspection = await t.inspect(scope, null);
+
+    expect(inspection?.independentInstance).toBe(false);
   });
   it("enables weekly, daily and archive-check timers only after PostgreSQL is ready", async () => {
     const host = new FakeHost();
     const { scope, profile } = scopeFor();
     const t = transport(host);
     await t.create(scope, profile);
-    host.commands.length = 0;
+    host.calls.length = 0;
 
     await t.start(scope, null);
 
-    const order = host.commands.map((c) => c.at(-1) ?? "");
-    const readyAt = host.commands.findIndex((c) => c[0]?.endsWith("/pg_isready"));
-    expect(readyAt).toBeGreaterThan(-1);
-    expect(order.slice(readyAt + 1)).toEqual(
-      ["full", "diff", "check"].map((k) => `godseye-pg-backup-${k}@${scope.allocationId}.timer`),
-    );
+    expect(host.verbs().slice(-2)).toEqual(["pg-isready", "timers"]);
+    expect(host.calls.at(-1)?.args).toEqual([scope.allocationId, "enable"]);
   });
   it("returns null for an unknown allocation", async () => {
     await expect(transport(new FakeHost()).inspect(scopeFor().scope, null)).resolves.toBeNull();
   });
-  it("stops through the allocation's own systemd instance only", async () => {
+  it("disables the timers before stopping the allocation's own systemd instance", async () => {
     const host = new FakeHost();
     const { scope } = scopeFor();
 
     await transport(host).stop(scope, `godseye-pg@${scope.allocationId}.service`);
 
-    const units = host.commands.map((c) => c.at(-1));
-    expect(units.slice(-2)).toEqual(Array(2).fill(`godseye-pg@${scope.allocationId}.service`));
-    expect(units.slice(0, 3)).toEqual(
-      ["full", "diff", "check"].map((k) => `godseye-pg-backup-${k}@${scope.allocationId}.timer`),
-    );
-    await expect(transport(host).stop(scope, "godseye-pg@other.service")).rejects.toThrow(
+    expect(host.calls.map((c) => `${c.verb}:${c.args[1]}`)).toEqual([
+      "timers:disable",
+      "unit:stop",
+      "unit:disable",
+    ]);
+  });
+  it("refuses to stop a different unit", async () => {
+    const { scope } = scopeFor();
+
+    await expect(transport(new FakeHost()).stop(scope, "godseye-pg@other.service")).rejects.toThrow(
       "differs",
     );
   });
@@ -220,9 +267,21 @@ describe("hostQualification", () => {
 
     expect(proof?.expiresAt).toBe("2026-11-15T00:05:00.000Z");
   });
-  it("withholds attestation when the ZFS pool is not online", async () => {
+  it("withholds attestation when project quotas are not enabled on the volume", async () => {
     const host = new FakeHost();
-    host.poolHealth = "DEGRADED";
+    host.probe = HEALTHY_PROBE.replace("PRJQUOTA=on", "PRJQUOTA=off");
+
+    await expect(hostQualification(hostConfig, host, binding)()).resolves.toBeNull();
+  });
+  it("withholds attestation when the volume is not XFS", async () => {
+    const host = new FakeHost();
+    host.probe = HEALTHY_PROBE.replace("FILESYSTEM=xfs", "FILESYSTEM=ext4");
+
+    await expect(hostQualification(hostConfig, host, binding)()).resolves.toBeNull();
+  });
+  it("withholds attestation for an older pgBackRest", async () => {
+    const host = new FakeHost();
+    host.probe = HEALTHY_PROBE.replace("2.60.0", "2.55.1");
 
     await expect(hostQualification(hostConfig, host, binding)()).resolves.toBeNull();
   });
@@ -245,5 +304,34 @@ describe("ServerPgBackRestTransport", () => {
       repositoryPath: `/srv/godseye/pg/${scope.allocationId}/repo`,
       pgPort: 15432,
     });
+  });
+  it("points the stanza at the off-host S3 repository under a per-cell path", async () => {
+    const s3Host = parseCellHost({
+      mountRoot: "/srv/godseye/pg",
+      bindAddress: "10.77.0.1",
+      servername: "pg.cells.internal",
+      portRange: [15432, 15434],
+      repositoryQuotaGiB: 0,
+      s3Repository: {
+        bucket: "example-backups",
+        endpoint: "s3.example.test",
+        region: "eu-central-003",
+        pathPrefix: "/cells",
+      },
+    });
+    const host = new FakeHost();
+    const { scope, profile } = scopeFor();
+    await new ServerPostgresTransport({
+      host: s3Host,
+      executor: host,
+      archiveCipher: async () => "c".repeat(43),
+      sleep: async () => {},
+    }).create(scope, profile);
+
+    const config = host.file(scope.allocationId, "pgbackrest-conf");
+
+    expect(config).toContain("repo1-type=s3");
+    expect(config).toContain(`repo1-path=/cells/${scope.allocationId}`);
+    expect(host.calls.find((c) => c.verb === "storage-create")?.args.at(-1)).toBe("0");
   });
 });

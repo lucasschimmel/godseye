@@ -1,10 +1,12 @@
 import {
   allocateCellPort,
-  assertArgv,
   type CellHost,
   type CellHostExecutor,
   cellLayout,
+  listCells,
   parseEnv,
+  readCellFile,
+  writeCellFile,
 } from "./cell-host.js";
 import { immutableSnapshot } from "./infra-policy.js";
 import {
@@ -20,22 +22,19 @@ import { renderHeldRecoveryPostgres } from "./recovery-postgres-policy.js";
 import type { RecoveryScope } from "./recovery-provider.js";
 
 /**
- * Per-cell pgBackRest transport: one stanza per source cell (named from its allocation), a ZFS
- * repository dataset with a hard quota, and restores into a new allocation whose datasets,
- * configuration and unit are independent of the source.
+ * Per-cell pgBackRest transport: one stanza per source cell (named from its allocation), an
+ * off-host S3 repository under a per-cell path (or a quota-bound local directory), and restores into a
+ * new allocation whose storage, configuration and unit are independent of the source. Every
+ * privileged step is one fixed helper verb.
  */
 export class ServerPgBackRestTransport implements PgBackRestTransport {
   constructor(
     private readonly host: CellHost,
     private readonly executor: CellHostExecutor,
   ) {}
-  private run(argv: string[], options?: Parameters<CellHostExecutor["run"]>[1]) {
-    assertArgv(argv);
-    return this.executor.run(argv, options);
-  }
   async binding(scope: RecoveryScope): Promise<PgBackRestBinding> {
     const layout = cellLayout(this.host, scope.sourceAllocationId);
-    const env = parseEnv(await this.executor.readFile(layout.envFile));
+    const env = parseEnv(await readCellFile(this.executor, layout.allocationId, "cell-env"));
     const port = Number(env.PORT);
     if (!Number.isInteger(port)) throw new Error("Source cell is not provisioned on this host");
     return {
@@ -52,73 +51,59 @@ export class ServerPgBackRestTransport implements PgBackRestTransport {
       configIncludePath: layout.pgBackRestInclude,
       lockPath: layout.pgBackRestLock,
       logPath: layout.pgBackRestLog,
+      ...(this.host.s3Repository
+        ? {
+            s3: {
+              bucket: this.host.s3Repository.bucket,
+              endpoint: this.host.s3Repository.endpoint,
+              region: this.host.s3Repository.region,
+            },
+          }
+        : {}),
     };
   }
   async installConfiguration(scope: RecoveryScope, policy: CompiledPgBackRest) {
     const layout = cellLayout(this.host, scope.sourceAllocationId);
     if (policy.binding.configPath !== layout.pgBackRestConfig)
       throw new Error("Backup policy path differs from the source cell layout");
-    if (scope.kind === "full" || scope.kind === "diff")
-      await this.run([
-        this.host.zfsExecutable,
-        "set",
-        `quota=${scope.policy.repositoryGiB}G`,
-        layout.dataset.repo,
+    if ((scope.kind === "full" || scope.kind === "diff") && !this.host.s3Repository)
+      await this.executor.call("storage-resize", [
+        layout.allocationId,
+        "repo",
+        String(scope.policy.repositoryGiB),
       ]);
-    await this.executor.writeFile(layout.pgBackRestConfig, policy.config, {
-      mode: 0o640,
-      owner: "root",
-      group: this.host.serviceUser,
-    });
+    await writeCellFile(this.executor, layout.allocationId, "pgbackrest-conf", policy.config);
   }
   async execute(
-    _scope: RecoveryScope,
+    scope: RecoveryScope,
     args: readonly string[],
-    privateEnvironment: Readonly<Record<string, string>>,
+    _privateEnvironment: Readonly<Record<string, string>>,
   ) {
-    // Authentication stays the repository cipher passphrase in the child environment only.
-    return this.run([this.host.pgBackRestExecutable, ...args], {
-      user: this.host.serviceUser,
-      env: privateEnvironment,
-    });
+    // The helper loads the repository cipher passphrase and storage credentials from the source
+    // cell's root-owned environment files; neither travels over the helper socket or in argv.
+    return this.executor.call("pgbackrest", [scope.sourceAllocationId, ...args]);
   }
   async reserveEmptyDestination(scope: RecoveryScope): Promise<RecoveryDestinationBinding> {
     if (scope.allocationId === scope.sourceAllocationId)
       throw new Error("Restore destination must differ from the source allocation");
     const layout = cellLayout(this.host, scope.allocationId);
-    if ((await this.executor.readFile(layout.envFile)) !== null)
+    if (
+      (await readCellFile(this.executor, layout.allocationId, "cell-env")) !== null ||
+      (await listCells(this.executor)).includes(layout.allocationId)
+    )
       throw new Error("Restore destination already exists");
     const storage = scope.sourceCatalog.storage;
-    for (const [name, mountpoint, quota, volume] of [
-      [layout.dataset.data, layout.dataPath, storage.dataQuotaGiB, `pgdata-${layout.suffix}`],
-      [layout.dataset.wal, layout.walPath, storage.walQuotaGiB, `pgwal-${layout.suffix}`],
-    ] as const) {
-      await this.run([
-        this.host.zfsExecutable,
-        "create",
-        "-p",
-        "-o",
-        `quota=${quota}G`,
-        "-o",
-        `mountpoint=${mountpoint}`,
-        "-o",
-        `godseye:volume=${volume}`,
-        "-o",
-        `godseye:allocation=${layout.allocationId}`,
-        name,
-      ]);
-      await this.run([
-        "/usr/bin/chown",
-        `${this.host.serviceUser}:${this.host.serviceUser}`,
-        mountpoint,
-      ]);
-      await this.run(["/usr/bin/chmod", "0700", mountpoint]);
-    }
-    const [data, wal] = await Promise.all([
-      this.executor.listDirectory(layout.dataPath),
-      this.executor.listDirectory(layout.walPath),
+    await this.executor.call("storage-create", [
+      layout.allocationId,
+      String(storage.dataQuotaGiB),
+      String(storage.walQuotaGiB),
+      "0",
     ]);
-    if (data.length || wal.length) throw new Error("Restore destination is not empty");
+    try {
+      await this.executor.call("storage-empty", [layout.allocationId]);
+    } catch {
+      throw new Error("Restore destination is not empty");
+    }
     return {
       allocationId: scope.allocationId,
       environmentId: scope.environmentId,
@@ -144,12 +129,7 @@ export class ServerPgBackRestTransport implements PgBackRestTransport {
       differentialRetention: scope.policy.differentialRetention,
     });
     const port = await allocateCellPort(this.host, this.executor);
-    await this.run([
-      this.host.certificateHelper,
-      layout.allocationId,
-      this.host.servername,
-      layout.tlsDirectory,
-    ]);
+    await this.executor.call("cert", [layout.allocationId, this.host.servername]);
     const rendered = renderHeldRecoveryPostgres(
       scope,
       {
@@ -166,32 +146,20 @@ export class ServerPgBackRestTransport implements PgBackRestTransport {
       },
       repository,
     );
-    const owned = { mode: 0o640, owner: "root", group: this.host.serviceUser } as const;
-    await this.executor.writeFile(layout.configFile, rendered.configuration, owned);
-    await this.executor.writeFile(layout.hbaFile, rendered.hba, owned);
-    await this.executor.writeFile(layout.identFile, rendered.ident, owned);
+    const write = (kind: Parameters<typeof writeCellFile>[2], content: string) =>
+      writeCellFile(this.executor, layout.allocationId, kind, content);
+    await write("config", rendered.configuration);
+    await write("hba", rendered.hba);
+    await write("ident", rendered.ident);
     // Restored inherited configuration is replaced before any startup; empty files neutralize it.
-    const inherited = { mode: 0o600, owner: this.host.serviceUser } as const;
-    await this.executor.writeFile(
-      `${layout.dataPath}/postgresql.auto.conf`,
-      rendered.autoConfiguration,
-      inherited,
-    );
-    await this.executor.writeFile(
-      `${layout.dataPath}/recovery.signal`,
-      rendered.recoverySignal,
-      inherited,
-    );
-    await this.executor.writeFile(
-      layout.envFile,
-      `ALLOCATION=${layout.allocationId}\nPORT=${port}\nHELD=1\n`,
-      { mode: 0o644, owner: "root" },
-    );
+    await write("auto-conf", rendered.autoConfiguration);
+    await write("recovery-signal", rendered.recoverySignal);
+    await write("cell-env", `ALLOCATION=${layout.allocationId}\nPORT=${port}\nHELD=1\n`);
   }
   async startPaused(scope: RecoveryScope, destination: RecoveryDestinationBinding) {
     const layout = cellLayout(this.host, scope.allocationId);
     if (destination.pgData !== layout.dataPath) throw new Error("Recovery destination differs");
-    await this.run([this.host.systemctlExecutable, "start", layout.unit]);
+    await this.executor.call("unit", [layout.allocationId, "start"]);
   }
   /** Production inspection attestation remains unavailable until a manifest/WAL verifier is qualified. */
   async inspect() {
