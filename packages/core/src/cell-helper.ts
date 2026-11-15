@@ -467,6 +467,19 @@ export class CellHelper {
     ]);
     for (const dir of [layout.pgBackRestInclude, layout.pgBackRestLog])
       await this.need(["/usr/bin/install", "-d", "-m", "0750", "-o", user, "-g", user, dir]);
+    // pgBackRest lock path and PostgreSQL socket directory; the unit's RuntimeDirectory= adopts it.
+    // Needed before the first start because the stanza is created offline at provisioning.
+    await this.need([
+      "/usr/bin/install",
+      "-d",
+      "-m",
+      "0751",
+      "-o",
+      user,
+      "-g",
+      user,
+      layout.socketDirectory,
+    ]);
     return "";
   }
   async cert(args: readonly string[]) {
