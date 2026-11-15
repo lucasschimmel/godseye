@@ -26,7 +26,7 @@ import type { RecoveryRepositoryMaterial } from "../../../packages/core/src/reco
 import { ManagedPgBackRestProvider } from "../../../packages/core/src/recovery-pgbackrest-provider.js";
 import type { RecoveryScope } from "../../../packages/core/src/recovery-provider.js";
 import { ServerPgBackRestTransport } from "../../../packages/core/src/recovery-server-transport.js";
-import { SudoCellHostExecutor } from "./cell-host-process.js";
+import { HelperSocketExecutor, UnixSocketHelperTransport } from "./cell-host-process.js";
 import { privateDirectory } from "./identity/runtime.js";
 import { readPrivateJson } from "./private-json.js";
 
@@ -46,7 +46,7 @@ const key = (value: string) => {
   return value;
 };
 /** Generated once per cell and persisted privately; the production path is the OpenBao broker. */
-class FileDatabaseMaterial implements DatabaseMaterialDelivery {
+export class FileDatabaseMaterial implements DatabaseMaterialDelivery {
   constructor(private readonly directory: string) {}
   async withMaterial(
     scope: DatabaseProviderScope,
@@ -69,7 +69,7 @@ class FileDatabaseMaterial implements DatabaseMaterialDelivery {
     await consume(material);
   }
 }
-async function repositoryPassphrase(directory: string, allocationId: string) {
+export async function repositoryPassphrase(directory: string, allocationId: string) {
   const folder = join(directory, key(allocationId));
   await privateDirectory(folder);
   const file = join(folder, "repository.pass");
@@ -103,12 +103,14 @@ class FileRepositoryMaterial implements RecoveryRepositoryMaterial {
  */
 export function configuredCellProviders(
   env: NodeJS.ProcessEnv = process.env,
-  executor: CellHostExecutor = new SudoCellHostExecutor(),
+  injectedExecutor?: CellHostExecutor,
 ) {
   const file = env.GODSEYE_PG_CELLS_FILE;
   if (!file) return undefined;
   const binding = Binding.parse(readPrivateJson(file));
   const host = parseCellHost(binding.host as CellHostConfigInput);
+  const executor =
+    injectedExecutor ?? new HelperSocketExecutor(new UnixSocketHelperTransport(host.helperSocket));
   const provider = {
     providerId: binding.providerId,
     targetId: binding.targetId,
@@ -131,6 +133,6 @@ export function configuredCellProviders(
       new FileRepositoryMaterial(binding.secretsDirectory),
       async () => null,
     ),
-    backupSchedule: backupScheduleDetector({ host, executor }),
+    backupSchedule: backupScheduleDetector({ executor }),
   };
 }

@@ -11,6 +11,8 @@ User=postgres
 Group=postgres
 # Repository cipher passphrase: root-owned file, loaded by systemd only.
 EnvironmentFile=/etc/godseye/pg/%i/archive.env
+# Off-host repository credentials shared by all cells (root-owned, loaded by systemd only).
+EnvironmentFile=-/etc/godseye/pg/b2.env
 ExecStart=/usr/local/sbin/godseye-pg-backup full %i
 TimeoutStartSec=6h
 Nice=10

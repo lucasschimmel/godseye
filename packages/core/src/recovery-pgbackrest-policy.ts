@@ -20,6 +20,8 @@ export interface PgBackRestBinding {
   logPath: string;
   fullRetention?: number;
   differentialRetention?: number;
+  /** Off-host S3-compatible repository; credentials come only from the process environment. */
+  s3?: { bucket: string; endpoint: string; region: string };
 }
 const path = z
   .string()
@@ -46,6 +48,16 @@ export function compilePgBackRest(bindingInput: PgBackRestBinding) {
   z.string()
     .regex(/^[a-z_][a-z0-9_]{0,62}$/)
     .parse(binding.pgUser);
+  const s3 =
+    binding.s3 &&
+    z
+      .object({
+        bucket: z.string().regex(/^[a-z0-9][a-z0-9.-]{2,62}$/),
+        endpoint: z.string().regex(/^[a-z0-9][a-z0-9.-]+$/),
+        region: z.string().regex(/^[a-z0-9-]+$/),
+      })
+      .strict()
+      .parse(binding.s3);
   const stanza = `g_${binding.sourceAllocationId.replaceAll("-", "")}`;
   const fullRetention = z
     .number()
@@ -67,6 +79,15 @@ export function compilePgBackRest(bindingInput: PgBackRestBinding) {
     throw new Error("Repository and database paths overlap");
   const config = [
     "[global]",
+    ...(s3
+      ? [
+          "repo1-type=s3",
+          `repo1-s3-bucket=${s3.bucket}`,
+          `repo1-s3-endpoint=${s3.endpoint}`,
+          `repo1-s3-region=${s3.region}`,
+          "repo1-s3-uri-style=path",
+        ]
+      : []),
     `repo1-path=${binding.repositoryPath}`,
     "repo1-cipher-type=aes-256-cbc",
     `repo1-retention-full=${fullRetention}`,
@@ -74,6 +95,7 @@ export function compilePgBackRest(bindingInput: PgBackRestBinding) {
     "archive-check=y",
     "archive-timeout=60",
     "process-max=2",
+    "start-fast=y",
     "log-level-console=off",
     "log-level-file=off",
     `lock-path=${binding.lockPath}`,

@@ -15,7 +15,13 @@ CONFIG_ROOT="/etc/godseye/pg/${ALLOCATION}"
 STATUS_DIR="/var/lib/godseye/pg-backup"
 STATUS_FILE="${STATUS_DIR}/${ALLOCATION}.json"
 STANZA="g_${ALLOCATION//-/}"
-PGBACKREST=(/usr/bin/pgbackrest
+HOST_FILE="/etc/godseye/pg/host.json"
+PGBACKREST_BIN="$(jq -r '.pgBackRestExecutable // "/usr/bin/pgbackrest"' "${HOST_FILE}")"
+# The bootstrap role authenticates over the local socket with SCRAM; the password file is
+# group-readable by the service user only and the value never leaves this process environment.
+PGPASSWORD="$(tr -d '\n' <"${CONFIG_ROOT}/admin.pass")"
+export PGPASSWORD
+PGBACKREST=("${PGBACKREST_BIN}"
   "--config=${CONFIG_ROOT}/pgbackrest.conf"
   "--config-include-path=${CONFIG_ROOT}/pgbackrest.conf.d"
   "--stanza=${STANZA}")

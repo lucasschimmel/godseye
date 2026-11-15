@@ -1,4 +1,4 @@
-import { type CellHost, type CellHostExecutor, parseEnv } from "./cell-host.js";
+import { type CellHostExecutor, listCells, parseEnv, readCellFile } from "./cell-host.js";
 import type { Finding } from "./incidents-state.js";
 
 /**
@@ -14,7 +14,6 @@ export const BACKUP_CADENCE = {
   /** A run may be late by this factor of its interval before it is raised (timer jitter, long backups). */
   tolerance: 1.5,
 } as const;
-export const BACKUP_STATUS_DIRECTORY = "/var/lib/godseye/pg-backup";
 
 export interface BackupStatusRecord {
   fullAt: string | null;
@@ -81,25 +80,17 @@ export function evaluateBackupStatus(
   return null;
 }
 /** System detector for `IncidentEngine`: one finding per overdue cell, resolved keys for healthy cells. */
-export function backupScheduleDetector(options: {
-  host: CellHost;
-  executor: CellHostExecutor;
-  now?: () => Date;
-  statusDirectory?: string;
-}) {
+export function backupScheduleDetector(options: { executor: CellHostExecutor; now?: () => Date }) {
   const now = options.now ?? (() => new Date());
-  const directory = options.statusDirectory ?? BACKUP_STATUS_DIRECTORY;
   return async () => {
     const findings: Finding[] = [];
     const coveredKeys: string[] = [];
-    for (const allocationId of await options.executor.listDirectory(options.host.configRoot)) {
-      const env = parseEnv(
-        await options.executor.readFile(`${options.host.configRoot}/${allocationId}/cell.env`),
-      );
+    for (const allocationId of await listCells(options.executor)) {
+      const env = parseEnv(await readCellFile(options.executor, allocationId, "cell-env"));
       // Held restore destinations are never scheduled; only provisioned source cells are.
       if (!env.PROJECT || !env.ENVIRONMENT || env.HELD) continue;
       const status = parseBackupStatus(
-        await options.executor.readFile(`${directory}/${allocationId}.json`),
+        await readCellFile(options.executor, allocationId, "backup-status"),
       );
       const result = evaluateBackupStatus(status, now());
       const key = `archive-lag:${env.ENVIRONMENT}:${allocationId}`;

@@ -119,6 +119,7 @@ async function start() {
     hermesTools = configuredHermesToolExecutor(process.env);
     // Private per-cell PostgreSQL/pgBackRest providers; absent binding keeps everything unconfigured.
     const cells = configuredCellProviders();
+    if (cells) console.info("Private PostgreSQL cell providers are configured");
     const infrastructure = new InfrastructureEngine(store, {
       ...configuredDelivery(process.env),
       ...cells,

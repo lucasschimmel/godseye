@@ -1,19 +1,20 @@
 import { describe, expect, it } from "vitest";
 import {
-  type SpawnedProcess,
-  SudoCellHostExecutor,
+  HelperSocketExecutor,
+  type HelperTransport,
 } from "../apps/control-api/src/cell-host-process.js";
 import { configuredCellProviders } from "../apps/control-api/src/cell-providers.js";
+import { HELPER_NOT_FOUND, HelperError, readCellFile } from "../packages/core/src/cell-host.js";
 
-function recorder(code = 0, stdout = "") {
-  const calls: { argv: readonly string[]; stdin?: string; env: Record<string, string> }[] = [];
-  const spawner: SpawnedProcess = {
-    run: async (argv, options) => {
-      calls.push({ argv, stdin: options.stdin, env: options.env });
-      return { code, stdout };
+function transport(reply: string) {
+  const requests: string[] = [];
+  const fake: HelperTransport = {
+    exchange: async (request) => {
+      requests.push(request);
+      return reply;
     },
   };
-  return { calls, spawner };
+  return { requests, fake };
 }
 
 describe("configuredCellProviders", () => {
@@ -22,59 +23,49 @@ describe("configuredCellProviders", () => {
   });
 });
 
-describe("SudoCellHostExecutor", () => {
-  it("wraps fixed argv in non-interactive sudo without a shell", async () => {
-    const { calls, spawner } = recorder(0, "ok");
+describe("HelperSocketExecutor", () => {
+  it("sends one fixed verb with its arguments and payload as a JSON line", async () => {
+    const { requests, fake } = transport('{"code":0,"stdout":"ok"}');
 
-    await new SudoCellHostExecutor(spawner).run([
-      "/usr/bin/systemctl",
-      "start",
-      "godseye-pg@x.service",
-    ]);
-
-    expect(calls[0]?.argv).toEqual([
-      "/usr/bin/sudo",
-      "-n",
-      "--",
-      "/usr/bin/systemctl",
-      "start",
-      "godseye-pg@x.service",
-    ]);
-  });
-  it("keeps the cipher passphrase out of argv and passes it through the preserved environment", async () => {
-    const { calls, spawner } = recorder();
-    const secret = "p".repeat(40);
-
-    await new SudoCellHostExecutor(spawner).run(["/usr/bin/pgbackrest", "info"], {
-      user: "postgres",
-      env: { PGBACKREST_REPO1_CIPHER_PASS: secret },
+    const output = await new HelperSocketExecutor(fake).call("unit", ["a", "start"], {
+      stdin: "payload",
     });
 
-    expect(calls[0]?.argv.join(" ")).not.toContain(secret);
-    expect(calls[0]?.argv.slice(0, 5)).toEqual([
-      "/usr/bin/sudo",
-      "-n",
-      "--preserve-env=PGBACKREST_REPO1_CIPHER_PASS",
-      "-u",
-      "postgres",
-    ]);
-    expect(calls[0]?.env.PGBACKREST_REPO1_CIPHER_PASS).toBe(secret);
+    expect(output).toBe("ok");
+    expect(JSON.parse(requests[0] ?? "")).toEqual({
+      verb: "unit",
+      args: ["a", "start"],
+      stdin: "payload",
+    });
   });
-  it("rejects a relative executable", async () => {
-    await expect(
-      new SudoCellHostExecutor(recorder().spawner).run(["zfs", "list"]),
-    ).rejects.toThrow();
-  });
-  it("rejects unsafe path characters before spawning", async () => {
-    const { calls, spawner } = recorder();
+  it("rejects a verb outside the fixed set before touching the socket", async () => {
+    const { requests, fake } = transport('{"code":0,"stdout":""}');
 
-    await expect(new SudoCellHostExecutor(spawner).readFile("/etc/x; rm -rf /")).rejects.toThrow();
-    expect(calls).toHaveLength(0);
+    await expect(new HelperSocketExecutor(fake).call("sh" as never, ["-c", "id"])).rejects.toThrow(
+      "Invalid private host command",
+    );
+    expect(requests).toHaveLength(0);
   });
-  it("reports a missing file as null and a failed command as an error", async () => {
-    const executor = new SudoCellHostExecutor(recorder(1).spawner);
+  it("maps a non-zero helper code to a typed error", async () => {
+    const { fake } = transport('{"code":44,"stdout":""}');
 
-    await expect(executor.readFile("/etc/godseye/pg/none/cell.env")).resolves.toBeNull();
-    await expect(executor.run(["/usr/bin/true"])).rejects.toThrow("failed");
+    const outcome = await new HelperSocketExecutor(fake)
+      .call("file-read", ["a", "cell-env"])
+      .catch((error: unknown) => error);
+
+    expect(outcome).toBeInstanceOf(HelperError);
+    expect((outcome as HelperError).code).toBe(HELPER_NOT_FOUND);
+  });
+  it("reports a missing cell file as null", async () => {
+    const { fake } = transport('{"code":44,"stdout":""}');
+
+    await expect(readCellFile(new HelperSocketExecutor(fake), "a", "cell-env")).resolves.toBeNull();
+  });
+  it("refuses a malformed helper response", async () => {
+    const { fake } = transport("not json");
+
+    await expect(new HelperSocketExecutor(fake).call("cells-list", [])).rejects.toThrow(
+      "invalid response",
+    );
   });
 });
