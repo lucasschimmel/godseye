@@ -209,7 +209,7 @@ describe("private coding adapter with only its native child boundary replaced", 
     });
   });
   it("T-AC-787 native bridge resolves an absolute trusted executable without ambient vendor environment", async () => {
-    await createCodingProvider(config);
+    await createCodingProvider(config, { platform: "win32" });
     for (const [command, args, options] of external.spawn.mock.calls) {
       expect(isAbsolute(command)).toBe(true);
       expect(JSON.stringify(args)).not.toContain(config.bindings[0]?.broker.apiKey);
@@ -219,7 +219,7 @@ describe("private coding adapter with only its native child boundary replaced", 
     }
   });
   it("T-AC-789 acknowledges exact native authorization only after the current controller fence", async () => {
-    const provider = await createCodingProvider(config);
+    const provider = await createCodingProvider(config, { platform: "win32" });
     let fences = 0;
     const observed = await provider.submit(request, {
       signal: new AbortController().signal,
@@ -244,7 +244,7 @@ describe("private coding adapter with only its native child boundary replaced", 
   });
   it("T-AC-789 refuses a mismatched native correlation without acknowledging or retrying", async () => {
     wrongCorrelation = true;
-    const provider = await createCodingProvider(config);
+    const provider = await createCodingProvider(config, { platform: "win32" });
     const observed = await provider.submit(request, {
       signal: new AbortController().signal,
       assertActive: async () => undefined,
@@ -254,7 +254,7 @@ describe("private coding adapter with only its native child boundary replaced", 
     expect(actions.filter((action) => action === "run")).toHaveLength(1);
   });
   it("T-AC-789 revocation at per-request authorization sends no ACK and retains uncertainty", async () => {
-    const provider = await createCodingProvider(config);
+    const provider = await createCodingProvider(config, { platform: "win32" });
     let fences = 0;
     const observed = await provider.submit(request, {
       signal: new AbortController().signal,
@@ -266,7 +266,7 @@ describe("private coding adapter with only its native child boundary replaced", 
     expect(acknowledgments).toEqual([]);
   });
   it("T-AC-788 inspection never executes, renews authorization or restarts a child task", async () => {
-    const provider = await createCodingProvider(config);
+    const provider = await createCodingProvider(config, { platform: "win32" });
     await provider.inspect(request, new AbortController().signal);
     expect(actions).toEqual(["readiness", "inspect"]);
     expect(acknowledgments).toEqual([]);
@@ -275,7 +275,7 @@ describe("private coding adapter with only its native child boundary replaced", 
     mutate = (value) => {
       Reflect.deleteProperty(value.guestResult, "treeHash");
     };
-    const provider = await createCodingProvider(config);
+    const provider = await createCodingProvider(config, { platform: "win32" });
     const observed = await provider.submit(request, {
       signal: new AbortController().signal,
       assertActive: async () => undefined,
@@ -287,7 +287,7 @@ describe("private coding adapter with only its native child boundary replaced", 
     mutate = (value) => {
       value.guestResult.patchSha256 = "0".repeat(64);
     };
-    const provider = await createCodingProvider(config);
+    const provider = await createCodingProvider(config, { platform: "win32" });
     const observed = await provider.submit(request, {
       signal: new AbortController().signal,
       assertActive: async () => undefined,
