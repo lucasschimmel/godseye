@@ -31,6 +31,10 @@ KVM_PROBE = ('import os,fcntl,json; '
              'print(json.dumps({"uid":1000,"api":12,"created":True}))')
 
 
+# Selected only by the SSH transport (work-VM Debian profile). The WSL2 KVM profile is the default.
+WORK_VM = os.environ.get('GODSEYE_CODING_PROFILE') == 'work-vm'
+
+
 def load(name: str, path: Path):
     specification = importlib.util.spec_from_file_location(name, path)
     module = importlib.util.module_from_spec(specification)
@@ -139,6 +143,8 @@ def receipt(workspace: Path, preparation: dict) -> dict:
 
 def readiness(workspace: Path, document: dict, deep: bool = True) -> dict:
     """Availability requires current executable bytes and actual stopped CLI guest proof."""
+    if WORK_VM:
+        return load('coding_guest_profile', workspace / 'scripts/coding_guest_profile.py').work_vm_readiness(workspace, document)
     cli = json.loads((workspace / 'artifacts/tools/coding-cli/manifest.json').read_text())
     versions = {'codex': cli['observedVersions']['codex'], 'claude-code': cli['observedVersions']['claude']}
     result = {'available': False, 'reason': 'No qualified private coding binding', 'versions': versions}
@@ -416,8 +422,11 @@ def run(workspace: Path, document: dict, lab: bool = False, authorize=None, atte
 
 def main() -> None:
     workspace = Path(sys.argv[1])
-    if workspace.resolve() != workspace or os.getuid() != 1000:
+    ordinary = os.getuid() != 0 if WORK_VM else os.getuid() == 1000
+    if workspace.resolve() != workspace or not ordinary:
         raise ValueError('Private bridge requires an unlinked registered workspace and ordinary host user')
+    if WORK_VM and sys.argv[2] in ('run', 'lab'):
+        raise ValueError('Work-VM sandbox runner is not qualified; execution is unavailable')
     raw = sys.stdin.buffer.readline(262145)
     if len(raw) > 262144:
         raise ValueError('Native request exceeds bound')
