@@ -1,0 +1,93 @@
+#!/usr/bin/env bash
+# godseye-offhost-backup: encrypted off-host copy (restic -> Backblaze B2) of
+# host configuration archives and the newest per-VM vzdump archives (DS09).
+#
+#   godseye-offhost-backup config   nightly: newest host-config archive
+#   godseye-offhost-backup vms      weekly: newest vzdump archive per VM + sample check
+#
+# Credentials live only in /etc/godseye (root, 0600), created by the owner:
+#   offhost-backup.env      RESTIC_REPOSITORY, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
+#   restic-password         repository encryption passphrase (generated on the host,
+#                           the owner MUST escrow a copy offline: without it the
+#                           off-host copies cannot be decrypted after a host loss)
+# When the credentials are absent the run records status "not_configured" and
+# exits 0, so local backups continue and the observer can still see the gap.
+set -euo pipefail
+umask 077
+
+MODE="${1:-}"
+CONF_DIR="${GODSEYE_CONF_DIR:-/etc/godseye}"
+STATUS_DIR="${GODSEYE_STATUS_DIR:-/var/lib/godseye/status}"
+HOST_CFG_DIR="${GODSEYE_HOST_CONFIG_DIR:-/rpool/backup/host-config}"
+VZDUMP_DIR="${GODSEYE_VZDUMP_DIR:-/rpool/backup/vzdump/dump}"
+UPLOAD_LIMIT_KIB="${GODSEYE_UPLOAD_LIMIT_KIB:-20000}"
+ENV_FILE="$CONF_DIR/offhost-backup.env"
+PASS_FILE="$CONF_DIR/restic-password"
+STATUS_FILE="$STATUS_DIR/offhost-backup.json"
+
+mkdir -p "$STATUS_DIR" "$CONF_DIR"
+chmod 700 "$CONF_DIR"
+
+write_status() {
+  # $1 = state, $2 = detail (plain ASCII, no secrets)
+  local tmp="$STATUS_FILE.tmp"
+  printf '{"ts":"%s","mode":"%s","state":"%s","detail":"%s"}\n' \
+    "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "${MODE:-none}" "$1" "$2" >"$tmp"
+  chmod 644 "$tmp"
+  mv "$tmp" "$STATUS_FILE"
+}
+
+case "$MODE" in config | vms) ;; *)
+  echo "usage: $0 config|vms" >&2
+  exit 64
+  ;;
+esac
+
+if [ ! -s "$PASS_FILE" ]; then
+  # Generate once; never printed. The owner escrows it (see break-glass runbook).
+  openssl rand -base64 33 >"$PASS_FILE"
+  chmod 600 "$PASS_FILE"
+fi
+
+if [ ! -s "$ENV_FILE" ]; then
+  write_status "not_configured" "missing $ENV_FILE (owner must create a B2 application key)"
+  echo "OFFHOST_NOT_CONFIGURED: local backups only"
+  exit 0
+fi
+
+set -a
+# shellcheck disable=SC1090
+. "$ENV_FILE"
+set +a
+export RESTIC_PASSWORD_FILE="$PASS_FILE"
+: "${RESTIC_REPOSITORY:?RESTIC_REPOSITORY missing in env file}"
+
+if ! restic cat config >/dev/null 2>&1; then
+  restic init >/dev/null
+fi
+
+if [ "$MODE" = "config" ]; then
+  LATEST="$(ls -1t "$HOST_CFG_DIR"/host-config-*.tar.zst 2>/dev/null | head -n 1 || true)"
+  [ -n "$LATEST" ] || {
+    write_status "failed" "no host-config archive found"
+    exit 1
+  }
+  restic backup --tag host-config --host godseye-wg --limit-upload "$UPLOAD_LIMIT_KIB" --quiet "$LATEST" "$LATEST.sha256"
+  restic forget --tag host-config --group-by host,tags --keep-daily 14 --keep-weekly 8 --keep-monthly 6 --prune --quiet
+  write_status "ok" "config archive $(basename "$LATEST")"
+else
+  FILES=()
+  for vmid in 100 200 300; do
+    f="$(ls -1t "$VZDUMP_DIR"/vzdump-qemu-"$vmid"-*.vma.zst 2>/dev/null | head -n 1 || true)"
+    [ -n "$f" ] && FILES+=("$f")
+  done
+  [ "${#FILES[@]}" -gt 0 ] || {
+    write_status "failed" "no vzdump archives found"
+    exit 1
+  }
+  restic backup --tag vzdump --host godseye-wg --limit-upload "$UPLOAD_LIMIT_KIB" --quiet "${FILES[@]}"
+  restic forget --tag vzdump --group-by host,tags --keep-last 2 --prune --quiet
+  restic check --read-data-subset=2% --quiet
+  write_status "ok" "vzdump archives ${#FILES[@]} files, sample integrity check passed"
+fi
+echo "OFFHOST_BACKUP_OK mode=$MODE"

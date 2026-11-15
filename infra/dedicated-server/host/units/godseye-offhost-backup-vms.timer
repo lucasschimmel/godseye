@@ -1,0 +1,11 @@
+[Unit]
+Description=Weekly encrypted off-host copy of the newest VM backups
+
+[Timer]
+OnCalendar=Sun *-*-* 05:30:00 UTC
+RandomizedDelaySec=300
+Persistent=true
+Unit=godseye-offhost-backup@vms.service
+
+[Install]
+WantedBy=timers.target
