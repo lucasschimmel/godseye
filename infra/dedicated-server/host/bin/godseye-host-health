@@ -1,0 +1,308 @@
+#!/usr/bin/env python3
+"""godseye-host-health: Proxmox host health snapshot for the external observer (DS11).
+
+Runs every 15 minutes from godseye-host-health.timer and writes
+/var/lib/godseye/status/host-health.json (world-readable, atomic, no secrets) plus one
+compact line to the bounded /var/log/godseye-host-health.jsonl. Exit code 1 only when a
+critical alert is active, so the systemd unit fails visibly.
+
+Severity model: critical alerts need action now (pool, disk, backups, firewall);
+warnings are drift the owner should schedule (scrub age, reboot pending, off-host gap).
+The Samsung PM9A1 critical_warning bit 0x04 (percentage_used > 100) is accepted as the
+documented warranty-threshold flag (Hetzner ticket #2026111403017785); any other bit,
+spare below threshold or media errors is critical.
+"""
+import datetime
+import glob
+import json
+import os
+import re
+import subprocess
+import sys
+import time
+
+STATUS_DIR = os.environ.get("GODSEYE_STATUS_DIR", "/var/lib/godseye/status")
+LOG_PATH = os.environ.get("GODSEYE_HEALTH_LOG", "/var/log/godseye-host-health.jsonl")
+DUMP_DIR = os.environ.get("GODSEYE_VZDUMP_DIR", "/rpool/backup/vzdump/dump")
+HOSTCFG_DIR = os.environ.get("GODSEYE_HOST_CONFIG_DIR", "/rpool/backup/host-config")
+NVME_DEVICES = os.environ.get("GODSEYE_NVME_DEVICES", "/dev/nvme0n1,/dev/nvme1n1").split(",")
+VM_IDS = (100, 200, 300)
+BACKUP_MAX_AGE_H = 36
+HOSTCFG_MAX_AGE_H = 36
+SCRUB_MAX_AGE_D = 45
+POOL_WARN_PCT = 70
+POOL_CRIT_PCT = 85
+BACKUP_DS_WARN_PCT = 80
+REBOOT_PENDING_WARN_D = 14
+WG_HANDSHAKE_WARN_S = 3600 * 24 * 7
+
+NOW = time.time()
+alerts = []  # (severity, message)
+
+
+def run(args, timeout=60):
+    return subprocess.run(args, capture_output=True, text=True, timeout=timeout, check=False)
+
+
+def alert(severity, message):
+    alerts.append({"severity": severity, "message": message})
+
+
+def iso(ts):
+    return datetime.datetime.fromtimestamp(ts, datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def read_json(path):
+    try:
+        with open(path, encoding="utf-8") as handle:
+            return json.load(handle)
+    except (OSError, ValueError):
+        return None
+
+
+def check_pool():
+    health = run(["zpool", "status", "-x"]).stdout.strip()
+    ok = health == "all pools are healthy"
+    if not ok:
+        alert("critical", "zpool status -x reports a problem")
+    listing = run(["zpool", "list", "-Hp", "-o", "name,size,alloc,free,capacity,fragmentation,health"]).stdout.split()
+    pool = {}
+    if len(listing) >= 7:
+        capacity = int(listing[4])
+        pool = {
+            "name": listing[0],
+            "size_bytes": int(listing[1]),
+            "alloc_bytes": int(listing[2]),
+            "free_bytes": int(listing[3]),
+            "capacity_pct": capacity,
+            "fragmentation_pct": int(listing[5]) if listing[5].isdigit() else None,
+            "health": listing[6],
+        }
+        if capacity >= POOL_CRIT_PCT:
+            alert("critical", f"pool capacity {capacity}% >= {POOL_CRIT_PCT}%")
+        elif capacity >= POOL_WARN_PCT:
+            alert("warning", f"pool capacity {capacity}% >= {POOL_WARN_PCT}%")
+    return {"ok": ok, "status_x": health, **pool}
+
+
+def check_scrub():
+    out = run(["zpool", "status", "rpool"]).stdout
+    match = re.search(r"scan:\s*(.*)", out)
+    line = match.group(1).strip() if match else ""
+    info = {"raw": line, "last_completed": None, "age_days": None, "in_progress": "in progress" in line}
+    done = re.search(r"scrub repaired (\S+) in (\S+) with (\d+) errors on (.+)$", line)
+    if done:
+        try:
+            when = datetime.datetime.strptime(" ".join(done.group(4).split()), "%a %b %d %H:%M:%S %Y")
+            info["last_completed"] = when.strftime("%Y-%m-%dT%H:%M:%S")
+            info["age_days"] = round((datetime.datetime.now() - when).total_seconds() / 86400, 1)
+            info["repaired"] = done.group(1)
+            info["errors"] = int(done.group(3))
+        except ValueError:
+            pass
+        if info.get("errors"):
+            alert("critical", f"last scrub found {info['errors']} errors")
+    if not info["in_progress"]:
+        if info["age_days"] is None:
+            alert("warning", "pool has never completed a scrub")
+        elif info["age_days"] > SCRUB_MAX_AGE_D:
+            alert("warning", f"last scrub {info['age_days']} days ago (> {SCRUB_MAX_AGE_D})")
+    return info
+
+
+def check_arc():
+    stats = {}
+    try:
+        with open("/proc/spl/kstat/zfs/arcstats", encoding="utf-8") as handle:
+            for row in handle.read().splitlines()[2:]:
+                parts = row.split()
+                if len(parts) == 3:
+                    stats[parts[0]] = int(parts[2])
+    except OSError:
+        alert("warning", "ARC statistics unavailable")
+        return {}
+    hits, misses = stats.get("hits", 0), stats.get("misses", 0)
+    arc = {
+        "size_bytes": stats.get("size"),
+        "target_max_bytes": stats.get("c_max"),
+        "hit_ratio_pct": round(100 * hits / (hits + misses), 1) if hits + misses else None,
+    }
+    if arc["size_bytes"] and arc["target_max_bytes"] and arc["size_bytes"] > arc["target_max_bytes"] * 1.1:
+        alert("warning", "ARC exceeds its configured maximum by more than 10%")
+    return arc
+
+
+def check_drives():
+    drives = []
+    for dev in NVME_DEVICES:
+        res = run(["smartctl", "-j", "-a", dev])
+        try:
+            data = json.loads(res.stdout)
+        except ValueError:
+            alert("critical", f"smartctl output unreadable for {dev}")
+            continue
+        nvme = data.get("nvme_smart_health_information_log", {})
+        cw = nvme.get("critical_warning", 0)
+        spare = nvme.get("available_spare", 100)
+        spare_thresh = nvme.get("available_spare_threshold", 10)
+        media = nvme.get("media_errors", 0)
+        temp = nvme.get("temperature", 0)
+        ok = (cw & ~0x04) == 0 and spare >= spare_thresh and media == 0 and temp < 78
+        if not ok:
+            alert("critical", f"{dev} SMART policy violated (cw={hex(cw)} spare={spare} media_errors={media} temp={temp})")
+        drives.append({
+            "dev": dev,
+            "serial": data.get("serial_number", ""),
+            "critical_warning_hex": hex(cw),
+            "warranty_only_0x04": bool(cw & 0x04),
+            "available_spare": spare,
+            "media_errors": media,
+            "percentage_used": nvme.get("percentage_used", 0),
+            "temperature_c": temp,
+            "ok": ok,
+        })
+    return drives
+
+
+def newest(pattern):
+    files = glob.glob(pattern)
+    return max(files, key=os.path.getmtime) if files else None
+
+
+def check_backups():
+    result = {"vzdump": {}, "host_config": None, "offhost": None, "backup_dataset": None}
+    for vmid in VM_IDS:
+        path = newest(os.path.join(DUMP_DIR, f"vzdump-qemu-{vmid}-*.vma.zst"))
+        if not path:
+            result["vzdump"][str(vmid)] = {"newest": None}
+            alert("critical", f"no vzdump archive for VM {vmid}")
+            continue
+        age_h = round((NOW - os.path.getmtime(path)) / 3600, 1)
+        result["vzdump"][str(vmid)] = {"newest": os.path.basename(path), "age_hours": age_h, "bytes": os.path.getsize(path)}
+        if age_h > BACKUP_MAX_AGE_H:
+            alert("critical", f"VM {vmid} newest backup is {age_h} h old (> {BACKUP_MAX_AGE_H})")
+    path = newest(os.path.join(HOSTCFG_DIR, "host-config-*.tar.zst"))
+    if path:
+        age_h = round((NOW - os.path.getmtime(path)) / 3600, 1)
+        result["host_config"] = {"newest": os.path.basename(path), "age_hours": age_h}
+        if age_h > HOSTCFG_MAX_AGE_H:
+            alert("critical", f"host-config backup is {age_h} h old")
+    else:
+        alert("critical", "no host-config backup archive")
+    off = read_json(os.path.join(STATUS_DIR, "offhost-backup.json"))
+    result["offhost"] = off
+    if not off or off.get("state") == "not_configured":
+        alert("warning", "off-host backup not configured (owner must supply the B2 application key)")
+    elif off.get("state") != "ok":
+        alert("critical", f"off-host backup state {off.get('state')}")
+    ds = run(["zfs", "list", "-Hp", "-o", "used,quota", "rpool/backup"]).stdout.split()
+    if len(ds) == 2 and ds[1].isdigit() and int(ds[1]) > 0:
+        pct = round(100 * int(ds[0]) / int(ds[1]), 1)
+        result["backup_dataset"] = {"used_bytes": int(ds[0]), "quota_bytes": int(ds[1]), "used_pct": pct}
+        if pct >= BACKUP_DS_WARN_PCT:
+            alert("warning", f"backup dataset {pct}% of its quota")
+    return result
+
+
+def check_guests():
+    guests = {}
+    listing = run(["qm", "list"]).stdout.splitlines()[1:]
+    states = {int(row.split()[0]): row.split()[2] for row in listing if row.split()}
+    for vmid in VM_IDS:
+        entry = {"state": states.get(vmid, "missing")}
+        if entry["state"] == "running":
+            res = run(["qm", "guest", "exec", str(vmid), "--timeout", "20", "--", "/usr/local/sbin/godseye-update-status"], 40)
+            try:
+                inner = json.loads(res.stdout)
+                entry["updates"] = json.loads(inner.get("out-data", "{}"))
+            except ValueError:
+                entry["updates"] = None
+                alert("warning", f"VM {vmid} guest agent could not report update status")
+            upd = entry.get("updates") or {}
+            if upd.get("reboot_required_since"):
+                since = datetime.datetime.strptime(upd["reboot_required_since"], "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=datetime.timezone.utc)
+                days = (datetime.datetime.now(datetime.timezone.utc) - since).days
+                if days > REBOOT_PENDING_WARN_D:
+                    alert("warning", f"VM {vmid} has needed a reboot for {days} days")
+            if upd and not upd.get("ntp_synchronized", True):
+                alert("warning", f"VM {vmid} clock not NTP-synchronized")
+        elif vmid != 300:  # the work VM is on demand (onboot=0)
+            alert("critical", f"VM {vmid} is {entry['state']}")
+        guests[str(vmid)] = entry
+    return guests
+
+
+def check_time():
+    out = run(["chronyc", "tracking"]).stdout
+    info = {}
+    stratum = re.search(r"Stratum\s*:\s*(\d+)", out)
+    offset = re.search(r"System time\s*:\s*([\d.]+) seconds (fast|slow)", out)
+    if stratum:
+        info["stratum"] = int(stratum.group(1))
+    if offset:
+        info["offset_seconds"] = float(offset.group(1)) * (1 if offset.group(2) == "fast" else -1)
+    synced = run(["timedatectl", "show", "-p", "NTPSynchronized", "--value"]).stdout.strip() == "yes"
+    info["ntp_synchronized"] = synced
+    if not synced or info.get("stratum", 16) >= 16 or abs(info.get("offset_seconds", 0)) > 1:
+        alert("warning", "host clock not synchronized or offset above 1 s")
+    return info
+
+
+def check_network():
+    info = {}
+    ruleset = run(["nft", "list", "ruleset"]).stdout
+    info["nft_filter_table"] = "table inet godseye_filter" in ruleset
+    info["nft_input_policy_drop"] = bool(re.search(r"chain input \{[^}]*policy drop", ruleset, re.S))
+    info["nft_forward_policy_drop"] = bool(re.search(r"chain forward \{[^}]*policy drop", ruleset, re.S))
+    if not (info["nft_filter_table"] and info["nft_input_policy_drop"] and info["nft_forward_policy_drop"]):
+        alert("critical", "host firewall tables or default-drop policies missing")
+    peers = []
+    for line in run(["wg", "show", "wg0", "latest-handshakes"]).stdout.splitlines():
+        parts = line.split()
+        if len(parts) == 2:
+            stamp = int(parts[1])
+            peers.append({"peer": parts[0][:8], "handshake_age_s": int(NOW - stamp) if stamp else None})
+    info["wireguard_peers"] = peers
+    if not any(p["handshake_age_s"] is not None and p["handshake_age_s"] < WG_HANDSHAKE_WARN_S for p in peers):
+        alert("warning", "no WireGuard peer handshake within 7 days")
+    info["ssh_public_closed_by_firewall"] = info["nft_input_policy_drop"]
+    return info
+
+
+def main():
+    os.makedirs(STATUS_DIR, mode=0o755, exist_ok=True)
+    report = {
+        "ts": iso(NOW),
+        "schema": 2,
+        "host": os.uname().nodename,
+        "pool": check_pool(),
+        "scrub": check_scrub(),
+        "arc": check_arc(),
+        "drives": check_drives(),
+        "backups": check_backups(),
+        "time": check_time(),
+        "network": check_network(),
+        "guests": check_guests(),
+        "host_updates": json.loads(run(["/usr/local/sbin/godseye-update-status"]).stdout or "null"),
+    }
+    host_upd = report["host_updates"] or {}
+    if host_upd.get("reboot_required"):
+        alert("warning", "host has a pending reboot (attended window only)")
+    critical = [a for a in alerts if a["severity"] == "critical"]
+    report["alerts"] = alerts
+    report["status"] = "critical" if critical else ("degraded" if alerts else "ok")
+    report["overall_ok"] = not critical
+    line = json.dumps(report, separators=(",", ":"))
+    tmp = os.path.join(STATUS_DIR, ".host-health.json.tmp")
+    with open(tmp, "w", encoding="utf-8") as handle:
+        handle.write(json.dumps(report, indent=2) + "\n")
+    os.chmod(tmp, 0o644)
+    os.replace(tmp, os.path.join(STATUS_DIR, "host-health.json"))
+    with open(LOG_PATH, "a", encoding="utf-8") as handle:
+        handle.write(line + "\n")
+    print(line)
+    sys.exit(1 if critical else 0)
+
+
+if __name__ == "__main__":
+    main()
