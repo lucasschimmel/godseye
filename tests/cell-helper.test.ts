@@ -211,6 +211,11 @@ describe("CellHelper pgBackRest", () => {
       "PGPASSWORD",
     ]);
   });
+  it("accepts the offline stanza creation used at provisioning", async () => {
+    await expect(
+      code(run(system(), "pgbackrest", [ID, ...base, "--no-online", "stanza-create"])),
+    ).resolves.toBe(0);
+  });
   it("keeps secrets out of the executed argument vector", async () => {
     const fake = system();
 

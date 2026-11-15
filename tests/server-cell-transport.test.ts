@@ -114,6 +114,16 @@ describe("ServerPostgresTransport", () => {
     expect(verbs.indexOf("storage-create")).toBeLessThan(verbs.indexOf("file-write"));
     expect(verbs.indexOf("file-write")).toBeLessThan(verbs.indexOf("initdb"));
   });
+  it("creates the backup stanza offline right after initdb so archiving works from the first start", async () => {
+    const host = new FakeHost();
+    const { scope, profile } = scopeFor();
+
+    await transport(host).create(scope, profile);
+
+    const last = host.calls.at(-1);
+    expect(last?.verb).toBe("pgbackrest");
+    expect(last?.args.slice(-2)).toEqual(["--no-online", "stanza-create"]);
+  });
   it("binds the listener to the private bridge address", async () => {
     const host = new FakeHost();
     const { scope, profile } = scopeFor();

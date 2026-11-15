@@ -244,7 +244,7 @@ async function verify(labelA: string, labelB: string) {
     bMigrationOnA: foreignMigrationOnA.ok ? "ALLOWED" : "denied",
   });
   // Quota: fill cell A past its hard data limit; cell B must stay healthy.
-  await attempt(migrationA, dbA, "CREATE TABLE proof_fill (id bigserial, pad text)");
+  await attempt(migrationA, dbA, "CREATE UNLOGGED TABLE proof_fill (id bigserial, pad text)");
   const before = await storage(a);
   let failure: { code: string; message: string } | null = null;
   let batches = 0;

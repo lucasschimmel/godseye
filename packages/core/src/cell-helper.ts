@@ -147,6 +147,7 @@ const FILES: Record<CellFileKind, FileSpec> = {
 const PGBACKREST_COMMANDS = new Set(["backup", "check", "info", "restore", "stanza-create"]);
 const PGBACKREST_FLAGS = new Set([
   "--repo=1",
+  "--no-online",
   "--log-level-console=off",
   "--log-level-file=off",
   "--no-expire-auto",

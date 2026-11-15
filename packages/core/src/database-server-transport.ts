@@ -32,6 +32,7 @@ import {
   compilePgBackRest,
   type PgBackRestBinding,
   pgBackRestArchiveCommand,
+  pgBackRestArguments,
 } from "./recovery-pgbackrest-policy.js";
 
 export interface ServerPostgresTransportOptions {
@@ -102,7 +103,19 @@ export class ServerPostgresTransport implements PostgresInstanceTransport {
       ]);
       await this.writeCellFiles(scope, profile, layout, port);
       await this.call("initdb", [layout.allocationId]);
+      await this.createStanza(layout, port, scope.projectId);
     });
+  }
+  /**
+   * WAL archiving is on from the first start, so the stanza must exist before PostgreSQL runs: without
+   * it every segment fails to archive and pg_wal fills its hard quota (the cell then cannot even
+   * restart). The offline form needs no running server.
+   */
+  private async createStanza(layout: CellLayout, port: number, projectId: string) {
+    const policy = compilePgBackRest(this.pgBackRestBinding(layout, port, projectId));
+    const args = pgBackRestArguments(policy, "stanza-create");
+    args.splice(args.length - 1, 0, "--no-online");
+    await this.call("pgbackrest", [layout.allocationId, ...args]);
   }
   private async writeCellFiles(
     scope: DatabaseProviderScope,
