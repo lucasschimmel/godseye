@@ -61,7 +61,16 @@ runuser -u postgres -- env "PGBACKREST_REPO1_CIPHER_PASS=${PGBACKREST_REPO1_CIPH
   "${PGBIN}/pg_ctl" -D "${MOUNT}/${DEST}/data" -w -t 600 \
   -o "-p ${PORT} -c listen_addresses= -c unix_socket_directories=${SOCK} -c archive_mode=off -c archive_command=/bin/true -c max_connections=64 -c shared_buffers=64MB" \
   -l "${SOCK}/pg.log" start >/dev/null || { tail -25 "${SOCK}/pg.log" >&2; exit 3; }
-SQL="SELECT count(*)::text || ' ' || coalesce(md5(string_agg(id || marker || payload, ',' ORDER BY id)), '') FROM ${TABLE}"
+# Connections are accepted as soon as the server is consistent; wait until WAL replay has finished.
+for _ in $(seq 1 120); do
+  [ "$("${PGBIN}/psql" -X -At -h "${SOCK}" -p "${PORT}" -U "g_${SUFFIX}_admin" -d postgres -c 'SELECT pg_is_in_recovery()')" = f ] && break
+  sleep 1
+done
+# The application roles own a schema of their own; resolve the table without assuming a search path.
+LOOKUP="SELECT format('%I.%I', schemaname, tablename) FROM pg_tables WHERE tablename = '${TABLE}' LIMIT 1"
+QUALIFIED="$("${PGBIN}/psql" -X -At -h "${SOCK}" -p "${PORT}" -U "g_${SUFFIX}_admin" -d "${DB}" -c "${LOOKUP}")"
+[ -n "${QUALIFIED}" ] || { echo "table ${TABLE} not found in the restored database" >&2; exit 4; }
+SQL="SELECT count(*)::text || ' ' || coalesce(md5(string_agg(id || marker || payload, ',' ORDER BY id)), '') FROM ${QUALIFIED}"
 GOT="$("${PGBIN}/psql" -X -At -h "${SOCK}" -p "${PORT}" -U "g_${SUFFIX}_admin" -d "${DB}" -c "${SQL}")"
 IN_RECOVERY="$("${PGBIN}/psql" -X -At -h "${SOCK}" -p "${PORT}" -U "g_${SUFFIX}_admin" -d "${DB}" -c 'SELECT pg_is_in_recovery()')"
 echo "[drill] restored: ${GOT}; in_recovery=${IN_RECOVERY}"
