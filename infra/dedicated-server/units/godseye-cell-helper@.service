@@ -12,7 +12,8 @@ StandardOutput=socket
 StandardError=journal
 # A full backup or restore can run for hours.
 RuntimeMaxSec=6h
-NoNewPrivileges=true
+# NoNewPrivileges is deliberately absent: it removes CAP_SETUID from the root helper, which must run
+# initdb, pgBackRest and PostgreSQL tools as the postgres user.
 PrivateTmp=true
 ProtectHome=true
 ProtectKernelModules=true

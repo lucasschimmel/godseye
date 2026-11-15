@@ -153,7 +153,10 @@ async function up(label: string, dataGiB: number) {
     generation: 1,
     epoch: 1,
   };
-  const profile = compileDatabaseProfile({ ...PROFILE, dataGiB }, scope);
+  const profile = compileDatabaseProfile(
+    { ...PROFILE, dataGiB },
+    { allocationId, projectId: scope.projectId, environmentId: scope.environmentId },
+  );
   await provider.provision(scope, profile, noop);
   const port = Number(parseEnv(await readCellFile(executor, allocationId, "cell-env")).PORT);
   await writeFile(statePath(label), JSON.stringify({ label, scope, profile, port }), {
