@@ -1,0 +1,26 @@
+# One root helper process per connection (socket activation, Accept=yes). The code lives in a
+# root-owned path; /opt/godseye (writable by the deploy user) is never executed as root.
+[Unit]
+Description=G.O.D.S.E.Y.E cell helper (connection %i)
+
+[Service]
+Type=simple
+User=root
+ExecStart=/usr/bin/node /usr/local/lib/godseye/cell-helper.mjs --serve
+StandardInput=socket
+StandardOutput=socket
+StandardError=journal
+# A full backup or restore can run for hours.
+RuntimeMaxSec=6h
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectKernelModules=true
+ProtectKernelLogs=true
+ProtectControlGroups=true
+ProtectClock=true
+LockPersonality=true
+RestrictRealtime=true
+RestrictSUIDSGID=true
+RestrictNamespaces=true
+SystemCallArchitectures=native

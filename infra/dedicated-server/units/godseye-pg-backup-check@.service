@@ -10,6 +10,8 @@ Type=oneshot
 User=postgres
 Group=postgres
 EnvironmentFile=/etc/godseye/pg/%i/archive.env
+# Off-host repository credentials shared by all cells (root-owned, loaded by systemd only).
+EnvironmentFile=-/etc/godseye/pg/b2.env
 ExecStart=/usr/local/sbin/godseye-pg-backup check %i
 TimeoutStartSec=10min
 Nice=10

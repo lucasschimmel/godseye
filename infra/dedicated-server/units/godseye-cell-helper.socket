@@ -1,0 +1,16 @@
+# Root cell helper endpoint. Only members of the godseye group can connect; the helper itself accepts
+# nothing but its fixed verbs (see packages/core/src/cell-helper.ts).
+[Unit]
+Description=G.O.D.S.E.Y.E cell helper socket
+
+[Socket]
+ListenStream=/run/godseye-cell-helper.sock
+SocketUser=root
+SocketGroup=godseye
+SocketMode=0660
+Accept=yes
+MaxConnections=8
+MaxConnectionsPerSource=8
+
+[Install]
+WantedBy=sockets.target
