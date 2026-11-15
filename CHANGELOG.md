@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### Custom domains and external observer
+
+- Added per-environment custom domains (owner API `1.16.0`, migration `0025_project_domains.sql`, ADR-020): DNS (CNAME/A) or TXT ownership verification through an injectable resolver, fresh-passkey add/remove, five-domain limit, Caddy `ask` guard with on-demand HTTP-01 and a file-per-route domain publisher with rollback. Not qualified against live DNS/TLS.
+- Edge Caddy now answers 404 for unknown hosts, and `.github/workflows/external-observer.yml` adds a five-minute external uptime observer (no secrets, no third-party actions). Jenkins remains the build system.
+
 ### Usage, observability and incidents (local)
 
 - Added trusted physical model-attempt intent/outcome accounting acknowledged before upstream POST, exclusive token categories with raw totals/cache TTL, immutable reviewed prices and honest unknown totals. Conservative Foundation charges remain separate and are never refunded by reconciliation.
