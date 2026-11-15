@@ -19,6 +19,7 @@ import { DomainError } from "./errors.js";
 import type { FoundationOptions } from "./foundation-data.js";
 import { FoundationEngine } from "./foundations.js";
 import { IncidentEngine, type IncidentNotifier } from "./incidents.js";
+import type { Finding } from "./incidents-state.js";
 import { gateAdmission, setAdmission } from "./infra-admission.js";
 import { LocalSystemCollector } from "./infra-collector.js";
 import { executeInfrastructure, reconcileInfrastructure } from "./infra-execution.js";
@@ -56,6 +57,12 @@ export interface InfrastructureOptions {
   leaseMs?: number;
   databaseProvider?: DatabaseProvider;
   recoveryProvider?: RecoveryProvider;
+  /** Optional host backup-schedule detector feeding E08 incidents (see `backupScheduleDetector`). */
+  backupSchedule?: () => Promise<{
+    findings: Finding[];
+    coveredKinds: readonly never[];
+    coveredKeys: string[];
+  }>;
   /** Private role-rotation provider; omitting it keeps rotation honestly unconfigured. */
   rotationProvider?: DatabaseRotationProvider;
   /** Optional external owner notifier; omitting it keeps incident delivery `unconfigured`. */
@@ -105,14 +112,20 @@ export class InfrastructureEngine {
       notifier: options.incidentNotifier,
       sources: {
         system: async () => {
-          const [health, usage] = await Promise.all([
+          const [health, usage, schedule] = await Promise.all([
             this.observability.systemFindings(),
             this.usage.systemFindings(),
+            // A failing detector must not hide the others; it contributes nothing instead of "healthy".
+            options.backupSchedule?.().catch(() => null) ?? null,
           ]);
           return {
-            findings: [...health.findings, ...usage.findings],
+            findings: [...health.findings, ...usage.findings, ...(schedule?.findings ?? [])],
             coveredKinds: [...health.coveredKinds, ...usage.coveredKinds],
-            coveredKeys: [...health.coveredKeys, ...usage.coveredKeys],
+            coveredKeys: [
+              ...health.coveredKeys,
+              ...usage.coveredKeys,
+              ...(schedule?.coveredKeys ?? []),
+            ],
           };
         },
         observability: async (actor) => {

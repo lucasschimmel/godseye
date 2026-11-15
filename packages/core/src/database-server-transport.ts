@@ -212,6 +212,8 @@ export class ServerPostgresTransport implements PostgresInstanceTransport {
       layout.envFile,
       [
         `ALLOCATION=${layout.allocationId}`,
+        `PROJECT=${scope.projectId}`,
+        `ENVIRONMENT=${scope.environmentId}`,
         `PORT=${port}`,
         `QUOTA_DATA_GIB=${profile.storage.dataQuotaGiB}`,
         `QUOTA_WAL_GIB=${profile.storage.walQuotaGiB}`,
