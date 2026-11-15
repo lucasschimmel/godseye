@@ -115,17 +115,35 @@ absolute path outside the repository (the renderer places it on tmpfs). The same
 control protocol, authorization frames and attempt accounting run over SSH stdio; tests
 inject the spawner and never open a connection.
 
-### Debian guest profile and install template
+### Debian guest profile, install and sandbox runner
 
-`scripts/coding_guest_profile.py` replaces the KVM/WSL probes when the SSH transport sets
-`GODSEYE_CODING_PROFILE=work-vm`: Debian 12/13, x86_64, systemd as init, unified cgroup v2
-with `cpu memory pids`, unprivileged user, and a `runsc` binary matching the pinned digest
-(or user namespaces for the rootless sandbox). It never reports availability by itself:
-readiness stays `false` until a sandbox runner and qualification evidence exist, and `run`
-is refused in this profile. `infra/dedicated-server/templates/work-vm-coding-host-install.sh.tmpl`
-is an **unexecuted** template with pinned runsc provenance (the tarball digest from
-`scripts/install-runsc.mjs`) and `@@PLACEHOLDER@@` values for the extracted-binary digest,
-the Debian snapshot timestamp and package versions, which the owner fills after verifying them.
+The SSH transport runs `scripts/coding_work_vm_control.py` (not the KVM bridge, whose runtime sources and
+receipts stay untouched). `scripts/coding_guest_profile.py` checks Debian 12/13, x86_64, systemd as init,
+unified cgroup v2 with `cpu memory pids`, an unprivileged service user and the pinned runsc digest
+(release-20261109.0, the package the pro VM runs). It reports `available: true` only when
+`artifacts/work-vm/qualification.json` records every required gate as passed **and** its runsc digest,
+runtime-source hashes and CLI hashes still match; any change makes the evidence stale.
+
+`infra/dedicated-server/work-vm-coding-host-install.sh` is the rendered install script (the `.tmpl` keeps the
+`@@PLACEHOLDER@@` form). It verifies the pinned Debian package versions against a dated snapshot, never
+touches the Jenkins agent user (uid 1000) or the system apt sources, creates the lingering service user
+`godseye` (uid 994 on the work VM) with cgroup delegation, and installs runsc from the signed gVisor
+package after checking the signing-key fingerprint, the `.deb` digest and the extracted binary digest.
+
+Each task runs as a transient unit in the service user's own systemd manager, started by
+`coding_sandbox_service.py`, which re-checks the exact cgroup ceilings (2048 MiB, no swap, one CPU,
+512 tasks, 180 s), the runsc digest and the OCI bundle before the controller releases it. The sandbox is
+`runsc --platform=systrap --network=none` in fresh rootless namespaces: read-only host `/usr`, read-only
+CLI/worker/source mounts, tmpfs for everything writable, the fixed worker as the only root process and every
+repository command spawned as uid 1000 with no capabilities. There is no network device at all; model
+traffic crosses stdio to the host broker with the same authorization frames and attempt accounting as the
+KVM bridge. `coding_sandbox_policy.py` is the pure allowlist (`validate_oci`) and is unit tested.
+`coding_work_vm_gate.py` is the SSH forced command: the control API's key can start only the fixed
+production actions, never the laboratory action or a shell, and only from the pro VM.
+
+Operator commands on the work VM, as the service user: `python3 -I scripts/coding_work_vm_install.py
+/opt/godseye` (pinned npm CLIs, integrity-checked) and `python3 -I scripts/coding_sandbox_qualify.py
+/opt/godseye qualify codex claude-code` (scripted fixture model only; writes the evidence file).
 
 ### Bindings from OpenBao
 
@@ -136,14 +154,16 @@ AppRole secret-id. A sealed or unreachable OpenBao removes any previous files an
 `75`; the control API then starts with both providers unavailable. Restart the control API
 after an unseal. Nothing is written to persistent disk and no value is printed.
 
-### Qualification still required before `available: true`
+### Qualification gates before `available: true`
 
-1. Implement the sandbox task runner (runsc systrap / rootless) in the work-VM profile.
-2. Record runsc binary digest, Debian snapshot and package versions from the install run.
-3. Real CLI chains for both runners with a scripted model, plus the five adversarial cases
-   and physical stop/revocation evidence inside the sandbox.
-4. Egress proof that only the broker endpoint is reachable from `godseye-work`.
-5. Owner acceptance of the weaker boundary; real vendor CLI egress/auth stays off until then.
+Per runner: `cli-chain` (real pinned CLI, edit + test + patch with the scripted fixture), the four regression
+cases (`adversarial-index`, `-test-mutation`, `-background`, `-attributes`), `adversarial-escape`,
+`adversarial-egress` (sandbox has only loopback and reaches nothing), `adversarial-exhaustion` (memory,
+task count, disk and deadline ceilings) and `stop-revocation-cleanup` (physical stop from a second process,
+nothing left behind). Shared: `vm-egress-allowlist` (the Proxmox firewall must leave only the broker endpoint
+reachable from the work VM; observed from inside the VM) and `owner-acceptance` (an owner-signed
+`artifacts/work-vm/owner-acceptance.json`). The last two cannot be proven by software on the work VM, so the
+runner stays unavailable until the owner supplies them. Real vendor CLI egress/auth stays off.
 
 Pinned assets are Codex `0.167.0-alpha.4.1`, Claude Code `2.1.215`, Node `24.22.1`,
 Git `2.53.0`, QEMU `10.2.1` and Linux `7.0.0-30`. The 19 CLI assets include signed
