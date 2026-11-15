@@ -1,3 +1,5 @@
+import { existsSync } from "node:fs";
+import { isAbsolute } from "node:path";
 import type { CodingOptions } from "@godseye/core";
 import { configuredCodingProvider } from "./coding-provider.js";
 import { NOT_CONFIGURED_FOR_PROFILE, unavailableCodingProvider } from "./coding-transport.js";
@@ -13,7 +15,9 @@ export async function codingStartupOptions(
   environment: NodeJS.ProcessEnv = process.env,
   platform: NodeJS.Platform = process.platform,
 ): Promise<CodingOptions> {
-  if (!environment.GODSEYE_CODING_BINDINGS_FILE)
+  const file = environment.GODSEYE_CODING_BINDINGS_FILE;
+  // A tmpfs-rendered file is absent while OpenBao is sealed; treat it exactly as unconfigured.
+  if (!file || (isAbsolute(file) && !existsSync(file)))
     return platform === "win32"
       ? {}
       : { provider: unavailableCodingProvider(NOT_CONFIGURED_FOR_PROFILE) };

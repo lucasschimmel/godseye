@@ -1,4 +1,4 @@
-import { spawn } from "node:child_process";
+import { type ChildProcessWithoutNullStreams, spawn } from "node:child_process";
 import { createHash } from "node:crypto";
 import { isAbsolute, resolve, win32 } from "node:path";
 import {
@@ -185,7 +185,7 @@ export type CodingSpawner = (
   command: string,
   args: string[],
   options: { env: NodeJS.ProcessEnv; windowsHide: boolean },
-) => ReturnType<typeof spawn>;
+) => ChildProcessWithoutNullStreams;
 export interface CodingProviderOptions {
   spawner?: CodingSpawner;
   platform?: NodeJS.Platform;

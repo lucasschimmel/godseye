@@ -22,7 +22,7 @@ intentions are durable before admission; restarts and lost responses reuse them.
 Existing heavy capacity, reservations, grants, effect journal and adapter checks apply.
 Plan approval does not install/configure providers or bypass their readiness gates.
 Hermes orchestration children currently use model-only tasks without data-tool grants.
-Repository code executes through the separately qualified coding KVM runner.
+Repository code executes only through the separately qualified coding runner: the KVM microVM profile (`disposable-kvm`) or, on the server, the explicitly weaker and still unqualified work-VM profile (`disposable-vm-container`); see [coding runners](coding-runners.md).
 
 ## Contract and limits
 

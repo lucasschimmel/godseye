@@ -63,7 +63,7 @@ function workVm(identityFile = outsideKey): CodingPrivateConfigurationView {
 }
 type Call = { command: string; args: string[] };
 function recordingSpawner(calls: Call[]): CodingSpawner {
-  return ((command, args) => {
+  return ((command: string, args: string[]) => {
     calls.push({ command, args });
     const events = new EventEmitter();
     const stdout = new PassThrough();
@@ -84,6 +84,21 @@ function recordingSpawner(calls: Call[]): CodingSpawner {
     });
   }) as unknown as CodingSpawner;
 }
+
+describe("sealed OpenBao leaves rendered bindings absent", () => {
+  const missing =
+    process.platform === "win32"
+      ? "C:\\run\\godseye-bindings\\absent.json"
+      : "/run/godseye-bindings/absent.json";
+  it("reports coding unavailable instead of failing startup when the tmpfs file is absent", async () => {
+    const options = await codingStartupOptions({ GODSEYE_CODING_BINDINGS_FILE: missing }, "linux");
+    expect(options.provider?.capabilities().every((c) => !c.available)).toBe(true);
+  });
+  it("leaves the Hermes provider absent when its tmpfs file is absent", async () => {
+    const { configuredHermesProvider } = await import("../apps/control-api/src/hermes-provider.js");
+    expect(configuredHermesProvider({ GODSEYE_HERMES_BINDINGS_FILE: missing })).toBeUndefined();
+  });
+});
 
 describe("coding work-VM transport and Linux profile states", () => {
   it("reports not-configured-for-profile on Linux when no transport is configured", async () => {
@@ -135,9 +150,10 @@ describe("coding work-VM transport and Linux profile states", () => {
   });
   it("refuses a host key that does not match its pinned fingerprint", () => {
     const value = workVm();
+    const transport = "transport" in value ? value.transport : undefined;
     const parsed = CodingPrivateConfiguration.safeParse({
       ...value,
-      transport: { ...value.transport, hostKeyFingerprint: `SHA256:${"A".repeat(43)}` },
+      transport: { ...transport, hostKeyFingerprint: `SHA256:${"A".repeat(43)}` },
     });
     expect(parsed.success).toBe(false);
   });
