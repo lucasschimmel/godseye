@@ -21,6 +21,8 @@ StartLimitBurst=5
 Type=notify
 User=postgres
 Group=postgres
+# unix_socket_group = godseye: the server may only chgrp the socket to a group it belongs to.
+SupplementaryGroups=godseye
 EnvironmentFile=/etc/godseye/pg/%i/cell.env
 # Optional: the WAL archive cipher passphrase (root-owned, read by systemd, never by the cell files).
 EnvironmentFile=-/etc/godseye/pg/%i/archive.env
