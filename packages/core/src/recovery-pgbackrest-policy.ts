@@ -95,6 +95,7 @@ export function compilePgBackRest(bindingInput: PgBackRestBinding) {
     "archive-check=y",
     "archive-timeout=60",
     "process-max=2",
+    "start-fast=y",
     "log-level-console=off",
     "log-level-file=off",
     `lock-path=${binding.lockPath}`,
