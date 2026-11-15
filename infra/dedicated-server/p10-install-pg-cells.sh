@@ -115,7 +115,7 @@ if ! findmnt -n --mountpoint "${MOUNT_ROOT}" >/dev/null; then
   fi
   [ -n "${DEVICE}" ] && [ -b "${DEVICE}" ] || { echo "cell disk (serial ${DISK_SERIAL}) not found" >&2; exit 68; }
   if ! blkid "${DEVICE}" >/dev/null 2>&1; then
-    mkfs.xfs -L GODSEYE_CELLS "${DEVICE}"
+    mkfs.xfs -L GODSEYECELLS "${DEVICE}"
   fi
   [ "$(blkid -s TYPE -o value "${DEVICE}")" = xfs ] || { echo "cell disk is not XFS" >&2; exit 69; }
   UUID="$(blkid -s UUID -o value "${DEVICE}")"
