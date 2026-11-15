@@ -46,7 +46,7 @@ const key = (value: string) => {
   return value;
 };
 /** Generated once per cell and persisted privately; the production path is the OpenBao broker. */
-class FileDatabaseMaterial implements DatabaseMaterialDelivery {
+export class FileDatabaseMaterial implements DatabaseMaterialDelivery {
   constructor(private readonly directory: string) {}
   async withMaterial(
     scope: DatabaseProviderScope,
@@ -69,7 +69,7 @@ class FileDatabaseMaterial implements DatabaseMaterialDelivery {
     await consume(material);
   }
 }
-async function repositoryPassphrase(directory: string, allocationId: string) {
+export async function repositoryPassphrase(directory: string, allocationId: string) {
   const folder = join(directory, key(allocationId));
   await privateDirectory(folder);
   const file = join(folder, "repository.pass");

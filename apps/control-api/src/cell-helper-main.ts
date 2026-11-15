@@ -53,7 +53,7 @@ function nodeSystem(allowedRoots: readonly string[]): HelperSystem {
         const child = spawn(command, args, {
           env: { PATH: "/usr/sbin:/usr/bin:/sbin:/bin", LANG: "C.UTF-8", ...options?.env },
           shell: false,
-          stdio: ["pipe", "pipe", "ignore"],
+          stdio: ["pipe", "pipe", "pipe"],
         });
         const chunks: Buffer[] = [];
         let size = 0;
@@ -69,6 +69,8 @@ function nodeSystem(allowedRoots: readonly string[]): HelperSystem {
             stdout: Buffer.concat(chunks).toString("utf8"),
           }),
         );
+        // Diagnostics of fixed host commands go to the journal, never into the reply.
+        child.stderr.on("data", (chunk: Buffer) => process.stderr.write(chunk.subarray(0, 4096)));
         child.stdin.on("error", () => undefined);
         child.stdin.end(options?.stdin ?? "");
       }),

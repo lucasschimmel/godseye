@@ -151,6 +151,9 @@ if [ ! -f /etc/godseye/pki/cells-ca.key ]; then
   chmod 0644 /etc/godseye/pki/cells-ca.crt
 fi
 
+# The CA certificate is public; clients (applications, the proof harness) verify cells against it.
+install -m 0644 -o root -g root /etc/godseye/pki/cells-ca.crt /etc/godseye/pg/cells-ca.crt
+
 echo "[p10] Off-host repository settings (reused from the control stanza; secrets are never printed)"
 CONTROL_CONF=/etc/pgbackrest/pgbackrest.conf
 conf_value() { awk -F= -v k="$1" '$1==k {sub(/^[^=]*=/, ""); print; exit}' "${CONTROL_CONF}"; }
