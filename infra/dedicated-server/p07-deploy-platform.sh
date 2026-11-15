@@ -53,6 +53,13 @@ GODSEYE_STATE_DIR=/var/lib/godseye/state
 ENVEOF
   # Signed webhook intake stays disabled until the owner provisions the key out of band.
   [ -z "$WEBHOOK_KEY" ] || echo "GODSEYE_GITHUB_WEBHOOK_KEY=${WEBHOOK_KEY}"
+  # Preserve every other existing setting (PostgreSQL cells, coding, Hermes, delivery bindings, ...) that
+  # other installers added; only the keys managed above and the dropped legacy ones are not copied.
+  if [ -f "$ENV_FILE" ]; then
+    grep -E '^[A-Z][A-Z0-9_]*=' "$ENV_FILE" \
+      | grep -vE '^(GODSEYE_MODE|NODE_ENV|GODSEYE_PUBLIC_ORIGIN|GODSEYE_API_HOST|GODSEYE_API_PORT|GODSEYE_CONSOLE_PORT|GODSEYE_TRUSTED_PROXIES|GODSEYE_DATABASE_URL|DATABASE_URL|GODSEYE_BAO_ADDRESS|GODSEYE_BAO_MOUNT|NODE_EXTRA_CA_CERTS|GODSEYE_DATA_DIR|GODSEYE_STATE_DIR|GODSEYE_GITHUB_WEBHOOK_KEY|REDIS_URL|GODSEYE_SESSION_SECRET|GODSEYE_INTERNAL_TOKEN)=' \
+      || true
+  fi
 } >"$ENV_FILE.new"
 chown godseye:godseye "$ENV_FILE.new"
 chmod 0600 "$ENV_FILE.new"
