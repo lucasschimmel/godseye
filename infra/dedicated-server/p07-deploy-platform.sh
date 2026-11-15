@@ -32,6 +32,9 @@ DB_URL="$(read_existing GODSEYE_DATABASE_URL)"
 WEBHOOK_KEY="$(read_existing GODSEYE_GITHUB_WEBHOOK_KEY)"
 : "${GODSEYE_PUBLIC_ORIGIN:=https://console.godseye.lucasschimmel.fr}"
 
+# Keep the previous environment (0600, root-readable only) so a failed switch can be rolled back.
+[ ! -f "$ENV_FILE" ] || cp -p "$ENV_FILE" "$ENV_FILE.bak-pre-server-mode"
+
 {
   cat <<ENVEOF
 GODSEYE_MODE=server
