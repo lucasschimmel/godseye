@@ -32,6 +32,7 @@ import { registerCodingRoutes } from "./coding-routes.js";
 import type { Configuration } from "./config.js";
 import { registerDatabaseRoutes } from "./database-routes.js";
 import { registerDeliveryRoutes } from "./delivery-routes.js";
+import { DOMAIN_ASK_PATH, registerDomainRoutes } from "./domain-routes.js";
 import { registerFoundationRoutes } from "./foundation-routes.js";
 import type { OwnerIdentity } from "./identity/index.js";
 import { registerInfrastructureRoutes } from "./infra-routes.js";
@@ -83,7 +84,12 @@ export function createApp(
           422,
         );
     }
-    if (!config.hosts.includes(context.req.header("host") ?? new URL(context.req.url).host)) {
+    // The edge reaches the ask guard by its private gateway address, so only that read is exempt.
+    const askGuard = context.req.method === "GET" && context.req.path === DOMAIN_ASK_PATH;
+    if (
+      !askGuard &&
+      !config.hosts.includes(context.req.header("host") ?? new URL(context.req.url).host)
+    ) {
       throw new DomainError("INVALID_HOST", "Local host is not allowed", 403);
     }
     const origin = context.req.header("origin");
@@ -118,9 +124,12 @@ export function createApp(
   );
   app.use(`${base}/*`, async (c, next) => {
     if (
-      [`${base}/health`, `${base}/owner/session`, `${base}/owner/local-command`].includes(
-        c.req.path,
-      )
+      [
+        `${base}/health`,
+        `${base}/owner/session`,
+        `${base}/owner/local-command`,
+        DOMAIN_ASK_PATH,
+      ].includes(c.req.path)
     )
       return next();
     if (!identity)
@@ -260,6 +269,7 @@ export function createApp(
   if (infrastructure && identity)
     registerAgentChatTransport(app, infrastructure.agents, (headers) => identity.actor(headers));
   registerLifecycleRoutes(app, infrastructure);
+  registerDomainRoutes(app, infrastructure);
   registerOpenApi(app);
   app.notFound((c) =>
     c.json(

@@ -53,10 +53,14 @@ export function renderRoute(input: {
 }
 /** Atomic file-per-route store (write temp file, rename). */
 export class FileRouteStore implements RouteStore {
-  constructor(private readonly directory: string) {}
+  /** `suffix` keeps the custom-domain file (`.domains.caddy`) apart from the platform route file. */
+  constructor(
+    private readonly directory: string,
+    private readonly suffix = ".caddy",
+  ) {}
   private path(environmentId: string) {
     if (!UUID.test(environmentId)) throw new Error("Route environment identity is invalid");
-    return join(this.directory, `${environmentId}.caddy`);
+    return join(this.directory, `${environmentId}${this.suffix}`);
   }
   async read(environmentId: string) {
     try {
