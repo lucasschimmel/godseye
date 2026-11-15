@@ -293,7 +293,7 @@ describe.skipIf(!python || !posix)("work-VM sandbox runner preparation", () => {
         "    return buffer.getvalue()",
         "def write(entries):",
         "    return attempt(lambda: bool(runner._write_tree(pathlib.Path(tempfile.mkdtemp()), archive(entries))))",
-        "plain = (b'source.git/HEAD', b'ref', tarfile.REGTYPE)",
+        "plain = ('source.git/HEAD', b'ref', tarfile.REGTYPE)",
         "print(json.dumps({",
         "  'plain': write([plain]),",
         "  'traversal': write([(b'source.git/../../x'.decode(), b'x', tarfile.REGTYPE)]),",
