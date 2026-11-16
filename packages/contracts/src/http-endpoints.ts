@@ -45,7 +45,7 @@ import { PROTECTION_HTTP_ENDPOINTS } from "./protection-endpoints.js";
 import { RECOVERY_HTTP_ENDPOINTS } from "./recovery-endpoints.js";
 import { USAGE_HTTP_ENDPOINTS } from "./usage-endpoints.js";
 
-export const CONTROL_API_VERSION = "1.18.0" as const;
+export const CONTROL_API_VERSION = "1.19.0" as const;
 export const CONTROL_API_HEADER = "x-godseye-api-version" as const;
 export interface ControlEndpoint {
   method: "GET" | "POST" | "PUT";

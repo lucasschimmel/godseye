@@ -7,6 +7,7 @@ import type {
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { Fingerprint } from "lucide-react";
+import { BackupSchedulePanel } from "@/components/backup-schedule-panel";
 import { BackupStatus } from "@/components/backup-status";
 import { DatabaseProfileForm } from "@/components/database-profile-form";
 import { IncidentsPanel } from "@/components/incidents-panel";
@@ -224,6 +225,7 @@ function Databases() {
           })}
         </div>
       )}
+      <BackupSchedulePanel />
       <BackupStatus projects={projects.data} />
       <RecoveryPanel projects={projects.data} databases={overview.data} fresh={fresh} />
       <RotationPanel projects={projects.data} databases={overview.data} fresh={fresh} />

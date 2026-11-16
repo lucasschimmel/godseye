@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Backup cadence
+
+- Owner API `1.19.0`: the server observation host digest now carries the host's recorded off-host (B2) copy state. The databases page shows a real backup cadence panel (last full, differential and WAL-check age per cell, pgBackRest repository check result, host B2 copy state) and the last platform-verified restore. Restore drills run on the host are not machine-recorded, so they are reported as absent rather than inferred.
+
 ### Domain overview
 
 - Added owner API `1.18.0` with read-only `GET /domains`: every non-removed custom domain across projects with project and environment names and its verification state. The console lists them on the infrastructure page. Certificate expiry is intentionally not reported because the edge exposes no per-host certificate state.

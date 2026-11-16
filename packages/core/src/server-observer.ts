@@ -276,6 +276,17 @@ export function parseHostHealth(
       vmid: vmid.slice(0, 12),
       state: text(record(entry).state, 24) ?? "unknown",
     }));
+  const offhostRecord = record(record(value.backups).offhost);
+  const offhostState = text(offhostRecord.state, 40);
+  const offhostStamp =
+    typeof offhostRecord.ts === "string" ? Date.parse(offhostRecord.ts) : Number.NaN;
+  const offhost: HostHealthDigestView["offhostBackup"] = offhostState
+    ? {
+        state: offhostState,
+        mode: text(offhostRecord.mode, 40),
+        recordedAt: Number.isFinite(offhostStamp) ? new Date(offhostStamp).toISOString() : null,
+      }
+    : null;
   const alerts: HostHealthDigestView["alerts"] = [];
   for (const entry of (Array.isArray(value.alerts) ? value.alerts : []).slice(0, 20)) {
     const item = record(entry);
@@ -293,6 +304,7 @@ export function parseHostHealth(
       scrubAgeDays: finite(record(value.scrub).age_days),
       // The oldest of the newest per-VM archives: the weakest recoverability claim, not the best.
       weakestVmBackupAgeHours: dumps.length ? Math.max(...dumps) : null,
+      offhostBackup: offhost,
       guests,
       alerts,
     },

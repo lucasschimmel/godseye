@@ -23,7 +23,10 @@ const hostHealth = (ts: string) =>
     status: "degraded",
     pool: { health: "ONLINE", capacity_pct: 41 },
     scrub: { age_days: 12.5 },
-    backups: { vzdump: { "100": { age_hours: 5.2 }, "200": { age_hours: 7.9 } } },
+    backups: {
+      vzdump: { "100": { age_hours: 5.2 }, "200": { age_hours: 7.9 } },
+      offhost: { ts: "2026-11-16T03:00:00Z", mode: "vms", state: "ok", detail: "ignored" },
+    },
     guests: { "100": { state: "running" }, "300": { state: "stopped" } },
     alerts: [
       { severity: "warning", message: "host has a pending reboot" },
@@ -147,6 +150,7 @@ describe("server observation", () => {
         poolCapacityPercent: 41,
         scrubAgeDays: 12.5,
         weakestVmBackupAgeHours: 7.9,
+        offhostBackup: { state: "ok", mode: "vms", recordedAt: "2026-11-16T03:00:00.000Z" },
         alerts: [{ severity: "warning", message: "host has a pending reboot" }],
       },
     });
