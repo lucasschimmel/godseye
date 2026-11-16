@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import {
-  ANNOUNCER_LABEL,
   focusMainLandmark,
   isNavigation,
   pageAnnouncement,
@@ -23,7 +22,9 @@ export function RouteAnnouncer({ pathname, label }: { pathname: string; label: s
     setMessage(pageAnnouncement(label));
   }, [pathname, label]);
   return (
-    <div className="sr-only" role="status" aria-label={ANNOUNCER_LABEL}>
+    // A bare live region (no role): a second role="status" element would make every page's own status
+    // message ambiguous for assistive technology and for tests that look for it.
+    <div className="sr-only" aria-live="polite" aria-atomic="true" data-route-announcer>
       {message}
     </div>
   );

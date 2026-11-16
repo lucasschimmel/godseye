@@ -109,7 +109,7 @@ test.describe("keyboard and landmarks", () => {
       .click();
     await expect(page.getByRole("heading", { name: "Projets", level: 1 })).toBeVisible();
     await expect(page.locator("main#main-content")).toBeFocused();
-    await expect(page.getByRole("status", { name: "Navigation" })).toContainText("Projets");
+    await expect(page.locator("[data-route-announcer]")).toContainText("Projets");
   });
 
   test("keyboard focus is always visible", async ({ page }) => {

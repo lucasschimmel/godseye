@@ -54,8 +54,9 @@ describe("route announcements", () => {
       createElement(RouteAnnouncer, { pathname: "/", label: "Vue d’ensemble" }),
     );
 
-    expect(html).toContain('role="status"');
-    expect(html).toContain('aria-label="Navigation"');
+    expect(html).toContain('aria-live="polite"');
+    expect(html).not.toContain('role="status"');
+    expect(html).toContain("data-route-announcer");
     expect(html).not.toContain("Page :");
   });
 });
