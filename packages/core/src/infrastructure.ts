@@ -41,6 +41,10 @@ import { fenceInfrastructure } from "./infra-quarantine.js";
 import { markInfrastructureUncertain, settleInfrastructure } from "./infra-settlement.js";
 import { INFRA_ADAPTER_ID, type InfrastructureState } from "./infra-state.js";
 import { JobEngine, type JobOptions } from "./jobs.js";
+import {
+  NotificationChannelEngine,
+  type NotificationChannelOptions,
+} from "./notification-channels.js";
 import { ObservabilityEngine, type ObservabilityOptions } from "./observability.js";
 import { OrchestrationEngine } from "./orchestration.js";
 import type { Actor } from "./policy.js";
@@ -68,6 +72,8 @@ export interface InfrastructureOptions {
   rotationProvider?: DatabaseRotationProvider;
   /** Optional external owner notifier; omitting it keeps incident delivery `unconfigured`. */
   incidentNotifier?: IncidentNotifier;
+  /** Owner webhook channels; without `sealer` they report `unavailable` and nothing is delivered. */
+  notifications?: Omit<NotificationChannelOptions, "now">;
   deliveryProvider?: DeliveryProvider;
   sourceProvider?: GithubSourceProvider;
   /** Explicit local fixtures; omitting them leaves the job engine honestly unconfigured. */
@@ -88,6 +94,7 @@ export class InfrastructureEngine {
   readonly recovery: RecoveryEngine;
   readonly rotation: DatabaseRotationEngine;
   readonly incidents: IncidentEngine;
+  readonly notifications: NotificationChannelEngine;
   readonly delivery: DeliveryEngine;
   readonly jobs: JobEngine;
   readonly agents: AgentEngine;
@@ -111,9 +118,10 @@ export class InfrastructureEngine {
     this.database = new DatabaseEngine(store, { now, provider: options.databaseProvider });
     this.recovery = new RecoveryEngine(store, { now, provider: options.recoveryProvider });
     this.rotation = new DatabaseRotationEngine(store, { now, provider: options.rotationProvider });
+    this.notifications = new NotificationChannelEngine(store, { ...options.notifications, now });
     this.incidents = new IncidentEngine(store, {
       now,
-      notifier: options.incidentNotifier,
+      notifier: options.incidentNotifier ?? this.notifications.notifier(),
       sources: {
         system: async () => {
           const [health, usage, schedule] = await Promise.all([

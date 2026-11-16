@@ -10,6 +10,10 @@
 
 - The accessibility suite now also audits populated states (project list and detail, release table with build links, platform builds table), the redeploy confirmation dialog, forms showing validation and server errors, and reflow at 200% zoom (640 px) and 320 CSS px.
 
+### Notification channels
+
+- Owner API `1.21.0`: `GET/POST /notifications/channels`, `POST /notifications/channels/:id/test` and `/remove`. Owner webhook channels (https, port 443, public names only, connect-time DNS validation, no redirects, bounded retries) deliver incidents and rotation alerts; an arrival test sends a real event. Create, test and remove need a fresh passkey. The URL and signing secret are sealed (AES-256-GCM) and never returned, logged or audited. The console reports `confirmed` only for a 2xx answer and `unknown` when a send may have reached the receiver. Migration `0026`. No SMTP adapter: no contract exists. Not qualified against a live receiver.
+
 ### Release visibility
 
 - Console only (owner API unchanged): the CI/CD page lists the current release and deploy health per environment from the delivery journal and the latest builds, with a Jenkins link only when a build reference is recorded as a plain https URL. No redeploy or restart control was added because the existing operation and delivery intents contain no restart.

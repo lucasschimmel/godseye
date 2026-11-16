@@ -52,6 +52,12 @@ export class IncidentEngine {
       notifier?: IncidentNotifier;
     },
   ) {}
+  /** A notifier without `configured()` is always configured; one with no target right now is not. */
+  private async notifierConfigured(): Promise<boolean> {
+    const { notifier } = this.options;
+    if (!notifier) return false;
+    return notifier.configured ? notifier.configured().catch(() => false) : true;
+  }
   async overview(actor: Actor) {
     assertOwner(actor);
     const rows = await this.store.db
@@ -60,7 +66,9 @@ export class IncidentEngine {
       .orderBy(desc(schema.incidents.lastRaisedAt))
       .limit(1000);
     return {
-      notifier: this.options.notifier ? ("configured" as const) : ("unconfigured" as const),
+      notifier: (await this.notifierConfigured())
+        ? ("configured" as const)
+        : ("unconfigured" as const),
       incidents: rows.map((row) => incidentView(row, this.options.now())),
     };
   }
@@ -125,10 +133,11 @@ export class IncidentEngine {
     });
     const observability = this.options.sources.observability;
     if (observability) await collect(() => observability(actor));
+    const configured = await this.notifierConfigured();
     const replay = await write(this.store, async (tx) => {
       const request = await requestFor(tx, actor, key, "incident.evaluate", {});
       if (request.existing) return true;
-      await this.reconcileFindings(tx, actor, findings, coveredKinds, coveredKeys);
+      await this.reconcileFindings(tx, actor, findings, coveredKinds, coveredKeys, configured);
       await recordRequest(tx, this.fresh, key, request.digest, randomUUID(), "incident.evaluate");
       return false;
     });
@@ -140,6 +149,7 @@ export class IncidentEngine {
     if (!this.options.sources.system) return;
     const result = await this.options.sources.system();
     const actor: Actor = { id: "godseye:incidents:controller", kind: "service", projectIds: [] };
+    const configured = await this.notifierConfigured();
     await write(this.store, (tx) =>
       this.reconcileFindings(
         tx,
@@ -147,6 +157,7 @@ export class IncidentEngine {
         result.findings,
         [...result.coveredKinds],
         [...(result.coveredKeys ?? [])],
+        configured,
       ),
     );
   }
@@ -215,6 +226,7 @@ export class IncidentEngine {
     findings: Finding[],
     _coveredKinds: string[],
     coveredKeys: string[] = [],
+    notifierConfigured = false,
   ) {
     const now = this.options.now();
     const active = await tx
@@ -226,7 +238,7 @@ export class IncidentEngine {
     for (const finding of findings) {
       const current = byKey.get(finding.key);
       if (current) await this.reraise(tx, current, finding, now);
-      else await this.raise(tx, actor, finding, now);
+      else await this.raise(tx, actor, finding, now, notifierConfigured);
     }
     const keys = new Set(findings.map((finding) => finding.key));
     for (const row of active.filter(
@@ -244,7 +256,13 @@ export class IncidentEngine {
       await appendAudit(tx, actor, row.projectId, "incident.cleared", `Incident ${row.id}`);
     }
   }
-  private async raise(tx: DatabaseAccess, actor: Actor, finding: Finding, now: Date) {
+  private async raise(
+    tx: DatabaseAccess,
+    actor: Actor,
+    finding: Finding,
+    now: Date,
+    notifierConfigured: boolean,
+  ) {
     const id = randomUUID();
     await tx.insert(schema.incidents).values({
       id,
@@ -262,7 +280,7 @@ export class IncidentEngine {
       revision: 1,
       mutedUntil: null,
       resolution: null,
-      deliveryState: this.options.notifier ? "pending" : "unconfigured",
+      deliveryState: notifierConfigured ? "pending" : "unconfigured",
       deliveryAttempts: 0,
       deliveryAttemptedAt: null,
       firstRaisedAt: now,
@@ -270,7 +288,7 @@ export class IncidentEngine {
       acknowledgedAt: null,
       resolvedAt: null,
     });
-    if (this.options.notifier)
+    if (notifierConfigured)
       await tx.insert(schema.incidentOutbox).values({
         id: randomUUID(),
         incidentId: id,

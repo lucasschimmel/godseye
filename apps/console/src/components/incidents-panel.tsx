@@ -2,6 +2,7 @@ import type { IncidentOverviewView, IncidentView, ProjectDTO } from "@godseye/co
 import { useQuery } from "@tanstack/react-query";
 import { resource, timestamp } from "@/lib/api";
 import { channelStatus } from "@/lib/notification-channels";
+import { NotificationChannelsPanel } from "./notification-channels-panel";
 import { ProtectionBadge, reasonLabels } from "./protection-labels";
 import { EmptyState, Failure, Loading, SectionTitle } from "./shared";
 import { useTelemetryMutation } from "./telemetry-shared";
@@ -65,6 +66,7 @@ export function IncidentsPanel({ projects }: { projects: ProjectDTO[] }) {
         </p>
         {channel.ownerAction && <p>{channel.ownerAction}</p>}
       </section>
+      <NotificationChannelsPanel />
       <p className="muted">
         Les observations absentes ou périmées ne prouvent pas la disparition d’un incident.
       </p>
