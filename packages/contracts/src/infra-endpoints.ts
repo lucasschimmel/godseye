@@ -11,6 +11,7 @@ import {
   PrepareInfrastructure,
   SetAdmission,
 } from "./infrastructure.js";
+import { PlatformBuilds } from "./platform-builds.js";
 import { ServerObservation } from "./server-observation.js";
 
 export const INFRASTRUCTURE_HTTP_ENDPOINTS = [
@@ -85,6 +86,14 @@ export const INFRASTRUCTURE_HTTP_ENDPOINTS = [
     path: "/infrastructure/server",
     operationId: "serverObservation",
     response: ServerObservation,
+    success: 200,
+    access: "owner",
+  },
+  {
+    method: "GET",
+    path: "/infrastructure/jenkins",
+    operationId: "platformBuilds",
+    response: PlatformBuilds,
     success: 200,
     access: "owner",
   },

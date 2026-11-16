@@ -50,6 +50,7 @@ export * from "./infrastructure.js";
 export * from "./inngest.js";
 export * from "./jobs.js";
 export { appendAudit, existingRequest, fingerprint, verifyAudit, write } from "./journal.js";
+export * from "./platform-builds.js";
 export { type Actor, assertProjectAccess, assertTransition } from "./policy.js";
 export * from "./recovery.js";
 export * from "./recovery-server-transport.js";
@@ -156,7 +157,11 @@ export class ControlPlane {
 
   async overview(
     actor: Actor,
-    deployment: { mode: "local" | "server"; secretsConfigured?: boolean } = { mode: "local" },
+    deployment: {
+      mode: "local" | "server";
+      secretsConfigured?: boolean;
+      jenkinsConfigured?: boolean;
+    } = { mode: "local" },
   ): Promise<Overview> {
     assertOwner(actor);
     const [projects, operations, runs, activity] = await Promise.all([
@@ -215,8 +220,10 @@ export class ControlPlane {
         {
           id: "jenkins",
           name: "Jenkins",
-          status: "unconfigured",
-          description: "Private controller and isolated agents must be configured",
+          status: deployment.jenkinsConfigured ? "configured" : "unconfigured",
+          description: deployment.jenkinsConfigured
+            ? "Private controller is bound read-only; platform builds are listed on the delivery page"
+            : "Private controller and isolated agents must be configured",
         },
         {
           id: "inngest",

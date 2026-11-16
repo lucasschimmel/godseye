@@ -235,3 +235,16 @@
     width: 100%;
   }
 }
+
+.platform-job {
+  padding: 0 23px 16px;
+}
+.platform-job h3 {
+  margin: 16px 0 8px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.platform-job .mono {
+  font-size: 10px;
+  font-weight: 400;
+}

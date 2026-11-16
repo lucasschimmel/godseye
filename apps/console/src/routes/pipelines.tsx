@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { ArrowRight, Box, GitBranch, Rocket, ShieldCheck } from "lucide-react";
 import { DeliveryPanel } from "@/components/delivery-panel";
+import { PlatformBuildsPanel } from "@/components/platform-builds-panel";
 import { ReleaseVisibility } from "@/components/release-visibility";
 import {
   EmptyState,
@@ -64,6 +65,7 @@ function Pipelines() {
         </div>
       </section>
       <ReleaseVisibility />
+      <PlatformBuildsPanel />
       <DeliveryPanel />
       <section className="panel">
         <div className="panel-heading">
