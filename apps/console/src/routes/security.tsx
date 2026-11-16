@@ -7,11 +7,19 @@ import { useOwner } from "@/components/owner-gate";
 import { Failure, Loading, PageHeading, SectionTitle } from "@/components/shared";
 import { Button } from "@/components/ui/button";
 import { api, resource, timestamp } from "@/lib/api";
+import {
+  OWNER_RECOVER_COMMAND,
+  OWNER_RECOVER_OFFLINE_COMMAND,
+  recoveryCopy,
+} from "@/lib/deployment";
 import { ownerAuth } from "@/lib/owner";
+import { useDeployment } from "@/lib/use-deployment";
 
 export const Route = createFileRoute("/security")({ component: OwnerSecurity });
 function OwnerSecurity() {
   const owner = useOwner();
+  const deployment = useDeployment();
+  const recovery = recoveryCopy(deployment);
   const security = useQuery(resource<OwnerSecurityView>("owner-security", "/owner/security"));
   const [busy, setBusy] = useState(false);
   const [failure, setFailure] = useState<Error | null>(null);
@@ -136,7 +144,7 @@ function OwnerSecurity() {
         )}
         <div className="panel-note">
           Conservez une deuxième clé sur un autre appareil. La dernière clé ne peut être remplacée
-          que par la récupération locale.
+          que par la procédure de récupération {deployment.isLocal ? "locale" : "sur le serveur"}.
         </div>
       </section>
       <section className="panel">
@@ -182,16 +190,14 @@ function OwnerSecurity() {
         )}
       </section>
       <section className="panel owner-recovery">
-        <h2>Récupération indépendante du navigateur</h2>
-        <p>
-          Depuis le terminal de cette machine, préparez une nouvelle clé et révoquez les anciens
-          accès :
-        </p>
-        <code>bun run owner:recover</code>
-        <p>
-          Si l’API est arrêtée, utilisez <code>bun run owner:recover --offline</code>, puis
-          redémarrez le panneau. Cette commande exige l’accès au répertoire local privé.
-        </p>
+        <h2>{recovery.title}</h2>
+        <p>{recovery.intro}</p>
+        <code>{OWNER_RECOVER_COMMAND}</code>
+        <p>{recovery.offline}</p>
+        <code>{OWNER_RECOVER_OFFLINE_COMMAND}</code>
+        {recovery.procedure && (
+          <p className="muted">Procédures documentées : {recovery.procedure}</p>
+        )}
       </section>
     </>
   );
