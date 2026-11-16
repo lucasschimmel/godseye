@@ -76,6 +76,7 @@ export const AccessHealth = z
       "ready",
       "sealed",
       "uninitialized",
+      "no_authority",
       "unauthorized",
       "unavailable",
       "invalid",
