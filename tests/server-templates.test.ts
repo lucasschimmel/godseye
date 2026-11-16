@@ -7,8 +7,9 @@ const read = (name: string) => readFileSync(resolve(directory, name), "utf8");
 const names = readdirSync(directory);
 
 describe("dedicated-server coding/Hermes templates", () => {
-  it("ships only non-executable .tmpl files", () => {
-    expect(names.every((name) => name.endsWith(".tmpl"))).toBe(true);
+  it("ships only non-executable .tmpl templates and .hcl OpenBao policies", () => {
+    const unexpected = names.filter((name) => !name.endsWith(".tmpl") && !name.endsWith(".hcl"));
+    expect(unexpected).toEqual([]);
   });
   it("runs the Hermes readiness gates as the unprivileged godseye user", () => {
     for (const name of [
