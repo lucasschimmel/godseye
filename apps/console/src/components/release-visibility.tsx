@@ -107,91 +107,99 @@ export function ReleaseVisibility() {
           }}
         />
       ) : (
-        <table className="headroom-table">
-          <caption className="sr-only">Version courante par environnement</caption>
-          <thead>
-            <tr>
-              <th scope="col">Projet</th>
-              <th scope="col">Environnement</th>
-              <th scope="col">Version</th>
-              <th scope="col">Santé du déploiement</th>
-              <th scope="col">Mis à jour</th>
-              <th scope="col">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows(projects.data, delivery.data).map((row) => (
-              <tr key={row.key}>
-                <th scope="row">{row.project}</th>
-                <td>{row.environment}</td>
-                <td className="mono" title={row.digest ?? undefined}>
-                  {row.commit ? row.commit.slice(0, 12) : "Aucune version déployée"}
-                </td>
-                <td>{row.run ? healthLabels[row.run.state] : "Aucun déploiement enregistré"}</td>
-                <td>{row.run ? timestamp(row.run.updatedAt) : "—"}</td>
-                <td>
-                  <RedeployControl
-                    project={row.project}
-                    environment={row.environment}
-                    commit={row.commit}
-                    digest={row.digest}
-                    pending={redeploy.isPending}
-                    reason={redeployBlockReason({
-                      environment: row.environmentView,
-                      environmentId: row.key,
-                      run: row.run,
-                      delivery: delivery.data,
-                      fresh: security.data?.fresh === true,
-                      now: Date.now(),
-                    })}
-                    onConfirm={() =>
-                      redeploy.mutate({
-                        environment: row.environmentView,
-                        key: crypto.randomUUID(),
-                      })
-                    }
-                  />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div className="panel-body">
+          <div className="headroom-table-wrap">
+            <table className="headroom-table">
+              <caption className="sr-only">Version courante par environnement</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Projet</th>
+                  <th scope="col">Environnement</th>
+                  <th scope="col">Version</th>
+                  <th scope="col">Santé du déploiement</th>
+                  <th scope="col">Mis à jour</th>
+                  <th scope="col">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {rows(projects.data, delivery.data).map((row) => (
+                  <tr key={row.key}>
+                    <th scope="row">{row.project}</th>
+                    <td>{row.environment}</td>
+                    <td className="mono" title={row.digest ?? undefined}>
+                      {row.commit ? row.commit.slice(0, 12) : "Aucune version déployée"}
+                    </td>
+                    <td>
+                      {row.run ? healthLabels[row.run.state] : "Aucun déploiement enregistré"}
+                    </td>
+                    <td>{row.run ? timestamp(row.run.updatedAt) : "—"}</td>
+                    <td>
+                      <RedeployControl
+                        project={row.project}
+                        environment={row.environment}
+                        commit={row.commit}
+                        digest={row.digest}
+                        pending={redeploy.isPending}
+                        reason={redeployBlockReason({
+                          environment: row.environmentView,
+                          environmentId: row.key,
+                          run: row.run,
+                          delivery: delivery.data,
+                          fresh: security.data?.fresh === true,
+                          now: Date.now(),
+                        })}
+                        onConfirm={() =>
+                          redeploy.mutate({
+                            environment: row.environmentView,
+                            key: crypto.randomUUID(),
+                          })
+                        }
+                      />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
       )}
-      {redeploy.isError && <Failure error={redeploy.error} />}
-      {redeploy.isSuccess && (
-        <p className="success-message" role="status">
-          Redéploiement préparé sur la même image. Admettez-le dans « Livraisons préparées » pour
-          l’exécuter.
-        </p>
-      )}
-      <h3>Dernières constructions</h3>
-      {builds.isError ? (
-        <Failure error={builds.error} />
-      ) : !builds.data ? (
-        <Loading />
-      ) : builds.data.length === 0 ? (
-        <p className="muted">Aucune exécution reçue.</p>
-      ) : (
-        <ul className="build-list">
-          {builds.data.slice(0, RECENT_BUILDS).map((run) => {
-            const link = buildLink(run.providerRef ?? null);
-            return (
-              <li key={run.id}>
-                <span className="mono">{run.commitSha.slice(0, 12)}</span> · {run.projectName} ·{" "}
-                {run.branch} · {run.status}
-                {" · "}
-                {link ? (
-                  <a href={link} target="_blank" rel="noreferrer noopener">
-                    Voir le build Jenkins
-                  </a>
-                ) : (
-                  <span className="muted">Build Jenkins non rapporté</span>
-                )}
-              </li>
-            );
-          })}
-        </ul>
-      )}
+      <div className="panel-body">
+        {redeploy.isError && <Failure error={redeploy.error} />}
+        {redeploy.isSuccess && (
+          <p className="success-message" role="status">
+            Redéploiement préparé sur la même image. Admettez-le dans « Livraisons préparées » pour
+            l’exécuter.
+          </p>
+        )}
+        <h3 className="panel-subheading">Dernières constructions</h3>
+        {builds.isError ? (
+          <Failure error={builds.error} />
+        ) : !builds.data ? (
+          <Loading />
+        ) : builds.data.length === 0 ? (
+          <p className="panel-caption">Aucune exécution reçue.</p>
+        ) : (
+          <ul className="build-list">
+            {builds.data.slice(0, RECENT_BUILDS).map((run) => {
+              const link = buildLink(run.providerRef ?? null);
+              return (
+                <li key={run.id}>
+                  <span className="mono">{run.commitSha.slice(0, 12)}</span> · {run.projectName} ·{" "}
+                  {run.branch} · {run.status}
+                  {" · "}
+                  {link ? (
+                    <a href={link} target="_blank" rel="noreferrer noopener">
+                      Voir le build Jenkins
+                    </a>
+                  ) : (
+                    <span className="muted">Build Jenkins non rapporté</span>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+        )}
+      </div>
     </section>
   );
 }

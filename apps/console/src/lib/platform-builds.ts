@@ -9,7 +9,7 @@ export const PLATFORM_BUILDS_REFRESH_MS = 15_000;
 
 export const platformJobLabels: Record<string, string> = {
   "godseye-platform": "Plateforme (suit main)",
-  "godseye-platform-candidate": "Candidate (déclenchée à la main)",
+  "godseye-platform-candidate": "Candidat (lancé à la main)",
 };
 
 export const platformUnavailableLabel = {
