@@ -110,30 +110,32 @@ export function ServerPanel() {
           ) : data.pgBackup.cells.length === 0 ? (
             <p className="muted">Aucune cellule n’a encore écrit de statut de sauvegarde.</p>
           ) : (
-            <table className="headroom-table">
-              <caption className="sr-only">Âge des sauvegardes par cellule</caption>
-              <thead>
-                <tr>
-                  <th scope="col">Cellule</th>
-                  <th scope="col">Complète</th>
-                  <th scope="col">Différentielle</th>
-                  <th scope="col">Archivage WAL</th>
-                </tr>
-              </thead>
-              <tbody>
-                {data.pgBackup.cells.map((cell) => (
-                  <tr key={cell.allocationId}>
-                    <th scope="row">{cell.allocationId.slice(0, 8)}</th>
-                    <td>{age(cell.fullAgeHours)}</td>
-                    <td>{age(cell.differentialAgeHours)}</td>
-                    <td>
-                      {age(cell.archiveCheckAgeHours)}
-                      {cell.archiveCheckOk ? "" : " · dernier contrôle en échec"}
-                    </td>
+            <div className="headroom-table-wrap">
+              <table className="headroom-table">
+                <caption className="sr-only">Âge des sauvegardes par cellule</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Cellule</th>
+                    <th scope="col">Complète</th>
+                    <th scope="col">Différentielle</th>
+                    <th scope="col">Archivage WAL</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {data.pgBackup.cells.map((cell) => (
+                    <tr key={cell.allocationId}>
+                      <th scope="row">{cell.allocationId.slice(0, 8)}</th>
+                      <td>{age(cell.fullAgeHours)}</td>
+                      <td>{age(cell.differentialAgeHours)}</td>
+                      <td>
+                        {age(cell.archiveCheckAgeHours)}
+                        {cell.archiveCheckOk ? "" : " · dernier contrôle en échec"}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )}
           <h3>Hôte Proxmox</h3>
           {data.host.state === "unknown" ? (

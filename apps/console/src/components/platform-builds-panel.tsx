@@ -30,50 +30,52 @@ function JobBuilds({ job, nowMs }: { job: PlatformBuildJobView; nowMs: number })
       ) : job.builds.length === 0 ? (
         <p className="muted">Aucun build enregistré pour ce job.</p>
       ) : (
-        <table className="headroom-table">
-          <caption className="sr-only">Derniers builds de {label}</caption>
-          <thead>
-            <tr>
-              <th scope="col">Build</th>
-              <th scope="col">État</th>
-              <th scope="col">Branche</th>
-              <th scope="col">Démarré</th>
-              <th scope="col">Durée</th>
-            </tr>
-          </thead>
-          <tbody>
-            {job.builds.map((build) => {
-              const badge = buildBadge(build);
-              const href = safeBuildUrl(build.url);
-              return (
-                <tr key={build.number}>
-                  <th scope="row" className="mono">
-                    {href ? (
-                      <a href={href} target="_blank" rel="noreferrer noopener">
-                        #{build.number}
-                      </a>
-                    ) : (
-                      `#${build.number}`
-                    )}
-                  </th>
-                  <td>
-                    <Badge variant="outline" className={`state state-${badge.tone}`}>
-                      <span className="status-dot" />
-                      {badge.label}
-                    </Badge>
-                  </td>
-                  <td className="mono">{build.branch ?? "—"}</td>
-                  <td>{timestamp(build.startedAt)}</td>
-                  <td>
-                    {badge.label === "En cours"
-                      ? `en cours depuis ${buildDuration(build, nowMs)}`
-                      : buildDuration(build, nowMs)}
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+        <div className="headroom-table-wrap">
+          <table className="headroom-table">
+            <caption className="sr-only">Derniers builds de {label}</caption>
+            <thead>
+              <tr>
+                <th scope="col">Build</th>
+                <th scope="col">État</th>
+                <th scope="col">Branche</th>
+                <th scope="col">Démarré</th>
+                <th scope="col">Durée</th>
+              </tr>
+            </thead>
+            <tbody>
+              {job.builds.map((build) => {
+                const badge = buildBadge(build);
+                const href = safeBuildUrl(build.url);
+                return (
+                  <tr key={build.number}>
+                    <th scope="row" className="mono">
+                      {href ? (
+                        <a href={href} target="_blank" rel="noreferrer noopener">
+                          #{build.number}
+                        </a>
+                      ) : (
+                        `#${build.number}`
+                      )}
+                    </th>
+                    <td>
+                      <Badge variant="outline" className={`state state-${badge.tone}`}>
+                        <span className="status-dot" />
+                        {badge.label}
+                      </Badge>
+                    </td>
+                    <td className="mono">{build.branch ?? "—"}</td>
+                    <td>{timestamp(build.startedAt)}</td>
+                    <td>
+                      {badge.label === "En cours"
+                        ? `en cours depuis ${buildDuration(build, nowMs)}`
+                        : buildDuration(build, nowMs)}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );

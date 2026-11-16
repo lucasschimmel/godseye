@@ -107,55 +107,57 @@ export function ReleaseVisibility() {
           }}
         />
       ) : (
-        <table className="headroom-table">
-          <caption className="sr-only">Version courante par environnement</caption>
-          <thead>
-            <tr>
-              <th scope="col">Projet</th>
-              <th scope="col">Environnement</th>
-              <th scope="col">Version</th>
-              <th scope="col">Santé du déploiement</th>
-              <th scope="col">Mis à jour</th>
-              <th scope="col">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows(projects.data, delivery.data).map((row) => (
-              <tr key={row.key}>
-                <th scope="row">{row.project}</th>
-                <td>{row.environment}</td>
-                <td className="mono" title={row.digest ?? undefined}>
-                  {row.commit ? row.commit.slice(0, 12) : "Aucune version déployée"}
-                </td>
-                <td>{row.run ? healthLabels[row.run.state] : "Aucun déploiement enregistré"}</td>
-                <td>{row.run ? timestamp(row.run.updatedAt) : "—"}</td>
-                <td>
-                  <RedeployControl
-                    project={row.project}
-                    environment={row.environment}
-                    commit={row.commit}
-                    digest={row.digest}
-                    pending={redeploy.isPending}
-                    reason={redeployBlockReason({
-                      environment: row.environmentView,
-                      environmentId: row.key,
-                      run: row.run,
-                      delivery: delivery.data,
-                      fresh: security.data?.fresh === true,
-                      now: Date.now(),
-                    })}
-                    onConfirm={() =>
-                      redeploy.mutate({
-                        environment: row.environmentView,
-                        key: crypto.randomUUID(),
-                      })
-                    }
-                  />
-                </td>
+        <div className="headroom-table-wrap">
+          <table className="headroom-table">
+            <caption className="sr-only">Version courante par environnement</caption>
+            <thead>
+              <tr>
+                <th scope="col">Projet</th>
+                <th scope="col">Environnement</th>
+                <th scope="col">Version</th>
+                <th scope="col">Santé du déploiement</th>
+                <th scope="col">Mis à jour</th>
+                <th scope="col">Action</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {rows(projects.data, delivery.data).map((row) => (
+                <tr key={row.key}>
+                  <th scope="row">{row.project}</th>
+                  <td>{row.environment}</td>
+                  <td className="mono" title={row.digest ?? undefined}>
+                    {row.commit ? row.commit.slice(0, 12) : "Aucune version déployée"}
+                  </td>
+                  <td>{row.run ? healthLabels[row.run.state] : "Aucun déploiement enregistré"}</td>
+                  <td>{row.run ? timestamp(row.run.updatedAt) : "—"}</td>
+                  <td>
+                    <RedeployControl
+                      project={row.project}
+                      environment={row.environment}
+                      commit={row.commit}
+                      digest={row.digest}
+                      pending={redeploy.isPending}
+                      reason={redeployBlockReason({
+                        environment: row.environmentView,
+                        environmentId: row.key,
+                        run: row.run,
+                        delivery: delivery.data,
+                        fresh: security.data?.fresh === true,
+                        now: Date.now(),
+                      })}
+                      onConfirm={() =>
+                        redeploy.mutate({
+                          environment: row.environmentView,
+                          key: crypto.randomUUID(),
+                        })
+                      }
+                    />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
       {redeploy.isError && <Failure error={redeploy.error} />}
       {redeploy.isSuccess && (

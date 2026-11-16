@@ -56,32 +56,34 @@ export function BackupSchedulePanel() {
       ) : server.data.pgBackup.cells.length === 0 ? (
         <p className="muted">Aucune cellule n’a encore écrit de statut de sauvegarde.</p>
       ) : (
-        <table className="headroom-table">
-          <caption className="sr-only">Âge des sauvegardes par cellule</caption>
-          <thead>
-            <tr>
-              <th scope="col">Cellule</th>
-              <th scope="col">Dernière complète</th>
-              <th scope="col">Dernière différentielle</th>
-              <th scope="col">Dernier contrôle WAL</th>
-              <th scope="col">Dépôt pgBackRest</th>
-            </tr>
-          </thead>
-          <tbody>
-            {server.data.pgBackup.cells.map((cell) => (
-              <tr key={cell.allocationId}>
-                <th scope="row">{cell.allocationId.slice(0, 8)}</th>
-                <td>{age(cell.fullAgeHours)}</td>
-                <td>{age(cell.differentialAgeHours)}</td>
-                <td>{age(cell.archiveCheckAgeHours)}</td>
-                <td>
-                  {cell.archiveCheckOk ? "Contrôle réussi" : "Dernier contrôle en échec"}
-                  {cell.lastFailureAt ? ` · échec le ${timestamp(cell.lastFailureAt)}` : ""}
-                </td>
+        <div className="headroom-table-wrap">
+          <table className="headroom-table">
+            <caption className="sr-only">Âge des sauvegardes par cellule</caption>
+            <thead>
+              <tr>
+                <th scope="col">Cellule</th>
+                <th scope="col">Dernière complète</th>
+                <th scope="col">Dernière différentielle</th>
+                <th scope="col">Dernier contrôle WAL</th>
+                <th scope="col">Dépôt pgBackRest</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {server.data.pgBackup.cells.map((cell) => (
+                <tr key={cell.allocationId}>
+                  <th scope="row">{cell.allocationId.slice(0, 8)}</th>
+                  <td>{age(cell.fullAgeHours)}</td>
+                  <td>{age(cell.differentialAgeHours)}</td>
+                  <td>{age(cell.archiveCheckAgeHours)}</td>
+                  <td>
+                    {cell.archiveCheckOk ? "Contrôle réussi" : "Dernier contrôle en échec"}
+                    {cell.lastFailureAt ? ` · échec le ${timestamp(cell.lastFailureAt)}` : ""}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
       {server.data && (
         <p>
