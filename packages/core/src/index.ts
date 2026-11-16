@@ -53,6 +53,7 @@ export { appendAudit, existingRequest, fingerprint, verifyAudit, write } from ".
 export { type Actor, assertProjectAccess, assertTransition } from "./policy.js";
 export * from "./recovery.js";
 export * from "./recovery-server-transport.js";
+export * from "./server-observer.js";
 
 /** Application boundary; no infrastructure credential or privileged execution capability. */
 export class ControlPlane {

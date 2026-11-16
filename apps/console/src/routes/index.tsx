@@ -4,6 +4,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Activity, ArrowUpRight, Box, GitBranch, Plus, Server } from "lucide-react";
 import { OperationalOverview } from "@/components/operational-overview";
 import { ProjectTable } from "@/components/project-table";
+import { ServerTiles } from "@/components/server-tiles";
 import { Failure, Loading, PageHeading, SectionTitle, Status } from "@/components/shared";
 import { Button } from "@/components/ui/button";
 import { resource, timestamp } from "@/lib/api";
@@ -31,6 +32,7 @@ function Dashboard() {
           </Button>
         }
       />
+      <ServerTiles />
       <OperationalOverview />
       <div className="metric-grid">
         {[

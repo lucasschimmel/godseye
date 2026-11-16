@@ -83,6 +83,15 @@ export function loadConfiguration(
     githubWebhookKey: env.GODSEYE_GITHUB_WEBHOOK_KEY,
     baoAddress: env.GODSEYE_BAO_ADDRESS,
     baoMount: env.GODSEYE_BAO_MOUNT,
+    /** Server observations: unset paths stay unknown; only the server's own root disk and backup status directory have defaults. */
+    serverObservation: {
+      rootPath: env.GODSEYE_OBSERVE_ROOT_PATH ?? (server ? "/" : null),
+      cellDataPath: env.GODSEYE_OBSERVE_CELL_DATA_PATH ?? null,
+      hostHealthFile: env.GODSEYE_HOST_HEALTH_FILE ?? null,
+      pgBackupDirectory:
+        env.GODSEYE_PG_BACKUP_STATUS_DIR ?? (server ? "/var/lib/godseye/pg-backup" : null),
+      baoAddress: env.GODSEYE_BAO_ADDRESS ?? null,
+    },
     ...identityPaths(env.GODSEYE_DATA_DIR ?? ".local/control", env.GODSEYE_STATE_DIR),
   };
 }
