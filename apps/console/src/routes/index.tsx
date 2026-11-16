@@ -108,7 +108,7 @@ function Dashboard() {
           </div>
           <div className="panel-note">
             {data.mode === "server"
-              ? "Serveur dédié connecté. Les métriques de l’hôte ne sont pas encore remontées dans la console."
+              ? "Serveur dédié connecté. Les mesures de la VM sont affichées ci-dessus ; celles de l’hôte Proxmox apparaissent dès que son rapport est lisible."
               : "Les observations locales sont disponibles ci-dessus. Les métriques de l’hôte distant restent indisponibles."}
           </div>
         </section>
