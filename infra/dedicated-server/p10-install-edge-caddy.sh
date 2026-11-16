@@ -80,6 +80,14 @@ SERVICE_USER="${GODSEYE_SERVICE_USER:-godseye}"
 SERVICE_UID="$(id -u "$SERVICE_USER")"
 SERVICE_GID="$(id -g "$SERVICE_USER")"
 
+# Rollback copy of what this run replaces (Caddyfile and start script). Restore both and run
+# `systemctl restart godseye-edge` to return to the previous edge.
+ROLLBACK_DIR="/var/lib/godseye/rollback/p10-install-edge-caddy-$(date -u +%Y%m%dT%H%M%SZ)"
+install -d -m 0700 "${ROLLBACK_DIR}"
+[ -f "${CADDYFILE_DIR}/Caddyfile" ] && cp -a "${CADDYFILE_DIR}/Caddyfile" "${ROLLBACK_DIR}/Caddyfile"
+[ -f "${LIB_DIR}/start-edge.sh" ] && cp -a "${LIB_DIR}/start-edge.sh" "${ROLLBACK_DIR}/start-edge.sh"
+echo "Rollback copy: ${ROLLBACK_DIR}"
+
 # Route files are written by the control API (service user) and read by Caddy as the same uid.
 install -d -m 0755 "${CADDYFILE_DIR}"
 install -d -m 0750 -o "$SERVICE_UID" -g "$SERVICE_GID" "${ROUTE_DIR}"
@@ -250,7 +258,13 @@ systemctl daemon-reload
 systemctl enable godseye-edge.service
 systemctl restart godseye-edge.service
 
-docker exec "${EDGE_CONTAINER}" caddy validate --config /etc/caddy/Caddyfile
+if ! docker exec "${EDGE_CONTAINER}" caddy validate --config /etc/caddy/Caddyfile; then
+  echo "Caddyfile validation failed: restoring ${ROLLBACK_DIR}" >&2
+  [ -f "${ROLLBACK_DIR}/Caddyfile" ] && cp -a "${ROLLBACK_DIR}/Caddyfile" "${CADDYFILE_DIR}/Caddyfile"
+  [ -f "${ROLLBACK_DIR}/start-edge.sh" ] && cp -a "${ROLLBACK_DIR}/start-edge.sh" "${LIB_DIR}/start-edge.sh"
+  systemctl restart godseye-edge.service
+  exit 1
+fi
 echo "Public listener (must serve webhook/health only):"
 curl -fsS --resolve "${SITE_HOST}:443:${PUBLIC_BIND}" "https://${SITE_HOST}/healthz" || true
 echo ""
