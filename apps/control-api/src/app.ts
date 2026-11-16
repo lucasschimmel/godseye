@@ -14,6 +14,7 @@ import {
   DomainError,
   type FoundationEngine,
   type InfrastructureEngine,
+  PlatformBuilds,
   ServerObserver,
 } from "@godseye/core";
 import { APIError } from "better-auth/api";
@@ -42,6 +43,7 @@ import { registerLifecycleRoutes } from "./lifecycle-routes.js";
 import { registerObservabilityRoutes } from "./observability-routes.js";
 import { registerOpenApi } from "./openapi.js";
 import { registerOrchestrationRoutes } from "./orchestration-routes.js";
+import { registerPlatformBuildsRoutes } from "./platform-builds-routes.js";
 import { registerProtectionRoutes } from "./protection-routes.js";
 import { registerRecoveryRoutes } from "./recovery-routes.js";
 import { registerServerObservationRoutes } from "./server-observation-routes.js";
@@ -64,6 +66,9 @@ export function createApp(
   broker?: AccessBroker,
   infrastructure?: InfrastructureEngine,
   serverObserver: ServerObserver = new ServerObserver(config.serverObservation),
+  platformBuilds: PlatformBuilds = new PlatformBuilds({
+    mode: config.mode === "server" ? "server" : "local",
+  }),
 ) {
   if (config.mode === "server" && (!identity || !config.ownerOrigin.startsWith("https://")))
     throw new Error("Server mode requires owner identity and an https owner origin");
@@ -200,6 +205,7 @@ export function createApp(
       await core.overview(c.get("actor"), {
         mode: config.mode === "server" ? "server" : "local",
         secretsConfigured: Boolean(config.baoAddress),
+        jenkinsConfigured: platformBuilds.configured,
       }),
     ),
   );
@@ -265,6 +271,7 @@ export function createApp(
   registerAccessRoutes(app, broker);
   registerInfrastructureRoutes(app, infrastructure);
   registerServerObservationRoutes(app, serverObserver);
+  registerPlatformBuildsRoutes(app, platformBuilds);
   registerDatabaseRoutes(app, core, infrastructure);
   registerBackendRoutes(app, core);
   registerRecoveryRoutes(app, infrastructure);

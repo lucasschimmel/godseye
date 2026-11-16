@@ -40,6 +40,26 @@ const JobView = z.object({
     }),
   ),
 });
+const RecentBuildsView = z.object({
+  builds: z.array(
+    z.object({
+      number: z.number().int().positive(),
+      result: z.string().nullable(),
+      building: z.boolean(),
+      timestamp: z.number().int().nonnegative(),
+      duration: z.number().int().nonnegative(),
+      actions: z.array(z.unknown()),
+    }),
+  ),
+});
+export type JenkinsRecentBuild = z.infer<typeof RecentBuildsView>["builds"][number];
+/** A non-success HTTP status from Jenkins, kept distinct so callers can classify it. */
+export class JenkinsHttpError extends Error {
+  constructor(readonly status: number) {
+    super(`Jenkins request failed (${status})`);
+    this.name = "JenkinsHttpError";
+  }
+}
 const QueueView = z.object({
   items: z.array(z.object({ id: z.number().int(), actions: z.array(z.unknown()) })),
 });
@@ -54,22 +74,31 @@ export class JenkinsClient {
   private url(path: string) {
     return `${this.config.baseUrl.replace(/\/+$/, "")}${path}`;
   }
-  private async call(path: string, init: RequestInit = {}) {
+  private async call(path: string, init: RequestInit = {}, timeoutMs = REQUEST_TIMEOUT_MS) {
     const auth = Buffer.from(`${this.config.user}:${this.config.apiToken}`).toString("base64");
     const response = await this.request(this.url(path), {
       ...init,
       redirect: "manual",
       headers: { authorization: `Basic ${auth}`, ...(init.headers ?? {}) },
-      signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+      signal: AbortSignal.timeout(timeoutMs),
     });
     if (response.status >= 300 && response.status < 400 && init.method !== "POST")
       throw new Error("Jenkins unexpectedly redirected");
     return response;
   }
-  private async json<T>(path: string, schema: z.ZodType<T>) {
-    const response = await this.call(path, { headers: { accept: "application/json" } });
-    if (!response.ok) throw new Error(`Jenkins request failed (${response.status})`);
+  private async json<T>(path: string, schema: z.ZodType<T>, timeoutMs = REQUEST_TIMEOUT_MS) {
+    const response = await this.call(path, { headers: { accept: "application/json" } }, timeoutMs);
+    if (!response.ok) throw new JenkinsHttpError(response.status);
     return schema.parse(JSON.parse(await boundedText(response)));
+  }
+  /** Read-only list of the newest builds of any job on this controller, with a short deadline. */
+  async recentBuilds(jobName: string, limit: number, timeoutMs: number) {
+    const tree = `builds[number,result,building,timestamp,duration,actions[parameters[name,value]]]{0,${limit}}`;
+    return this.json(
+      `/job/${encodeURIComponent(jobName)}/api/json?tree=${encodeURIComponent(tree)}`,
+      RecentBuildsView,
+      timeoutMs,
+    );
   }
   private jobPath() {
     return `/job/${encodeURIComponent(this.config.jobName)}`;

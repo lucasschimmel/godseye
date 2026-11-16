@@ -111,6 +111,7 @@ import {
   type OverviewResponse,
   type OwnerSecurityView,
   type OwnerStatusView,
+  type PlatformBuildsView,
   type PrepareDatabaseInput,
   type PrepareInfrastructureInput,
   type ProjectDTO,
@@ -421,6 +422,7 @@ export function createControlClient(options: ControlClientOptions = {}) {
     infrastructureHeadroom: () =>
       request<InfrastructureHeadroomView>("GET", "/infrastructure/headroom"),
     serverObservation: () => request<ServerObservationView>("GET", "/infrastructure/server"),
+    platformBuilds: () => request<PlatformBuildsView>("GET", "/infrastructure/jenkins"),
     setInfrastructureAdmission: (input: SetAdmissionInput, key: string) =>
       request<AdmissionControlView>("PUT", "/infrastructure/admission", input, key),
     declareInfrastructure: (input: DeclareInventoryInput, key: string) =>

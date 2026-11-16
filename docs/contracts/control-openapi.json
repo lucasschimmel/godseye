@@ -43623,6 +43623,261 @@
         }
       }
     },
+    "/api/v1/infrastructure/jenkins": {
+      "get": {
+        "operationId": "platformBuilds",
+        "description": "Private owner control operation. Requires the server-verified owner session; this is not an application project SDK endpoint.",
+        "parameters": [
+          {
+            "name": "x-godseye-api-version",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "const": "1.19.0"
+            },
+            "description": "When supplied, must match the supported control API version."
+          }
+        ],
+        "security": [
+          {
+            "ownerSession": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful owner control response",
+            "headers": {
+              "x-godseye-api-version": {
+                "schema": {
+                  "type": "string",
+                  "const": "1.19.0"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "state": {
+                          "type": "string",
+                          "const": "not_connected"
+                        },
+                        "reason": {
+                          "type": "string",
+                          "enum": [
+                            "LOCAL_MODE",
+                            "NOT_CONFIGURED"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "state",
+                        "reason"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "state": {
+                          "type": "string",
+                          "const": "connected"
+                        },
+                        "observedAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+                        },
+                        "jobs": {
+                          "maxItems": 8,
+                          "type": "array",
+                          "items": {
+                            "oneOf": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "name": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 100
+                                  },
+                                  "state": {
+                                    "type": "string",
+                                    "const": "observed"
+                                  },
+                                  "builds": {
+                                    "maxItems": 8,
+                                    "type": "array",
+                                    "items": {
+                                      "type": "object",
+                                      "properties": {
+                                        "number": {
+                                          "type": "integer",
+                                          "exclusiveMinimum": 0,
+                                          "maximum": 9007199254740991
+                                        },
+                                        "result": {
+                                          "anyOf": [
+                                            {
+                                              "type": "string",
+                                              "enum": [
+                                                "SUCCESS",
+                                                "FAILURE",
+                                                "UNSTABLE",
+                                                "ABORTED",
+                                                "NOT_BUILT"
+                                              ]
+                                            },
+                                            {
+                                              "type": "null"
+                                            }
+                                          ]
+                                        },
+                                        "building": {
+                                          "type": "boolean"
+                                        },
+                                        "startedAt": {
+                                          "type": "string",
+                                          "format": "date-time",
+                                          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+                                        },
+                                        "durationMs": {
+                                          "anyOf": [
+                                            {
+                                              "type": "integer",
+                                              "minimum": 0,
+                                              "maximum": 9007199254740991
+                                            },
+                                            {
+                                              "type": "null"
+                                            }
+                                          ]
+                                        },
+                                        "branch": {
+                                          "anyOf": [
+                                            {
+                                              "type": "string",
+                                              "minLength": 1,
+                                              "maxLength": 200
+                                            },
+                                            {
+                                              "type": "null"
+                                            }
+                                          ]
+                                        },
+                                        "url": {
+                                          "type": "string",
+                                          "maxLength": 512,
+                                          "format": "uri"
+                                        }
+                                      },
+                                      "required": [
+                                        "number",
+                                        "result",
+                                        "building",
+                                        "startedAt",
+                                        "durationMs",
+                                        "branch",
+                                        "url"
+                                      ],
+                                      "additionalProperties": false
+                                    }
+                                  }
+                                },
+                                "required": [
+                                  "name",
+                                  "state",
+                                  "builds"
+                                ],
+                                "additionalProperties": false
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "name": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 100
+                                  },
+                                  "state": {
+                                    "type": "string",
+                                    "const": "unavailable"
+                                  },
+                                  "reason": {
+                                    "type": "string",
+                                    "enum": [
+                                      "UNREACHABLE",
+                                      "TIMEOUT",
+                                      "UNAUTHORIZED",
+                                      "NOT_FOUND",
+                                      "INVALID",
+                                      "ERROR"
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "name",
+                                  "state",
+                                  "reason"
+                                ],
+                                "additionalProperties": false
+                              }
+                            ]
+                          }
+                        }
+                      },
+                      "required": [
+                        "state",
+                        "observedAt",
+                        "jobs"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ControlError"
+          },
+          "401": {
+            "$ref": "#/components/responses/ControlError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ControlError"
+          },
+          "404": {
+            "$ref": "#/components/responses/ControlError"
+          },
+          "409": {
+            "$ref": "#/components/responses/ControlError"
+          },
+          "413": {
+            "$ref": "#/components/responses/ControlError"
+          },
+          "415": {
+            "$ref": "#/components/responses/ControlError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ControlError"
+          },
+          "429": {
+            "$ref": "#/components/responses/ControlError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ControlError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ControlError"
+          }
+        }
+      }
+    },
     "/api/v1/health": {
       "get": {
         "operationId": "health",

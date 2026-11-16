@@ -18,6 +18,7 @@ export * from "./lifecycle.js";
 export * from "./observability.js";
 export * from "./orchestration.js";
 export * from "./owner.js";
+export * from "./platform-builds.js";
 export * from "./protection.js";
 export * from "./recovery.js";
 export * from "./server-observation.js";
