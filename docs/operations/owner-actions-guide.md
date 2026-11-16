@@ -47,19 +47,21 @@ bao operator generate-root              # part 1 (silencieux), puis refaire avec
 bao operator generate-root -decode=<Encoded Token> -otp=<OTP>   # jeton temporaire
 ```
 
-**b) AppRoles et snapshots.** L'assistant copie d'abord les templates sur la VM, puis :
+**b) AppRoles.** Le jeton temporaire est demandé à l'invite silencieuse :
 ```
-ssh -t godseye-pro sudo ./p12-openbao-owner-setup.sh <dossier templates>
+ssh -t godseye-pro "sudo bash /opt/godseye/infra/dedicated-server/p12-openbao-owner-setup.sh /opt/godseye/infra/dedicated-server/templates"
 ```
-Colle le jeton à l'invite silencieuse (crée les AppRoles `godseye-bindings-render` et `godseye-snapshot`). L'assistant lance ensuite `p12-install-snapshots.sh` pour activer le timer de snapshot raft.
+Crée les AppRoles `godseye-bindings-render` et `godseye-snapshot`. L'assistant lance ensuite `p12-install-snapshots.sh` pour activer le timer de snapshot raft.
 
-**c) Identité du contrôleur (`bao.auth`).** Le contrôleur attend un jeton dont la seule politique est `godseye-broker-v1`, sans politique par défaut (vérifié par `auth/token/lookup-self`).
-- Sur ton PC : `bun run access:policy > broker.hcl`.
-- Sur la VM, avec le jeton temporaire : `bao policy write godseye-broker-v1 broker.hcl`, puis `bao token create -policy=godseye-broker-v1 -no-default-policy -orphan` avec un TTL long ou périodique.
-- Le jeton est écrit dans `<identityDir>/bao.auth` par `bun run access:provider-auth` (lecture sur stdin, contrôleur arrêté, voir `service-access.md`).
-- **Écart du dépôt.** Aucun script `infra/` n'appelle `access:provider-auth` sur le serveur : l'assistant doit écrire un script à invite silencieuse. Rien ne renouvelle le jeton : prévoir un jeton périodique avec renouvellement, ou une rotation `--replace` avant l'expiration (32 jours par défaut).
+**c) Identité du contrôleur (`bao.auth`).** Le contrôleur reçoit un jeton dont la seule politique est `godseye-broker-v1` (périodique 720 h, renouvelé chaque semaine par un timer). Le script écrit la politique compilée, crée le jeton, arrête le contrôleur, installe `bao.auth` par la CLI du dépôt, redémarre le contrôleur et installe le timer de renouvellement :
+```
+ssh -t godseye-pro "sudo bash /opt/godseye/infra/dedicated-server/p13-openbao-controller-identity.sh identity"
+```
 
-**d) Révocation du jeton racine :** `bao token revoke -self`. Preuve : `bao token lookup` avec l'ancien jeton répond « permission denied ».
+**d) Révocation du jeton racine** (avec le même jeton temporaire ; le script prouve ensuite que OpenBao le refuse) :
+```
+ssh -t godseye-pro "sudo bash /opt/godseye/infra/dedicated-server/p13-openbao-controller-identity.sh revoke-admin"
+```
 
 **e) Redistribution des parts :** `bao operator rekey -init -key-shares=3 -key-threshold=2` (puis 2 anciennes parts avec le nonce). Une part dans le gestionnaire de mots de passe, une sur clé USB chiffrée, une sur papier au coffre. Détruis les anciennes.
 
@@ -97,7 +99,7 @@ Renvoie « OK » et l'heure. L'assistant vérifie `Sealed false`, redémarre l'e
   - Active aussi l'email d'échec Actions (Settings > Notifications).
 
 ### 6. GitHub App et registre (livraison)
-- **GitHub App.** Settings > Developer settings > GitHub Apps > New GitHub App. Webhook URL `https://godseye.lucasschimmel.fr/hooks/github`, content type `application/json`. Secret : `[Convert]::ToHexString([Security.Cryptography.RandomNumberGenerator]::GetBytes(32))` (PowerShell 7), à ranger dans le gestionnaire de mots de passe. Permissions dépôt : Contents (read), Metadata (read), Pull requests (read), Commit statuses (read et write) ; événements Push et Pull request (compare avec `application-delivery.md` avant d'installer). Installation sur le seul dépôt `lucasschimmel/godseye`. Génère la clé privée `.pem` et garde-la hors du chat et du dépôt.
+- **GitHub App.** Settings > Developer settings > GitHub Apps > New GitHub App. Webhook URL `https://godseye.lucasschimmel.fr/hooks/github`, content type `application/json`. Secret : `[Convert]::ToHexString([Security.Cryptography.RandomNumberGenerator]::GetBytes(32))` (PowerShell 7), à ranger dans le gestionnaire de mots de passe. Permissions dépôt (lecture seule, ce que le code demande dans `github-app-auth.ts`) : Contents (read), Pull requests (read), Metadata (read), rien d'autre ; événements Push et Pull request. Installation sur le seul dépôt `lucasschimmel/godseye`. Génère la clé privée `.pem` et garde-la hors du chat et du dépôt.
 - **Stockage.** Le secret webhook et la `.pem` vont dans OpenBao. Aucun script ne le fait aujourd'hui : l'assistant en écrit un à invite silencieuse. Toi : `scp` de la `.pem` vers un chemin temporaire, puis exécution du script. La liaison `GODSEYE_GITHUB_APP_BINDING` est `{issuer, privateKeyPath}`.
 - **Renvoyer** l'App ID, l'Installation ID et l'ID numérique du dépôt (identifiants publics, à saisir dans la page projet).
 - **Registre Zot** (VM pro, avant `p10-install-registry.sh`) : `read -rs P; printf %s "$P" | htpasswd -niB <user> > /etc/zot/htpasswd`, puis `chmod 0640` et `chown root:zot`.
