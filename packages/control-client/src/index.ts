@@ -406,7 +406,7 @@ export function createControlClient(options: ControlClientOptions = {}) {
     activateRestoredEnvironment: (value: string, input: ActivateRestoreInput, key: string) =>
       request<RestoreActivationView>(
         "POST",
-        "/recovery/environments/" + id(value) + "/activation",
+        `/recovery/environments/${id(value)}/activation`,
         input,
         key,
       ),
