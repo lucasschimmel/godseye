@@ -144,7 +144,7 @@ describe("custom application domains over the owner API", () => {
     });
   const pointAtPlatform = (hostname: string) => dns.records.cname.set(hostname, [CNAME]);
 
-  it("lists every non-removed domain across projects with names and no certificate claim", async () => {
+  it("lists every non-removed domain across projects with names and an unknown certificate when no probe exists", async () => {
     const kept = await created("app.customer.com");
     const dropped = await created("old.customer.com");
     await remove(dropped);
@@ -160,7 +160,7 @@ describe("custom application domains over the owner API", () => {
       projectSlug: projectInput.slug,
       environmentKind: "development",
     });
-    expect(overview.domains[0]).not.toHaveProperty("certificateExpiresAt");
+    expect(overview.domains[0]?.tls).toMatchObject({ state: "unknown", expiresAt: null });
   });
 
   it("refuses the cross-project list without an owner session", async () => {

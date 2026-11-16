@@ -11,6 +11,7 @@ import { DOMAIN_ROUTE_SUFFIX } from "./domain-routes.js";
 import { createGithubSourceProvider } from "./github-app-auth.js";
 import { JenkinsClient } from "./jenkins-client.js";
 import { RegistryClient } from "./registry-client.js";
+import { createTlsProbe } from "./tls-probe.js";
 import { DockerJenkinsTransport } from "./transport.js";
 
 const Path = z.string().min(1).max(512);
@@ -119,6 +120,7 @@ export function configuredDelivery(env: NodeJS.ProcessEnv): ConfiguredDelivery {
       };
       result.domains = {
         resolver: createDnsResolver(binding.domains.resolvers),
+        probe: createTlsProbe(),
         target,
         publisher: {
           publish: ({ environmentId, hostnames }) =>
