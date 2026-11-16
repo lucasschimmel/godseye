@@ -15,6 +15,7 @@ import {
   platformUnavailableLabel,
   safeBuildUrl,
 } from "@/lib/platform-builds";
+import { TableScroll } from "./table-scroll";
 
 function JobBuilds({ job, nowMs }: { job: PlatformBuildJobView; nowMs: number }) {
   const label = platformJobLabels[job.name] ?? job.name;
@@ -30,7 +31,7 @@ function JobBuilds({ job, nowMs }: { job: PlatformBuildJobView; nowMs: number })
       ) : job.builds.length === 0 ? (
         <p className="panel-caption">Aucun build enregistré pour ce job.</p>
       ) : (
-        <div className="headroom-table-wrap">
+        <TableScroll label={`Tableau défilant : ${label}`}>
           <table className="headroom-table">
             <caption className="sr-only">Derniers builds de {label}</caption>
             <thead>
@@ -75,7 +76,7 @@ function JobBuilds({ job, nowMs }: { job: PlatformBuildJobView; nowMs: number })
               })}
             </tbody>
           </table>
-        </div>
+        </TableScroll>
       )}
     </div>
   );

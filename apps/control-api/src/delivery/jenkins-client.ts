@@ -93,7 +93,7 @@ export class JenkinsClient {
   }
   /** Read-only list of the newest builds of any job on this controller, with a short deadline. */
   async recentBuilds(jobName: string, limit: number, timeoutMs: number) {
-    const tree = `builds[number,result,building,timestamp,duration,actions[parameters[name,value]]]{0,${limit}}`;
+    const tree = `builds[number,result,building,timestamp,duration,actions[parameters[name,value],lastBuiltRevision[SHA1]]]{0,${limit}}`;
     return this.json(
       `/job/${encodeURIComponent(jobName)}/api/json?tree=${encodeURIComponent(tree)}`,
       RecentBuildsView,

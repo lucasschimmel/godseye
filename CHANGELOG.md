@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+### Jenkins build links on recent builds
+
+- `GET /ci/runs` now fills a run's `providerRef` with the Jenkins build URL when a platform build (read-only Jenkins source) reports having built exactly that commit (git plugin revision) and the build URL is on the configured Jenkins origin. A recorded `providerRef` is never overwritten; with Jenkins unconfigured, unreachable or silent about the commit, no link is offered. `PlatformBuild` gains a nullable `commitSha`. The console accepts plain http(s) build links without credentials because the private controller may be http.
+
+### Accessibility (A15 remainder)
+
+- The accessibility suite now also audits populated states (project list and detail, release table with build links, platform builds table), the redeploy confirmation dialog, forms showing validation and server errors, and reflow at 200% zoom (640 px) and 320 CSS px.
+
 ### Owner-confirmed restore activation
 
 - Owner API `1.22.0`, migration `0027_restore_activation.sql`: `POST /recovery/environments/:id/activation` fences the source environment, requires an independent provider promotion proof and only then designates a verified held restore as the active environment; the source stays held as evidence. It needs a fresh passkey, exact revisions, the typed name and every coverage acknowledgement. `GET .../activation` now reports derived blockers (`reasons`), required acknowledgements and retained definitions instead of a fixed list. The console shows the form only when a provider can promote. The shipped pgBackRest provider has no promotion capability, so on a real stack activation stays blocked (`PROMOTION_UNAVAILABLE`); verified with a fixture provider only.

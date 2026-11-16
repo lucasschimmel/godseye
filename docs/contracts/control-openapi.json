@@ -45595,6 +45595,17 @@
                                             }
                                           ]
                                         },
+                                        "commitSha": {
+                                          "anyOf": [
+                                            {
+                                              "type": "string",
+                                              "pattern": "^[a-f0-9]{40}$"
+                                            },
+                                            {
+                                              "type": "null"
+                                            }
+                                          ]
+                                        },
                                         "url": {
                                           "type": "string",
                                           "maxLength": 512,
@@ -45608,6 +45619,7 @@
                                         "startedAt",
                                         "durationMs",
                                         "branch",
+                                        "commitSha",
                                         "url"
                                       ],
                                       "additionalProperties": false

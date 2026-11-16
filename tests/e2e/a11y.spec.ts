@@ -1,7 +1,9 @@
+import { randomUUID } from "node:crypto";
 import { mkdirSync } from "node:fs";
 import { join } from "node:path";
 import AxeBuilder from "@axe-core/playwright";
 import { expect, type Page, test } from "@playwright/test";
+import { createProject, mockReleaseData } from "./a11y-fixtures.js";
 import { enrollConsoleOwner } from "./owner-fixture.js";
 
 /** Every owner-console page reachable from the main navigation, rendered in local mode. */
@@ -36,6 +38,21 @@ async function settle(page: Page) {
   await expect(page.getByText("Chargement des données…")).toHaveCount(0, { timeout: 15_000 });
 }
 
+/** Zero axe violations (WCAG 2.2 AA) and no horizontal page scroll on the page as currently shown. */
+async function expectAccessible(page: Page) {
+  const results = await new AxeBuilder({ page }).withTags(WCAG_TAGS).analyze();
+  const summary = results.violations.map((violation) => ({
+    rule: violation.id,
+    impact: violation.impact,
+    targets: violation.nodes.slice(0, 4).map((node) => node.target.join(" ")),
+  }));
+  expect(summary).toEqual([]);
+  const overflow = await page.evaluate(
+    () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+  );
+  expect(overflow).toBeLessThanOrEqual(0);
+}
+
 for (const viewport of VIEWPORTS) {
   test.describe(viewport.label, () => {
     test.use({ viewport: { width: viewport.width, height: viewport.height } });
@@ -56,19 +73,164 @@ for (const viewport of VIEWPORTS) {
             fullPage: true,
           });
         }
-        const results = await new AxeBuilder({ page }).withTags(WCAG_TAGS).analyze();
-        const summary = results.violations.map((violation) => ({
-          rule: violation.id,
-          impact: violation.impact,
-          targets: violation.nodes.slice(0, 4).map((node) => node.target.join(" ")),
-        }));
-        expect(summary).toEqual([]);
-        const overflow = await page.evaluate(
-          () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
-        );
-        expect(overflow).toBeLessThanOrEqual(0);
+        await expectAccessible(page);
       });
     }
+  });
+}
+
+const POPULATED_VIEWPORTS = [VIEWPORTS[0], VIEWPORTS[3]] as const;
+
+for (const viewport of POPULATED_VIEWPORTS) {
+  test.describe(`populated states at ${viewport.label}`, () => {
+    test.use({ viewport: { width: viewport.width, height: viewport.height } });
+
+    test.beforeEach(async ({ page, baseURL }, testInfo) => {
+      await enrollConsoleOwner(page, baseURL, testInfo.project.metadata);
+    });
+
+    test("project list and project detail with data have no violations", async ({ page }) => {
+      const name = `A11y liste ${randomUUID().slice(0, 8)}`;
+      const project = await createProject(page, name);
+      await expectAccessible(page);
+      await page.goto("/projects");
+      await expect(page.getByText(name, { exact: true }).first()).toBeVisible();
+      await settle(page);
+      await expectAccessible(page);
+      await page.goto(`/projects/${project.id}`);
+      await expect(page.getByRole("heading", { name, exact: true })).toBeVisible();
+      await settle(page);
+      await expectAccessible(page);
+    });
+
+    test("release table, build links and platform builds with data have no violations", async ({
+      page,
+    }) => {
+      const project = await createProject(page, `A11y livraison ${randomUUID().slice(0, 8)}`);
+      await mockReleaseData(page, project);
+      await page.goto("/pipelines");
+      const releases = page.getByRole("region", { name: "Versions en service" });
+      const row = releases.getByRole("row").filter({ hasText: project.name });
+      await expect(row.getByText("a1b2c3d4e5f6")).toBeVisible();
+      await expect(releases.getByRole("link", { name: "Voir le build Jenkins" })).toHaveAttribute(
+        "href",
+        "http://10.20.1.10:8080/job/godseye-platform/42/",
+      );
+      const platform = page.getByRole("region", { name: "Builds de la plateforme" });
+      await expect(platform.getByRole("table").first()).toBeVisible();
+      await settle(page);
+      await expectAccessible(page);
+    });
+
+    test("redeploy confirmation dialog is named, operable by keyboard and has no violations", async ({
+      page,
+    }) => {
+      const project = await createProject(page, `A11y dialogue ${randomUUID().slice(0, 8)}`);
+      await mockReleaseData(page, project);
+      await page.goto("/pipelines");
+      const row = page
+        .getByRole("region", { name: "Versions en service" })
+        .getByRole("row")
+        .filter({ hasText: project.name });
+      // Only the production environment has a current release, so only its button is enabled.
+      await row.locator("button:enabled", { hasText: "Redéployer" }).click();
+      const dialog = page.getByRole("alertdialog", { name: "Confirmer le redéploiement" });
+      await expect(dialog).toBeVisible();
+      await expectAccessible(page);
+      await dialog.getByRole("button", { name: "Annuler", exact: true }).click();
+      await expect(dialog).toHaveCount(0);
+    });
+  });
+}
+
+test.describe("forms with errors", () => {
+  test.use({ viewport: { width: 1280, height: 900 } });
+
+  test.beforeEach(async ({ page, baseURL }, testInfo) => {
+    await enrollConsoleOwner(page, baseURL, testInfo.project.metadata);
+  });
+
+  test("new project form announces a validation error without violations", async ({ page }) => {
+    await page.goto("/projects/new");
+    await page.getByLabel("Nom du projet", { exact: true }).fill("Projet invalide");
+    await page.getByLabel("Identifiant", { exact: true }).fill("1-invalide");
+    // The browser would block this submit with its own bubble; the console's own error is audited.
+    await page.locator("form.project-form").evaluate((form) => {
+      (form as HTMLFormElement).noValidate = true;
+    });
+    await page.getByRole("button", { name: "Enregistrer le projet", exact: true }).click();
+    await expect(
+      page.getByRole("alert").filter({ hasText: "L’identifiant doit commencer" }),
+    ).toBeVisible();
+    await expectAccessible(page);
+  });
+
+  test("a rejected duplicate project shows its server error without violations", async ({
+    page,
+  }) => {
+    const name = `A11y doublon ${randomUUID().slice(0, 8)}`;
+    await createProject(page, name);
+    await page.goto("/projects/new");
+    await page.getByLabel("Nom du projet", { exact: true }).fill(name);
+    await page.getByRole("button", { name: "Enregistrer le projet", exact: true }).click();
+    await expect(
+      page.getByRole("alert").filter({ hasText: "Cet identifiant de projet est déjà utilisé." }),
+    ).toBeVisible();
+    await expectAccessible(page);
+  });
+
+  test("repository form announces a validation error without violations", async ({ page }) => {
+    const project = await createProject(page, `A11y dépôt ${randomUUID().slice(0, 8)}`);
+    await page.goto(`/projects/${project.id}`);
+    await page.getByLabel("Dépôt", { exact: true }).fill("pas un dépôt");
+    await page.getByLabel("ID du dépôt", { exact: true }).fill("12345");
+    await page.getByLabel("ID de l’installation GitHub App", { exact: true }).fill("67890");
+    await page.getByRole("button", { name: "Enregistrer l’association", exact: true }).click();
+    await expect(page.getByRole("alert").filter({ hasText: "Vérifiez le dépôt" })).toBeVisible();
+    await expectAccessible(page);
+  });
+});
+
+/** WCAG 1.4.10: content reflows at 320 CSS px (400% of 1280) and stays usable at 200% (640 px). */
+const REFLOW_VIEWPORTS = [
+  { label: "zoom-200-percent-640", width: 640, height: 512 },
+  { label: "reflow-320", width: 320, height: 256 },
+] as const;
+
+for (const viewport of REFLOW_VIEWPORTS) {
+  test.describe(viewport.label, () => {
+    test.use({ viewport: { width: viewport.width, height: viewport.height } });
+
+    test.beforeEach(async ({ page, baseURL }, testInfo) => {
+      await enrollConsoleOwner(page, baseURL, testInfo.project.metadata);
+    });
+
+    for (const route of ROUTES) {
+      test(`${route.name} reflows without violations or two-dimensional scrolling`, async ({
+        page,
+      }) => {
+        await page.goto(route.path);
+        await expect(page.locator("main h1").first()).toBeVisible();
+        await settle(page);
+        await expectAccessible(page);
+      });
+    }
+
+    test("populated release table and dialog reflow without horizontal page scroll", async ({
+      page,
+    }) => {
+      const project = await createProject(page, `A11y reflow ${randomUUID().slice(0, 8)}`);
+      await mockReleaseData(page, project);
+      await page.goto("/pipelines");
+      const row = page
+        .getByRole("region", { name: "Versions en service" })
+        .getByRole("row")
+        .filter({ hasText: project.name });
+      await row.locator("button:enabled", { hasText: "Redéployer" }).click();
+      await expect(page.getByRole("alertdialog")).toBeVisible();
+      await settle(page);
+      await expectAccessible(page);
+    });
   });
 }
 

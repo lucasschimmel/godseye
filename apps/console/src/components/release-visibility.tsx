@@ -14,6 +14,7 @@ import { buildLink } from "@/lib/build-link";
 import { environmentLabel } from "@/lib/environment-labels";
 import { redeployBlockReason } from "@/lib/redeploy";
 import { RedeployControl } from "./redeploy-control";
+import { TableScroll } from "./table-scroll";
 
 /** Health as the delivery journal proves it; anything not proven active stays explicitly unknown. */
 const healthLabels: Record<DeliveryRunView["state"], string> = {
@@ -108,7 +109,7 @@ export function ReleaseVisibility() {
         />
       ) : (
         <div className="panel-body">
-          <div className="headroom-table-wrap">
+          <TableScroll label="Tableau défilant : version courante par environnement">
             <table className="headroom-table">
               <caption className="sr-only">Version courante par environnement</caption>
               <thead>
@@ -160,7 +161,7 @@ export function ReleaseVisibility() {
                 ))}
               </tbody>
             </table>
-          </div>
+          </TableScroll>
         </div>
       )}
       <div className="panel-body">

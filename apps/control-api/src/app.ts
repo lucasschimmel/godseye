@@ -16,6 +16,7 @@ import {
   type InfrastructureEngine,
   PlatformBuilds,
   ServerObserver,
+  withBuildLinks,
 } from "@godseye/core";
 import { APIError } from "better-auth/api";
 import { Hono } from "hono";
@@ -252,7 +253,14 @@ export function createApp(
   app.get(`${base}/operations/:id`, async (c) =>
     c.json(await core.getOperation(c.get("actor"), Uuid.parse(c.req.param("id")))),
   );
-  app.get(`${base}/ci/runs`, async (c) => c.json(await core.listCiRuns(c.get("actor"))));
+  app.get(`${base}/ci/runs`, async (c) => {
+    const actor = c.get("actor");
+    const [runs, links] = await Promise.all([
+      core.listCiRuns(actor),
+      platformBuilds.buildLinks(actor),
+    ]);
+    return c.json(withBuildLinks(runs, links));
+  });
   app.get(`${base}/audit`, async (c) => c.json(await core.listAudit(c.get("actor"))));
   app.post("/hooks/github", async (c) =>
     c.json(

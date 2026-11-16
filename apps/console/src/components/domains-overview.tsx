@@ -6,6 +6,7 @@ import { DomainTlsCell } from "@/components/domain-tls-cell";
 import { Failure, Loading, SectionTitle } from "@/components/shared";
 import { resource, timestamp } from "@/lib/api";
 import { environmentLabel } from "@/lib/environment-labels";
+import { TableScroll } from "./table-scroll";
 
 const stateLabels: Record<ProjectDomainView["state"], string> = {
   pending_verification: "Vérification en attente",
@@ -42,7 +43,7 @@ export function DomainsOverview() {
         </p>
       ) : (
         <div className="panel-body">
-          <div className="headroom-table-wrap">
+          <TableScroll label="Tableau défilant : domaines personnalisés">
             <table className="headroom-table">
               <caption className="sr-only">Domaines personnalisés de tous les projets</caption>
               <thead>
@@ -84,7 +85,7 @@ export function DomainsOverview() {
                 ))}
               </tbody>
             </table>
-          </div>
+          </TableScroll>
         </div>
       )}
     </section>

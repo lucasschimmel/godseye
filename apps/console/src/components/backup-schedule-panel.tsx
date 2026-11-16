@@ -4,6 +4,7 @@ import { DatabaseBackup } from "lucide-react";
 import { Failure, Loading, SectionTitle } from "@/components/shared";
 import { resource, timestamp } from "@/lib/api";
 import { serverUnknownLabel } from "@/lib/server-labels";
+import { TableScroll } from "./table-scroll";
 
 const age = (hours: number | null) => (hours === null ? "Inconnu" : `il y a ${hours} h`);
 const offhostLabel: Record<string, string> = {
@@ -56,7 +57,7 @@ export function BackupSchedulePanel() {
       ) : server.data.pgBackup.cells.length === 0 ? (
         <p className="muted">Aucune cellule n’a encore écrit de statut de sauvegarde.</p>
       ) : (
-        <div className="headroom-table-wrap">
+        <TableScroll label="Tableau défilant : sauvegardes par cellule">
           <table className="headroom-table">
             <caption className="sr-only">Âge des sauvegardes par cellule</caption>
             <thead>
@@ -83,7 +84,7 @@ export function BackupSchedulePanel() {
               ))}
             </tbody>
           </table>
-        </div>
+        </TableScroll>
       )}
       {server.data && (
         <p>
