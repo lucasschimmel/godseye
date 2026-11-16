@@ -53,7 +53,7 @@ and coding source receipts must be refreshed/qualified after the new accounting 
 older green native proofs cannot qualify changed controller/helper sources.
 
 Local invoice fixtures and adapter tests verify software behavior. Paid invoices,
-provider administration, a separate live observer/notifier, AX41/guest metrics and
+provider administration, a separate live observer/notifier, server (EX44)/guest metrics and
 deployed containment remain explicit qualification boundaries. Final E08 acceptance
 must cite current independent regressions, composition, browser, mutation and static
 gates rather than sum overlapping historical test counts.

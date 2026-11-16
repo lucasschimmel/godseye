@@ -8,7 +8,7 @@
 
 The owner requested the next E02.S03 infrastructure inventory and isolated-environment provisioning work while keeping all work local. Logical project/environment registration, passkey owner authority, scoped service access and FoundationEngine execution already exist. A planned environment row does not identify a running cell, and a monetary budget reservation does not reserve physical CPU, memory, data or network capacity.
 
-The accepted placement has one professional VM with sandboxed applications, a separate games VM and an optional host-created disposable work VM. The development PC is not the AX41. Docker is unavailable locally; WSL can exercise selected gVisor mechanisms without changing the operating-system configuration. These facts require preparation and truthful refusal before real host qualification, rather than invented infrastructure readiness.
+The accepted placement has one professional VM with sandboxed applications, a separate games VM and an optional host-created disposable work VM. The development PC is not the dedicated server (a Hetzner EX44, first assumed AX41). Docker is unavailable locally; WSL can exercise selected gVisor mechanisms without changing the operating-system configuration. These facts require preparation and truthful refusal before real host qualification, rather than invented infrastructure readiness.
 
 ## Decision
 

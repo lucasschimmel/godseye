@@ -1,15 +1,15 @@
 # G.O.D.S.E.Y.E architecture overview
 
-Status: proposed V1 baseline, 2026-11-11. Specifications only; no infrastructure or software has been deployed. The owner accepted a custom SDK, one professional VM and a separate games VM. Current placement/network authority: [ADR-002](adr/ADR-002-professional-vm-and-dual-stack.md).
+Status: V1 baseline (2026-11-11), updated 2026-11-16. The platform software is implemented and deployed on the dedicated server (Hetzner `EX44-1-LTD`); qualification gaps are tracked in the [execution ledger](operations/dedicated-server-execution.md) and the [gap inventory](reviews/2026-11-16-gap-inventory.md). The owner accepted a custom SDK, one professional VM and a separate games VM. Current placement/network authority: [ADR-002](adr/ADR-002-professional-vm-and-dual-stack.md); delivery engine, PostgreSQL 17/18 split and WireGuard-only console: [ADR-021](adr/ADR-021-direct-docker-runsc-delivery-and-server-decisions.md).
 
 ## One hypervisor and two permanent VMs
 
 ```text
-AX41 physical host
+EX44 physical host
   Proxmox installed ONCE: routing, firewall and VM lifecycle
   |
   +-- Professional VM: G.O.D.S.E.Y.E and all normal pro projects
-  |     +-- private console, control API, Coolify, credential broker
+  |     +-- private console (WireGuard only), control API, Docker/runsc delivery, OpenBao broker
   |     +-- dual-stack HTTPS ingress
   |     +-- project A: sandboxed apps, private database/files/jobs
   |     +-- project B: sandboxed apps, private database/files/jobs
@@ -26,7 +26,7 @@ The optional worker is a bounded sibling directly on the physical Proxmox host, 
 
 Docker/Compose packages services. Application and compatible project-worker processes use gVisor `runsc` with the `systrap` platform, which requires no nested hardware virtualization. Every project/environment cell has separate application sandboxes, Docker networks, filesystem-quota-managed data allocations, credentials, PostgreSQL instance and workflow state/keys. Development, production and previews do not share those resources.
 
-Trusted database and infrastructure services use separately qualified native runtime profiles where required. No application receives the Docker socket, migration/backup/controller credentials, arbitrary mounts or another project's network. Coolify documents runtime selection, but the adapter must verify the effective runtime/policies after deploy and redeploy; unsupported workloads do not silently fall back to native execution.
+Trusted database and infrastructure services use separately qualified native runtime profiles where required. No application receives the Docker socket, migration/backup/controller credentials, arbitrary mounts or another project's network. The delivery adapter selects `--runtime=runsc` itself and verifies the effective runtime by inspection after deploy and redeploy; unsupported workloads do not silently fall back to native execution. The control database runs PostgreSQL 17; project cells run PostgreSQL 18, each with its own instance and backup stanza.
 
 This is a revised trust boundary: professional-VM root, daemon or kernel compromise can affect every professional project. It is not equivalent to the earlier separate-kernel-per-project proposal. The host still isolates professional, games and optional work VMs. The [isolation contract](spec/isolation.md) and [network matrix](spec/networking.md) define observable controls, not perfect containment guarantees.
 
@@ -44,7 +44,7 @@ The owner console uses TanStack Start, React, TypeScript, Tailwind, shadcn/ui an
 
 The backend provides project/environment lifecycle, independent databases and identities, application auth/files, realtime domain/job events, custom SDK, migrations, backup/PITR and export/import without Supabase Cloud. Inngest remains cell-scoped plus a trusted platform scheduler. Hermes is central to operational/security/market/research/coding skills; Laya supplies evaluated local decisions. Usage accounting remains separate.
 
-Coolify is the first replaceable Docker deployment provider. It does not provision project VMs and is not assumed to manage Kubernetes. Kubernetes remains an evaluated later provider rather than an additional platform installed beside Docker for the same applications.
+Deployment runs through the platform's own replaceable Docker + `runsc` adapter (Coolify, the first candidate, was dropped: [ADR-021](adr/ADR-021-direct-docker-runsc-delivery-and-server-decisions.md)). It does not provision project VMs and is not assumed to manage Kubernetes. Kubernetes remains an evaluated later provider rather than an additional platform installed beside Docker for the same applications.
 
 ## Authoritative documents
 
