@@ -35,8 +35,9 @@ Schedule (UTC), chosen so nothing overlaps pgBackRest (03:30) and the games back
 Archives contain WireGuard/SSH/pmxcfs private keys on purpose (they are needed to rebuild): they never leave the host unencrypted
 and must never be copied into a repository.
 
-Off-host leg: needs the owner key (`h08-offhost-credentials.sh`) and the escrowed restic passphrase. Until then
-`/var/lib/godseye/status/offhost-backup.json` says `not_configured` and the health file carries a warning.
+Off-host leg: running since 2026-11-16 on the shared pgBackRest key (`h11-offhost-shared-key.sh`, accepted risk R-P06b in ledger entry 023); `h08-offhost-credentials.sh` replaces it with a dedicated prefix-scoped key later. Drill: `h13-offhost-restore-drill.sh [vmid]` restores from Backblaze into scratch and checks checksums. The escrowed restic passphrase is still an owner step. `/var/lib/godseye/status/offhost-backup.json` says `not_configured` only when no key is present.
+
+Status publication: `h12-host-status-push.sh` (host) and `p13-host-status-receiver.sh` (VM) copy `host-health.json` and `offhost-backup.json` to `/var/lib/godseye-host-status/` on `godseye-pro` after each health run, through a forced-command SSH account; the control API reads them for the console server panel.
 
 Restore procedures
 

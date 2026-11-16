@@ -31,7 +31,7 @@ cat > /etc/pgbackrest/pgbackrest.conf <<EOF
 repo1-type=s3
 repo1-s3-uri-style=path
 repo1-path=/pgbackrest
-repo1-retention-full=4
+repo1-retention-full=2
 repo1-retention-diff=7
 repo1-cipher-type=aes-256-cbc
 process-max=2

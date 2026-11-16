@@ -27,8 +27,10 @@ From the owner's workstation (WireGuard active), run twice with two different sh
 ssh -t root@10.20.1.10 "read -rs -p 'unseal share: ' S; echo; BAO_ADDR=https://127.0.0.1:8200 BAO_SKIP_VERIFY=true bao operator unseal \"\$S\""
 ```
 
-`BAO_SKIP_VERIFY` is limited to the loopback address because the listener certificate has no `127.0.0.1`
-subject alternative name. `bao status` must then report `Sealed: false`.
+`BAO_SKIP_VERIFY` is limited to the loopback address. The listener certificate does carry `127.0.0.1` and
+`10.20.1.10` as subject alternative names (checked 2026-11-16), so on the VM `BAO_CACERT=/etc/openbao/bao.crt`
+works without skipping verification; the control API already verifies it that way. `bao status` must report
+`Sealed: false`.
 
 ## Root token
 
