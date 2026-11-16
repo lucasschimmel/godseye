@@ -8,9 +8,15 @@ import { useOwner } from "@/components/owner-gate";
 import { EmptyState, Failure, Loading, PageHeading, SectionTitle } from "@/components/shared";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { api, resource } from "@/lib/api";
+import { api, resource, timestamp } from "@/lib/api";
 import { environmentLabel, ordinaryEnvironment } from "@/lib/environment-labels";
 import { ownerAuth } from "@/lib/owner";
+import {
+  bindingLabels,
+  bindingRows,
+  IMPORT_EXPLANATION,
+  providerExplanations,
+} from "@/lib/secrets-bindings";
 import { useDeployment } from "@/lib/use-deployment";
 
 export const Route = createFileRoute("/access")({ component: AccessManagement });
@@ -30,6 +36,7 @@ function AccessManagement() {
   const environments = project?.environments.filter(ordinaryEnvironment) ?? [];
   const environment = environments.find((item) => item.id === environmentId) ?? environments[0];
   const fresh = security.data?.fresh ?? false;
+  const bindings = projects.data && access.data ? bindingRows(projects.data, access.data) : [];
   async function action(work: () => Promise<void>) {
     setBusy(true);
     setFailure(null);
@@ -88,10 +95,7 @@ function AccessManagement() {
             <KeyRound size={24} />
             <div>
               <h2>{providerLabels[access.data.provider.state]}</h2>
-              <p>
-                Un coffre scellé bloque les nouveaux accès. Les services conservent leurs valeurs
-                déjà montées.
-              </p>
+              <p>{providerExplanations[access.data.provider.state]}</p>
               <p>
                 {fresh
                   ? "Identité propriétaire confirmée récemment."
@@ -216,17 +220,51 @@ function AccessManagement() {
                 identités distinctes.
               </p>
               <p>
+                {IMPORT_EXPLANATION.where}{" "}
                 {deployment.isLocal
-                  ? "Les imports et les remises de preuves passent par le terminal local privé, après arrêt du contrôleur."
-                  : "Les imports et les remises de preuves passent par une session SSH sur le serveur, via WireGuard, après arrêt du contrôleur."}{" "}
-                Aucune valeur n’est affichée ici.
+                  ? "Ici, c’est le terminal local privé."
+                  : "Avec le serveur, c’est une session SSH via WireGuard depuis votre poste."}
               </p>
+              <p>{IMPORT_EXPLANATION.why}</p>
               <p>
                 Une rotation exige un adaptateur qualifié qui confirme la transition du service et
                 la révocation de l’ancien accès.
               </p>
             </aside>
           </div>
+          <section className="panel" aria-label="Liaisons OpenBao par environnement">
+            <div className="panel-heading">
+              <SectionTitle count={bindings.length}>
+                Liaisons OpenBao par environnement
+              </SectionTitle>
+            </div>
+            <p className="muted">
+              Noms, versions et dates uniquement ; aucune valeur. Un emplacement vide signifie
+              qu’aucune valeur n’a encore été importée.
+            </p>
+            {bindings.length === 0 ? (
+              <EmptyState
+                title="Aucun environnement"
+                description="Créez un projet pour lier ses environnements au coffre."
+              />
+            ) : (
+              <ul className="rotation-roles">
+                {bindings.map((row) => (
+                  <li key={`${row.projectId}-${row.environmentId}`}>
+                    <strong>
+                      {row.projectName} · {row.environmentName}
+                    </strong>{" "}
+                    <span>{bindingLabels[row.state]}.</span>{" "}
+                    <span className="muted">
+                      {row.lastOperationAt
+                        ? `Dernier import ou transition : ${timestamp(row.lastOperationAt)}.`
+                        : "Aucun import ni transition enregistré."}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
           <section className="panel">
             <div className="panel-heading">
               <SectionTitle count={access.data.identities.length}>
