@@ -9,6 +9,9 @@ jenkins:
       users:
         - id: "${JENKINS_OWNER_ID}"
           password: "${JENKINS_OWNER_PASSWORD}"
+        # Read-only identity used by the control API to list the platform builds on the console.
+        - id: "${JENKINS_READER_ID}"
+          password: "${JENKINS_READER_PASSWORD}"
   authorizationStrategy:
     globalMatrix:
       entries:
@@ -16,6 +19,11 @@ jenkins:
             name: "${JENKINS_OWNER_ID}"
             permissions:
               - "Overall/Administer"
+        - user:
+            name: "${JENKINS_READER_ID}"
+            permissions:
+              - "Overall/Read"
+              - "Job/Read"
 security:
   gitHostKeyVerificationConfiguration:
     sshHostKeyVerificationStrategy: "knownHostsFileVerificationStrategy"

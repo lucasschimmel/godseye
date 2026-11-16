@@ -2,6 +2,7 @@ import {
   ControlPlane,
   InfrastructureEngine,
   JOBS_ADAPTER_ID,
+  PlatformBuilds,
   runDeliveryScheduler,
   runFoundationWorker,
   runJobScheduler,
@@ -15,6 +16,7 @@ import { createApp } from "./app.js";
 import { configuredCellProviders } from "./cell-providers.js";
 import { codingStartupOptions } from "./coding-startup.js";
 import { loadConfiguration } from "./config.js";
+import { configuredPlatformBuildSource } from "./delivery/platform-builds-source.js";
 import { configuredDelivery } from "./delivery/startup.js";
 import { configuredHermesProvider, type ManagedHermesProvider } from "./hermes-provider.js";
 import {
@@ -178,6 +180,11 @@ async function start() {
       engine,
       broker,
       infrastructure,
+      undefined,
+      new PlatformBuilds({
+        mode: config.mode === "server" ? "server" : "local",
+        source: configuredPlatformBuildSource(process.env) ?? null,
+      }),
     );
     server = serve({ fetch: app.fetch, port: config.apiPort, hostname: config.host }, () => {
       console.info(

@@ -235,3 +235,16 @@
     width: 100%;
   }
 }
+
+.platform-job + .platform-job {
+  margin-top: 8px;
+}
+.platform-job h3 {
+  margin: 18px 0 10px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.platform-job .mono {
+  font-size: 10px;
+  font-weight: 400;
+}

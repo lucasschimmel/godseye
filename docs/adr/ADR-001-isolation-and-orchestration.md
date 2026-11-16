@@ -2,6 +2,7 @@
 
 Date: 2026-11-11
 Status: superseded placement proposal; see [ADR-002](ADR-002-professional-vm-and-dual-stack.md)
+Update 2026-11-16: Coolify is no longer the deployment provider ([ADR-021](ADR-021-direct-docker-runsc-delivery-and-server-decisions.md)) and the machine is a Hetzner `EX44-1-LTD`; the text below is the historical record.
 
 ## Context
 

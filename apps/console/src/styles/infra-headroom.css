@@ -7,6 +7,11 @@
 }
 .headroom-table-wrap {
   overflow-x: auto;
+  /* Containing block for absolutely positioned descendants (sr-only reasons), so the scroll container
+     clips them instead of letting them stretch the page beyond the viewport. */
+  position: relative;
+  /* Keep wide nowrap tables from stretching the panel (and page) beyond the viewport. */
+  contain: inline-size;
 }
 .headroom-table {
   width: 100%;

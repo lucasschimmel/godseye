@@ -1,0 +1,80 @@
+/* Content blocks inside a .panel: same 23px inset as the panel heading and note. */
+.panel-body {
+  padding: 16px 23px 20px;
+  min-width: 0;
+}
+.panel-caption {
+  color: var(--text-secondary);
+  font-size: 11px;
+  line-height: 1.6;
+  padding: 14px 23px 0;
+}
+.panel-body .panel-caption {
+  padding: 0;
+}
+.panel-subheading {
+  margin: 22px 0 10px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.panel-body > .panel-subheading:first-child {
+  margin-top: 0;
+}
+.panel-body .headroom-table-wrap {
+  margin-top: 10px;
+}
+.panel-body .headroom-table th,
+.panel-body .headroom-table td {
+  padding: 0.7rem 0.75rem;
+}
+.panel-body .headroom-table thead th {
+  border-top: 0;
+  border-bottom: 1px solid var(--border-default);
+  color: var(--text-secondary);
+  font-size: 0.72rem;
+  font-weight: 500;
+}
+.panel-body .headroom-table tbody th {
+  font-weight: 550;
+}
+
+/* Metric tiles: same card look as the overview metric grid, sized for label/value pairs. */
+.metric-tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr));
+  gap: 1px;
+  margin: 14px 0 0;
+  background: var(--border-default);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.metric-tiles > div {
+  min-width: 0;
+  padding: 14px 18px;
+  background: var(--surface);
+}
+.metric-tiles dt {
+  color: var(--text-secondary);
+  font-size: 10px;
+}
+.metric-tiles dd {
+  margin-top: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.build-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 11px;
+  line-height: 1.6;
+}
+.build-list li {
+  padding: 10px 0;
+  border-top: 1px solid var(--border-default);
+  overflow-wrap: anywhere;
+}

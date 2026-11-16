@@ -20,8 +20,10 @@ import {
 } from "lucide-react";
 import type { ReactNode } from "react";
 import { shellCopy } from "@/lib/deployment";
+import { FALLBACK_PAGE_LABEL } from "@/lib/route-announcement";
 import { useDeployment } from "@/lib/use-deployment";
 import { useOwner } from "./owner-gate";
+import { RouteAnnouncer } from "./route-announcer";
 
 const navigation = [
   { to: "/", label: "Vue d’ensemble", icon: LayoutDashboard },
@@ -47,11 +49,12 @@ export function Shell({ children }: { children: ReactNode }) {
   );
   return (
     <div className="app-shell">
+      <RouteAnnouncer pathname={pathname} label={active?.label ?? FALLBACK_PAGE_LABEL} />
       <a className="skip-link" href="#main-content">
         Aller au contenu
       </a>
       <aside className="sidebar">
-        <Link to="/" className="brand" aria-label="G.O.D.S.E.Y.E, accueil">
+        <Link to="/" className="brand">
           <span className="brand-mark">
             <Eye size={25} />
           </span>
@@ -107,7 +110,7 @@ export function Shell({ children }: { children: ReactNode }) {
         <header className="topbar">
           <div className="breadcrumb">
             Espace personnel <ChevronRight size={13} />
-            <strong>{active?.label ?? "Projet"}</strong>
+            <strong>{active?.label ?? FALLBACK_PAGE_LABEL}</strong>
           </div>
           {copy && (
             <div className="local-pill">

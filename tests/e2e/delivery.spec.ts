@@ -85,6 +85,15 @@ test("lists each environment without inventing a deployed version or a Jenkins b
   await expect(releases.getByRole("heading", { name: "Dernières constructions" })).toBeVisible();
 });
 
+test("states that platform builds are not connected in local mode and lists none", async ({
+  page,
+}) => {
+  await boundProject(page, "Platform builds");
+  const panel = page.getByRole("region", { name: "Builds de la plateforme" });
+  await expect(panel.getByText(/Non raccordé/)).toBeVisible();
+  await expect(panel.getByRole("table")).toHaveCount(0);
+});
+
 test("T-AC-45 T-AC-51 creates, persists and revokes exact synthetic standing policy while default execution remains unavailable", async ({
   page,
 }) => {

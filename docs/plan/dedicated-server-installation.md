@@ -1,6 +1,6 @@
 # Dedicated-server implementation and qualification plan
 
-Status: documentation ready for review, 2026-11-13. **Every execution phase is pending.** This task creates a plan; it does not log into, reinstall or change the dedicated server.
+Status: plan of 2026-11-13; execution has since started and is tracked phase by phase in the [execution ledger](../operations/dedicated-server-execution.md) (the machine is a Hetzner `EX44-1-LTD`, not the AX41 first assumed; see [ADR-021](../adr/ADR-021-direct-docker-runsc-delivery-and-server-decisions.md)). The sentences below describe the original plan and are not a status.
 
 Contract: [dedicated-server specification](../spec/dedicated-server.md). Dependencies: [networking](../spec/networking.md), [isolation/recovery](../spec/isolation.md), [product development plan](v1-development.md), [placement ADR](../adr/ADR-002-professional-vm-and-dual-stack.md).
 
@@ -113,11 +113,11 @@ Acceptance: DS03 passes with host capacity preserved. Failure: stop optional/hea
 State: pending. Depends P04; maps to E00.S02/S03 and DS06/DS07.
 
 - Install pinned Docker/Compose/gVisor and trusted helpers in the professional VM; qualify systrap and compatible native infrastructure profiles separately.
-- Install the private console/control metadata DB, OpenBao, replaceable Coolify broker and optional private registry using restricted qualified profiles. Bootstrap their scoped identities and persisted material/volumes for fixture use only; retain independent recovery custody. Real project delivery remains disabled until P06/P07.
+- Install the private console/control metadata DB, OpenBao, the Docker/runsc delivery adapter (Coolify was dropped, ADR-021) and optional private registry using restricted qualified profiles. Bootstrap their scoped identities and persisted material/volumes for fixture use only; retain independent recovery custody. Real project delivery remains disabled until P06/P07.
 - Create two disposable A/B project cells with development/production boundaries, independent data/WAL/identities/workflow state and real disk limits.
 - Inspect actual sandbox/user/mount/capability/runtime settings; test no Docker socket, cross-cell file/network/material denial and direct IPv6 denial.
 - Exercise CPU/memory/PID/disk exhaustion using fixture-owned resources; verify unrelated cells, games and the host retain required headroom.
-- Inspect policies again after Coolify deploy/redeploy and host/guest reboot; do not accept only an initial manifest.
+- Inspect policies again after Docker/runsc deploy/redeploy and host/guest reboot; do not accept only an initial manifest.
 - Complete deferred DS04 container forwarding/egress and Docker bypass probes in both families with fixture-owned listeners. Actual GitHub receiver/TLS path acceptance remains in P07.
 
 Deliverables: effective runtime/compatibility matrix, A/B positive/negative evidence, quotas/dual-stack results and exact ownership/cleanup records.
@@ -144,11 +144,11 @@ Acceptance: DS09 demonstrated; DS10/DS14 remain pending until their full activat
 State: pending. Depends P05/P06 for stateful workloads; maps to DS08/DS13.
 
 - Verify the restricted platform services installed in P05 against their P06 backup/restore evidence; admit only actions whose profiles, identities and recovery contracts passed. Do not reinstall or silently replace existing persisted state.
-- Provision named owner/admin/service/emergency accounts and exact scoped Proxmox/Coolify/Bao/GitHub/registry identities; test denied cross-scope API calls, credential rotation/revocation and a fresh owner approval without exposing material.
+- Provision named owner/admin/service/emergency accounts and exact scoped Proxmox/Bao/GitHub/registry identities; test denied cross-scope API calls, credential rotation/revocation and a fresh owner approval without exposing material.
 - Bind real provider/transport target IDs, versions, observations, quotas and private material references to G.O.D.S.E.Y.E admission. Never toggle a boolean to turn fixture evidence into qualification.
 - Configure GitHub App exact repository/installation/branch bindings and signed webhooks; respect main release and develop integration roles. Keep owner-created finite delivery policies mandatory.
 - Complete P03's deferred actual receiver tests: expose only required signed webhook/callback paths, reject replay/oversized/invalid requests and neighboring admin routes over IPv4 and IPv6. Close DS04 only when all host/guest/container/receiver evidence is recorded; polling remains available where qualified.
-- Fix the prepared Jenkins main-only source configuration/stage assumptions before enabling this repository's jobs: trusted develop is the initial platform CI branch; main remains release presentation until a release contains code. Configure distinct source/PR/project policies and corresponding actual callback or polling paths; do not call the current Jenkinsfile/JCasC a completed deploy integration.
+- Jenkins branch policy (as built, 2026-11-16): the released-source job `godseye-platform` follows `main` only (SCM trigger and nightly schedule are defined in `infra/jenkins/jenkins.yaml`), and `develop` is verified before every release PR through the manual `godseye-platform-candidate` job (parameter `BRANCH`, default `develop`, same Jenkinsfile, no schedule and no SCM polling). The earlier "trusted develop is the CI branch" assumption is superseded. Configure distinct source/PR/project policies and corresponding actual callback or polling paths; do not call the current Jenkinsfile/JCasC a completed deploy integration.
 - Qualify Jenkins with zero controller executors and disposable work-VM agents. Separate source checkout, scan/artifact publication and scoped deployment authorities.
 - Exercise immutable build/check/provenance, readiness failure preserving previous traffic, compatible rollback, isolated synthetic preview and TTL cleanup. Prove lost-result reconciliation without duplicate effects.
 - Add HTTPS domains through owned DNS authority; publish AAAA only after actual IPv6 listener/TLS/renewal checks. Keep admin URLs private.

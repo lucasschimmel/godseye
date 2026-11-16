@@ -1,6 +1,7 @@
 import type { IncidentOverviewView, IncidentView, ProjectDTO } from "@godseye/contracts";
 import { useQuery } from "@tanstack/react-query";
 import { resource, timestamp } from "@/lib/api";
+import { channelStatus } from "@/lib/notification-channels";
 import { ProtectionBadge, reasonLabels } from "./protection-labels";
 import { EmptyState, Failure, Loading, SectionTitle } from "./shared";
 import { useTelemetryMutation } from "./telemetry-shared";
@@ -38,7 +39,8 @@ export function IncidentsPanel({ projects }: { projects: ProjectDTO[] }) {
   if (overview.isPending) return <Loading />;
   if (overview.isError)
     return <Failure error={overview.error} retry={() => void overview.refetch()} />;
-  const { notifier, incidents } = overview.data;
+  const { incidents } = overview.data;
+  const channel = channelStatus(overview.data);
   const active = incidents.filter((item) => item.state !== "resolved");
   const act = (item: IncidentView, action: string, extra: object = {}) =>
     mutation.mutate({
@@ -49,10 +51,21 @@ export function IncidentsPanel({ projects }: { projects: ProjectDTO[] }) {
   return (
     <section aria-label="Incidents">
       <SectionTitle count={active.length}>Incidents</SectionTitle>
+      <section className="panel" aria-label="Canaux de notification">
+        <h3>Canaux de notification</h3>
+        <p>
+          <strong>{channel.title}.</strong> {channel.detail}
+        </p>
+        <p className="muted">
+          {channel.lastAttemptAt
+            ? `Dernière tentative d’envoi enregistrée : ${timestamp(channel.lastAttemptAt)}.`
+            : "Aucune tentative d’envoi enregistrée."}{" "}
+          Confirmées : {channel.counts.notified} · en échec : {channel.counts.failed} · résultat
+          inconnu : {channel.counts.unknown} · en attente : {channel.counts.pending}.
+        </p>
+        {channel.ownerAction && <p>{channel.ownerAction}</p>}
+      </section>
       <p className="muted">
-        {notifier === "configured"
-          ? "Un canal de notification externe est configuré ; seul l’état « Notification externe confirmée » prouve un envoi."
-          : "Aucun canal de notification externe n’est configuré : les incidents sont enregistrés ici, personne n’est prévenu automatiquement."}{" "}
         Les observations absentes ou périmées ne prouvent pas la disparition d’un incident.
       </p>
       <Button

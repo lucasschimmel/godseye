@@ -11,6 +11,7 @@
 @import "./styles/features.css";
 @import "./styles/owner.css";
 @import "./styles/responsive-desktop.css";
+@import "./styles/responsive-tablet.css";
 @import "./styles/responsive-mobile.css";
 @import "./styles/infrastructure.css";
 @import "./styles/infra-headroom.css";
@@ -22,4 +23,6 @@
 @import "./styles/agents-chat.css";
 @import "./styles/agents-coding.css";
 
+@import "./styles/panel-sections.css";
 @import "./styles/telemetry.css";
+@import "./styles/accessibility.css";

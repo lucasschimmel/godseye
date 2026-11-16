@@ -3,6 +3,7 @@ export const providerLabels: Record<string, string> = {
   ready: "OpenBao disponible",
   sealed: "OpenBao scellé",
   uninitialized: "OpenBao non initialisé",
+  no_authority: "OpenBao répond, sans identité pour le contrôleur",
   unauthorized: "Autorité OpenBao refusée",
   unavailable: "OpenBao indisponible",
   invalid: "Réponse OpenBao invalide",
