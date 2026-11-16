@@ -64,3 +64,19 @@ export const recoverySteps = pgTable("recovery_steps", {
   evidence: text("evidence"),
   createdAt: moment("created_at").notNull(),
 });
+/** Durable intent and outcome of an owner-confirmed restore activation; `fenced` and `unknown` are resumable. */
+export const recoveryActivations = pgTable("recovery_activations", {
+  id: uuid("id").primaryKey(),
+  projectId: uuid("project_id").notNull(),
+  environmentId: uuid("environment_id").notNull().unique(),
+  sourceEnvironmentId: uuid("source_environment_id").notNull(),
+  preparationId: uuid("preparation_id").notNull(),
+  state: text("state").$type<"fenced" | "unknown" | "activated">().notNull(),
+  epoch: integer("epoch").notNull(),
+  acknowledged: jsonb("acknowledged").$type<string[]>().notNull(),
+  reason: text("reason"),
+  evidence: text("evidence"),
+  createdAt: moment("created_at").notNull(),
+  updatedAt: moment("updated_at").notNull(),
+  activatedAt: moment("activated_at"),
+});

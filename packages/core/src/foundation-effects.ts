@@ -323,6 +323,29 @@ export async function cancel(
     return viewRun(tx, runId);
   });
 }
+/** Advances the environment's activation epoch, marks running work unknown and revokes every run's grants. */
+export async function fenceEnvironment(
+  tx: DatabaseAccess,
+  state: FoundationState,
+  environmentId: string,
+) {
+  const epoch = (await currentEpoch(tx, environmentId)) + 1;
+  await tx
+    .insert(schema.activationEpochs)
+    .values({ environmentId, epoch })
+    .onConflictDoUpdate({ target: schema.activationEpochs.environmentId, set: { epoch } });
+  const rows = await tx
+    .select()
+    .from(schema.executionRuns)
+    .where(and(eq(schema.executionRuns.environmentId, environmentId)));
+  for (const run of rows) {
+    const { operation } = await runFor(tx, run.id);
+    if (["running", "reconciling"].includes(operation.status))
+      await markUnknown(tx, state, run.id, "ACTIVATION_FENCED");
+    await revokeGrants(tx, state, run.id);
+  }
+  return epoch;
+}
 export async function advanceEpoch(
   state: FoundationState,
   actor: Actor,
@@ -339,21 +362,7 @@ export async function advanceEpoch(
     assertProjectAccess(actor, environment.projectId);
     const receipt = await requestFor(tx, actor, key, "environment.fence", { environmentId });
     if (receipt.existing) return Number(receipt.existing.resourceId);
-    const epoch = (await currentEpoch(tx, environmentId)) + 1;
-    await tx
-      .insert(schema.activationEpochs)
-      .values({ environmentId, epoch })
-      .onConflictDoUpdate({ target: schema.activationEpochs.environmentId, set: { epoch } });
-    const rows = await tx
-      .select()
-      .from(schema.executionRuns)
-      .where(and(eq(schema.executionRuns.environmentId, environmentId)));
-    for (const run of rows) {
-      const { operation } = await runFor(tx, run.id);
-      if (["running", "reconciling"].includes(operation.status))
-        await markUnknown(tx, state, run.id, "ACTIVATION_FENCED");
-      await revokeGrants(tx, state, run.id);
-    }
+    const epoch = await fenceEnvironment(tx, state, environmentId);
     await recordRequest(tx, state, key, receipt.digest, String(epoch), "environment.fence");
     await appendAudit(
       tx,

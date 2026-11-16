@@ -180,7 +180,9 @@ describe("durable physical recovery uncertainty and controller reconstruction", 
       preparation.environmentId,
     );
     expect(empty).toMatchObject({ activation: "blocked", recoveryHold: true });
-    expect(empty.reasons).toContain("NON_REWOUND_BUSINESS_EFFECT_COVERAGE_UNQUALIFIED");
+    expect(empty.requiredAcknowledgements).toContain(
+      "NON_REWOUND_BUSINESS_EFFECT_COVERAGE_UNQUALIFIED",
+    );
   });
 
   it("T-AC-41 never expires unresolved recovery effects even when a terminal timestamp was written before a late outcome", async () => {

@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { api, resource, timestamp } from "@/lib/api";
 import { ordinaryEnvironment } from "@/lib/environment-labels";
+import { RecoveryActivationForm } from "./recovery-activation-form";
 import { EmptyState, Failure, Loading, SectionTitle, Status } from "./shared";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
@@ -94,10 +95,18 @@ export function RecoveryPanel({
             seule, applications, tâches, agents et accès de service bloqués. La source est
             conservée.
           </p>
-          <p>
-            Activation bloquée : fichiers, authentification, configuration, historique des effets et
-            arrêt des producteurs restent à qualifier.
-          </p>
+          {overview.data.activation === "blocked" ? (
+            <p>
+              Activation bloquée : fichiers, authentification, configuration, historique des effets
+              et arrêt des producteurs restent à qualifier.
+            </p>
+          ) : (
+            <p>
+              Activation possible uniquement après confirmation du propriétaire : la source est
+              isolée, la base restaurée promue puis désignée active. Fichiers, authentification et
+              configuration ne sont pas restaurés.
+            </p>
+          )}
           <p>
             Politique préparée : complète hebdomadaire, différentielle quotidienne, archivage
             continu. Aucun ordonnanceur automatique qualifié n’exécute cette politique.
@@ -277,6 +286,9 @@ export function RecoveryPanel({
             const currentEnvironment = currentProject?.environments.find(
               (e) => e.id === preparation.sourceEnvironmentId,
             );
+            const restoredEnvironment = currentProject?.environments.find(
+              (e) => e.id === preparation.environmentId,
+            );
             const current =
               currentProject?.revision === preparation.expectedProjectRevision &&
               currentEnvironment?.revision === preparation.expectedEnvironmentRevision;
@@ -302,9 +314,24 @@ export function RecoveryPanel({
                 {preparation.kind === "restore" && (
                   <p>
                     Maintien de récupération permanent. Identité et catalogue PostgreSQL issus de la
-                    source ; volumes et réseau distincts. Activation indisponible.
+                    source ; volumes et réseau distincts.
+                    {overview.data.activation === "blocked"
+                      ? " Activation indisponible."
+                      : " Activation soumise à la confirmation du propriétaire."}
                   </p>
                 )}
+                {preparation.kind === "restore" &&
+                  run?.state === "restore-verified" &&
+                  currentProject &&
+                  restoredEnvironment?.recoveryHold &&
+                  restoredEnvironment.kind === "recovery" &&
+                  overview.data.activation !== "blocked" && (
+                    <RecoveryActivationForm
+                      project={currentProject}
+                      environment={restoredEnvironment}
+                      fresh={fresh}
+                    />
+                  )}
                 {run?.state === "unknown" && (
                   <p>
                     Résultat incertain : toutes les réservations sont conservées. Rapprochement

@@ -256,3 +256,158 @@ test("T-AC-35 T-AC-40 shows derived backup, rotation and incident states without
   });
   await expect(page.getByRole("button", { name: /Pivoter/ })).toHaveCount(0);
 });
+
+// The product configuration has no promotion provider, so this journey serves a verified held restore
+// through route fixtures and asserts what the owner is shown and exactly what the console sends.
+test("T-AC-40 T-AC-42 shows the owner-confirmed activation form and sends only exact confirmed input", async ({
+  page,
+}) => {
+  const name = await registerProject(page, "Recovery activation e2e");
+  const restoredName = "restauration-controle";
+  const ids = {
+    preparation: randomUUID(),
+    run: randomUUID(),
+    allocation: randomUUID(),
+    sourceAllocation: randomUUID(),
+    source: randomUUID(),
+  };
+  const acknowledgements = [
+    "FILES_SNAPSHOT_MISSING",
+    "AUTH_SNAPSHOT_MISSING",
+    "CONFIG_SNAPSHOT_MISSING",
+    "NON_REWOUND_BUSINESS_EFFECT_COVERAGE_UNQUALIFIED",
+  ];
+  const posted: unknown[] = [];
+  const headers = { [CONTROL_API_HEADER]: CONTROL_API_VERSION };
+  let restoredId = "";
+  let projectId = "";
+  await page.route("**/api/v1/projects", async (route) => {
+    if (route.request().method() !== "GET") return route.continue();
+    const response = await route.fetch();
+    const body = (await response.json()) as {
+      id: string;
+      name: string;
+      environments: { id: string; kind: string; name: string; recoveryHold: boolean }[];
+    }[];
+    const project = body.find((item) => item.name === name);
+    const environment = project?.environments[0];
+    if (project && environment) {
+      projectId = project.id;
+      restoredId = environment.id;
+      Object.assign(environment, { kind: "recovery", name: restoredName, recoveryHold: true });
+    }
+    return route.fulfill({ response, json: body });
+  });
+  await page.route("**/api/v1/recovery", async (route) => {
+    await route.fulfill({
+      headers,
+      json: {
+        execution: "qualified",
+        activation: "owner-confirmed",
+        schedule: "prepared-only",
+        backups: [],
+        preparations: [
+          {
+            id: ids.preparation,
+            projectId,
+            sourceEnvironmentId: ids.source,
+            sourceAllocationId: ids.sourceAllocation,
+            environmentId: restoredId,
+            allocationId: ids.allocation,
+            kind: "restore",
+            backupId: randomUUID(),
+            targetTime: "2026-11-11T11:30:00.000Z",
+            name: restoredName,
+            expectedProjectRevision: 0,
+            expectedEnvironmentRevision: 0,
+            policy: {
+              fullRetention: 4,
+              differentialRetention: 7,
+              repositoryGiB: 4,
+              stagingGiB: 1,
+              archiveHeadroomGiB: 1,
+              maxArchiveAgeSeconds: 300,
+            },
+            policyVersion: "pgbackrest-held-recovery-v1",
+            hash: "a".repeat(64),
+            createdAt: "2026-11-11T11:00:00.000Z",
+          },
+        ],
+        runs: [
+          {
+            id: randomUUID(),
+            preparationId: ids.preparation,
+            runId: ids.run,
+            projectId,
+            environmentId: restoredId,
+            allocationId: ids.allocation,
+            kind: "restore",
+            state: "restore-verified",
+            recoveryHold: true,
+            reason: null,
+            updatedAt: "2026-11-11T11:05:00.000Z",
+          },
+        ],
+      },
+    });
+  });
+  await page.route("**/api/v1/recovery/environments/*/activation", async (route) => {
+    if (route.request().method() === "POST") {
+      posted.push(route.request().postDataJSON());
+      return route.fulfill({
+        headers,
+        json: {
+          id: randomUUID(),
+          projectId,
+          environmentId: restoredId,
+          sourceEnvironmentId: ids.source,
+          state: "activated",
+          epoch: 2,
+          acknowledged: acknowledgements,
+          reason: null,
+          createdAt: "2026-11-11T11:10:00.000Z",
+          activatedAt: "2026-11-11T11:10:00.000Z",
+        },
+      });
+    }
+    return route.fulfill({
+      headers,
+      json: {
+        environmentId: restoredId,
+        sourceEnvironmentId: ids.source,
+        recoveryHold: true,
+        activation: "ready",
+        reasons: [],
+        requiredAcknowledgements: acknowledgements,
+        pending: null,
+        retainedDefinitions: { jobs: 2, backend: 1, domains: 0 },
+      },
+    });
+  });
+  await openRecovery(page);
+  const form = page.getByRole("form", {
+    name: `Activer l’environnement restauré ${restoredName}`,
+    exact: true,
+  });
+  await expect(form).toBeVisible();
+  await expect(form.getByText(/2 tâche\(s\), 1 configuration\(s\) backend/)).toBeVisible();
+  const submit = form.getByRole("button", {
+    name: "Activer l’environnement restauré",
+    exact: true,
+  });
+  await expect(submit).toBeDisabled();
+  for (const box of await form.getByRole("checkbox").all()) await box.check();
+  await expect(submit).toBeDisabled();
+  await form.getByLabel(`Saisissez « ${restoredName} » pour confirmer`).fill(restoredName);
+  await expect(submit).toBeEnabled();
+  await submit.click();
+  await expect(page.getByText(/Environnement restauré activé/)).toBeVisible();
+  expect(posted).toEqual([
+    {
+      expectedProjectRevision: expect.any(Number),
+      expectedEnvironmentRevision: 0,
+      confirmName: restoredName,
+      acknowledged: acknowledgements,
+    },
+  ]);
+});

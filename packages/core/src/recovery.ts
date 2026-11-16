@@ -1,4 +1,5 @@
 import type {
+  ActivateRestoreInput,
   AdmitRecoveryInput,
   ExecutionContext,
   PrepareArchiveCheckInput,
@@ -9,13 +10,14 @@ import { RecoveryBackup } from "@godseye/contracts";
 import { type DatabaseAccess, type Store, schema } from "@godseye/store";
 import { eq } from "drizzle-orm";
 import { DomainError } from "./errors.js";
-import { currentEpoch, environmentFor } from "./foundation-data.js";
+import { currentEpoch } from "./foundation-data.js";
 import type { FoundationEngine } from "./foundations.js";
 import { type Actor, assertOwner } from "./policy.js";
+import { activateRestore, assessRestoreActivation } from "./recovery-activation.js";
 import { admitRecovery, reserveRecovery } from "./recovery-admission.js";
 import { executeRecovery } from "./recovery-execution.js";
 import { prepareArchiveCheck, prepareBackup, prepareRestore } from "./recovery-preparation.js";
-import type { RecoveryMetadata, RecoveryProvider } from "./recovery-provider.js";
+import { canPromote, type RecoveryMetadata, type RecoveryProvider } from "./recovery-provider.js";
 import {
   qualifyRecovery,
   RECOVERY_ADAPTER_ID,
@@ -146,7 +148,9 @@ export class RecoveryEngine {
     }
     return {
       execution,
-      activation: "blocked" as const,
+      activation: canPromote(this.options.provider)
+        ? ("owner-confirmed" as const)
+        : ("blocked" as const),
       schedule: "prepared-only" as const,
       preparations: preparations.map(recoveryPreparationView),
       runs: runs.map(recoveryRunView),
@@ -202,28 +206,12 @@ export class RecoveryEngine {
   async protection() {
     return backupProtection(await backupOverview(this.state));
   }
+  /** Derived from stored state on every call: the gate never trusts a cached or caller-supplied verdict. */
   async assessActivation(actor: Actor, environmentId: string) {
-    assertOwner(actor);
-    const [env] = await this.store.db
-      .select()
-      .from(schema.environments)
-      .where(eq(schema.environments.id, environmentId));
-    if (!env) throw new DomainError("NOT_FOUND", "Recovery environment not found", 404);
-    await environmentFor(this.store.db, actor, env.projectId, env.id, true);
-    if (!env.recoveryHold)
-      throw new DomainError("RECOVERY_HOLD", "Environment is not held for recovery", 409);
-    return {
-      environmentId,
-      recoveryHold: true as const,
-      activation: "blocked" as const,
-      reasons: [
-        "PRODUCER_FENCING_UNQUALIFIED",
-        "NON_REWOUND_BUSINESS_EFFECT_COVERAGE_UNQUALIFIED",
-        "FILES_SNAPSHOT_MISSING",
-        "AUTH_SNAPSHOT_MISSING",
-        "CONFIG_SNAPSHOT_MISSING",
-        "RUNTIME_ACCESS_UNQUALIFIED",
-      ],
-    };
+    return (await assessRestoreActivation(this.state, this.store.db, actor, environmentId)).view;
+  }
+  /** Fence the source, promote through the provider and designate the restore active; fresh owner step-up required. */
+  activate(actor: Actor, environmentId: string, input: ActivateRestoreInput, key: string) {
+    return activateRestore(this.state, actor, environmentId, input, key);
   }
 }

@@ -11,13 +11,13 @@ import { DomainError } from "./errors.js";
 import { type Actor, assertProjectAccess } from "./policy.js";
 
 export const QUARANTINE_MS = QUARANTINE_RETENTION_DAYS * 86_400_000;
-const OPEN_RUNS: (typeof schema.jobRuns.$inferSelect)["state"][] = [
+export const OPEN_RUNS: (typeof schema.jobRuns.$inferSelect)["state"][] = [
   "running",
   "cancel_requested",
   "unknown",
   "reconciling",
 ];
-const OPEN_OUTBOX: (typeof schema.jobOutbox.$inferSelect)["state"][] = [
+export const OPEN_OUTBOX: (typeof schema.jobOutbox.$inferSelect)["state"][] = [
   "dispatching",
   "unknown",
   "reconciling",
