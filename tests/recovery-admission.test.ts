@@ -322,9 +322,9 @@ describe("exact recovery source, fresh authority and atomic physical reservation
       preparation.environmentId,
     );
     expect(assessment).toMatchObject({ recoveryHold: true, activation: "blocked" });
-    expect(assessment.reasons).toEqual(
+    expect(assessment.reasons).toEqual(["PROMOTION_UNAVAILABLE"]);
+    expect(assessment.requiredAcknowledgements).toEqual(
       expect.arrayContaining([
-        "PRODUCER_FENCING_UNQUALIFIED",
         "NON_REWOUND_BUSINESS_EFFECT_COVERAGE_UNQUALIFIED",
         "FILES_SNAPSHOT_MISSING",
         "AUTH_SNAPSHOT_MISSING",

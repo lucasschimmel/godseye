@@ -1,4 +1,5 @@
 import {
+  ActivateRestore,
   AdmitRecovery,
   HttpId,
   LOCAL_DEFAULTS,
@@ -62,5 +63,15 @@ export function registerRecoveryRoutes(
   );
   app.get(`${base}/environments/:id/activation`, async (c) =>
     c.json(await recovery().assessActivation(c.get("actor"), HttpId.parse(c.req.param("id")))),
+  );
+  app.post(`${base}/environments/:id/activation`, async (c) =>
+    c.json(
+      await recovery().activate(
+        c.get("actor"),
+        HttpId.parse(c.req.param("id")),
+        ActivateRestore.parse(await c.req.json()),
+        c.req.header("idempotency-key") ?? "",
+      ),
+    ),
   );
 }
