@@ -172,6 +172,7 @@ export * from "./infra-admission-schema.js";
 export * from "./infra-schema.js";
 export * from "./jobs-schema.js";
 export * from "./lifecycle-schema.js";
+export * from "./notifications-schema.js";
 export * from "./observability-schema.js";
 export * from "./orchestration-schema.js";
 export * from "./owner-schema.js";

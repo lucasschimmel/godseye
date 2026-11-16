@@ -38,6 +38,7 @@ import {
 import { INFRASTRUCTURE_HTTP_ENDPOINTS } from "./infra-endpoints.js";
 import { JOBS_HTTP_ENDPOINTS } from "./jobs-endpoints.js";
 import { LIFECYCLE_HTTP_ENDPOINTS } from "./lifecycle-endpoints.js";
+import { NOTIFICATION_HTTP_ENDPOINTS } from "./notifications-endpoints.js";
 import { OBSERVABILITY_HTTP_ENDPOINTS } from "./observability-endpoints.js";
 import { ORCHESTRATION_HTTP_ENDPOINTS } from "./orchestration-endpoints.js";
 import { OwnerSecurityResponse, OwnerStatusResponse } from "./owner.js";
@@ -45,7 +46,7 @@ import { PROTECTION_HTTP_ENDPOINTS } from "./protection-endpoints.js";
 import { RECOVERY_HTTP_ENDPOINTS } from "./recovery-endpoints.js";
 import { USAGE_HTTP_ENDPOINTS } from "./usage-endpoints.js";
 
-export const CONTROL_API_VERSION = "1.21.0" as const;
+export const CONTROL_API_VERSION = "1.22.0" as const;
 export const CONTROL_API_HEADER = "x-godseye-api-version" as const;
 export interface ControlEndpoint {
   method: "GET" | "POST" | "PUT";
@@ -76,6 +77,7 @@ export const CONTROL_HTTP_ENDPOINTS = [
   ...DATABASE_HTTP_ENDPOINTS,
   ...DELIVERY_HTTP_ENDPOINTS,
   ...DOMAIN_HTTP_ENDPOINTS,
+  ...NOTIFICATION_HTTP_ENDPOINTS,
   ...JOBS_HTTP_ENDPOINTS,
   ...LIFECYCLE_HTTP_ENDPOINTS,
   ...RECOVERY_HTTP_ENDPOINTS,

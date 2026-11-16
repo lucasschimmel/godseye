@@ -16,7 +16,7 @@ Sources: three read-only audits (console, V1 spec/plan, dedicated-server spec/pl
 | A8 | Passkeys: no "add a passkey" flow; revoke disabled with no explanation; ticket creation is CLI-only | important | C |
 | A9 | Audit export/anchor exist in the API with no console surface | important | C |
 | A10 | Secrets: no remote import flow; "à connecter" rotation labels without a path | important | C |
-| A11 | Incidents/notifications: no channel configuration, no real delivery | important | C + O |
+| A11 | Incidents/notifications: webhook adapter, console configuration and arrival test now exist (owner API 1.22.0); email absent (no SMTP contract); no live receiver qualified | important | C + O |
 | A12 | Backend panel, project create/detail, repository form: stale "runtime non connecté", "validated locally" copy | important | C |
 | A13 | Custom domains: no cross-project list, no TLS expiry/state | polish | C |
 | A14 | Usage/jobs/Hermes copy ("fixture", "local"), English fragments, duplicate nav icons | polish | C |
@@ -55,7 +55,7 @@ Stale or contradictory documentation (status updated 2026-11-16 by the `docs/spe
 | B10 | Inconsistent DS numbering and storage commitments | **Closed** | Ledger entries 010, 011, 014, 017 and 019 renumbered to the DS definitions of the spec; a reconciliation note explains the 300 / 360 / 420 / 480 GiB figures. The disk/RAM over-commit itself is a capacity decision and stays open (section C) |
 | B11 | Stale OpenBao custody claim in ledger entry 016 (init material still on the VM) | **Closed** | Entries 015, 016 and 012 corrected from the owner's confirmation that the VM copy was deleted and only the desktop holds parts. **Not verified here:** deletion on the VM, root-token revocation evidence and an unseal rehearsal (section C and D item 8) |
 
-Code-side spec/plan gaps, status after the restore-activation change (owner API `1.21.0`):
+Code-side spec/plan gaps, status after the restore-activation change (owner API `1.22.0`):
 
 | # | Gap | Status | Reason / what remains |
 |---|---|---|---|

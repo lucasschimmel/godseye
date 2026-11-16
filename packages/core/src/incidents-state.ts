@@ -20,6 +20,11 @@ export interface Finding {
 }
 /** Delivery is external and optional; absence of a notifier is a visible state, not a delivery. */
 export interface IncidentNotifier {
+  /**
+   * Whether a delivery target exists right now. Omitted means "always configured". When it
+   * answers false, new incidents stay `unconfigured` and the outbox is not drained.
+   */
+  configured?(): Promise<boolean>;
   notify(
     incident: IncidentView,
     context?: { idempotencyKey: string },

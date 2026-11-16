@@ -4,7 +4,11 @@
 
 ### Owner-confirmed restore activation
 
-- Owner API `1.21.0`, migration `0026_restore_activation.sql`: `POST /recovery/environments/:id/activation` fences the source environment, requires an independent provider promotion proof and only then designates a verified held restore as the active environment; the source stays held as evidence. It needs a fresh passkey, exact revisions, the typed name and every coverage acknowledgement. `GET .../activation` now reports derived blockers (`reasons`), required acknowledgements and retained definitions instead of a fixed list. The console shows the form only when a provider can promote. The shipped pgBackRest provider has no promotion capability, so on a real stack activation stays blocked (`PROMOTION_UNAVAILABLE`); verified with a fixture provider only.
+- Owner API `1.22.0`, migration `0027_restore_activation.sql`: `POST /recovery/environments/:id/activation` fences the source environment, requires an independent provider promotion proof and only then designates a verified held restore as the active environment; the source stays held as evidence. It needs a fresh passkey, exact revisions, the typed name and every coverage acknowledgement. `GET .../activation` now reports derived blockers (`reasons`), required acknowledgements and retained definitions instead of a fixed list. The console shows the form only when a provider can promote. The shipped pgBackRest provider has no promotion capability, so on a real stack activation stays blocked (`PROMOTION_UNAVAILABLE`); verified with a fixture provider only.
+
+### Notification channels
+
+- Owner API `1.21.0`: `GET/POST /notifications/channels`, `POST /notifications/channels/:id/test` and `/remove`. Owner webhook channels (https, port 443, public names only, connect-time DNS validation, no redirects, bounded retries) deliver incidents and rotation alerts; an arrival test sends a real event. Create, test and remove need a fresh passkey. The URL and signing secret are sealed (AES-256-GCM) and never returned, logged or audited. The console reports `confirmed` only for a 2xx answer and `unknown` when a send may have reached the receiver. Migration `0026`. No SMTP adapter: no contract exists. Not qualified against a live receiver.
 
 ### Release visibility
 

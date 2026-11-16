@@ -48,7 +48,7 @@ The durable server-owned hold blocks ordinary app/database start/resume, executi
 
 Database validation does not restore files, auth or configuration at the same timestamp. Coverage exposes `databaseAt`, nullable `filesAt`/`authAt`/`configAt`, and missing ancillary snapshots, business-effect history and producer fencing. No complete recovery set is claimed.
 
-### Owner-confirmed activation (owner API `1.21.0`, migration `0026`)
+### Owner-confirmed activation (owner API `1.22.0`, migration `0027`)
 
 A restored environment becomes the project's active data only through `POST /recovery/environments/:id/activation`. The request carries the exact project and environment revisions, the typed environment name and every required acknowledgement (`FILES_SNAPSHOT_MISSING`, `AUTH_SNAPSHOT_MISSING`, `CONFIG_SNAPSHOT_MISSING`, `NON_REWOUND_BUSINESS_EFFECT_COVERAGE_UNQUALIFIED`); a recent passkey session is required. The gate is derived from stored state and refuses with `ACTIVATION_BLOCKED` while: the restore run is not `restore-verified`; the project is suspended or being deleted; the source is already held; the source has unfinished execution/job/outbox work or unresolved (`intent`/`unknown`) effects; or the provider has no promotion capability (`PROMOTION_UNAVAILABLE`).
 

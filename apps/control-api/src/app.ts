@@ -40,6 +40,7 @@ import type { OwnerIdentity } from "./identity/index.js";
 import { registerInfrastructureRoutes } from "./infra-routes.js";
 import { registerJobsRoutes } from "./jobs-routes.js";
 import { registerLifecycleRoutes } from "./lifecycle-routes.js";
+import { registerNotificationRoutes } from "./notification-routes.js";
 import { registerObservabilityRoutes } from "./observability-routes.js";
 import { registerOpenApi } from "./openapi.js";
 import { registerOrchestrationRoutes } from "./orchestration-routes.js";
@@ -276,6 +277,7 @@ export function createApp(
   registerBackendRoutes(app, core);
   registerRecoveryRoutes(app, infrastructure);
   registerProtectionRoutes(app, infrastructure);
+  registerNotificationRoutes(app, infrastructure);
   registerDeliveryRoutes(app, infrastructure);
   registerJobsRoutes(app, infrastructure);
   registerAgentRoutes(app, infrastructure);
