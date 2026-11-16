@@ -6,6 +6,7 @@ import type {
 import { useId, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { serverInventory, serverInventoryBasis } from "@/lib/infra-server-inventory";
 
 const capacities = ["cpuMilliCores", "memoryMiB", "storageGiB", "pids"] as const;
 const labels = {
@@ -75,13 +76,17 @@ export function InfrastructureInventoryForm({
   overview,
   disabled,
   save,
+  serverDefaults = false,
 }: {
   overview: InfrastructureOverviewView;
   disabled: boolean;
   save: (input: DeclareInventoryInput) => Promise<void>;
+  /** Pre-fill from the facts recorded on the dedicated server instead of generic planning values. */
+  serverDefaults?: boolean;
 }) {
+  const prefilled = serverDefaults && !overview.desired;
   const [draft, setDraft] = useState<DeclareInventoryInput>(() =>
-    structuredClone(overview.desired ?? plannedInventory),
+    structuredClone(overview.desired ?? (serverDefaults ? serverInventory : plannedInventory)),
   );
   return (
     <form
@@ -92,9 +97,22 @@ export function InfrastructureInventoryForm({
       }}
     >
       <p className="muted">
-        Valeurs de planification à confirmer. Cette déclaration ne mesure aucun serveur et n’accorde
-        aucune qualification.
+        {prefilled
+          ? "Valeurs relevées sur ce serveur, à confirmer."
+          : "Valeurs de planification à confirmer."}{" "}
+        Cette déclaration ne mesure aucun serveur et n’accorde aucune qualification.
       </p>
+      {prefilled && (
+        <div className="infra-basis" data-testid="inventory-basis">
+          <ul>
+            {serverInventoryBasis.measured.map((line) => (
+              <li key={line}>{line}</li>
+            ))}
+          </ul>
+          <p>{serverInventoryBasis.commitment}</p>
+          <p>{serverInventoryBasis.proposals}</p>
+        </div>
+      )}
       <label htmlFor="infra-host-name">
         Nom de l’hôte
         <Input

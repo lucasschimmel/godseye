@@ -22,6 +22,7 @@ import {
   infrastructureReason,
   infrastructureStates,
 } from "@/lib/infra-labels";
+import { collectedMeasuresServerNote, headroomEvidence } from "@/lib/infra-server-truth";
 import { ownerAuth } from "@/lib/owner";
 import { useDeployment } from "@/lib/use-deployment";
 
@@ -194,7 +195,9 @@ function Infrastructure() {
                   </div>
                 ) : (
                   <p className="panel-note">
-                    Aucune mesure collectée. Les capacités du serveur dédié restent inconnues.
+                    {deployment.isServer
+                      ? collectedMeasuresServerNote
+                      : "Aucune mesure collectée. Les capacités du serveur dédié restent inconnues."}
                   </p>
                 )}
               </section>
@@ -225,6 +228,7 @@ function Infrastructure() {
                 data={headroom.data}
                 fresh={fresh}
                 busy={busy}
+                evidence={headroomEvidence(deployment.isServer, data)}
                 onAdmission={(state, reason) =>
                   void action(async () => {
                     await mutate(
@@ -237,10 +241,12 @@ function Infrastructure() {
                 }
               />
             )}
-            <section className="panel">
+            <section className="panel" id="inventaire-souhaite">
               <div className="panel-heading">
                 <SectionTitle>Inventaire souhaité</SectionTitle>
-                <span className="muted">Déclaré · révision {data.revision}</span>
+                <span className="muted">
+                  {data.desired ? `Déclaré · révision ${data.revision}` : "Non déclaré"}
+                </span>
               </div>
               <details open={!data.desired}>
                 <summary>
@@ -249,7 +255,8 @@ function Infrastructure() {
                     : "Déclarer la topologie souhaitée"}
                 </summary>
                 <InfrastructureInventoryForm
-                  key={data.revision}
+                  key={`${data.revision}-${deployment.mode ?? "unknown"}`}
+                  serverDefaults={deployment.isServer}
                   overview={data}
                   disabled={busy || !fresh}
                   save={(input) =>
