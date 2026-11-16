@@ -82,3 +82,19 @@ Effective policy, enforced in `/etc/nftables.conf` (`godseye_filter`, `godseye_n
 - Expected scan result from outside (`h05-external-scan.ps1`): `65.108.38.218` has only 80 and 443 open; `2a01:4f9:3080:344e::{2,100,200}` have nothing open; `22, 5432, 6379, 8006, 8080, 8200` closed everywhere.
 - Publishing an AAAA record or any new port needs a recorded justification (N01, N05); add the port in `/etc/nftables.conf`, rerun `h05-external-scan.ps1` and the guest tests, and update the expected list in the script.
 - After any firewall change: `h06-firewall-hardening.sh`-style procedure: schedule a rollback timer first, keep the current SSH session, test from a second session, then cancel the timer.
+
+## 5. In-guest firewalls, LLMNR and work-VM egress (since 2026-11-16)
+
+Scripts in [`infra/dedicated-server/guest/`](../../infra/dedicated-server/guest/), copied to the guest and run as root; each saves a rollback copy under `/var/lib/godseye/rollback/g0x-<timestamp>/`.
+
+| Script | Purpose |
+| --- | --- |
+| `g01-guest-firewall.sh apply\|commit\|rollback\|status pro\|games\|work` | Table `inet godseye_guest`, input policy drop; SSH only from WireGuard peers and the subnet gateway (work also from pro); Jenkins UI 8080 and the edge forwards on pro; UDP 30000 on games. 5-minute auto-rollback until `commit` |
+| `g02-disable-llmnr.sh` | `LLMNR=no`, `MulticastDNS=no` through a resolved drop-in |
+| `g03-work-egress.sh apply\|verify\|commit\|refresh\|rollback` | Work VM output allowlist: local dnsmasq fills an nftables set for the names in `work-egress-domains.txt` (plus the apt mirrors) and the output chain drops the rest |
+
+- Never use the distribution `/etc/nftables.conf` (starts with `flush ruleset`); the guest tables are loaded by `godseye-guest-fw.service` and `godseye-egress-fw.service`.
+- A build that needs a new host fails with `EHOSTUNREACH`: add the name to `/etc/godseye/work-egress-domains.local` (or the repository list) and run `bash /usr/local/lib/godseye/g03-work-egress.sh refresh` while no build is running (the resolver restarts). Emergency exit: `bash /usr/local/lib/godseye/g03-work-egress.sh rollback`, or from the host `qm guest exec 300 -- bash /usr/local/lib/godseye/g03-work-egress.sh rollback`.
+- Same emergency exit for the inbound table: `bash g01-guest-firewall.sh rollback <role>` (or `nft delete table inet godseye_guest` through `qm guest exec`).
+- `p12-post-reboot-check.sh` (read-only, from the workstation) verifies the host guard, guest tables, OpenBao state, edge, console and Jenkins agent after any reboot. Rebooting `godseye-pro` or the host seals OpenBao: have two unseal shares ready ([openbao-custody.md](openbao-custody.md)); the edge and console stay down until it is unsealed.
+- Jenkins operational drills: `p12-jenkins-drills.sh offline|cancel|retention|missed|cleanup`.

@@ -25,7 +25,7 @@ networks:
 
 services:
   cell-a-app:
-    image: alpine:3.21
+    image: alpine:3.21@sha256:bc21487101ae47172509130ee1092cc273a831968d64b617776d1f69c81e42ab
     runtime: runsc
     user: "10001:10001"
     read_only: true
@@ -43,7 +43,7 @@ services:
     command: ["sh", "-c", "sleep 120"]
 
   cell-b-app:
-    image: alpine:3.21
+    image: alpine:3.21@sha256:bc21487101ae47172509130ee1092cc273a831968d64b617776d1f69c81e42ab
     runtime: runsc
     user: "10002:10002"
     read_only: true
@@ -85,7 +85,7 @@ else
 fi
 
 echo "[p05] Testing PID limit containment in disposable runsc container (pids-limit=64)..."
-docker run --rm --runtime=runsc --pids-limit=64 --memory=64m alpine:3.21 sh -c '
+docker run --rm --runtime=runsc --pids-limit=64 --memory=64m alpine:3.21@sha256:bc21487101ae47172509130ee1092cc273a831968d64b617776d1f69c81e42ab sh -c '
   i=0
   while [ $i -lt 90 ]; do
     sleep 2 &

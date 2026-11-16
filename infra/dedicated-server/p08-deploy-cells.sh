@@ -7,7 +7,7 @@ docker network inspect godseye_prod_net >/dev/null 2>&1 || \
 docker network inspect godseye_dev_net >/dev/null 2>&1 || \
   docker network create --driver bridge --internal godseye_dev_net
 
-docker pull -q alpine:3.21
+docker pull -q alpine:3.21@sha256:bc21487101ae47172509130ee1092cc273a831968d64b617776d1f69c81e42ab
 
 for CELL in prod dev; do
   NAME="godseye-cell-${CELL}-app"
@@ -25,7 +25,7 @@ for CELL in prod dev; do
     --pids-limit=64 \
     --memory=128m \
     --cpus=0.25 \
-    alpine:3.21 \
+    alpine:3.21@sha256:bc21487101ae47172509130ee1092cc273a831968d64b617776d1f69c81e42ab \
     sh -c "while true; do sleep 30; done"
 done
 

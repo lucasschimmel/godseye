@@ -18,6 +18,12 @@ describe("external uptime observer workflow", () => {
     expect(workflow).not.toContain("secrets.");
     expect(workflow).not.toMatch(/^\s*-?\s*uses:/m);
   });
+  it("refuses unknown hosts and keeps the console private and its certificate fresh", () => {
+    expect(workflow).toContain("CONSOLE_HOST: console.godseye.lucasschimmel.fr");
+    expect(workflow).toContain("expected 404");
+    expect(workflow).toContain("non-private address");
+    expect(workflow).toContain("crt.sh");
+  });
   it("checks health body, certificate lifetime and the closed admin ports", () => {
     expect(workflow).toContain("godseye-edge-ok");
     expect(workflow).toContain("/healthz");

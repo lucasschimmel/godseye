@@ -1,0 +1,40 @@
+# Domains the work VM (Jenkins agent) may reach outbound on TCP 22/80/443. A name matches itself and every
+# subdomain. One per line; '#' starts a comment. Local additions without a repository change go to
+# /etc/godseye/work-egress-domains.local (same format), then run g03-work-egress.sh refresh.
+# Not listed on purpose: model-provider endpoints of the coding runner (the runner stays unavailable
+# until the owner accepts it; add them via the local file when it is enabled).
+
+# GitHub: git over SSH/HTTPS, API, archives, release assets, raw files
+github.com
+githubusercontent.com
+
+# JavaScript and Bun toolchain
+registry.npmjs.org
+npmjs.org
+nodejs.org
+deb.nodesource.com
+bun.sh
+
+# Python
+pypi.org
+pythonhosted.org
+
+# Debian archives and security (apt); the guest's configured mirrors are added automatically
+debian.org
+
+# Playwright browser downloads
+playwright.dev
+playwright.download.prss.microsoft.com
+playwright.azureedge.net
+# cdn.playwright.dev answers 307 to Chrome for Testing on Google Cloud Storage. The name covers every
+# public bucket (accepted exposure, found by the first candidate build behind the allowlist).
+storage.googleapis.com
+
+# gVisor rootfs fixture, PostgreSQL and Ubuntu archives used by the infrastructure lab tests
+dl-cdn.alpinelinux.org
+apt.postgresql.org
+ftp.postgresql.org
+www.postgresql.org
+archive.ubuntu.com
+security.ubuntu.com
+ports.ubuntu.com
