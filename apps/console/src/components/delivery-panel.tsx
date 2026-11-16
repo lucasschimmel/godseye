@@ -109,9 +109,9 @@ export function DeliveryPanel() {
             : "Chaque construction et promotion revérifie l’installation, le dépôt et la tête actuelle de branche ou de pull request."}
         </p>
         <p>
-          Jenkins, les agents isolés, Coolify, les quotas, le réseau et les domaines du serveur
-          restent à qualifier. Aucun code de dépôt n’est exécuté directement sur cet ordinateur par
-          le dashboard.
+          Jenkins, les agents isolés, le runtime Docker, les quotas, le réseau et les domaines du
+          serveur restent à qualifier. Aucun code de dépôt n’est exécuté directement sur cet
+          ordinateur par le dashboard.
         </p>
         <p>
           {fresh

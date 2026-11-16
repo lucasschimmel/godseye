@@ -192,7 +192,14 @@ export function createApp(
       serverConnected: config.mode === "server",
     }),
   );
-  app.get(`${base}/overview`, async (c) => c.json(await core.overview(c.get("actor"))));
+  app.get(`${base}/overview`, async (c) =>
+    c.json(
+      await core.overview(c.get("actor"), {
+        mode: config.mode === "server" ? "server" : "local",
+        secretsConfigured: Boolean(config.baoAddress),
+      }),
+    ),
+  );
   app.get(`${base}/projects`, async (c) => c.json(await core.listProjects(c.get("actor"))));
   app.post(`${base}/projects`, async (c) =>
     c.json(

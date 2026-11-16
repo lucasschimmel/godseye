@@ -43409,7 +43409,10 @@
                   "properties": {
                     "mode": {
                       "type": "string",
-                      "const": "local"
+                      "enum": [
+                        "local",
+                        "server"
+                      ]
                     },
                     "projectCount": {
                       "type": "integer",
@@ -43544,8 +43547,7 @@
                           "maximum": 9007199254740991
                         },
                         "serverConnected": {
-                          "type": "boolean",
-                          "const": false
+                          "type": "boolean"
                         }
                       },
                       "required": [
@@ -51303,7 +51305,10 @@
         "properties": {
           "mode": {
             "type": "string",
-            "const": "local"
+            "enum": [
+              "local",
+              "server"
+            ]
           },
           "projectCount": {
             "type": "integer",
@@ -51438,8 +51443,7 @@
                 "maximum": 9007199254740991
               },
               "serverConnected": {
-                "type": "boolean",
-                "const": false
+                "type": "boolean"
               }
             },
             "required": [
