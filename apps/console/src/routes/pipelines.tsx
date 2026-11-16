@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { ArrowRight, Box, GitBranch, Rocket, ShieldCheck } from "lucide-react";
 import { DeliveryPanel } from "@/components/delivery-panel";
+import { ReleaseVisibility } from "@/components/release-visibility";
 import {
   EmptyState,
   Failure,
@@ -62,6 +63,7 @@ function Pipelines() {
             : "Jenkins est installé sur le serveur dédié. La réception signée des événements GitHub, la première construction validée de la plateforme et les déploiements d’applications restent à qualifier."}
         </div>
       </section>
+      <ReleaseVisibility />
       <DeliveryPanel />
       <section className="panel">
         <div className="panel-heading">
