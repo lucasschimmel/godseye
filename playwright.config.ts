@@ -96,7 +96,10 @@ export default defineConfig({
   timeout: 45_000,
   expect: { timeout: 10_000 },
   outputDir: "artifacts/playwright-results",
-  reporter: [["list"], ["junit", { outputFile: "artifacts/test-results/e2e.xml" }]],
+  reporter: [
+    ["list"],
+    ["junit", { outputFile: process.env.GODSEYE_E2E_JUNIT ?? "artifacts/test-results/e2e.xml" }],
+  ],
   use: {
     browserName: "chromium",
     viewport: { width: 1440, height: 1000 },
@@ -119,7 +122,9 @@ export default defineConfig({
   webServer: serverInstances.map((instance) => ({
     name: `${instance.name} isolated application`,
     command: "node scripts/dev.mjs",
-    url: instance.baseURL,
+    // The console proxies /api to the control API, so this health route answers only once both are up;
+    // waiting on the console page alone let the first journey hit a closed API port.
+    url: `${instance.baseURL}/api/v1/health`,
     reuseExistingServer: false,
     timeout: 90_000,
     env: {

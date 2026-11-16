@@ -126,3 +126,7 @@ TTL/verified PR closure authorizes owned ephemeral preview stop/unpublish, not p
 - Notification: a failed run makes GitHub email the repository owner (the user who last changed the schedule) under their Actions notification settings; check that failed-workflow email is enabled in the GitHub account. This is GitHub's notification, not the platform's E08 notifier.
 - Cost: the schedule runs every thirty minutes, 48 runs a day, about 1,440 billed minutes a month on a private repository (each run bills at least one minute), which fits the 2,000 included minutes of a free plan. A five-minute cadence would be about 8,600 a month; raise the frequency only on a plan that includes enough minutes. Detection of an outage therefore takes up to thirty minutes.
 - Not covered: only public behaviour is observed. The private console, internal services, delivered applications and the WireGuard side are not probed.
+
+## Browser journeys on the CI agent
+
+`bun run test:e2e:sequential` (`scripts/e2e-sequential.mjs`) runs each Playwright project on its own with a single isolated application, one JUnit file per project (`artifacts/test-results/e2e-<project>.xml`) and a non-zero exit if any project failed. Plain `bun run test:e2e` still starts every isolated application at once, which exhausts the 6 GiB agent (the kernel killed browsers and servers). Each application is considered ready only when `/api/v1/health` answers through the console proxy, so a journey never reaches a closed API port.
