@@ -244,7 +244,8 @@ test("T-AC-35 T-AC-40 shows derived backup, rotation and incident states without
   ).toBeVisible();
   await page.getByRole("button", { name: "Réévaluer les incidents", exact: true }).click();
   await expect(page.getByText("Aucun incident enregistré", { exact: true })).toBeVisible();
-  await expect(page.getByText(/personne n’est prévenu automatiquement/)).toBeVisible();
+  // The incidents panel and the notification-channels panel both state this; either one satisfies it.
+  await expect(page.getByText(/personne n’est prévenu automatiquement/).first()).toBeVisible();
   expect(await apiRequest(page, "/databases/backups", false)).toEqual({
     status: 200,
     body: { provider: "unconfigured", environments: [] },
