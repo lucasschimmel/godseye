@@ -141,6 +141,8 @@ test("server panel reports unconfigured sources as unknown instead of inventing 
   await expect(server.getByRole("heading", { name: "Serveur" })).toBeVisible();
   await expect(server.getByText(/Inconnu · source non configurée/).first()).toBeVisible();
   await expect(server.getByText("OpenBao")).toBeVisible();
+  const domains = page.getByRole("region", { name: "Domaines personnalisés" });
+  await expect(domains.getByText(/Aucun domaine personnalisé/)).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(
     true,
   );

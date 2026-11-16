@@ -93,6 +93,19 @@ export const ProjectDomainList = z
       .nullable(),
   })
   .strict();
+/** One custom domain in the cross-project owner list, with the names needed to read it without a lookup. */
+export const DomainOverviewItem = ProjectDomain.extend({
+  projectName: z.string(),
+  projectSlug: z.string(),
+  environmentName: z.string(),
+  environmentKind: z.enum(["development", "production", "preview", "recovery"]),
+}).strict();
+/**
+ * Non-removed domains of every project. Certificate expiry is deliberately absent: the edge reports no
+ * per-host certificate state, so nothing is shown rather than a guess.
+ */
+export const DomainOverview = z.object({ domains: z.array(DomainOverviewItem) }).strict();
+export type DomainOverviewView = z.infer<typeof DomainOverview>;
 export const DomainAskResponse = z.object({ allowed: z.literal(true) }).strict();
 export type ProjectDomainView = z.infer<typeof ProjectDomain>;
 export type ProjectDomainListView = z.infer<typeof ProjectDomainList>;

@@ -2,6 +2,7 @@ import { randomBytes, randomUUID } from "node:crypto";
 import {
   AddProjectDomain,
   type AddProjectDomainInput,
+  type DomainOverviewView,
   isPublicHostname,
   MAX_DOMAINS_PER_PROJECT,
   type ProjectDomainListView,
@@ -139,6 +140,30 @@ export class ProjectDomainEngine {
       domains: rows.map((row) => this.view(row)),
       limit: MAX_DOMAINS_PER_PROJECT,
       target: target && this.options.resolver ? { cname: target.cname, ipv4: target.ipv4 } : null,
+    };
+  }
+
+  /** Every non-removed domain across projects, oldest first, for the owner overview. */
+  async listAll(actor: Actor): Promise<DomainOverviewView> {
+    assertOwner(actor);
+    const rows = await this.store.db
+      .select({
+        domain: schema.projectDomains,
+        projectName: schema.projects.name,
+        projectSlug: schema.projects.slug,
+        environmentName: schema.environments.name,
+        environmentKind: schema.environments.kind,
+      })
+      .from(schema.projectDomains)
+      .innerJoin(schema.projects, eq(schema.projects.id, schema.projectDomains.projectId))
+      .innerJoin(
+        schema.environments,
+        eq(schema.environments.id, schema.projectDomains.environmentId),
+      )
+      .where(ne(schema.projectDomains.state, "removed"))
+      .orderBy(asc(schema.projectDomains.createdAt));
+    return {
+      domains: rows.map(({ domain, ...names }) => ({ ...this.view(domain), ...names })),
     };
   }
 

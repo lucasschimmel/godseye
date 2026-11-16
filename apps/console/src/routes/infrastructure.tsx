@@ -8,6 +8,7 @@ import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { Fingerprint, RefreshCw, Server, ShieldCheck } from "lucide-react";
 import { useState } from "react";
+import { DomainsOverview } from "@/components/domains-overview";
 import { InfrastructureHeadroomPanel } from "@/components/infra-headroom-panel";
 import { InfrastructureInventoryForm } from "@/components/infra-inventory-form";
 import { InfrastructureWorkloadForm } from "@/components/infra-workload-form";
@@ -127,6 +128,7 @@ function Infrastructure() {
               </div>
             </section>
             <ServerPanel />
+            <DomainsOverview />
             <div className="infrastructure-grid">
               <section className="panel">
                 <div className="panel-heading">

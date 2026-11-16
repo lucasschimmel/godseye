@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Domain overview
+
+- Added owner API `1.18.0` with read-only `GET /domains`: every non-removed custom domain across projects with project and environment names and its verification state. The console lists them on the infrastructure page. Certificate expiry is intentionally not reported because the edge exposes no per-host certificate state.
+
 ### Server observations
 
 - Added owner API `1.17.0` with read-only `GET /infrastructure/server`: CPU load, memory, uptime, the pro VM and cell data disk usage, OpenBao seal state, per-cell pgBackRest status ages and a digest of the host health file when it is readable. Every source that is unconfigured, unreadable, unreachable or stale is reported as `unknown` with a reason. The console gains a "Serveur" panel on the infrastructure page and overview tiles. Optional settings: `GODSEYE_OBSERVE_ROOT_PATH`, `GODSEYE_OBSERVE_CELL_DATA_PATH`, `GODSEYE_HOST_HEALTH_FILE`, `GODSEYE_PG_BACKUP_STATUS_DIR`.

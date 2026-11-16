@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto";
 import {
   CONTROL_API_HEADER,
   CONTROL_API_VERSION,
+  DomainOverview,
   MAX_DOMAINS_PER_PROJECT,
   type ProjectDomainListView,
   type ProjectDomainView,
@@ -142,6 +143,32 @@ describe("custom application domains over the owner API", () => {
       headers: { host: "172.30.0.1:4300" },
     });
   const pointAtPlatform = (hostname: string) => dns.records.cname.set(hostname, [CNAME]);
+
+  it("lists every non-removed domain across projects with names and no certificate claim", async () => {
+    const kept = await created("app.customer.com");
+    const dropped = await created("old.customer.com");
+    await remove(dropped);
+
+    const response = await request("/domains");
+    const overview = DomainOverview.parse(await response.json());
+
+    expect(response.status).toBe(200);
+    expect(overview.domains.map((d) => d.hostname)).toEqual(["app.customer.com"]);
+    expect(overview.domains[0]).toMatchObject({
+      id: kept.id,
+      state: "pending_verification",
+      projectSlug: projectInput.slug,
+      environmentKind: "development",
+    });
+    expect(overview.domains[0]).not.toHaveProperty("certificateExpiresAt");
+  });
+
+  it("refuses the cross-project list without an owner session", async () => {
+    const response = await app.request(new URL("/api/v1/domains", fixture.origin), {
+      headers: { origin: fixture.origin, host: new URL(fixture.origin).host },
+    });
+    expect(response.status).toBe(401);
+  });
 
   it("binds a hostname as pending and offers the DNS target without serving it", async () => {
     const response = await add("app.customer.com");
