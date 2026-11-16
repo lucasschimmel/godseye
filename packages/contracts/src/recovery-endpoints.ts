@@ -1,5 +1,6 @@
 import type { ControlEndpoint } from "./http-endpoints.js";
 import {
+  ActivateRestore,
   ActivationAssessment,
   AdmitRecovery,
   PrepareArchiveCheck,
@@ -8,6 +9,7 @@ import {
   RecoveryOverview,
   RecoveryPreparation,
   RecoveryRun,
+  RestoreActivation,
 } from "./recovery.js";
 export const RECOVERY_HTTP_ENDPOINTS = [
   {
@@ -65,5 +67,15 @@ export const RECOVERY_HTTP_ENDPOINTS = [
     response: ActivationAssessment,
     success: 200,
     access: "owner",
+  },
+  {
+    method: "POST",
+    path: "/recovery/environments/:id/activation",
+    operationId: "activateRestoredEnvironment",
+    request: ActivateRestore,
+    response: RestoreActivation,
+    success: 200,
+    access: "owner",
+    idempotent: true,
   },
 ] as const satisfies readonly ControlEndpoint[];

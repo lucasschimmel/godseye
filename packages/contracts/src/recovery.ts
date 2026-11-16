@@ -125,18 +125,78 @@ export const RecoveryRun = z
   })
   .strict();
 export type RecoveryRunView = z.infer<typeof RecoveryRun>;
+/** Machine-verified conditions that refuse activation until they are resolved. */
+export const ACTIVATION_BLOCKER_CODES = [
+  "RESTORE_NOT_VERIFIED",
+  "PROJECT_NOT_ACTIVE",
+  "SOURCE_NOT_ACTIVE",
+  "SOURCE_WORK_IN_FLIGHT",
+  "UNRECONCILED_EFFECTS",
+  "PROMOTION_UNAVAILABLE",
+] as const;
+/**
+ * Coverage the platform cannot establish for a database-only restore. The owner must acknowledge each one
+ * by name; activation never infers that an empty or truncated journal means nothing happened.
+ */
+export const ACTIVATION_ACKNOWLEDGEMENTS = [
+  "FILES_SNAPSHOT_MISSING",
+  "AUTH_SNAPSHOT_MISSING",
+  "CONFIG_SNAPSHOT_MISSING",
+  "NON_REWOUND_BUSINESS_EFFECT_COVERAGE_UNQUALIFIED",
+] as const;
 export const ActivationAssessment = z
   .object({
     environmentId: Id,
+    sourceEnvironmentId: Id.nullable(),
     recoveryHold: z.literal(true),
-    activation: z.literal("blocked"),
-    reasons: z.array(z.string().max(100)).min(1).max(20),
+    activation: z.enum(["blocked", "ready"]),
+    reasons: z.array(z.enum(ACTIVATION_BLOCKER_CODES)).max(20),
+    requiredAcknowledgements: z.array(z.enum(ACTIVATION_ACKNOWLEDGEMENTS)).max(10),
+    /** Set when an earlier activation already fenced the source and still has to prove promotion. */
+    pending: z.enum(["fenced", "unknown"]).nullable(),
+    /** Definitions that stay with the fenced source environment and are not moved by activation. */
+    retainedDefinitions: z
+      .object({
+        jobs: z.number().int().nonnegative(),
+        backend: z.number().int().nonnegative(),
+        domains: z.number().int().nonnegative(),
+      })
+      .strict(),
   })
   .strict();
+export type ActivationAssessmentView = z.infer<typeof ActivationAssessment>;
+export const ActivateRestore = z
+  .object({
+    expectedProjectRevision: Revision,
+    expectedEnvironmentRevision: Revision,
+    confirmName: z.string().min(2).max(40),
+    acknowledged: z.array(z.enum(ACTIVATION_ACKNOWLEDGEMENTS)).max(10),
+  })
+  .strict();
+export type ActivateRestoreInput = z.infer<typeof ActivateRestore>;
+/**
+ * `fenced` means the source is already fenced and promotion is not proven; `unknown` means a provider
+ * outcome is uncertain. Both are resumed by repeating the command; neither makes the restore active.
+ */
+export const RestoreActivation = z
+  .object({
+    id: Id,
+    projectId: Id,
+    environmentId: Id,
+    sourceEnvironmentId: Id,
+    state: z.enum(["fenced", "unknown", "activated"]),
+    epoch: z.number().int().positive(),
+    acknowledged: z.array(z.enum(ACTIVATION_ACKNOWLEDGEMENTS)).max(10),
+    reason: z.string().max(100).nullable(),
+    createdAt: Moment,
+    activatedAt: Moment.nullable(),
+  })
+  .strict();
+export type RestoreActivationView = z.infer<typeof RestoreActivation>;
 export const RecoveryOverview = z
   .object({
     execution: z.enum(["unconfigured", "qualified"]),
-    activation: z.literal("blocked"),
+    activation: z.enum(["blocked", "owner-confirmed"]),
     schedule: z.literal("prepared-only"),
     preparations: z.array(RecoveryPreparation).max(10000),
     backups: z.array(RecoveryBackup).max(10000),

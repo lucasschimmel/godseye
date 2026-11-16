@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Owner-confirmed restore activation
+
+- Owner API `1.21.0`, migration `0026_restore_activation.sql`: `POST /recovery/environments/:id/activation` fences the source environment, requires an independent provider promotion proof and only then designates a verified held restore as the active environment; the source stays held as evidence. It needs a fresh passkey, exact revisions, the typed name and every coverage acknowledgement. `GET .../activation` now reports derived blockers (`reasons`), required acknowledgements and retained definitions instead of a fixed list. The console shows the form only when a provider can promote. The shipped pgBackRest provider has no promotion capability, so on a real stack activation stays blocked (`PROMOTION_UNAVAILABLE`); verified with a fixture provider only.
+
 ### Release visibility
 
 - Console only (owner API unchanged): the CI/CD page lists the current release and deploy health per environment from the delivery journal and the latest builds, with a Jenkins link only when a build reference is recorded as a plain https URL. No redeploy or restart control was added because the existing operation and delivery intents contain no restart.

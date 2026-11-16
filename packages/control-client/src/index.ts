@@ -1,5 +1,6 @@
 import type {
   AcknowledgeIncidentInput,
+  ActivateRestoreInput,
   ActivationAssessment,
   AdmitCodingTaskInput,
   AdmitDeliveryInput,
@@ -62,6 +63,7 @@ import type {
   RegisterJobDefinitionInput,
   RegisterTelemetrySourceInput,
   ReleaseQuarantineInput,
+  RestoreActivationView,
   ResumeProjectInput,
   RotateDatabaseRoleInput,
   RotationOverviewView,
@@ -400,6 +402,13 @@ export function createControlClient(options: ControlClientOptions = {}) {
       request<z.infer<typeof ActivationAssessment>>(
         "GET",
         `/recovery/environments/${id(value)}/activation`,
+      ),
+    activateRestoredEnvironment: (value: string, input: ActivateRestoreInput, key: string) =>
+      request<RestoreActivationView>(
+        "POST",
+        "/recovery/environments/" + id(value) + "/activation",
+        input,
+        key,
       ),
     prepareDatabase: (input: PrepareDatabaseInput, key: string) =>
       request<DatabasePreparationView>("POST", "/databases/preparations", input, key),

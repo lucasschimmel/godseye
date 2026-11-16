@@ -67,6 +67,7 @@ describe("strict authenticated owner recovery HTTP and typed client", () => {
       ["POST", "/recovery/archives/preparations"],
       ["POST", "/recovery/admissions"],
       ["GET", `/recovery/environments/${randomUUID()}/activation`],
+      ["POST", `/recovery/environments/${randomUUID()}/activation`],
     ]) {
       const response = await app.request(new URL(`/api/v1${path}`, fixture.origin), {
         method,
@@ -114,6 +115,44 @@ describe("strict authenticated owner recovery HTTP and typed client", () => {
       expect(response.status).toBe(403);
       expect(await response.json()).toMatchObject({ error: { code: "STEP_UP_REQUIRED" } });
     }
+  });
+
+  const activationBody = {
+    expectedProjectRevision: 0,
+    expectedEnvironmentRevision: 0,
+    confirmName: "recovered-cell",
+    acknowledged: [],
+  };
+
+  it("T-AC-42 rejects activation with a stale passkey session before touching the environment", async () => {
+    headers = (await fixture.session(6 * 60_000)).headers;
+    headers.set(CONTROL_API_HEADER, CONTROL_API_VERSION);
+    const response = await request(
+      `/recovery/environments/${randomUUID()}/activation`,
+      "POST",
+      activationBody,
+    );
+    expect(response.status).toBe(403);
+    expect(await response.json()).toMatchObject({ error: { code: "STEP_UP_REQUIRED" } });
+  });
+
+  it("T-AC-42 rejects injected activation fields without reflecting caller material", async () => {
+    const marker = randomBytes(32).toString("base64url");
+    const response = await request(`/recovery/environments/${randomUUID()}/activation`, "POST", {
+      ...activationBody,
+      sourceEnvironmentId: marker,
+    });
+    expect(response.status).toBe(422);
+    expect(await response.text()).not.toContain(marker);
+  });
+
+  it("T-AC-40 answers an activation for an environment that does not exist with 404", async () => {
+    const response = await request(
+      `/recovery/environments/${randomUUID()}/activation`,
+      "POST",
+      activationBody,
+    );
+    expect(response.status).toBe(404);
   });
 
   it.each(["sql", "repositoryId", "stanza", "path", "providerId", "material", "archiveCommand"])(

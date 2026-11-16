@@ -55,6 +55,15 @@ Stale or contradictory documentation (status updated 2026-11-16 by the `docs/spe
 | B10 | Inconsistent DS numbering and storage commitments | **Closed** | Ledger entries 010, 011, 014, 017 and 019 renumbered to the DS definitions of the spec; a reconciliation note explains the 300 / 360 / 420 / 480 GiB figures. The disk/RAM over-commit itself is a capacity decision and stays open (section C) |
 | B11 | Stale OpenBao custody claim in ledger entry 016 (init material still on the VM) | **Closed** | Entries 015, 016 and 012 corrected from the owner's confirmation that the VM copy was deleted and only the desktop holds parts. **Not verified here:** deletion on the VM, root-token revocation evidence and an unseal rehearsal (section C and D item 8) |
 
+Code-side spec/plan gaps, status after the restore-activation change (owner API `1.21.0`):
+
+| # | Gap | Status | Reason / what remains |
+|---|---|---|---|
+| G1 | Restore activation: a restored backup becomes active data only after an explicit owner-confirmed step (E03.S03, D08, DS10) | **Partially closed (control plane)** | Implemented and tested: fresh-passkey, exact-binding, acknowledged step that fences the source (hold, epoch, grants), requires an independent provider promotion proof and only then designates the restore active; fails closed and resumes. **Open:** no real provider implements promotion (`PROMOTION_UNAVAILABLE` on the shipped pgBackRest stack), so it is only exercised with a fixture; jobs/backend/domain definitions stay on the fenced source; the restored database is not yet adopted as a managed allocation; files/auth/config snapshots and app-level business-effect coverage do not exist (owner acknowledges them) |
+| G2 | Lifecycle composed all-service stop/resume and resource release (E03.S01) | **Open** | Needs each service's provider (database suspend, cell stop, preview teardown) driven through approved Foundation plans on a deployed stack; not implementable or testable without those providers |
+| G3 | F18 realtime events (SSE/WebSocket with cursor/refetch, revocation) | **Open (minor)** | SSE with signed cursors, `refetch`/`revoked` frames, bounded buffers and an SDK reader are implemented and tested (E04.S03). No WebSocket transport and no console consumer of application events; not changed here |
+| G4 | E07.S03 task grants, admission, disposable execution, tool allowlists | **Open** | Grants/reservations/allowlists exist locally; deployed I10/I11 containment, the general Hermes shell interface and the work-VM egress rule need the server and owner acceptance |
+
 ## C. Dedicated server vs spec/plan
 
 Done: P00, P03 (host), P05 lab isolation, P06c vzdump restores, P07 edge/DNS-01/owner passkey.

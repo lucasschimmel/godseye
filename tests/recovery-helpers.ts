@@ -8,6 +8,7 @@ import { fingerprint } from "../packages/core/src/journal.js";
 import type {
   RecoveryInspection,
   RecoveryMetadata,
+  RecoveryPromotion,
   RecoveryProvider,
   RecoveryQualification,
   RecoveryScope,
@@ -28,7 +29,7 @@ export function requireRecoveryFixture<T>(value: T | null | undefined): T {
     throw new Error("Required recovery fixture evidence is missing");
   return value;
 }
-type Action = "backup" | "check" | "restore" | "inspect" | "qualification";
+type Action = "backup" | "check" | "restore" | "promote" | "inspect" | "qualification";
 
 /** Synthetic fault-contract evidence only; never qualifies actual physical recovery or activation. */
 export class RecoveryProviderFixture implements RecoveryProvider {
@@ -39,13 +40,52 @@ export class RecoveryProviderFixture implements RecoveryProvider {
     generation: "recovery-generation-1",
   };
   readonly resources = new Map<string, RecoveryInspection>();
-  readonly effects: { action: "backup" | "check" | "restore"; scope: RecoveryScope }[] = [];
+  readonly effects: {
+    action: "backup" | "check" | "restore" | "promote";
+    scope: RecoveryScope;
+  }[] = [];
+  readonly promotions = new Map<string, RecoveryPromotion>();
+  promotionResult?: (result: RecoveryPromotion) => RecoveryPromotion | null;
+  promote?: RecoveryProvider["promote"];
+  inspectPromotion?: RecoveryProvider["inspectPromotion"];
   readonly lostAcknowledgments = new Set<Action>();
   beforeAction?: (action: Action, scope: RecoveryScope) => Promise<void>;
   afterAction?: (action: Action, scope: RecoveryScope) => Promise<void>;
   inspectionResult?: (result: RecoveryInspection) => RecoveryInspection | null;
   qualificationResult?: (result: RecoveryQualification) => RecoveryQualification | null;
   constructor(readonly clock: FoundationClock) {}
+  /** Opt in to the activation capability; the default fixture keeps the real provider's absence. */
+  enablePromotion() {
+    this.promote = async (scope, gate) => {
+      await this.beforeAction?.("promote", scope);
+      await gate();
+      const held = this.resources.get(scope.preparationId)?.destination;
+      if (!held || held.allocationId !== scope.allocationId)
+        throw new Error("Fixture refuses to promote a destination it did not restore");
+      if (!this.promotions.has(scope.preparationId)) {
+        this.promotions.set(scope.preparationId, {
+          scopeHash: fingerprint(scope),
+          allocationId: scope.allocationId,
+          environmentId: scope.environmentId,
+          promoted: true,
+          inRecovery: false,
+          runtimeAccessBlocked: false,
+          evidence: "synthetic-promoted-physical-clone",
+        });
+        this.effects.push({ action: "promote", scope: structuredClone(scope) });
+      }
+      await this.afterAction?.("promote", scope);
+      if (this.lostAcknowledgments.has("promote"))
+        throw new Error("Fixture lost promotion acknowledgment");
+    };
+    this.inspectPromotion = async (scope) => {
+      await this.beforeAction?.("inspect", scope);
+      const result = this.promotions.get(scope.preparationId);
+      if (!result) return null;
+      const copy = structuredClone(result);
+      return this.promotionResult ? this.promotionResult(copy) : copy;
+    };
+  }
   async qualification(scope: RecoveryScope) {
     await this.beforeAction?.("qualification", scope);
     const result: RecoveryQualification = {
