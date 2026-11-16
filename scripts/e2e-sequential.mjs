@@ -7,7 +7,9 @@
 //
 //   node scripts/e2e-sequential.mjs [project ...]
 import { spawnSync } from "node:child_process";
-import { mkdirSync } from "node:fs";
+import { mkdirSync, mkdtempSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 
 const ALL_PROJECTS = [
   "console",
@@ -38,16 +40,24 @@ mkdirSync("artifacts/test-results", { recursive: true });
 const failed = [];
 for (const project of projects) {
   console.info(`\n=== E2E project: ${project} ===`);
-  const run = spawnSync("bun", ["run", "playwright", "test", `--project=${project}`], {
-    stdio: "inherit",
-    shell: process.platform === "win32",
-    env: {
-      ...process.env,
-      GODSEYE_E2E_INSTANCE: instanceFor(project),
-      GODSEYE_E2E_JUNIT: `artifacts/test-results/e2e-${project}.xml`,
-    },
-  });
-  if (run.status !== 0) failed.push(project);
+  // Each project owns a temporary data directory (the config only accepts `godseye-e2e-*` under the
+  // temporary root) and the runner removes it, so a CI agent's tmpfs does not fill up across builds.
+  const dataDir = mkdtempSync(join(tmpdir(), "godseye-e2e-"));
+  try {
+    const run = spawnSync("bun", ["run", "playwright", "test", `--project=${project}`], {
+      stdio: "inherit",
+      shell: process.platform === "win32",
+      env: {
+        ...process.env,
+        GODSEYE_E2E_DATA_DIR: dataDir,
+        GODSEYE_E2E_INSTANCE: instanceFor(project),
+        GODSEYE_E2E_JUNIT: `artifacts/test-results/e2e-${project}.xml`,
+      },
+    });
+    if (run.status !== 0) failed.push(project);
+  } finally {
+    rmSync(dataDir, { recursive: true, force: true });
+  }
 }
 
 if (failed.length > 0) {
