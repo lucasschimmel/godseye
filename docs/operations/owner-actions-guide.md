@@ -38,16 +38,15 @@ Rédigé le 2026-11-16 à partir des runbooks (`openbao-custody.md`, `break-glas
 - **État.** Fichier d'init supprimé de la VM (sur ta déclaration, non revérifié). Révocation du jeton racine non prouvée. `bao.auth` absent : la page Accès affiche `no_authority`. Aucune répétition de déverrouillage.
 - **Vigilance.** Tu travailles à distance : au moins 2 parts doivent être accessibles depuis le laptop, sinon un reboot n'est pas récupérable à distance.
 
-**a) Jeton racine temporaire** (sur la VM pro, via WireGuard) :
-```
-ssh -t root@10.20.1.10
-set +o history; export BAO_ADDR=https://127.0.0.1:8200 BAO_CACERT=/etc/openbao/bao.crt
-bao operator generate-root -init        # note Nonce et OTP
-bao operator generate-root              # part 1 (silencieux), puis refaire avec la part 2
-bao operator generate-root -decode=<Encoded Token> -otp=<OTP>   # jeton temporaire
-```
+**a) Jeton admin.** Depuis OpenBao 2.6, `bao operator generate-root` passe par un endpoint authentifié (les anciens endpoints non authentifiés sont désactivés par défaut, vérifié sur le serveur : réponse 403 sans jeton). On ne peut donc pas fabriquer un jeton racine avec les seules parts. Le jeton à utiliser est le **jeton racine initial** du fichier d'initialisation sur ton bureau (champ `root_token`). Il n'a jamais été révoqué par les scripts du dépôt (`p07-openbao-and-db.sh` l'utilise sans le révoquer). La séance `p13-openbao-owner-session.sh` le teste, fait tout le travail, puis le révoque et prouve que OpenBao le refuse. **Plan B s'il est déjà révoqué :** réactiver temporairement les endpoints non authentifiés avec l'option de listener `disable_unauthed_generate_root_endpoints=false` (nom relevé dans le changelog OpenBao, à confirmer), redémarrer OpenBao, le redéverrouiller avec 2 parts, générer un jeton, puis retirer l'option.
 
-**b) AppRoles.** Le jeton temporaire est demandé à l'invite silencieuse :
+**Séance complète en une commande** (jeton demandé une seule fois, révoqué à la fin même en cas d'erreur) :
+```
+ssh -t godseye-pro "sudo bash /opt/godseye/infra/dedicated-server/p13-openbao-owner-session.sh"
+```
+Elle enchaîne b), c), le timer de snapshots et d) ci-dessous. Les commandes séparées restent disponibles :
+
+**b) AppRoles.** Le jeton est demandé à l'invite silencieuse :
 ```
 ssh -t godseye-pro "sudo bash /opt/godseye/infra/dedicated-server/p12-openbao-owner-setup.sh /opt/godseye/infra/dedicated-server/templates"
 ```
