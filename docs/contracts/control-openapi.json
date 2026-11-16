@@ -26728,7 +26728,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "const": "1.19.0"
+              "const": "1.20.0"
             },
             "description": "When supplied, must match the supported control API version."
           },
@@ -26754,7 +26754,7 @@
               "x-godseye-api-version": {
                 "schema": {
                   "type": "string",
-                  "const": "1.19.0"
+                  "const": "1.20.0"
                 }
               }
             },
