@@ -18,6 +18,15 @@ import { listOperations, operationView, requestOperation } from "./operations.js
 import { type Actor, assertOwner, assertProjectAccess } from "./policy.js";
 import { createEnvironment, updateEnvironment, updateProject } from "./project-management.js";
 
+export { NotificationChannelEngine } from "./notification-channels.js";
+export { AesGcmSealer, type SecretSealer } from "./notification-seal.js";
+export {
+  httpsTransport,
+  type SendPolicy,
+  type TransportOutcome,
+  type WebhookRequest,
+  type WebhookTransport,
+} from "./notification-webhook.js";
 export type {
   DomainResolver,
   DomainRoutePublisher,

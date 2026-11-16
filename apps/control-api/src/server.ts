@@ -1,4 +1,5 @@
 import {
+  AesGcmSealer,
   ControlPlane,
   InfrastructureEngine,
   JOBS_ADAPTER_ID,
@@ -126,6 +127,8 @@ async function start() {
       ...configuredDelivery(process.env),
       ...cells,
       agents: { provider: hermes, toolExecutor: hermesTools },
+      // Webhook targets are sealed under a key derived from the private identity material.
+      notifications: { sealer: new AesGcmSealer(signingKey) },
       coding: await codingStartupOptions(),
       ...(config.jobsDetached
         ? { foundationConsumer: { excludedAdapterIds: new Set([JOBS_ADAPTER_ID]) } }

@@ -15,6 +15,7 @@ export * from "./http-domain.js";
 export * from "./infrastructure.js";
 export * from "./jobs.js";
 export * from "./lifecycle.js";
+export * from "./notifications.js";
 export * from "./observability.js";
 export * from "./orchestration.js";
 export * from "./owner.js";
