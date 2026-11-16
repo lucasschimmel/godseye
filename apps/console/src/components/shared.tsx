@@ -87,7 +87,7 @@ export function EmptyState({
 export function Loading() {
   return (
     <div className="loading" role="status">
-      <LoaderCircle className="spin" size={20} /> Chargement des données locales…
+      <LoaderCircle className="spin" size={20} /> Chargement des données…
     </div>
   );
 }
