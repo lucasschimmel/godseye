@@ -32,6 +32,7 @@ export function registerDomainRoutes(
       throw new DomainError("NOT_FOUND", "Domain is not served by this platform", 404);
     return c.json({ allowed: true as const });
   });
+  app.get(`${base}/domains`, async (c) => c.json(await engine().listAll(c.get("actor"))));
   app.get(`${base}/projects/:id/domains`, async (c) =>
     c.json(await engine().list(c.get("actor"), HttpId.parse(c.req.param("id")))),
   );
