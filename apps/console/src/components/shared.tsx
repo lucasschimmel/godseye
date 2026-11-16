@@ -33,7 +33,7 @@ const stateLabels: Record<string, string> = {
   purged: "Purgé",
   planned: "Prévu",
   local: "Local",
-  unconfigured: "À connecter",
+  unconfigured: "Non configuré",
   unqualified: "À qualifier",
   configured: "Configuré",
   succeeded: "Terminé",

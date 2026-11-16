@@ -9,6 +9,7 @@ import { Fingerprint, RefreshCw } from "lucide-react";
 import { useEffect, useState } from "react";
 import { api, resource } from "@/lib/api";
 import { ownerAuth } from "@/lib/owner";
+import { useDeployment } from "@/lib/use-deployment";
 import { DeliveryResources } from "./delivery-evidence";
 import { DeliveryHistory } from "./delivery-history";
 import { DeliveryPolicyForm } from "./delivery-policy-form";
@@ -16,6 +17,7 @@ import { Failure, Loading, SectionTitle } from "./shared";
 import { Button } from "./ui/button";
 
 export function DeliveryPanel() {
+  const deployment = useDeployment();
   const overview = useQuery({
     ...resource<DeliveryOverviewView>("delivery", "/delivery"),
     refetchInterval: 5000,
@@ -109,9 +111,9 @@ export function DeliveryPanel() {
             : "Chaque construction et promotion revérifie l’installation, le dépôt et la tête actuelle de branche ou de pull request."}
         </p>
         <p>
-          Jenkins, les agents isolés, le runtime Docker, les quotas, le réseau et les domaines du
-          serveur restent à qualifier. Aucun code de dépôt n’est exécuté directement sur cet
-          ordinateur par le dashboard.
+          {deployment.isLocal
+            ? "Jenkins, les agents isolés, le runtime Docker, les quotas, le réseau et les domaines du serveur restent à qualifier. Aucun code de dépôt n’est exécuté directement sur cet ordinateur par le dashboard."
+            : "Jenkins, les agents isolés, le runtime Docker, les quotas, le réseau et les domaines applicatifs restent à qualifier sur le serveur dédié. Aucun code de dépôt n’est exécuté directement par la console."}
         </p>
         <p>
           {fresh

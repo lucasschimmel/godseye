@@ -4,6 +4,7 @@ import {
   isLoopbackHost,
   ownerEntryCopy,
   recoveryCopy,
+  runtimeHeading,
   shellCopy,
   UNKNOWN_DEPLOYMENT,
 } from "../apps/console/src/lib/deployment";
@@ -52,6 +53,12 @@ describe("console deployment awareness", () => {
     expect(remote.procedure).toContain("break-glass.md");
     expect(recoveryCopy(UNKNOWN_DEPLOYMENT).intro).toBe(remote.intro);
     expect(recoveryCopy(local).intro).toContain("terminal de cette machine");
+  });
+
+  it("labels the Hermes runtime without local wording in server mode", () => {
+    expect(runtimeHeading(false, true)).toBe("Runtime local à connecter");
+    expect(runtimeHeading(false, false)).toBe("Runtime à qualifier");
+    expect(runtimeHeading(true, false)).not.toMatch(/local/i);
   });
 
   it("derives the owner entry wording from the host", () => {

@@ -79,6 +79,12 @@ export function isLoopbackHost(hostname: string): boolean {
   return hostname === "localhost" || hostname === "127.0.0.1" || hostname === "[::1]";
 }
 
+/** Hermes runtime state label; local mode keeps its wording, server mode drops "local"/"à connecter". */
+export function runtimeHeading(available: boolean, isLocal: boolean): string {
+  if (isLocal) return available ? "Runtime local configuré" : "Runtime local à connecter";
+  return available ? "Runtime configuré" : "Runtime à qualifier";
+}
+
 export const OWNER_SETUP_COMMAND = "bun run owner:setup";
 export const OWNER_RECOVER_COMMAND = "bun run owner:recover";
 export const OWNER_RECOVER_OFFLINE_COMMAND = "bun run owner:recover --offline";

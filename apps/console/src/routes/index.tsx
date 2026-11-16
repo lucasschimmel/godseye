@@ -39,11 +39,11 @@ function Dashboard() {
           {
             label: "Projets enregistrés",
             value: data.projectCount,
-            note: "Dans le registre local",
+            note: data.mode === "server" ? "Dans le registre du serveur" : "Dans le registre local",
             icon: Box,
           },
           {
-            label: "Environnements prévus",
+            label: "Environnements",
             value: data.environmentCount,
             note: "Environnements du registre",
             icon: Server,

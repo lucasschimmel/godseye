@@ -11,10 +11,12 @@ import { Input } from "@/components/ui/input";
 import { api, resource } from "@/lib/api";
 import { environmentLabel, ordinaryEnvironment } from "@/lib/environment-labels";
 import { ownerAuth } from "@/lib/owner";
+import { useDeployment } from "@/lib/use-deployment";
 
 export const Route = createFileRoute("/access")({ component: AccessManagement });
 function AccessManagement() {
   const owner = useOwner();
+  const deployment = useDeployment();
   const access = useQuery(resource<AccessOverviewView>("access", "/access"));
   const projects = useQuery(resource<ProjectDTO[]>("projects", "/projects"));
   const security = useQuery(resource<OwnerSecurityView>("owner-security", "/owner/security"));
@@ -214,8 +216,10 @@ function AccessManagement() {
                 identités distinctes.
               </p>
               <p>
-                Les imports et les remises de preuves passent par le terminal local privé, après
-                arrêt du contrôleur. Aucune valeur n’est affichée ici.
+                {deployment.isLocal
+                  ? "Les imports et les remises de preuves passent par le terminal local privé, après arrêt du contrôleur."
+                  : "Les imports et les remises de preuves passent par une session SSH sur le serveur, via WireGuard, après arrêt du contrôleur."}{" "}
+                Aucune valeur n’est affichée ici.
               </p>
               <p>
                 Une rotation exige un adaptateur qualifié qui confirme la transition du service et

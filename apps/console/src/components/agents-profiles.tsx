@@ -1,5 +1,7 @@
 import type { AgentOverviewView, ProjectDTO } from "@godseye/contracts";
 import { useState } from "react";
+import { runtimeHeading } from "@/lib/deployment";
+import { useDeployment } from "@/lib/use-deployment";
 import { AgentsAction } from "./agents-action";
 import { type AgentPost, agentMoney, agentProfileScope, agentRoleLabels } from "./agents-labels";
 import { AgentsProfileForm } from "./agents-profile-form";
@@ -20,6 +22,7 @@ export function AgentsProfiles({
   selectTask: (id: string) => void;
 }) {
   const [editing, setEditing] = useState<string | null>(null);
+  const deployment = useDeployment();
   return (
     <section className="panel agents-profiles" aria-label="Profils Hermès">
       <SectionTitle count={overview.profiles.length}>Profils Hermès</SectionTitle>
@@ -79,10 +82,8 @@ export function AgentsProfiles({
                   : "Aucun outil · une requête modèle"}
               </p>
               <p className="muted">
-                {profile.runtime === "available"
-                  ? "Runtime local configuré"
-                  : "Runtime local à connecter"}{" "}
-                · Révision {profile.revision}
+                {runtimeHeading(profile.runtime === "available", deployment.isLocal)} · Révision{" "}
+                {profile.revision}
               </p>
               <details className="agents-binding-ids">
                 <summary>Identifiants du périmètre</summary>

@@ -13,17 +13,17 @@ import { Button } from "./ui/button";
 
 const engineTitles = {
   unconfigured: "Moteur non configuré, aucune exécution",
-  local_fixture: "Moteur de fixture locale : exécutions simulées",
-  local_inngest: "Inngest local configuré par cellule",
+  local_fixture: "Moteur de simulation : exécutions simulées",
+  local_inngest: "Inngest configuré par cellule",
   unavailable: "Moteur indisponible, aucune exécution",
 } as const;
 const engineNotes = {
   unconfigured:
     "Les définitions peuvent être enregistrées, mais aucun job n’est planifié ni exécuté. Un moteur configuré mais arrêté ne sera jamais présenté comme sain.",
   local_fixture:
-    "Les exécutions sont simulées sur cet ordinateur pour valider le parcours. Elles ne prouvent aucun effet réel.",
+    "Les exécutions sont simulées par le contrôleur pour valider le parcours. Elles ne prouvent aucun effet réel.",
   local_inngest:
-    "Des cellules Inngest locales sont configurées. Foundation conserve l’autorité d’exécution. Cet état de configuration ne prouve pas que tous les moteurs répondent.",
+    "Des cellules Inngest sont configurées. Foundation conserve l’autorité d’exécution. Cet état de configuration ne prouve pas que tous les moteurs répondent.",
   unavailable:
     "Le moteur est configuré mais ne répond pas. Les exécutions en cours sont à considérer comme incertaines jusqu’à réconciliation.",
 } as const;
