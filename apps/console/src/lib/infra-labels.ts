@@ -31,7 +31,7 @@ const reasons = labelMap({
   "New admission is paused by the owner; reads, reconciliation and protective stops continue":
     "Les nouvelles admissions sont suspendues par le propriétaire. Les lectures, la réconciliation et les arrêts de protection continuent.",
   "No independently qualified local infrastructure provider is registered":
-    "Aucun service de provisionnement local n’est qualifié.",
+    "Aucun service de provisionnement n’est qualifié.",
 });
 export function infrastructureReason(reason: string): string {
   if (reason.startsWith("Unqualified capability: "))
@@ -45,6 +45,6 @@ export function infrastructureReason(reason: string): string {
 }
 export function infrastructureFilesystem(label: string): string {
   return label === "Controller working-directory filesystem"
-    ? "Système de fichiers du contrôleur local"
+    ? "Système de fichiers du contrôleur"
     : "Système de fichiers observé";
 }

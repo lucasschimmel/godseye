@@ -117,6 +117,7 @@ import {
   type RegisterResourceInput,
   type RepositoryConfigurationInput,
   type ResourceResponse,
+  type ServerObservationView,
   type ServiceIdentity,
   type SetAdmissionInput,
   type UpdateEnvironmentInput,
@@ -419,6 +420,7 @@ export function createControlClient(options: ControlClientOptions = {}) {
     infrastructureOverview: () => request<InfrastructureOverviewView>("GET", "/infrastructure"),
     infrastructureHeadroom: () =>
       request<InfrastructureHeadroomView>("GET", "/infrastructure/headroom"),
+    serverObservation: () => request<ServerObservationView>("GET", "/infrastructure/server"),
     setInfrastructureAdmission: (input: SetAdmissionInput, key: string) =>
       request<AdmissionControlView>("PUT", "/infrastructure/admission", input, key),
     declareInfrastructure: (input: DeclareInventoryInput, key: string) =>

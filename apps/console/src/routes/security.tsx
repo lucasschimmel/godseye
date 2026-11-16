@@ -6,16 +6,29 @@ import { useState } from "react";
 import { useOwner } from "@/components/owner-gate";
 import { Failure, Loading, PageHeading, SectionTitle } from "@/components/shared";
 import { Button } from "@/components/ui/button";
+import { WithReason } from "@/components/with-reason";
 import { api, resource, timestamp } from "@/lib/api";
+import {
+  OWNER_RECOVER_COMMAND,
+  OWNER_RECOVER_OFFLINE_COMMAND,
+  recoveryCopy,
+} from "@/lib/deployment";
 import { ownerAuth } from "@/lib/owner";
+import { useDeployment } from "@/lib/use-deployment";
 
 export const Route = createFileRoute("/security")({ component: OwnerSecurity });
 function OwnerSecurity() {
   const owner = useOwner();
+  const deployment = useDeployment();
+  const recovery = recoveryCopy(deployment);
   const security = useQuery(resource<OwnerSecurityView>("owner-security", "/owner/security"));
   const [busy, setBusy] = useState(false);
   const [failure, setFailure] = useState<Error | null>(null);
   const [message, setMessage] = useState("");
+  const [keyName, setKeyName] = useState("");
+  const freshReason = security.data?.fresh
+    ? null
+    : "Confirmez d’abord votre identité par passkey (moins de cinq minutes) pour effectuer cette action.";
   async function action(work: () => Promise<void>) {
     setBusy(true);
     setFailure(null);
@@ -78,23 +91,38 @@ function OwnerSecurity() {
       <section className="panel">
         <div className="panel-heading">
           <SectionTitle>Clés d’accès</SectionTitle>
-          <Button
-            size="sm"
-            variant="outline"
-            disabled={busy || !security.data?.fresh}
-            onClick={() =>
-              void action(async () => {
-                const result = await ownerAuth.passkey.addPasskey({
-                  createSession: true,
-                  name: "Clé propriétaire supplémentaire",
-                });
-                if (result.error) throw new Error("Passkey enrollment failed");
-                setMessage("Votre nouvelle clé d’accès est enregistrée.");
-              })
-            }
-          >
-            <KeyRound size={14} /> Ajouter une clé d’accès
-          </Button>
+          <div className="passkey-add">
+            <label className="sr-only" htmlFor="passkey-name">
+              Nom de la nouvelle clé
+            </label>
+            <input
+              id="passkey-name"
+              maxLength={60}
+              placeholder="Nom de la nouvelle clé (facultatif)"
+              value={keyName}
+              onChange={(event) => setKeyName(event.target.value)}
+            />
+            <WithReason reason={freshReason}>
+              <Button
+                size="sm"
+                variant="outline"
+                disabled={busy || !security.data?.fresh}
+                onClick={() =>
+                  void action(async () => {
+                    const result = await ownerAuth.passkey.addPasskey({
+                      createSession: true,
+                      name: keyName.trim() || "Clé propriétaire supplémentaire",
+                    });
+                    if (result.error) throw new Error("Passkey enrollment failed");
+                    setKeyName("");
+                    setMessage("Votre nouvelle clé d’accès est enregistrée.");
+                  })
+                }
+              >
+                <KeyRound size={14} /> Ajouter une clé d’accès
+              </Button>
+            </WithReason>
+          </div>
         </div>
         {security.isError ? (
           <Failure error={security.error} />
@@ -113,30 +141,38 @@ function OwnerSecurity() {
                       : "Date non disponible"}
                   </small>
                 </div>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  disabled={busy || !security.data.fresh || security.data.passkeys.length <= 1}
-                  onClick={() =>
-                    void action(async () => {
-                      await api(`/owner/passkeys/${key.id}/revoke`, {
-                        method: "POST",
-                        body: "{}",
-                        headers: { "idempotency-key": crypto.randomUUID() },
-                      });
-                      setMessage("Clé d’accès révoquée.");
-                    })
+                <WithReason
+                  reason={
+                    security.data.passkeys.length <= 1
+                      ? "Dernière clé d’accès : ajoutez-en une autre avant de la révoquer. La procédure de récupération reste le seul moyen de la remplacer."
+                      : freshReason
                   }
                 >
-                  Révoquer
-                </Button>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    disabled={busy || !security.data.fresh || security.data.passkeys.length <= 1}
+                    onClick={() =>
+                      void action(async () => {
+                        await api(`/owner/passkeys/${key.id}/revoke`, {
+                          method: "POST",
+                          body: "{}",
+                          headers: { "idempotency-key": crypto.randomUUID() },
+                        });
+                        setMessage("Clé d’accès révoquée.");
+                      })
+                    }
+                  >
+                    Révoquer
+                  </Button>
+                </WithReason>
               </div>
             ))}
           </div>
         )}
         <div className="panel-note">
           Conservez une deuxième clé sur un autre appareil. La dernière clé ne peut être remplacée
-          que par la récupération locale.
+          que par la procédure de récupération {deployment.isLocal ? "locale" : "sur le serveur"}.
         </div>
       </section>
       <section className="panel">
@@ -158,40 +194,40 @@ function OwnerSecurity() {
                     {timestamp(session.expiresAt)}
                   </small>
                 </div>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  disabled={busy || !security.data.fresh}
-                  onClick={() =>
-                    void action(async () => {
-                      if (session.current) await owner.logout();
-                      else
-                        await api(`/owner/sessions/${session.id}/revoke`, {
-                          method: "POST",
-                          body: "{}",
-                          headers: { "idempotency-key": crypto.randomUUID() },
-                        });
-                    })
-                  }
-                >
-                  {session.current ? "Déconnecter" : "Révoquer"}
-                </Button>
+                <WithReason reason={freshReason}>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    disabled={busy || !security.data.fresh}
+                    onClick={() =>
+                      void action(async () => {
+                        if (session.current) await owner.logout();
+                        else
+                          await api(`/owner/sessions/${session.id}/revoke`, {
+                            method: "POST",
+                            body: "{}",
+                            headers: { "idempotency-key": crypto.randomUUID() },
+                          });
+                      })
+                    }
+                  >
+                    {session.current ? "Déconnecter" : "Révoquer"}
+                  </Button>
+                </WithReason>
               </div>
             ))}
           </div>
         )}
       </section>
       <section className="panel owner-recovery">
-        <h2>Récupération indépendante du navigateur</h2>
-        <p>
-          Depuis le terminal de cette machine, préparez une nouvelle clé et révoquez les anciens
-          accès :
-        </p>
-        <code>bun run owner:recover</code>
-        <p>
-          Si l’API est arrêtée, utilisez <code>bun run owner:recover --offline</code>, puis
-          redémarrez le panneau. Cette commande exige l’accès au répertoire local privé.
-        </p>
+        <h2>{recovery.title}</h2>
+        <p>{recovery.intro}</p>
+        <code>{OWNER_RECOVER_COMMAND}</code>
+        <p>{recovery.offline}</p>
+        <code>{OWNER_RECOVER_OFFLINE_COMMAND}</code>
+        {recovery.procedure && (
+          <p className="muted">Procédures documentées : {recovery.procedure}</p>
+        )}
       </section>
     </>
   );

@@ -20,6 +20,7 @@ export * from "./orchestration.js";
 export * from "./owner.js";
 export * from "./protection.js";
 export * from "./recovery.js";
+export * from "./server-observation.js";
 export * from "./usage.js";
 export * from "./usage-query.js";
 

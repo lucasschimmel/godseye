@@ -33,7 +33,7 @@ const stateLabels: Record<string, string> = {
   purged: "Purgé",
   planned: "Prévu",
   local: "Local",
-  unconfigured: "À connecter",
+  unconfigured: "Non configuré",
   unqualified: "À qualifier",
   configured: "Configuré",
   succeeded: "Terminé",
@@ -87,7 +87,7 @@ export function EmptyState({
 export function Loading() {
   return (
     <div className="loading" role="status">
-      <LoaderCircle className="spin" size={20} /> Chargement des données locales…
+      <LoaderCircle className="spin" size={20} /> Chargement des données…
     </div>
   );
 }

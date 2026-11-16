@@ -18,6 +18,7 @@ concurrency:
 
 env:
   SITE_HOST: godseye.lucasschimmel.fr
+  CONSOLE_HOST: console.godseye.lucasschimmel.fr
   EXPECTED_BODY: godseye-edge-ok
   MIN_CERT_DAYS: "14"
   # Admin ports that must never answer on the public IPv4: SSH, Proxmox, Jenkins, OpenBao, PostgreSQL, Redis.
@@ -70,3 +71,52 @@ jobs:
             exit 1
           fi
           echo "admin ports closed"
+
+      - name: Unknown hosts answer 404 on the public edge
+        run: |
+          ip="$(getent ahostsv4 "${SITE_HOST}" | awk 'NR==1 {print $1}')"
+          code="$(curl --silent --output /dev/null --write-out '%{http_code}' --max-time 15 \
+            --resolve "observer-probe.invalid:80:${ip}" "http://observer-probe.invalid/" || true)"
+          if [ "${code}" != "404" ]; then
+            echo "::error::Unknown host answered ${code}, expected 404"
+            exit 1
+          fi
+          echo "unknown host refused"
+
+      - name: Console name stays on a private address
+        run: |
+          addr="$(getent ahostsv4 "${CONSOLE_HOST}" | awk 'NR==1 {print $1}')"
+          if [ -z "${addr}" ]; then
+            echo "::error::Console name does not resolve"
+            exit 1
+          fi
+          case "${addr}" in
+            10.*|172.1[6-9].*|172.2[0-9].*|172.3[0-1].*|192.168.*) echo "console resolves to a private address" ;;
+            *) echo "::error::Console name resolves to a non-private address (${addr})"; exit 1 ;;
+          esac
+          if timeout 5 bash -c "exec 3<>/dev/tcp/${addr}/443" 2>/dev/null; then
+            echo "::error::Console address answers from the Internet"
+            exit 1
+          fi
+          echo "console not reachable from outside (expected)"
+
+      - name: Console certificate expiry from Certificate Transparency
+        run: |
+          # The console is private (WireGuard only), so its certificate is read from the public CT logs.
+          # crt.sh is best effort: an unreachable log is a warning, an expiring certificate is an error.
+          json="$(curl --silent --max-time 40 --retry 2 "https://crt.sh/?q=${CONSOLE_HOST}&output=json" || true)"
+          latest="$(echo "${json}" | jq -r --arg h "${CONSOLE_HOST}" '[.[] | select(.name_value == $h) | .not_after] | max // empty' 2>/dev/null || true)"
+          if [ -z "${latest}" ]; then
+            echo "::warning::Could not read the console certificate from crt.sh"
+            exit 0
+          fi
+          days="$(( ($(date -u -d "${latest}" +%s) - $(date -u +%s)) / 86400 ))"
+          echo "console certificate (latest logged) expires in ${days} days"
+          if [ "${days}" -lt "${MIN_CERT_DAYS}" ]; then
+            echo "::error::Console certificate logged expiry is under ${MIN_CERT_DAYS} days away"
+            exit 1
+          fi
+
+      # Not observable from outside, by design: B2 backup age and host-health staleness live behind
+      # WireGuard (host-health.json) and Backblaze credentials. They need a push heartbeat to a
+      # third-party dead-man's-switch service (owner account); see docs/operations/host-operations.md.

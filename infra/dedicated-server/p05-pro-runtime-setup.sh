@@ -66,4 +66,4 @@ docker compose version
 runsc --version
 
 echo "[p05] Qualifying gVisor (runsc systrap) container execution..."
-docker run --rm --runtime=runsc alpine:3.21 uname -a
+docker run --rm --runtime=runsc alpine:3.21@sha256:bc21487101ae47172509130ee1092cc273a831968d64b617776d1f69c81e42ab uname -a

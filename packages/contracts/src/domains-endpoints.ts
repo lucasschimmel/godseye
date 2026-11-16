@@ -2,6 +2,7 @@ import {
   AddProjectDomain,
   DomainAskQuery,
   DomainAskResponse,
+  DomainOverview,
   ProjectDomain,
   ProjectDomainList,
   RemoveProjectDomain,
@@ -11,6 +12,14 @@ import type { ControlEndpoint } from "./http-endpoints.js";
 
 const owner = "owner" as const;
 export const DOMAIN_HTTP_ENDPOINTS = [
+  {
+    method: "GET",
+    path: "/domains",
+    operationId: "domainOverview",
+    response: DomainOverview,
+    success: 200,
+    access: owner,
+  },
   {
     method: "GET",
     path: "/projects/:id/domains",

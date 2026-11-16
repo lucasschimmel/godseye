@@ -23,6 +23,11 @@ test("T-AC-01 manages owner passkeys and signs out of the private console", asyn
   const revoke = keyPanel.getByRole("button", { name: "Révoquer", exact: true });
   await expect(revoke).toHaveCount(1);
   await expect(revoke).toBeDisabled();
+  await expect(keyPanel.locator("[data-reason]")).toHaveAttribute(
+    "title",
+    /Dernière clé d’accès : ajoutez-en une autre/,
+  );
+  await keyPanel.getByLabel("Nom de la nouvelle clé").fill("Clé de secours USB");
   // A backup key belongs to another authenticator; the first device already has an excluded key.
   await enrolledAuthenticator.client.send("WebAuthn.setAutomaticPresenceSimulation", {
     authenticatorId: enrolledAuthenticator.authenticatorId,
@@ -34,6 +39,7 @@ test("T-AC-01 manages owner passkeys and signs out of the private console", asyn
   await expect(
     page.getByRole("status").filter({ hasText: "Votre nouvelle clé d’accès est enregistrée." }),
   ).toBeVisible();
+  await expect(keyPanel.getByText("Clé de secours USB")).toBeVisible();
   await revoke.first().click();
   await expect(revoke).toHaveCount(1);
   await expect(revoke).toBeDisabled();
@@ -149,6 +155,19 @@ test("T33 navigates the CI, operations, infrastructure and Hermes views with hon
   await expect(
     page.getByRole("heading", { name: "Runtime local à connecter", exact: true }),
   ).toBeVisible();
+});
+
+test("shows the audit anchor and downloads a journal export from the operations page", async ({
+  page,
+}) => {
+  await page.goto("/operations");
+  const panel = page.getByRole("region", { name: "Intégrité du journal" });
+  await expect(panel.getByTestId("audit-anchor-hash")).not.toBeEmpty();
+  const download = page.waitForEvent("download");
+  await panel.getByRole("button", { name: "Exporter le journal" }).click();
+  const file = await download;
+  expect(file.suggestedFilename()).toMatch(/^journal-audit-\d+\.json$/);
+  await expect(panel.getByRole("status")).toContainText("Export téléchargé");
 });
 
 // T-AC-06: mobile views fit the viewport and keyboard users can reach main content.

@@ -3,7 +3,9 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Bot, Fingerprint, RefreshCw } from "lucide-react";
 import { useRef, useState } from "react";
 import { api, resource } from "@/lib/api";
+import { runtimeHeading } from "@/lib/deployment";
 import { ownerAuth } from "@/lib/owner";
+import { useDeployment } from "@/lib/use-deployment";
 import { AgentsChat } from "./agents-chat";
 import { AgentsCoding } from "./agents-coding";
 import { AGENT_REFRESH_MS, type AgentPost } from "./agents-labels";
@@ -29,6 +31,7 @@ export function AgentsPanel() {
     refetchInterval: AGENT_REFRESH_MS,
   });
   const cache = useQueryClient();
+  const deployment = useDeployment();
   const intents = useRef(new Map<string, string>());
   const [selectedTask, setSelectedTask] = useState("");
   const mutation = useMutation({
@@ -97,12 +100,8 @@ export function AgentsPanel() {
         <div className="agents-runtime-heading">
           <Bot size={28} />
           <div>
-            <p className="eyebrow">HERMÈS · LOCAL</p>
-            <h2>
-              {data.status === "available"
-                ? "Runtime local configuré"
-                : "Runtime local à connecter"}
-            </h2>
+            <p className="eyebrow">{deployment.isLocal ? "HERMÈS · LOCAL" : "HERMÈS · SERVEUR"}</p>
+            <h2>{runtimeHeading(data.status === "available", deployment.isLocal)}</h2>
           </div>
           <span className={`agents-badge ${data.status === "available" ? "" : "agents-attention"}`}>
             {data.status === "available" ? "Configuré" : "Non configuré"}

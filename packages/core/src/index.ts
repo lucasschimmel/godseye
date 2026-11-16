@@ -53,6 +53,7 @@ export { appendAudit, existingRequest, fingerprint, verifyAudit, write } from ".
 export { type Actor, assertProjectAccess, assertTransition } from "./policy.js";
 export * from "./recovery.js";
 export * from "./recovery-server-transport.js";
+export * from "./server-observer.js";
 
 /** Application boundary; no infrastructure credential or privileged execution capability. */
 export class ControlPlane {
@@ -153,7 +154,10 @@ export class ControlPlane {
     }));
   }
 
-  async overview(actor: Actor): Promise<Overview> {
+  async overview(
+    actor: Actor,
+    deployment: { mode: "local" | "server"; secretsConfigured?: boolean } = { mode: "local" },
+  ): Promise<Overview> {
     assertOwner(actor);
     const [projects, operations, runs, activity] = await Promise.all([
       this.listProjects(actor),
@@ -161,38 +165,46 @@ export class ControlPlane {
       this.listCiRuns(actor),
       this.listAudit(actor),
     ]);
+    const server = deployment.mode === "server";
     return {
-      mode: "local",
+      mode: deployment.mode,
       projectCount: projects.length,
       environmentCount: projects.reduce((total, project) => total + project.environments.length, 0),
       operationCount: operations.length,
       ciRunCount: runs.length,
       recentActivity: activity.slice(0, 8),
-      qualification: { completed: 0, total: 8, serverConnected: false },
+      qualification: { completed: 0, total: 8, serverConnected: server },
       capabilities: [
         {
           id: "control",
           name: "Control plane",
-          status: "local",
-          description: "Persistent project registry and operation journal",
+          status: server ? "configured" : "local",
+          description: server
+            ? "Control API on the dedicated server, reachable over WireGuard only"
+            : "Persistent project registry and operation journal",
         },
         {
           id: "proxmox",
           name: "Proxmox / AX41",
-          status: "unconfigured",
-          description: "Server installation and hardware qualification are pending",
+          status: server ? "configured" : "unconfigured",
+          description: server
+            ? "Dedicated server and its VMs are running; host metrics come from the host probe"
+            : "Server installation and hardware qualification are pending",
         },
         {
           id: "runtime",
           name: "Docker + gVisor",
           status: "unqualified",
-          description: "Sandbox runtime and network isolation require Linux qualification",
+          description:
+            "Delivery runtime is qualified on the lab but has not yet run a real project delivery",
         },
         {
-          id: "coolify",
-          name: "Coolify",
-          status: "unconfigured",
-          description: "Deployment adapter is not connected",
+          id: "openbao",
+          name: "OpenBao",
+          status: deployment.secretsConfigured ? "configured" : "unconfigured",
+          description: deployment.secretsConfigured
+            ? "Secrets broker reachable; unseal shares stay offline with the owner"
+            : "Secrets broker is not configured",
         },
         {
           id: "github",

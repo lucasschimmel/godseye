@@ -252,8 +252,8 @@ export function InvoiceForm({ projects, post, disabled }: FormProps & { projects
     <details className="panel telemetry-section">
       <summary>Importer une facture</summary>
       <p>
-        Import local déclaré par l’opérateur ou fixture : aucune vérification du compte fournisseur.
-        La réconciliation ne rembourse pas les charges conservatrices.
+        Import déclaré par l’opérateur ou données de test : aucune vérification du compte
+        fournisseur. La réconciliation ne rembourse pas les charges conservatrices.
       </p>
       <form
         className="telemetry-form"
@@ -294,7 +294,7 @@ export function InvoiceForm({ projects, post, disabled }: FormProps & { projects
           Origine
           <select name="source">
             <option value="operator-import">Import opérateur</option>
-            <option value="fixture">Fixture locale</option>
+            <option value="fixture">Données de test</option>
           </select>
         </label>
         <Field name="periodStart" label="Début de période" type="datetime-local" />

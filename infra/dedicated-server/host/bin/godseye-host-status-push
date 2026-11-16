@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+# godseye-host-status-push: copy the host health and off-host backup status files to godseye-pro so the
+# console server panel is truthful. One-way, read-only for the guest: the VM can only receive these two
+# JSON documents through a forced command; the host never accepts anything back and holds no guest key
+# beyond this single restricted identity (pinned host key, no agent, no forwarding).
+set -euo pipefail
+
+CONF_DIR="${GODSEYE_CONF_DIR:-/etc/godseye}"
+STATUS_DIR="${GODSEYE_STATUS_DIR:-/var/lib/godseye/status}"
+TARGET="${GODSEYE_STATUS_TARGET:-hoststatus@10.20.1.10}"
+KEY="$CONF_DIR/status-push.key"
+KNOWN="$CONF_DIR/status-push.known_hosts"
+
+[ -s "$KEY" ] && [ -s "$KNOWN" ] || {
+  echo "status push not configured (missing key or known_hosts)" >&2
+  exit 0
+}
+SSH=(ssh -i "$KEY" -o IdentitiesOnly=yes -o BatchMode=yes -o ConnectTimeout=10
+  -o UserKnownHostsFile="$KNOWN" -o StrictHostKeyChecking=yes -o ForwardAgent=no -o ClearAllForwardings=yes
+  "$TARGET")
+
+rc=0
+for pair in "host-health:host-health.json" "offhost-backup:offhost-backup.json"; do
+  target="${pair%%:*}"
+  file="$STATUS_DIR/${pair##*:}"
+  [ -s "$file" ] || continue
+  "${SSH[@]}" "$target" <"$file" >/dev/null || rc=1
+done
+exit "$rc"

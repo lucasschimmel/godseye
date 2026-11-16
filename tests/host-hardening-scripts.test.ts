@@ -37,6 +37,24 @@ describe("host hardening scripts", () => {
     expect(absent).toEqual([]);
   });
 
+  it("reads the shared off-host key from stdin and never from argv", () => {
+    const script = read("h11-offhost-shared-key.sh");
+    expect(script).toContain("IFS= read -r KEY_ID");
+    expect(script).not.toMatch(/KEY_ID="\$\{?[1-9]/);
+    expect(script).toContain('chmod 600 "$ENV_FILE"');
+  });
+
+  it("publishes host status through a restricted one-way receiver", () => {
+    const receiver = readFileSync(resolve(root, "../p13-host-status-receiver.sh"), "utf8");
+    expect(receiver).toContain('restrict,from="%s",command=');
+    expect(receiver).toContain("chown root:root");
+    const push = read("bin/godseye-host-status-push");
+    expect(push).toContain("StrictHostKeyChecking=yes");
+    expect(push).toContain("ClearAllForwardings=yes");
+    const pin = read("h12-host-status-push.sh");
+    expect(pin.indexOf("mismatch")).toBeLessThan(pin.indexOf('>"$KNOWN"'));
+  });
+
   it("keeps the guard firewall table drop-only", () => {
     const guard = read("templates/godseye-guard.nft");
     expect(guard.replace(/policy accept/g, "")).not.toMatch(/^[^#\n]*\baccept\b/m);

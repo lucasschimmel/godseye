@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { api } from "@/lib/api";
+import { useDeployment } from "@/lib/use-deployment";
 
 export const Route = createFileRoute("/projects/new")({ component: NewProject });
 function NewProject() {
@@ -20,6 +21,7 @@ function NewProject() {
   const submitted = useRef("");
   const navigate = useNavigate();
   const cache = useQueryClient();
+  const deployment = useDeployment();
   const mutation = useMutation({
     mutationFn: (body: string) =>
       api<ProjectView>("/projects", {
@@ -180,8 +182,9 @@ function NewProject() {
             <li>Tâches Inngest propres au projet</li>
           </ul>
           <div className="soft-note">
-            Le provisionnement et les garanties d’isolation seront activés après qualification sur
-            le serveur.
+            {deployment.isLocal
+              ? "Le provisionnement et les garanties d’isolation seront activés après qualification sur le serveur."
+              : "Le provisionnement et les garanties d’isolation suivent la qualification du serveur dédié ; le projet est d’abord enregistré dans le registre du contrôleur."}
           </div>
         </aside>
       </div>

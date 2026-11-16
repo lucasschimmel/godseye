@@ -14,6 +14,7 @@ import {
   DomainError,
   type FoundationEngine,
   type InfrastructureEngine,
+  ServerObserver,
 } from "@godseye/core";
 import { APIError } from "better-auth/api";
 import { Hono } from "hono";
@@ -43,6 +44,7 @@ import { registerOpenApi } from "./openapi.js";
 import { registerOrchestrationRoutes } from "./orchestration-routes.js";
 import { registerProtectionRoutes } from "./protection-routes.js";
 import { registerRecoveryRoutes } from "./recovery-routes.js";
+import { registerServerObservationRoutes } from "./server-observation-routes.js";
 import { registerUsageRoutes } from "./usage-routes.js";
 
 const Uuid = z.string().uuid();
@@ -61,6 +63,7 @@ export function createApp(
   engine?: FoundationEngine,
   broker?: AccessBroker,
   infrastructure?: InfrastructureEngine,
+  serverObserver: ServerObserver = new ServerObserver(config.serverObservation),
 ) {
   if (config.mode === "server" && (!identity || !config.ownerOrigin.startsWith("https://")))
     throw new Error("Server mode requires owner identity and an https owner origin");
@@ -192,7 +195,14 @@ export function createApp(
       serverConnected: config.mode === "server",
     }),
   );
-  app.get(`${base}/overview`, async (c) => c.json(await core.overview(c.get("actor"))));
+  app.get(`${base}/overview`, async (c) =>
+    c.json(
+      await core.overview(c.get("actor"), {
+        mode: config.mode === "server" ? "server" : "local",
+        secretsConfigured: Boolean(config.baoAddress),
+      }),
+    ),
+  );
   app.get(`${base}/projects`, async (c) => c.json(await core.listProjects(c.get("actor"))));
   app.post(`${base}/projects`, async (c) =>
     c.json(
@@ -254,6 +264,7 @@ export function createApp(
   registerFoundationRoutes(app, engine);
   registerAccessRoutes(app, broker);
   registerInfrastructureRoutes(app, infrastructure);
+  registerServerObservationRoutes(app, serverObserver);
   registerDatabaseRoutes(app, core, infrastructure);
   registerBackendRoutes(app, core);
   registerRecoveryRoutes(app, infrastructure);

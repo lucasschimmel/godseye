@@ -2,6 +2,22 @@
 
 ## [Unreleased]
 
+### Release visibility
+
+- Console only (owner API unchanged): the CI/CD page lists the current release and deploy health per environment from the delivery journal and the latest builds, with a Jenkins link only when a build reference is recorded as a plain https URL. No redeploy or restart control was added because the existing operation and delivery intents contain no restart.
+
+### Backup cadence
+
+- Owner API `1.19.0`: the server observation host digest now carries the host's recorded off-host (B2) copy state. The databases page shows a real backup cadence panel (last full, differential and WAL-check age per cell, pgBackRest repository check result, host B2 copy state) and the last platform-verified restore. Restore drills run on the host are not machine-recorded, so they are reported as absent rather than inferred.
+
+### Domain overview
+
+- Added owner API `1.18.0` with read-only `GET /domains`: every non-removed custom domain across projects with project and environment names and its verification state. The console lists them on the infrastructure page. Certificate expiry is intentionally not reported because the edge exposes no per-host certificate state.
+
+### Server observations
+
+- Added owner API `1.17.0` with read-only `GET /infrastructure/server`: CPU load, memory, uptime, the pro VM and cell data disk usage, OpenBao seal state, per-cell pgBackRest status ages and a digest of the host health file when it is readable. Every source that is unconfigured, unreadable, unreachable or stale is reported as `unknown` with a reason. The console gains a "Serveur" panel on the infrastructure page and overview tiles. Optional settings: `GODSEYE_OBSERVE_ROOT_PATH`, `GODSEYE_OBSERVE_CELL_DATA_PATH`, `GODSEYE_HOST_HEALTH_FILE`, `GODSEYE_PG_BACKUP_STATUS_DIR`.
+
 ### Custom domains and external observer
 
 - Added per-environment custom domains (owner API `1.16.0`, migration `0025_project_domains.sql`, ADR-020): DNS (CNAME/A) or TXT ownership verification through an injectable resolver, fresh-passkey add/remove, five-domain limit, Caddy `ask` guard with on-demand HTTP-01 and a file-per-route domain publisher with rollback. Not qualified against live DNS/TLS.

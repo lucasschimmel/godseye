@@ -133,6 +133,21 @@ test("T-AC-24 keeps public IPv4 exceptions explicit after native owner confirmat
   await page.screenshot({ path: "artifacts/infrastructure-mobile.png", fullPage: true });
 });
 
+test("server panel reports unconfigured sources as unknown instead of inventing values", async ({
+  page,
+}) => {
+  await projectAndInfrastructure(page);
+  const server = page.getByTestId("server-panel");
+  await expect(server.getByRole("heading", { name: "Serveur" })).toBeVisible();
+  await expect(server.getByText(/Inconnu · source non configurée/).first()).toBeVisible();
+  await expect(server.getByText("OpenBao")).toBeVisible();
+  const domains = page.getByRole("region", { name: "Domaines personnalisés" });
+  await expect(domains.getByText(/Aucun domaine personnalisé/)).toBeVisible();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(
+    true,
+  );
+});
+
 test("T-AC-24 T05 shows unknown headroom for local observations and pauses then resumes admission", async ({
   page,
 }) => {

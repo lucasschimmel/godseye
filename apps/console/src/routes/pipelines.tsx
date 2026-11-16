@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { ArrowRight, Box, GitBranch, Rocket, ShieldCheck } from "lucide-react";
 import { DeliveryPanel } from "@/components/delivery-panel";
+import { ReleaseVisibility } from "@/components/release-visibility";
 import {
   EmptyState,
   Failure,
@@ -21,9 +22,11 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { resource, timestamp } from "@/lib/api";
+import { useDeployment } from "@/lib/use-deployment";
 
 export const Route = createFileRoute("/pipelines")({ component: Pipelines });
 function Pipelines() {
+  const deployment = useDeployment();
   const runs = useQuery(resource<CiRunView[]>("ci-runs", "/ci/runs"));
   return (
     <>
@@ -35,7 +38,7 @@ function Pipelines() {
       <section className="panel pipeline-overview">
         <div className="panel-heading">
           <SectionTitle>Parcours cible</SectionTitle>
-          <Status value="planned" />
+          <Status value={deployment.isLocal ? "planned" : "unqualified"} />
         </div>
         <div className="pipeline-stages">
           {[
@@ -55,15 +58,17 @@ function Pipelines() {
           ))}
         </div>
         <div className="panel-note">
-          La réception des événements est disponible localement. L’exécution Jenkins et les
-          déploiements attendent le raccordement des services.
+          {deployment.isLocal
+            ? "La réception des événements est disponible localement. L’exécution Jenkins et les déploiements attendent le raccordement des services."
+            : "Jenkins est installé sur le serveur dédié. La réception signée des événements GitHub, la première construction validée de la plateforme et les déploiements d’applications restent à qualifier."}
         </div>
       </section>
+      <ReleaseVisibility />
       <DeliveryPanel />
       <section className="panel">
         <div className="panel-heading">
           <SectionTitle count={runs.data?.length ?? 0}>Exécutions</SectionTitle>
-          <span className="muted">Historique local</span>
+          <span className="muted">{deployment.isLocal ? "Historique local" : "Historique"}</span>
         </div>
         {runs.isError ? (
           <Failure error={runs.error} />
@@ -112,7 +117,11 @@ function Pipelines() {
           done
         />
         <Step
-          title="Installer Jenkins et ses agents"
+          title={
+            deployment.isLocal
+              ? "Installer Jenkins et ses agents"
+              : "Qualifier Jenkins et ses agents"
+          }
           description="Contrôleur privé sans exécuteur. Les builds utilisent des agents isolés."
         />
         <Step

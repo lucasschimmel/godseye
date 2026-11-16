@@ -10,6 +10,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Eye, Fingerprint, KeyRound, LockKeyhole, LogIn, ShieldCheck } from "lucide-react";
 import { createContext, type ReactNode, useContext, useEffect, useState } from "react";
 import { api, resource } from "@/lib/api";
+import { OWNER_SETUP_COMMAND, ownerEntryCopy } from "@/lib/deployment";
 import { forgetOwnerData, ownerAuth } from "@/lib/owner";
 import { Button } from "./ui/button";
 
@@ -35,6 +36,9 @@ export function OwnerGate({ children }: { children: ReactNode }) {
   const [ticket, setTicket] = useState("");
   const [busy, setBusy] = useState(false);
   const [failure, setFailure] = useState("");
+  const [hostname, setHostname] = useState<string | null>(null);
+  useEffect(() => setHostname(window.location.hostname), []);
+  const copy = ownerEntryCopy(hostname);
   useEffect(() => {
     const value = new URLSearchParams(window.location.hash.slice(1)).get("enroll");
     if (value) {
@@ -79,7 +83,7 @@ export function OwnerGate({ children }: { children: ReactNode }) {
         : await ownerAuth.signIn.passkey();
       if (result.error)
         throw new Error(
-          "La clé d’accès n’a pas été validée. Réessayez ou préparez un nouveau lien local.",
+          "La clé d’accès n’a pas été validée. Réessayez ou préparez un nouveau lien d’enrôlement.",
         );
       setTicket("");
       await query.refetch();
@@ -113,7 +117,7 @@ export function OwnerGate({ children }: { children: ReactNode }) {
       <div className="owner-entry-brand">
         <Eye size={25} />
         <span>
-          G.O.D.S.E.Y.E<small>PRIVATE CONTROL PLANE</small>
+          G.O.D.S.E.Y.E<small>PLAN DE CONTRÔLE PRIVÉ</small>
         </span>
       </div>
       <section className="owner-entry-card">
@@ -123,11 +127,7 @@ export function OwnerGate({ children }: { children: ReactNode }) {
         <p className="eyebrow">VOTRE ESPACE PRIVÉ</p>
         <h1>Accès propriétaire</h1>
         {!query.data ? (
-          <p role="status">
-            {query.isError
-              ? "L’API locale n’est pas disponible. Vérifiez que le service est lancé."
-              : "Vérification de votre session…"}
-          </p>
+          <p role="status">{query.isError ? copy.unavailable : "Vérification de votre session…"}</p>
         ) : (
           <>
             <p>
@@ -135,7 +135,7 @@ export function OwnerGate({ children }: { children: ReactNode }) {
                 ? "Enregistrez une clé d’accès pour terminer l’enrôlement. Votre navigateur vous demandera de confirmer votre identité."
                 : query.data.configured
                   ? "Connectez-vous avec la clé d’accès de votre appareil ou votre clé de sécurité."
-                  : "Préparez votre premier accès depuis le terminal local. Une seule identité propriétaire est autorisée."}
+                  : copy.firstAccess}
             </p>
             {ticket || query.data.configured ? (
               <Button
@@ -152,8 +152,8 @@ export function OwnerGate({ children }: { children: ReactNode }) {
               </Button>
             ) : (
               <div className="owner-command">
-                <code>bun run owner:setup</code>
-                <small>Ouvrez ensuite le lien à usage unique affiché dans votre terminal.</small>
+                <code>{OWNER_SETUP_COMMAND}</code>
+                <small>{copy.setupHint}</small>
               </div>
             )}
           </>
@@ -169,7 +169,7 @@ export function OwnerGate({ children }: { children: ReactNode }) {
         </div>
       </section>
       <div className="owner-entry-footer">
-        <LockKeyhole size={13} /> Exécution locale · localhost
+        <LockKeyhole size={13} /> {copy.footer}
       </div>
     </div>
   );

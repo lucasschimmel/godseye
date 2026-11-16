@@ -74,6 +74,17 @@ async function expectWholeAction(button: Locator) {
   expect(bounds).toEqual({ inViewport: true, unclipped: true, textFits: true });
 }
 
+test("lists each environment without inventing a deployed version or a Jenkins build link", async ({
+  page,
+}) => {
+  const { name } = await boundProject(page, "Versions");
+  const releases = page.getByRole("region", { name: "Versions en service" });
+  const row = releases.getByRole("row").filter({ hasText: name }).first();
+  await expect(row.getByText("Aucune version déployée")).toBeVisible();
+  await expect(row.getByText("Aucun déploiement enregistré")).toBeVisible();
+  await expect(releases.getByRole("heading", { name: "Dernières constructions" })).toBeVisible();
+});
+
 test("T-AC-45 T-AC-51 creates, persists and revokes exact synthetic standing policy while default execution remains unavailable", async ({
   page,
 }) => {
