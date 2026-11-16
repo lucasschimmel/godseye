@@ -151,6 +151,19 @@ test("T33 navigates the CI, operations, infrastructure and Hermes views with hon
   ).toBeVisible();
 });
 
+test("shows the audit anchor and downloads a journal export from the operations page", async ({
+  page,
+}) => {
+  await page.goto("/operations");
+  const panel = page.getByRole("region", { name: "Intégrité du journal" });
+  await expect(panel.getByTestId("audit-anchor-hash")).not.toBeEmpty();
+  const download = page.waitForEvent("download");
+  await panel.getByRole("button", { name: "Exporter le journal" }).click();
+  const file = await download;
+  expect(file.suggestedFilename()).toMatch(/^journal-audit-\d+\.json$/);
+  await expect(panel.getByRole("status")).toContainText("Export téléchargé");
+});
+
 // T-AC-06: mobile views fit the viewport and keyboard users can reach main content.
 test("T33 keeps the mobile views within the viewport and supports the keyboard skip link", async ({
   page,
