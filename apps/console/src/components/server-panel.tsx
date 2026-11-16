@@ -59,9 +59,9 @@ export function ServerPanel() {
           retry={() => void query.refetch()}
         />
       ) : (
-        <>
-          <p className="muted">Relevé du {timestamp(data.observedAt)}</p>
-          <dl className="infra-metrics">
+        <div className="panel-body">
+          <p className="panel-caption">Relevé du {timestamp(data.observedAt)}</p>
+          <dl className="infra-metrics metric-tiles">
             <Row label="Charge CPU (1 / 5 / 15 min)">
               {data.cpu.state === "observed" ? (
                 `${data.cpu.loadAverage1m} / ${data.cpu.loadAverage5m} / ${data.cpu.loadAverage15m} · ${data.cpu.cores} cœurs`
@@ -104,11 +104,15 @@ export function ServerPanel() {
               )}
             </Row>
           </dl>
-          <h3>Sauvegardes PostgreSQL des cellules</h3>
+          <h3 className="panel-subheading">Sauvegardes PostgreSQL des cellules</h3>
           {data.pgBackup.state === "unknown" ? (
-            <Unknown value={data.pgBackup} />
+            <p className="panel-caption">
+              <Unknown value={data.pgBackup} />
+            </p>
           ) : data.pgBackup.cells.length === 0 ? (
-            <p className="muted">Aucune cellule n’a encore écrit de statut de sauvegarde.</p>
+            <p className="panel-caption">
+              Aucune cellule n’a encore écrit de statut de sauvegarde.
+            </p>
           ) : (
             <div className="headroom-table-wrap">
               <table className="headroom-table">
@@ -137,14 +141,14 @@ export function ServerPanel() {
               </table>
             </div>
           )}
-          <h3>Hôte Proxmox</h3>
+          <h3 className="panel-subheading">Hôte Proxmox</h3>
           {data.host.state === "unknown" ? (
-            <p className="muted">
+            <p className="panel-caption">
               Inconnu · {serverUnknownLabel[data.host.reason]}. {serverAvailability.host}
             </p>
           ) : (
             <>
-              <p>
+              <p className="panel-caption">
                 {hostStatusLabel[data.host.health.status]} · rapport du{" "}
                 {timestamp(data.host.reportedAt)}
                 {data.host.health.poolHealth
@@ -170,7 +174,7 @@ export function ServerPanel() {
               )}
             </>
           )}
-        </>
+        </div>
       )}
     </section>
   );

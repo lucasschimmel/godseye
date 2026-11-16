@@ -240,7 +240,7 @@ function AccessManagement() {
                 Liaisons OpenBao par environnement
               </SectionTitle>
             </div>
-            <p className="muted">
+            <p className="panel-note">
               Noms, versions et dates uniquement ; aucune valeur. Un emplacement vide signifie
               qu’aucune valeur n’a encore été importée.
             </p>

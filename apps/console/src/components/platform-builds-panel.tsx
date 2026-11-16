@@ -24,11 +24,11 @@ function JobBuilds({ job, nowMs }: { job: PlatformBuildJobView; nowMs: number })
         {label} <span className="muted mono">{job.name}</span>
       </h3>
       {job.state === "unavailable" ? (
-        <p className="muted" role="status">
+        <p className="panel-caption" role="status">
           Indisponible · {platformUnavailableLabel[job.reason]}
         </p>
       ) : job.builds.length === 0 ? (
-        <p className="muted">Aucun build enregistré pour ce job.</p>
+        <p className="panel-caption">Aucun build enregistré pour ce job.</p>
       ) : (
         <div className="headroom-table-wrap">
           <table className="headroom-table">
@@ -85,17 +85,17 @@ function JobBuilds({ job, nowMs }: { job: PlatformBuildJobView; nowMs: number })
 export function PlatformBuildsBody({ data, nowMs }: { data: PlatformBuildsView; nowMs: number }) {
   if (data.state === "not_connected")
     return (
-      <p className="muted" role="status">
+      <p className="quiet-empty" role="status">
         Non raccordé · {platformNotConnectedLabel[data.reason]} Aucun build n’est affiché.
       </p>
     );
   return (
-    <>
-      <p className="muted">Relevé du {timestamp(data.observedAt)}</p>
+    <div className="panel-body">
+      <p className="panel-caption">Relevé du {timestamp(data.observedAt)}</p>
       {data.jobs.map((job) => (
         <JobBuilds key={job.name} job={job} nowMs={nowMs} />
       ))}
-    </>
+    </div>
   );
 }
 

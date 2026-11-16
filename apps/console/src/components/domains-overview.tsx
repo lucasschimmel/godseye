@@ -37,50 +37,54 @@ export function DomainsOverview() {
       ) : query.isError ? (
         <Failure error={query.error} retry={() => void query.refetch()} />
       ) : query.data.domains.length === 0 ? (
-        <p className="muted">Aucun domaine personnalisé. Ajoutez-en depuis la page d’un projet.</p>
+        <p className="quiet-empty">
+          Aucun domaine personnalisé. Ajoutez-en depuis la page d’un projet.
+        </p>
       ) : (
-        <div className="headroom-table-wrap">
-          <table className="headroom-table">
-            <caption className="sr-only">Domaines personnalisés de tous les projets</caption>
-            <thead>
-              <tr>
-                <th scope="col">Domaine</th>
-                <th scope="col">Projet</th>
-                <th scope="col">Environnement</th>
-                <th scope="col">État</th>
-                <th scope="col">Dernière vérification</th>
-                <th scope="col">Certificat TLS</th>
-              </tr>
-            </thead>
-            <tbody>
-              {query.data.domains.map((domain) => (
-                <tr key={domain.id}>
-                  <th scope="row" className="mono">
-                    {domain.hostname}
-                  </th>
-                  <td>
-                    <Link to="/projects/$projectId" params={{ projectId: domain.projectId }}>
-                      {domain.projectName}
-                    </Link>
-                  </td>
-                  <td>
-                    {environmentLabel({
-                      kind: domain.environmentKind,
-                      name: domain.environmentName,
-                    })}
-                  </td>
-                  <td title={domain.failure?.message}>
-                    {stateLabels[domain.state]}
-                    {domain.failure ? ` · ${domain.failure.message}` : ""}
-                  </td>
-                  <td>{domain.lastCheckedAt ? timestamp(domain.lastCheckedAt) : "Jamais"}</td>
-                  <td>
-                    <DomainTlsCell tls={domain.tls} nowMs={nowMs} />
-                  </td>
+        <div className="panel-body">
+          <div className="headroom-table-wrap">
+            <table className="headroom-table">
+              <caption className="sr-only">Domaines personnalisés de tous les projets</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Domaine</th>
+                  <th scope="col">Projet</th>
+                  <th scope="col">Environnement</th>
+                  <th scope="col">État</th>
+                  <th scope="col">Dernière vérification</th>
+                  <th scope="col">Certificat TLS</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {query.data.domains.map((domain) => (
+                  <tr key={domain.id}>
+                    <th scope="row" className="mono">
+                      {domain.hostname}
+                    </th>
+                    <td>
+                      <Link to="/projects/$projectId" params={{ projectId: domain.projectId }}>
+                        {domain.projectName}
+                      </Link>
+                    </td>
+                    <td>
+                      {environmentLabel({
+                        kind: domain.environmentKind,
+                        name: domain.environmentName,
+                      })}
+                    </td>
+                    <td title={domain.failure?.message}>
+                      {stateLabels[domain.state]}
+                      {domain.failure ? ` · ${domain.failure.message}` : ""}
+                    </td>
+                    <td>{domain.lastCheckedAt ? timestamp(domain.lastCheckedAt) : "Jamais"}</td>
+                    <td>
+                      <DomainTlsCell tls={domain.tls} nowMs={nowMs} />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
     </section>
