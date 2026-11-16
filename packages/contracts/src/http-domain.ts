@@ -131,14 +131,14 @@ export interface Capability {
 }
 
 export interface Overview {
-  mode: "local";
+  mode: "local" | "server";
   projectCount: number;
   environmentCount: number;
   operationCount: number;
   ciRunCount: number;
   capabilities: Capability[];
   recentActivity: AuditView[];
-  qualification: { completed: number; total: number; serverConnected: false };
+  qualification: { completed: number; total: number; serverConnected: boolean };
 }
 
 export interface ApiErrorBody {

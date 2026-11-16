@@ -221,6 +221,13 @@ describe("local control plane", () => {
       true,
     );
     expect(overview.recentActivity).toHaveLength(1);
+
+    const server = await core.overview(owner, { mode: "server", secretsConfigured: true });
+    expect(server).toMatchObject({ mode: "server", qualification: { serverConnected: true } });
+    const status = (id: string) => server.capabilities.find((item) => item.id === id)?.status;
+    expect(status("control")).toBe("configured");
+    expect(status("openbao")).toBe("configured");
+    expect(server.capabilities.some((item) => item.id === "coolify")).toBe(false);
   });
 });
 

@@ -105,8 +105,9 @@ function Dashboard() {
             ))}
           </div>
           <div className="panel-note">
-            Les observations locales sont disponibles ci-dessus. Les métriques de l’hôte distant
-            restent indisponibles.
+            {data.mode === "server"
+              ? "Serveur dédié connecté. Les métriques de l’hôte restent à brancher."
+              : "Les observations locales sont disponibles ci-dessus. Les métriques de l’hôte distant restent indisponibles."}
           </div>
         </section>
       </div>

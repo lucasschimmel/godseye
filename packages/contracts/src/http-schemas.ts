@@ -137,7 +137,7 @@ export const CapabilityResponse = z
   .strict();
 export const OverviewResponse = z
   .object({
-    mode: z.literal("local"),
+    mode: z.enum(["local", "server"]),
     projectCount: Integer,
     environmentCount: Integer,
     operationCount: Integer,
@@ -145,7 +145,7 @@ export const OverviewResponse = z
     capabilities: z.array(CapabilityResponse).max(64),
     recentActivity: z.array(AuditResponse).max(100),
     qualification: z
-      .object({ completed: Integer, total: Integer, serverConnected: z.literal(false) })
+      .object({ completed: Integer, total: Integer, serverConnected: z.boolean() })
       .strict(),
   })
   .strict();
