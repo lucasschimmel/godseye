@@ -1,6 +1,18 @@
+import { fileURLToPath } from "node:url";
 import { defineConfig } from "vitest/config";
 
 export default defineConfig({
+  // Console components import through the same "@" alias as the Vite app.
+  // React is installed in the console workspace only, so resolve it from there.
+  resolve: {
+    alias: [
+      { find: "@", replacement: fileURLToPath(new URL("./apps/console/src", import.meta.url)) },
+      {
+        find: /^(react|react-dom)(\/.*)?$/,
+        replacement: `${fileURLToPath(new URL("./apps/console/node_modules", import.meta.url))}/$1$2`,
+      },
+    ],
+  },
   test: {
     include: ["tests/**/*.test.ts"],
     exclude: [
