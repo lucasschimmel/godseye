@@ -2,6 +2,7 @@ import type { DomainOverviewView, ProjectDomainView } from "@godseye/contracts";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { Globe } from "lucide-react";
+import { DomainTlsCell } from "@/components/domain-tls-cell";
 import { Failure, Loading, SectionTitle } from "@/components/shared";
 import { resource, timestamp } from "@/lib/api";
 import { environmentLabel } from "@/lib/environment-labels";
@@ -14,8 +15,9 @@ const stateLabels: Record<ProjectDomainView["state"], string> = {
   removed: "Retiré",
 };
 
-/** Cross-project list of custom domains. Certificate expiry is not shown: the edge cannot report it. */
+/** Cross-project list of custom domains with the certificate expiry observed through the edge. */
 export function DomainsOverview() {
+  const nowMs = Date.now();
   const query = useQuery(resource<DomainOverviewView>("domain-overview", "/domains"));
   return (
     <section className="panel" aria-labelledby="domains-overview-title">
@@ -26,8 +28,9 @@ export function DomainsOverview() {
         <Globe size={18} />
       </div>
       <p className="panel-note">
-        Tous les domaines liés aux projets. L’expiration du certificat n’est pas affichée : le
-        serveur d’entrée ne la remonte pas, elle reste donc inconnue.
+        Tous les domaines liés aux projets. L’expiration du certificat est lue par un contrôle TLS
+        en lecture seule ; quand il est impossible, la date reste inconnue et la raison est
+        indiquée.
       </p>
       {query.isPending ? (
         <Loading />
@@ -45,6 +48,7 @@ export function DomainsOverview() {
               <th scope="col">Environnement</th>
               <th scope="col">État</th>
               <th scope="col">Dernière vérification</th>
+              <th scope="col">Certificat TLS</th>
             </tr>
           </thead>
           <tbody>
@@ -69,6 +73,9 @@ export function DomainsOverview() {
                   {domain.failure ? ` · ${domain.failure.message}` : ""}
                 </td>
                 <td>{domain.lastCheckedAt ? timestamp(domain.lastCheckedAt) : "Jamais"}</td>
+                <td>
+                  <DomainTlsCell tls={domain.tls} nowMs={nowMs} />
+                </td>
               </tr>
             ))}
           </tbody>

@@ -29,6 +29,8 @@ export {
   isApexDomain,
   isPlatformHostname,
 } from "./project-domain-policy.js";
+export type { CertificateProbe } from "./project-domain-tls.js";
+export { classifyCertificate } from "./project-domain-tls.js";
 export { ProjectDomainEngine } from "./project-domains.js";
 export { ProjectLifecycleEngine } from "./project-lifecycle.js";
 

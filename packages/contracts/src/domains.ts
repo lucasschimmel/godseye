@@ -93,17 +93,41 @@ export const ProjectDomainList = z
       .nullable(),
   })
   .strict();
+/** A served certificate counts as expiring when fewer than this many days remain. */
+export const DOMAIN_TLS_EXPIRING_DAYS = 14;
+export const DOMAIN_TLS_STATES = ["valid", "expiring", "expired", "unknown"] as const;
+/** Why a certificate date is not known; never replaced by a guessed date. */
+export const DOMAIN_TLS_REASONS = [
+  "PROBE_NOT_CONFIGURED",
+  "NOT_SERVED",
+  "DNS_NOT_EDGE",
+  "DNS_UNAVAILABLE",
+  "HANDSHAKE_FAILED",
+  "NO_CERTIFICATE",
+] as const;
+/**
+ * Certificate observed by a read-only TLS handshake against the edge with the host as SNI. `expiresAt`
+ * is the certificate's not-after date and is null exactly when the state is `unknown`, in which case
+ * `reason` says why.
+ */
+export const DomainTls = z
+  .object({
+    state: z.enum(DOMAIN_TLS_STATES),
+    expiresAt: Moment.nullable(),
+    reason: z.enum(DOMAIN_TLS_REASONS).nullable(),
+    checkedAt: Moment,
+  })
+  .strict();
+export type DomainTlsView = z.infer<typeof DomainTls>;
 /** One custom domain in the cross-project owner list, with the names needed to read it without a lookup. */
 export const DomainOverviewItem = ProjectDomain.extend({
   projectName: z.string(),
   projectSlug: z.string(),
   environmentName: z.string(),
   environmentKind: z.enum(["development", "production", "preview", "recovery"]),
+  tls: DomainTls,
 }).strict();
-/**
- * Non-removed domains of every project. Certificate expiry is deliberately absent: the edge reports no
- * per-host certificate state, so nothing is shown rather than a guess.
- */
+/** Non-removed domains of every project, each with its observed certificate state. */
 export const DomainOverview = z.object({ domains: z.array(DomainOverviewItem) }).strict();
 export type DomainOverviewView = z.infer<typeof DomainOverview>;
 export const DomainAskResponse = z.object({ allowed: z.literal(true) }).strict();
