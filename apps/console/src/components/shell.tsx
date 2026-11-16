@@ -1,3 +1,4 @@
+import { CONTROL_API_VERSION } from "@godseye/contracts";
 import { Link, useLocation } from "@tanstack/react-router";
 import {
   Activity,
@@ -8,6 +9,7 @@ import {
   CircleHelp,
   Database,
   Eye,
+  Gauge,
   GitBranch,
   KeyRound,
   LayoutDashboard,
@@ -17,6 +19,8 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import type { ReactNode } from "react";
+import { shellCopy } from "@/lib/deployment";
+import { useDeployment } from "@/lib/use-deployment";
 import { useOwner } from "./owner-gate";
 
 const navigation = [
@@ -25,7 +29,7 @@ const navigation = [
   { to: "/databases", label: "Bases de données", icon: Database },
   { to: "/pipelines", label: "CI / CD", icon: GitBranch },
   { to: "/jobs", label: "Jobs", icon: ListChecks },
-  { to: "/usage", label: "Consommation et budgets", icon: Activity },
+  { to: "/usage", label: "Consommation et budgets", icon: Gauge },
   { to: "/observability", label: "Observabilité et incidents", icon: Radio },
   { to: "/operations", label: "Opérations", icon: Activity },
   { to: "/infrastructure", label: "Infrastructure", icon: Server },
@@ -36,6 +40,7 @@ const navigation = [
 
 export function Shell({ children }: { children: ReactNode }) {
   const { status } = useOwner();
+  const copy = shellCopy(useDeployment());
   const { pathname } = useLocation();
   const active = navigation.find((item) =>
     item.to === "/" ? pathname === "/" : pathname.startsWith(item.to),
@@ -51,7 +56,7 @@ export function Shell({ children }: { children: ReactNode }) {
             <Eye size={25} />
           </span>
           <span>
-            G.O.D.S.E.Y.E<small>PRIVATE CONTROL PLANE</small>
+            G.O.D.S.E.Y.E<small>PLAN DE CONTRÔLE PRIVÉ</small>
           </span>
         </Link>
         <div className="workspace-label">
@@ -77,7 +82,7 @@ export function Shell({ children }: { children: ReactNode }) {
           <div className="private-note">
             <ShieldCheck size={18} />
             <div>
-              Accès privé<small>Session de développement locale</small>
+              Accès privé<small>{copy?.sidebarSession ?? "Session sécurisée"}</small>
             </div>
           </div>
           <a
@@ -92,7 +97,7 @@ export function Shell({ children }: { children: ReactNode }) {
             <span>{status.owner?.name.slice(0, 2).toLocaleUpperCase("fr") ?? "PR"}</span>
             <div>
               {status.owner?.name ?? "Propriétaire"}
-              <small>Session propriétaire · local</small>
+              <small>{copy?.ownerSession ?? "Session propriétaire"}</small>
             </div>
             <span className="owner-indicator" />
           </div>
@@ -104,26 +109,30 @@ export function Shell({ children }: { children: ReactNode }) {
             Espace personnel <ChevronRight size={13} />
             <strong>{active?.label ?? "Projet"}</strong>
           </div>
-          <div className="local-pill">
-            <Radio size={13} /> Développement local
-          </div>
+          {copy && (
+            <div className="local-pill">
+              <Radio size={13} /> {copy.pill}
+            </div>
+          )}
         </header>
-        <div className="connection-strip">
-          <span className="status-dot amber" />
-          <strong>Serveur non connecté</strong>
-          <span>Vos configurations sont enregistrées sur cet ordinateur.</span>
-          <Link to="/infrastructure">
-            Voir la préparation <ArrowUpRight size={13} />
-          </Link>
-        </div>
+        {copy && (
+          <div className="connection-strip">
+            <span className={`status-dot ${copy.strip.tone}`} />
+            <strong>{copy.strip.title}</strong>
+            <span>{copy.strip.detail}</span>
+            <Link to="/infrastructure">
+              Voir l’infrastructure <ArrowUpRight size={13} />
+            </Link>
+          </div>
+        )}
         <main id="main-content" tabIndex={-1}>
           {children}
         </main>
         <footer className="app-footer">
           <span>
-            G.O.D.S.E.Y.E <span className="mono">/ 0.1.0</span>
+            G.O.D.S.E.Y.E <span className="mono">/ API {CONTROL_API_VERSION}</span>
           </span>
-          <span>Local d’abord. Votre infrastructure ensuite.</span>
+          <span>{copy?.footer ?? "Votre infrastructure, sous votre contrôle."}</span>
         </footer>
       </div>
     </div>
