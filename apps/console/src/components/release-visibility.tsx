@@ -2,14 +2,18 @@ import type {
   CiRunView,
   DeliveryOverviewView,
   DeliveryRunView,
+  EnvironmentView,
+  OwnerSecurityView,
   ProjectView,
 } from "@godseye/contracts";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Rocket } from "lucide-react";
 import { Failure, Loading, SectionTitle } from "@/components/shared";
-import { resource, timestamp } from "@/lib/api";
+import { api, resource, timestamp } from "@/lib/api";
 import { buildLink } from "@/lib/build-link";
 import { environmentLabel } from "@/lib/environment-labels";
+import { redeployBlockReason } from "@/lib/redeploy";
+import { RedeployControl } from "./redeploy-control";
 
 /** Health as the delivery journal proves it; anything not proven active stays explicitly unknown. */
 const healthLabels: Record<DeliveryRunView["state"], string> = {
@@ -27,6 +31,7 @@ const RECENT_BUILDS = 5;
 
 interface Row {
   key: string;
+  environmentView: EnvironmentView;
   project: string;
   environment: string;
   run: DeliveryRunView | null;
@@ -46,6 +51,7 @@ function rows(projects: ProjectView[], delivery: DeliveryOverviewView): Row[] {
         const artifact = delivery.artifacts.find((item) => item.id === run?.artifactId);
         return {
           key: environment.id,
+          environmentView: environment,
           project: project.name,
           environment: environmentLabel(environment),
           run,
@@ -61,6 +67,23 @@ export function ReleaseVisibility() {
   const delivery = useQuery(resource<DeliveryOverviewView>("delivery", "/delivery"));
   const projects = useQuery(resource<ProjectView[]>("projects", "/projects"));
   const builds = useQuery(resource<CiRunView[]>("ci-runs", "/ci/runs"));
+  const security = useQuery({
+    ...resource<OwnerSecurityView>("owner-security", "/owner/security"),
+    refetchInterval: 5000,
+  });
+  const cache = useQueryClient();
+  const redeploy = useMutation({
+    mutationFn: ({ environment, key }: { environment: EnvironmentView; key: string }) =>
+      api("/delivery/redeploy", {
+        method: "POST",
+        body: JSON.stringify({
+          environmentId: environment.id,
+          expectedEnvironmentRevision: environment.revision,
+        }),
+        headers: { "idempotency-key": key },
+      }),
+    onSuccess: () => cache.invalidateQueries(),
+  });
   return (
     <section className="panel" aria-labelledby="release-visibility-title">
       <div className="panel-heading">
@@ -93,6 +116,7 @@ export function ReleaseVisibility() {
               <th scope="col">Version</th>
               <th scope="col">Santé du déploiement</th>
               <th scope="col">Mis à jour</th>
+              <th scope="col">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -105,10 +129,40 @@ export function ReleaseVisibility() {
                 </td>
                 <td>{row.run ? healthLabels[row.run.state] : "Aucun déploiement enregistré"}</td>
                 <td>{row.run ? timestamp(row.run.updatedAt) : "—"}</td>
+                <td>
+                  <RedeployControl
+                    project={row.project}
+                    environment={row.environment}
+                    commit={row.commit}
+                    digest={row.digest}
+                    pending={redeploy.isPending}
+                    reason={redeployBlockReason({
+                      environment: row.environmentView,
+                      environmentId: row.key,
+                      run: row.run,
+                      delivery: delivery.data,
+                      fresh: security.data?.fresh === true,
+                      now: Date.now(),
+                    })}
+                    onConfirm={() =>
+                      redeploy.mutate({
+                        environment: row.environmentView,
+                        key: crypto.randomUUID(),
+                      })
+                    }
+                  />
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
+      )}
+      {redeploy.isError && <Failure error={redeploy.error} />}
+      {redeploy.isSuccess && (
+        <p className="success-message" role="status">
+          Redéploiement préparé sur la même image. Admettez-le dans « Livraisons préparées » pour
+          l’exécuter.
+        </p>
       )}
       <h3>Dernières constructions</h3>
       {builds.isError ? (

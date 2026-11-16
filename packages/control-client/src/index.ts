@@ -58,6 +58,7 @@ import type {
   RecoveryOverviewView,
   RecoveryPreparationView,
   RecoveryRunView,
+  RedeployDeliveryInput,
   RegisterJobDefinitionInput,
   RegisterTelemetrySourceInput,
   ReleaseQuarantineInput,
@@ -328,6 +329,8 @@ export function createControlClient(options: ControlClientOptions = {}) {
       request<{ prepared: string[]; blocked: number }>("POST", "/delivery/synchronize", input, key),
     prepareDelivery: (input: PrepareDeliveryInput, key: string) =>
       request<DeliveryPreparationView>("POST", "/delivery/preparations", input, key),
+    redeployDelivery: (input: RedeployDeliveryInput, key: string) =>
+      request<DeliveryPreparationView>("POST", "/delivery/redeploy", input, key),
     admitDelivery: (input: AdmitDeliveryInput, key: string) =>
       request<DeliveryRunView>("POST", "/delivery/admissions", input, key),
     cleanupDeliveryPreviews: (key: string) =>

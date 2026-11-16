@@ -5,6 +5,7 @@ import type {
   CreateExecutionPlanInput,
   ExecutionContext,
   PrepareDeliveryInput,
+  RedeployDeliveryInput,
 } from "@godseye/contracts";
 import { DeliveryOverview, DeliveryPreview } from "@godseye/contracts";
 import type { DatabaseAccess, Store } from "@godseye/store";
@@ -16,6 +17,7 @@ import { migrationBindingsByPreparation, rollbackMigrationBlocker } from "./deli
 import { createDeliveryPolicy, revokeDeliveryPolicy } from "./delivery-policy.js";
 import { prepareDelivery } from "./delivery-preparation.js";
 import type { DeliveryProvider, GithubSourceProvider } from "./delivery-provider.js";
+import { redeployDelivery } from "./delivery-redeploy.js";
 import {
   cleanupExpiredDelivery,
   deliverySchedulerTick,
@@ -77,6 +79,9 @@ export class DeliveryEngine {
   }
   prepare(actor: Actor, input: PrepareDeliveryInput, key: string) {
     return prepareDelivery(this.state, actor, input, key);
+  }
+  redeploy(actor: Actor, input: RedeployDeliveryInput, key: string) {
+    return redeployDelivery(this.state, actor, input, key);
   }
   admit(actor: Actor, input: AdmitDeliveryInput, key: string) {
     return admitDelivery(this.state, actor, input, key);
