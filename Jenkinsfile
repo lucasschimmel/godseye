@@ -3,7 +3,7 @@ pipeline {
   options {
     skipDefaultCheckout(true)
     disableConcurrentBuilds(abortPrevious: true)
-    timeout(time: 30, unit: 'MINUTES')
+    timeout(time: 45, unit: 'MINUTES')
     buildDiscarder(logRotator(numToKeepStr: '30', artifactNumToKeepStr: '10'))
     timestamps()
   }
@@ -60,34 +60,8 @@ pipeline {
         sh 'bun run test:e2e:sequential'
       }
     }
-    stage('Independent PostgreSQL laboratory') {
-      agent { label 'godseye-ubuntu2604-amd64-node24-bun144' }
-      steps {
-        checkout scm
-        sh 'test "$(uname -s)" = "Linux" && test "$(uname -m)" = "x86_64" && node --version && test "$(bun --version)" = "1.4.4"'
-        sh 'bun install --frozen-lockfile && bun run postgres:install && bun run test:database:lab'
-      }
-      post {
-        always {
-          junit allowEmptyResults: false, testResults: 'artifacts/test-results/pg-lab.xml'
-          archiveArtifacts allowEmptyArchive: false, artifacts: 'artifacts/test-results/pg-lab.xml,artifacts/test-results/pg-lab-report.json'
-        }
-      }
-    }
-    stage('Paused PostgreSQL recovery laboratory') {
-      agent { label 'godseye-ubuntu2604-amd64-node24-bun144' }
-      steps {
-        checkout scm
-        sh 'test "$(uname -s)" = "Linux" && test "$(uname -m)" = "x86_64" && node --version && test "$(bun --version)" = "1.4.4"'
-        sh 'bun install --frozen-lockfile && bun run postgres:install && bun run postgres:recovery:install && bun run test:recovery:lab'
-      }
-      post {
-        always {
-          junit allowEmptyResults: false, testResults: 'artifacts/test-results/recovery-lab.xml'
-          archiveArtifacts allowEmptyArchive: false, artifacts: 'artifacts/test-results/recovery-lab.xml,artifacts/test-results/recovery-lab-observation.json'
-        }
-      }
-    }
+    // The native PostgreSQL and recovery laboratories need an Ubuntu 26.04 amd64 agent and live in
+    // `Jenkinsfile.ubuntu-labs`; waiting for a label no agent carries stalled the whole pipeline.
   }
   post {
     always {
