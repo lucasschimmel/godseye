@@ -5,6 +5,7 @@ import { useState } from "react";
 import { api, resource } from "@/lib/api";
 import { environmentLabel } from "@/lib/environment-labels";
 import { ownerAuth } from "@/lib/owner";
+import { useDeployment } from "@/lib/use-deployment";
 import { Failure, Loading } from "./shared";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
@@ -55,6 +56,7 @@ function BackendSettings({
   project: ProjectView;
   environmentId: string;
 }) {
+  const deployment = useDeployment();
   const path = `/projects/${project.id}/environments/${environmentId}/backend`;
   const query = useQuery({
     ...resource<BackendConfigurationDTO>(`backend-${environmentId}`, path),
@@ -91,12 +93,17 @@ function BackendSettings({
     <>
       <div className="backend-status">
         <strong>{labels[data.state]}</strong>
-        <span>Runtime hébergé non connecté</span>
+        <span>
+          {deployment.isLocal
+            ? "Runtime hébergé non connecté"
+            : "Runtime hébergé à qualifier sur le serveur"}
+        </span>
         <span className="mono">Révision {data.revision}</span>
       </div>
       <p className="muted">
-        Enregistrer ces paramètres prépare le backend. Le template local permet de le tester ; le
-        déploiement sur le serveur sera raccordé ultérieurement.
+        {deployment.isLocal
+          ? "Enregistrer ces paramètres prépare le backend. Le template local permet de le tester ; le déploiement sur le serveur sera raccordé ultérieurement."
+          : "Enregistrer ces paramètres prépare le backend de cet environnement ; son application dépend du runtime hébergé sur le serveur dédié."}
       </p>
       <div className="backend-actions">
         <Button variant="outline" disabled={confirm.isPending} onClick={() => confirm.mutate()}>

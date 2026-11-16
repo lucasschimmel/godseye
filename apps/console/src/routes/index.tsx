@@ -39,11 +39,11 @@ function Dashboard() {
           {
             label: "Projets enregistrés",
             value: data.projectCount,
-            note: "Dans le registre local",
+            note: data.mode === "server" ? "Dans le registre du serveur" : "Dans le registre local",
             icon: Box,
           },
           {
-            label: "Environnements prévus",
+            label: "Environnements",
             value: data.environmentCount,
             note: "Environnements du registre",
             icon: Server,
@@ -108,7 +108,7 @@ function Dashboard() {
           </div>
           <div className="panel-note">
             {data.mode === "server"
-              ? "Serveur dédié connecté. Les métriques de l’hôte restent à brancher."
+              ? "Serveur dédié connecté. Les métriques de l’hôte ne sont pas encore remontées dans la console."
               : "Les observations locales sont disponibles ci-dessus. Les métriques de l’hôte distant restent indisponibles."}
           </div>
         </section>

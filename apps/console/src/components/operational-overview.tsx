@@ -2,11 +2,13 @@ import type { OperationalOverviewView } from "@godseye/contracts";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { resource, timestamp } from "@/lib/api";
+import { useDeployment } from "@/lib/use-deployment";
 import { Failure, Loading } from "./shared";
 import { Button } from "./ui/button";
 import { UsageTotals } from "./usage-panel";
 
 export function OperationalOverview() {
+  const deployment = useDeployment();
   const overview = useQuery(
     resource<OperationalOverviewView>("operational-overview", "/overview/operational"),
   );
@@ -20,15 +22,19 @@ export function OperationalOverview() {
   return (
     <section className="panel telemetry-section" aria-label="Situation opérationnelle">
       <div className="panel-heading">
-        <h2>Situation opérationnelle locale</h2>
+        <h2>
+          {deployment.isLocal ? "Situation opérationnelle locale" : "Situation opérationnelle"}
+        </h2>
         <Button variant="outline" onClick={() => void overview.refetch()}>
           Actualiser la situation
         </Button>
       </div>
       {overview.isError && <Failure error={overview.error} retry={() => void overview.refetch()} />}
       <p>
-        Collectée le {timestamp(data.collectedAt)}. Le serveur distant reste non connecté ; ces
-        observations concernent le contrôleur et ses journaux locaux.
+        Collectée le {timestamp(data.collectedAt)}.{" "}
+        {deployment.isLocal
+          ? "Le serveur distant reste non connecté ; ces observations concernent le contrôleur et ses journaux locaux."
+          : "Ces observations concernent le contrôleur du serveur dédié et ses journaux ; les mesures de l’hôte et des machines virtuelles ne sont pas encore remontées ici."}
       </p>
       <dl className="telemetry-totals">
         <div>

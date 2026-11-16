@@ -16,12 +16,14 @@ import { Failure, Loading, PageHeading, Status } from "@/components/shared";
 import { Button } from "@/components/ui/button";
 import { api, resource } from "@/lib/api";
 import { environmentLabel } from "@/lib/environment-labels";
+import { useDeployment } from "@/lib/use-deployment";
 
 export const Route = createFileRoute("/projects/$projectId")({ component: ProjectDetail });
 function ProjectDetail() {
   const { projectId } = Route.useParams();
   const query = useQuery(resource<ProjectView>(`project-${projectId}`, `/projects/${projectId}`));
   const cache = useQueryClient();
+  const deployment = useDeployment();
   const validation = useMutation({
     mutationFn: () =>
       api(`/projects/${projectId}/operations`, {
@@ -71,7 +73,8 @@ function ProjectDetail() {
       {validation.isError && <Failure error={validation.error} />}
       {validation.isSuccess && (
         <p className="success-message" role="status">
-          Configuration locale validée. Le projet n’a pas été provisionné.
+          {deployment.isLocal ? "Configuration locale validée" : "Configuration validée"}. Le projet
+          n’a pas été provisionné.
         </p>
       )}
       <div className="section-title">
