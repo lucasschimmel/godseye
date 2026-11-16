@@ -82,6 +82,7 @@ describe("strict owner delivery HTTP and typed client", () => {
       ["POST", `/delivery/policies/${randomUUID()}/revoke`],
       ["POST", "/delivery/synchronize"],
       ["POST", "/delivery/preparations"],
+      ["POST", "/delivery/redeploy"],
       ["POST", "/delivery/admissions"],
       ["POST", "/delivery/cleanup"],
     ]) {

@@ -3,6 +3,7 @@ import {
   CreateDeliveryPolicy,
   LOCAL_DEFAULTS,
   PrepareDelivery,
+  RedeployDelivery,
   SynchronizeDelivery,
 } from "@godseye/contracts";
 import { DomainError, type InfrastructureEngine } from "@godseye/core";
@@ -59,6 +60,16 @@ export function registerDeliveryRoutes(
       await engine().prepare(
         c.get("actor"),
         PrepareDelivery.parse(await c.req.json()),
+        c.req.header("idempotency-key") ?? "",
+      ),
+      201,
+    ),
+  );
+  app.post(`${base}/redeploy`, async (c) =>
+    c.json(
+      await engine().redeploy(
+        c.get("actor"),
+        RedeployDelivery.parse(await c.req.json()),
         c.req.header("idempotency-key") ?? "",
       ),
       201,

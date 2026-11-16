@@ -2,7 +2,9 @@
 
 Status: proposed installation contract, 2026-11-13. No remote inspection, installation, account creation, purchase or DNS mutation has been performed by this documentation task.
 
-Owner: Lucas Schimmel. Target: the owner's Hetzner AX41 in Finland. This contract specializes E00 and the infrastructure/recovery parts of E12; it does not replace the application V1 specification or mark any qualification complete.
+Update 2026-11-16: the machine was inspected (P00) and is a Hetzner `EX44-1-LTD #3097071` in `HEL1-DC8` (Intel i5-13500, 14 cores/20 threads, 62.57 GiB usable RAM, two 512 GB NVMe, Proxmox VE 9.2 on a ZFS mirror); every "AX41" figure in this contract is the original, superseded assumption. Measured values and the execution state are in the [execution ledger](../operations/dedicated-server-execution.md). Delivery runs on Docker + `runsc` without Coolify, control DB on PostgreSQL 17 and project cells on PostgreSQL 18, console reachable only over WireGuard: [ADR-021](../adr/ADR-021-direct-docker-runsc-delivery-and-server-decisions.md).
+
+Owner: Lucas Schimmel. Target: the owner's Hetzner server in Finland (originally assumed AX41, actually EX44). This contract specializes E00 and the infrastructure/recovery parts of E12; it does not replace the application V1 specification or mark any qualification complete.
 
 Authoritative companions: [installation plan](../plan/dedicated-server-installation.md), [placement decision](../adr/ADR-002-professional-vm-and-dual-stack.md), [isolation/data controls](isolation.md), [network contract](networking.md), [V1 scope](v1.md).
 
@@ -10,11 +12,11 @@ Authoritative companions: [installation plan](../plan/dedicated-server-installat
 
 | Item | Current knowledge | Required before installation |
 | --- | --- | --- |
-| Provider/location/model | Owner reports Hetzner, Finland, AX41 | Robot server identifier, actual location and contract |
+| Provider/location/model | Observed: Hetzner `EX44-1-LTD #3097071`, `HEL1-DC8` (owner first reported AX41) | Robot server identifier, actual location and contract |
 | Current OS | Owner reports Ubuntu26.04 after reset | Actual release, boot mode and current data inventory |
-| CPU | AX41 product references identify Ryzen5 3600, six cores/twelve SMT threads | CPU model, virtualization flags, actual usable topology |
+| CPU | Observed: Intel Core i5-13500, 14 cores/20 threads, VT-x (AX41 references said Ryzen5 3600) | CPU model, virtualization flags, actual usable topology |
 | Memory | Product references commonly list64GB DDR4 | MemTotal, available memory, health; do not equate marketed GB with usable GiB |
-| Disks | AX41 and AX41-NVMe references differ: SATA and NVMe variants exist | Count/model/serial/bytes, SMART/NVMe health, wear, boot partitions and existing RAID |
+| Disks | Observed: two Samsung MZVL2512HCJQ 512 GB NVMe (AX41 SATA/NVMe variants do not apply) | Count/model/serial/bytes, SMART/NVMe health, wear, boot partitions and existing RAID |
 | Addressing | One primary IPv4 and assigned IPv6 allocation expected | Robot assignment, upstream gateway/link-local scope, MAC/interface, MTU and routes |
 | Recovery access | Not verified | Robot access, Rescue and available remote-console procedure independent of the workstation |
 | External dependencies | Not selected/enrolled by this task | Domains/DNS provider, private admin devices, off-host backup target, recovery key custody and alert destination |
@@ -26,13 +28,13 @@ Historical product descriptions are sizing references, not an observation of thi
 ## 2. Required topology
 
 ```text
-Hetzner AX41 — one bare-metal Proxmox VE installation
-  + physical storage mirror, routing, host firewall, private management
+Hetzner EX44 — one bare-metal Proxmox VE installation
+  + physical storage mirror, routing, host firewall, private management (WireGuard)
   + professional VM
-  |   + private G.O.D.S.E.Y.E console/control API and metadata PostgreSQL
-  |   + private OpenBao, Coolify, registry/observability as qualified
+  |   + private G.O.D.S.E.Y.E console (WireGuard only)/control API and metadata PostgreSQL 17
+  |   + private OpenBao, Docker/runsc delivery adapter, registry/observability as qualified
   |   + HTTPS ingress for public registered application services
-  |   + project/environment cells: apps + independent PostgreSQL/data/WAL
+  |   + project/environment cells: apps + independent PostgreSQL 18/data/WAL
   |       + private files/identities + scoped Inngest/Redis/workflow state
   |       + development, production and each preview are distinct cells
   + games/personal VM — games and Discord bots
@@ -87,7 +89,7 @@ Public IPv4 target: one. Absolute ceiling: two, with a documented fixed-port/pro
 
 | Source | Allowed destinations | Default denial |
 | --- | --- | --- |
-| Internet | Registered web80/443; exact game protocol ports; chosen VPN endpoint | Proxmox8006, SSH22, control/CI/Bao/Coolify UI, databases/Redis/Inngest admin, registry/admin/metrics |
+| Internet | Registered web80/443; exact game protocol ports; chosen VPN endpoint | Proxmox8006, SSH22, control/console/CI/Bao UI, databases/Redis/Inngest admin, registry/admin/metrics |
 | Owner private network | Exact administrative endpoints and scope | Arbitrary project-to-project transit |
 | Professional cell | Its own DB/files/workflow endpoints and approved egress | Other cells, management, metadata endpoints, personal VM and backup custody |
 | Games VM | Explicit game/bot egress, authorized telemetry | Pro control/cells, host management and backup repositories |
@@ -108,9 +110,9 @@ Hetzner Robot filtering is an upstream layer, not the complete stateful guest/co
 
 Docker/Compose is the application packaging baseline; gVisor systrap is the candidate application sandbox, requiring no nested KVM. Verify effective runtime on deploy/redeploy, read-only roots, non-root UID, capabilities, PID/CPU/RAM limits, filesystem quotas, mounts and dual-stack policy. Refuse unsupported profiles; no silent native fallback.
 
-PostgreSQL and trusted infrastructure may use separately qualified native runtime profiles. Each project/environment owns its independent PostgreSQL instance, PGDATA/WAL, roles, backup scope and workflow installation state. The controller's metadata database is separate from application identities/data.
+PostgreSQL and trusted infrastructure may use separately qualified native runtime profiles. Each project/environment owns its independent PostgreSQL instance, PGDATA/WAL, roles, backup scope and workflow installation state. The controller's metadata database is separate from application identities/data. Version split (owner decision, ADR-021): the control database runs PostgreSQL 17 with the distribution pgBackRest 2.55; project cells run PostgreSQL 18 with pgBackRest 2.60.
 
-Only the trusted deployment broker has limited access to the deployment engine/daemon. Never mount the Docker socket into apps, build contexts or general agent tasks. Coolify is replaceable; documented runtime options are not proof that its rendered deployment enforces this contract.
+Only the trusted deployment broker has limited access to the deployment engine/daemon. Never mount the Docker socket into apps, build contexts or general agent tasks. The platform's own Docker adapter selects `--runtime=runsc` and inspects the effective runtime itself (Coolify was dropped, ADR-021); a configured option is never proof that the rendered deployment enforces this contract.
 
 Jenkins controller has zero executors and remains private. Untrusted repository builds and broad agent tools require the disposable work-VM boundary; if it is unavailable, queue or disable the operation. Keep registry publication, deployment and production material authority separate from checkout/build authority. Hermes and CI share one heavy-task admission budget, not simultaneous unbounded workers.
 
@@ -125,7 +127,7 @@ Every installed service needs an owner, immutable image/package version, resourc
 | Proxmox/private VPN | Host, restricted management identities | Host lifecycle only; emergency route independent of pro VM/dashboard |
 | Console/control API and journal DB | Pro VM/private control plane | Owner passkeys, exact adapters, durable operations/audit and visible stale/unknown state |
 | OpenBao | Pro VM/private management | Scoped runtime/worker/backup identities, rotation/revocation; protected off-host seal/recovery custody |
-| Edge/Coolify/deploy broker | Pro VM/trusted management | Owned domains/TLS, immutable images, inspected policies; deployment authority separate from builds |
+| Edge/Docker delivery broker | Pro VM/trusted management | Owned domains/TLS, immutable images, inspected policies; deployment authority separate from builds |
 | Jenkins controller | Pro VM/private; zero executors | Versioned controller/plugins/config, job inventory, periodic/source-triggered checks and retained evidence |
 | Jenkins/general coding agents | Disposable host-level work guest | Ephemeral workspace/cache, no prod keys, bounded checkout/model/registry access; clean or quarantine after task |
 | Per-cell app backend | Pro VM/qualified sandbox | Independent user auth, private files, domain/job realtime and custom SDK configuration without owner authority |
@@ -156,7 +158,7 @@ Closing the browser, disconnecting SSH and switching off the owner's PC must not
 
 Schedule recurring owned-application security checks, scoped log investigation, competitor/marketing watch and draft production through reviewed Hermes skills and Inngest jobs. Target/grant/tool limits apply to every run. External social posting/replies are separate explicitly authorized actions with scoped connector authority and unknown-result reconciliation; enabling a marketing skill is not blanket publication approval.
 
-Remote coding uses a supported configured Codex or Claude Code runner, with API/account entitlements checked separately. Do not assume a browser ChatGPT/Claude session or subscription automatically authorizes a server-side CLI/API. No large local generative model is required by the AX41 baseline. Keep Laya disabled until its held-out quality/resource gates pass; retain deterministic/owner/Hermes escalation where classification is unqualified.
+Remote coding uses a supported configured Codex or Claude Code runner, with API/account entitlements checked separately. Do not assume a browser ChatGPT/Claude session or subscription automatically authorizes a server-side CLI/API. No large local generative model is required by the server baseline. Keep Laya disabled until its held-out quality/resource gates pass; retain deterministic/owner/Hermes escalation where classification is unqualified.
 
 Laya inherits the exact F29 evaluation policy in the [V1 contract](v1.md): a bounded decision workload within its stated 1 vCPU / 3 GiB envelope, frozen evaluation thresholds, held-out FR/EN evidence and mandatory critical escalation. Account for its reservation inside the professional VM before admitting project cells; no automatic substitution with LiteLLM or a generation model is implied.
 
@@ -166,7 +168,7 @@ Administrative VM control, project suspension/resume/export, credential rotation
 
 ## 6. Backups, recovery and operations
 
-Inherited objectives remain targets to demonstrate: production DB RPO <=15minutes with healthy off-host WAL archiving; project RTO <=4hours on available replacement capacity; files/config RPO <=24hours. Hardware replacement lead time is separately reported. One AX41 provides no multi-host HA guarantee.
+Inherited objectives remain targets to demonstrate: production DB RPO <=15minutes with healthy off-host WAL archiving; project RTO <=4hours on available replacement capacity; files/config RPO <=24hours. Hardware replacement lead time is separately reported. One server provides no multi-host HA guarantee.
 
 - pgBackRest: weekly full, daily differential, continuous WAL; at least two completed full generations and their dependent archives.
 - Files/config: daily snapshots,14 daily copies initially; record timestamps separately from DB archive positions and explicitly assess gaps.
@@ -178,7 +180,7 @@ Inherited objectives remain targets to demonstrate: production DB RPO <=15minute
 - Export protected audit anchors/history off-host and detect missing/truncated intervals. Redact logs/artifacts before ingestion/export; a cell cannot impersonate another cell's telemetry labels or enumerate its files/backups.
 - Record at-rest encryption and unattended-reboot/key-unlock choices explicitly. Disk encryption is not assumed by selecting ZFS or private networking; recovery keys must not depend solely on the encrypted host or sealed store.
 
-Collect host/guest/cell CPU/RAM/disk/IO/latency, pool health, temperatures where supported, certificate expiry, backup/WAL freshness and queued-task pressure. Start from existing log7day/metrics30day/execution90day/audit180day targets within measured disk budgets. Use an external observer for whole-host loss; an alert process on the failed AX41 is insufficient.
+Collect host/guest/cell CPU/RAM/disk/IO/latency, pool health, temperatures where supported, certificate expiry, backup/WAL freshness and queued-task pressure. Start from existing log7day/metrics30day/execution90day/audit180day targets within measured disk budgets. Use an external observer for whole-host loss; an alert process on the failed host is insufficient.
 
 Security updates have maintenance windows, rollback evidence and scheduled reboots. Record a pinned compatibility matrix, sanitized config hashes and exact observations after upgrades. Freeze new admission before disk/headroom exhaustion; existing reads/recovery stay observable where safe.
 
@@ -202,7 +204,7 @@ All entries start **not executed**. Evidence must record timestamp, versions, ex
 | DS12 | Two representative prod/dev projects, reference game load and bounded heavy task pass a72-hour soak | T05/T36 |
 | DS13 | G.O.D.S.E.Y.E provider admission matches actual target/version/ownership; no local fixture qualifies server authority | T09/T34/T37 |
 | DS14 | Replacement-host recovery runbook, key custody, compatibility evidence and residual limits are reviewable | T31/T34 |
-| DS15 | Actual Jenkins develop/release/project branch jobs, periodic checks, isolated checkout/build and retained evidence execute; main-only prepared configuration cannot be accepted unchanged | T11/T39/T41–T43 |
+| DS15 | Actual Jenkins jobs execute with isolated checkout/build and retained evidence: the released-source job follows `main` only (SCM and nightly schedule live in the job definition), and `develop` or any other branch is verified before a release through the manual `godseye-platform-candidate` job with the same Jenkinsfile. A configuration that follows a different branch than the one recorded here cannot be accepted unchanged | T11/T39/T41–T43 |
 | DS16 | Admitted cron/jobs/CI/Hermes continue with PC/SSH/browser disconnected and reconcile after supervised restarts; sealed/recovery-held services remain blocked | T18/T20–T24 |
 | DS17 | Enabled Hermes skills/coding runner, reviewed Laya decisions and per-run token/cost/budget accounting satisfy their product gates; unavailable integrations are explicit | T21–T29 |
 | DS18 | Scoped dashboard lifecycle, rotation/export/quarantine/purge, off-host audit and attribution/redaction controls preserve authorization and recovery | T08/T25/T30/T32/T37/T38 |
@@ -221,7 +223,7 @@ Official sources checked2026-11-13. Documentation supports mechanisms, not this 
 4. [Hetzner address routing](https://docs.hetzner.com/robot/dedicated-server/ip/additional-ip-adresses/) and [Robot firewall](https://docs.hetzner.com/robot/dedicated-server/firewall/): assigned addressing and separate IPv6 filtering.
 5. [Docker packet filtering](https://docs.docker.com/engine/network/packet-filtering-firewalls/): bridge publishing, forwarding and firewall backend behavior.
 6. [gVisor platforms](https://gvisor.dev/docs/user_guide/platforms/): systrap platform choice.
-7. [Coolify Docker options](https://coolify.io/docs/applications/builds/custom-docker-options): runtime-selection surface requiring effective inspection.
+7. [Coolify Docker options](https://coolify.io/docs/applications/builds/custom-docker-options): historical reference from the dropped Coolify option (ADR-021); effective runtime inspection is still required of the platform adapter.
 8. [Jenkins controller isolation](https://www.jenkins.io/doc/book/security/controller-isolation/), [Inngest self-hosting](https://www.inngest.com/docs/self-hosting), [Docker daemon supervision](https://docs.docker.com/engine/daemon/start/) and [Proxmox ZFS documentation source](https://github.com/proxmox/pve-docs/blob/master/local-zfs.adoc): checked during the completeness recheck2026-11-13; installed service compatibility remains to qualify.
 
 Still unresolved: actual disk variant/health/usable capacity, precise provider routes, domains/private-access devices, off-host destination, game workloads/port requirements, exact pinned versions and measured compatible profiles. Resolve these through the plan before activating dependent services.

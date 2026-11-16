@@ -6,15 +6,11 @@ import type {
 } from "@godseye/contracts";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api, resource, timestamp } from "@/lib/api";
+import { rotationExplanations, rotationHeadings } from "@/lib/secrets-bindings";
 import { ProtectionBadge, roleLabels, scopeName } from "./protection-labels";
 import { EmptyState, Failure, Loading, SectionTitle } from "./shared";
 import { Button } from "./ui/button";
 
-const headings = {
-  unconfigured: "Rotation des secrets à connecter",
-  unavailable: "Rotation indisponible",
-  qualified: "Rotation qualifiée",
-} as const;
 const post = (path: string, body: unknown) =>
   api(path, {
     method: "POST",
@@ -75,12 +71,8 @@ export function RotationPanel({
   }
   return (
     <section aria-label="Rotation des rôles de base">
-      <SectionTitle count={groups.length}>{headings[execution]}</SectionTitle>
-      <p className="muted">
-        {execution === "qualified"
-          ? "Chaque rotation enregistre d’abord son intention, puis vérifie le résultat. Aucune valeur secrète n’est affichée."
-          : "Aucune rotation ne peut être lancée. L’historique reste lisible ; aucun état n’est présenté comme sain sans preuve."}
-      </p>
+      <SectionTitle count={groups.length}>{rotationHeadings[execution]}</SectionTitle>
+      <p className="muted">{rotationExplanations[execution]}</p>
       {mutation.isError && <Failure error={mutation.error} />}
       {groups.length === 0 ? (
         <EmptyState

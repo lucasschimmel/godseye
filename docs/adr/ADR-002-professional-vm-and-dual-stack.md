@@ -1,7 +1,8 @@
 # ADR-002: Keep one professional VM and use shared IPv4 with IPv6-first networking
 
 Date: 2026-11-11
-Status: proposed current V1 baseline; supersedes ADR-001 project/environment VM placement
+Status: accepted V1 baseline; supersedes ADR-001 project/environment VM placement
+Update 2026-11-16: the Coolify deployment provider named below is replaced by direct Docker + `runsc` delivery ([ADR-021](ADR-021-direct-docker-runsc-delivery-and-server-decisions.md)); the physical host is a Hetzner `EX44-1-LTD`, not the AX41 quoted below. The VM split, gVisor `systrap` and dual-stack decisions stand.
 
 ## Context
 
@@ -15,17 +16,17 @@ Install **Proxmox once on the physical AX41**. It hosts two permanent Linux VMs:
 
 Inside the professional VM use Docker/Compose with **gVisor `runsc`, using its `systrap` platform, for application and compatible project-worker services**. Each project/environment cell has separate application sandboxes, networks, managed data directories/volumes, identities, quotas, PostgreSQL instance and workflow keys/state. PostgreSQL and trusted infrastructure services may use a qualified native runtime profile; applications cannot request that profile. Keep privileged deployment/credential tooling private and outside application sandboxes.
 
-Retain Coolify as the first deployment provider. Its documented Custom Docker Options include `--runtime`; Compose documents a `runtime` service field. The provider must explicitly select and inspect the effective `runsc` configuration after deploy/redeploy, and fail closed if the required runtime or policy is missing. This documents a supported integration surface, not a tested end-to-end guarantee. [1][2][3]
+Deliver through the platform's own Docker adapter (originally Coolify was proposed here and was replaced, see ADR-021). The adapter must explicitly select and inspect the effective `runsc` configuration after deploy/redeploy, and fail closed if the required runtime or policy is missing. [1][2][3]
 
 The gVisor systrap platform is suitable inside a VM without `/dev/kvm`; its KVM backend is not selected. Workload syscall/network/filesystem compatibility and performance remain qualification gates. Native database/infrastructure processes still share the professional VM's kernel. **Professional-VM root/daemon/kernel compromise is a shared compromise boundary**, unlike the superseded per-project KVM proposal. Normal project access controls and sandboxing reduce exposure but must not be described as identical to separate guest kernels. [1][4]
 
 ## Topology
 
 ```text
-AX41 physical host: Proxmox, routing and host firewall
+EX44 physical host: Proxmox, routing and host firewall
   |
   +-- Professional VM: G.O.D.S.E.Y.E
-  |     +-- private control API, Coolify and credential broker
+  |     +-- private control API, Docker/runsc delivery and credential broker
   |     +-- dual-stack HTTPS ingress
   |     +-- project A: gVisor apps + private A data/job services
   |     +-- project B: gVisor apps + private B data/job services

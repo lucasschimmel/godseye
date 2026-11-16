@@ -90,6 +90,14 @@ export const PrepareDelivery = z
   })
   .strict();
 export type PrepareDeliveryInput = z.infer<typeof PrepareDelivery>;
+/**
+ * Re-releases the environment's CURRENT release digest. The server resolves the artifact, policy and
+ * source binding itself; the caller can only name the environment and the revision it was looking at.
+ */
+export const RedeployDelivery = z
+  .object({ environmentId: Id, expectedEnvironmentRevision: Revision })
+  .strict();
+export type RedeployDeliveryInput = z.infer<typeof RedeployDelivery>;
 export const AdmitDelivery = z
   .object({ preparationId: Id, expectedHash: Hash, approveMigrationHash: Hash.optional() })
   .strict();

@@ -46,6 +46,10 @@ const messages: Record<string, string> = {
   SOURCE_REJECTED:
     "La source ne correspond pas au dépôt, à l’installation ou à la pull request autorisés.",
   STALE_HEAD: "La branche a changé. Synchronisez GitHub pour préparer la version actuelle.",
+  NO_CURRENT_RELEASE: "Cet environnement n’a aucune version courante à redéployer.",
+  POLICY_REQUIRED:
+    "Aucune politique de livraison en cours : enregistrez-en une avant de redéployer.",
+  RECOVERY_HOLD: "Cet environnement est en restauration : aucune livraison n’est possible.",
   POLICY_REVOKED: "Cette politique de livraison est révoquée ou expirée.",
   POLICY_STALE: "Le projet ou son association GitHub a changé. Enregistrez une nouvelle politique.",
   DELIVERY_BUSY: "Cet environnement conserve une livraison ou un résultat incertain à réconcilier.",

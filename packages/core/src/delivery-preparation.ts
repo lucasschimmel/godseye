@@ -34,6 +34,7 @@ export async function prepareDelivery(
   input: PrepareDeliveryInput,
   key: string,
   delegated = false,
+  redeploy = false,
 ) {
   const actor = immutableSnapshot(actorInput),
     data = parseInput(PrepareDelivery, input);
@@ -375,8 +376,10 @@ export async function prepareDelivery(
       tx,
       actor,
       policy.projectId,
-      "delivery.prepared",
-      `Prepared exact ${data.intent} for source ${ci.commitSha.slice(0, 12)}; no provider mutation`,
+      redeploy ? "delivery.redeploy.prepared" : "delivery.prepared",
+      redeploy
+        ? `Prepared redeploy of the current release ${artifactDigest ?? "digest"} for source ${ci.commitSha.slice(0, 12)}; no new build, no provider mutation`
+        : `Prepared exact ${data.intent} for source ${ci.commitSha.slice(0, 12)}; no provider mutation`,
     );
     return deliveryPreparationView(row);
   });

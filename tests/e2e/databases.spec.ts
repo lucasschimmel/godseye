@@ -149,14 +149,14 @@ test("T-AC-28 T-AC-33 prepares a bounded profile for the selected preview and ke
     page.getByText(/sauvegarde à connecter, restauration à connecter, rotation à connecter/),
   ).toBeVisible();
   await expect(
-    page.getByRole("heading", { name: "Rotation des secrets à connecter", exact: true }),
+    page.getByRole("heading", { name: "Rotation des secrets non branchée", exact: true }),
   ).toBeVisible();
   const cadence = page.getByRole("region", { name: "Cadence réelle des sauvegardes" });
   await expect(
     cadence.getByText(/Inconnu · source non configurée|Aucune cellule/).first(),
   ).toBeVisible();
   await expect(cadence.getByText(/Dernier test de restauration enregistré/)).toBeVisible();
-  await expect(page.getByText(/Aucun canal de notification externe n’est configuré/)).toBeVisible();
+  await expect(page.getByText("Aucun canal configuré.", { exact: true })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Incidents", exact: true })).toBeVisible();
   await expect(
     page.getByText(/Activation bloquée : fichiers, authentification, configuration/),
