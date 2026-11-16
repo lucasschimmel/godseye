@@ -4,6 +4,7 @@ import { Server } from "lucide-react";
 import { Failure, Loading, SectionTitle } from "@/components/shared";
 import { resource, timestamp } from "@/lib/api";
 import { hostStatusLabel, serverAvailability, serverUnknownLabel } from "@/lib/server-labels";
+import { TableScroll } from "./table-scroll";
 
 const REFRESH_MS = 60_000;
 type Section =
@@ -114,7 +115,7 @@ export function ServerPanel() {
               Aucune cellule n’a encore écrit de statut de sauvegarde.
             </p>
           ) : (
-            <div className="headroom-table-wrap">
+            <TableScroll label="Tableau défilant : sauvegardes par cellule">
               <table className="headroom-table">
                 <caption className="sr-only">Âge des sauvegardes par cellule</caption>
                 <thead>
@@ -139,7 +140,7 @@ export function ServerPanel() {
                   ))}
                 </tbody>
               </table>
-            </div>
+            </TableScroll>
           )}
           <h3 className="panel-subheading">Hôte Proxmox</h3>
           {data.host.state === "unknown" ? (

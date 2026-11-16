@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+### Jenkins build links on recent builds
+
+- `GET /ci/runs` now fills a run's `providerRef` with the Jenkins build URL when a platform build (read-only Jenkins source) reports having built exactly that commit (git plugin revision) and the build URL is on the configured Jenkins origin. A recorded `providerRef` is never overwritten; with Jenkins unconfigured, unreachable or silent about the commit, no link is offered. `PlatformBuild` gains a nullable `commitSha`. The console accepts plain http(s) build links without credentials because the private controller may be http.
+
+### Accessibility (A15 remainder)
+
+- The accessibility suite now also audits populated states (project list and detail, release table with build links, platform builds table), the redeploy confirmation dialog, forms showing validation and server errors, and reflow at 200% zoom (640 px) and 320 CSS px.
+
 ### Release visibility
 
 - Console only (owner API unchanged): the CI/CD page lists the current release and deploy health per environment from the delivery journal and the latest builds, with a Jenkins link only when a build reference is recorded as a plain https URL. No redeploy or restart control was added because the existing operation and delivery intents contain no restart.

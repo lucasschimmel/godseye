@@ -11,7 +11,7 @@ describe("build link", () => {
   it.each([
     ["no reference", null],
     ["a javascript URL", "javascript:alert(1)"],
-    ["plain http", "http://jenkins.example.org/job/1"],
+    ["a non-web scheme", "ftp://jenkins.example.org/job/1"],
     ["embedded credentials", "https://user:secret@jenkins.example.org/job/1"],
     ["a non-URL string", "build-42"],
   ])("returns null for %s", (_label, reference) => {
