@@ -46,7 +46,13 @@ export function InfrastructureHeadroomPanel({ data, fresh, busy, onAdmission }: 
           <h3>
             {headroomScopes[scope.scope]} · {pressureLabels[scope.pressure]}
           </h3>
-          <div className="headroom-table-wrap">
+          {/* The wide table scrolls sideways on narrow screens; keyboard users need to focus it. */}
+          <section
+            className="headroom-table-wrap"
+            aria-label={`Tableau défilant : ${headroomScopes[scope.scope]}`}
+            // biome-ignore lint/a11y/noNoninteractiveTabindex: scrollable region must be keyboard reachable (WCAG 2.1.1)
+            tabIndex={0}
+          >
             <table className="headroom-table">
               <caption className="sr-only">{headroomScopes[scope.scope]}</caption>
               <thead>
@@ -77,7 +83,7 @@ export function InfrastructureHeadroomPanel({ data, fresh, busy, onAdmission }: 
                 ))}
               </tbody>
             </table>
-          </div>
+          </section>
         </div>
       ))}
       <div className="headroom-queue">
