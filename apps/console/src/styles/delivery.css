@@ -236,11 +236,11 @@
   }
 }
 
-.platform-job {
-  padding: 0 23px 16px;
+.platform-job + .platform-job {
+  margin-top: 8px;
 }
 .platform-job h3 {
-  margin: 16px 0 8px;
+  margin: 18px 0 10px;
   font-size: 13px;
   font-weight: 600;
 }

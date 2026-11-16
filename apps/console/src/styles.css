@@ -23,5 +23,6 @@
 @import "./styles/agents-chat.css";
 @import "./styles/agents-coding.css";
 
+@import "./styles/panel-sections.css";
 @import "./styles/telemetry.css";
 @import "./styles/accessibility.css";
