@@ -11,7 +11,7 @@ The backup section of `/databases` displays physical full/differential preparati
 3. Follow the run and independently inspected backup state. A successful command or pgBackRest `info` archive min/max does not prove continuous recoverability. Evidence binds the repository, source physical/catalog identity, backup/base labels, manifest hash, timestamps, LSN ordering and timeline to finite repository and archive-headroom limits.
 4. After new WAL is archived, prepare/admit an archive check for the existing backup. It uses the same Foundation queue, durable intention and authority checks. Verified continuous-WAL evidence refreshes that backup's archive timestamp and recoverable upper bound without changing its manifest/base/lineage or creating another backup.
 5. Select a target timestamp inside the freshly verified interval and a new recovery environment name. Restore preparation creates a new server-owned logical environment with a durable recovery hold and a distinct physical allocation ID. The source remains retained.
-6. Admit the exact restore preparation. Follow data-validation status separately from activation. A verified restore remains held; there is no activation mutation endpoint in this stage.
+6. Admit the exact restore preparation. Follow data-validation status separately from activation. A verified restore remains held until the owner runs the confirmed activation step (see "Owner-confirmed activation" below).
 
 All preparations and admissions require owner authentication, recent passkey verification, an `Idempotency-Key` and strict DTO validation. Repeated keys with changed inputs and stale revisions conflict. Preparation changes are immutable: prepare again after relevant scope/revision changes. Retrying an uncertain operation must reconcile the existing intention rather than repeat its physical effect.
 
@@ -48,7 +48,15 @@ The durable server-owned hold blocks ordinary app/database start/resume, executi
 
 Database validation does not restore files, auth or configuration at the same timestamp. Coverage exposes `databaseAt`, nullable `filesAt`/`authAt`/`configAt`, and missing ancillary snapshots, business-effect history and producer fencing. No complete recovery set is claimed.
 
-Activation assessment always returns `activation: "blocked"`. Actual old-source producer/egress fencing, complete non-rewound business-effect reconciliation with stable logical effect IDs, ancillary snapshots and runtime-access adapters are unqualified. A future activation path must obtain fresh exact owner approval and a new non-rewound epoch, reconcile unknown/truncated intervals and prevent replay of restored pending effects. D08 is not completed by this data-recovery implementation.
+### Owner-confirmed activation (owner API `1.22.0`, migration `0027`)
+
+A restored environment becomes the project's active data only through `POST /recovery/environments/:id/activation`. The request carries the exact project and environment revisions, the typed environment name and every required acknowledgement (`FILES_SNAPSHOT_MISSING`, `AUTH_SNAPSHOT_MISSING`, `CONFIG_SNAPSHOT_MISSING`, `NON_REWOUND_BUSINESS_EFFECT_COVERAGE_UNQUALIFIED`); a recent passkey session is required. The gate is derived from stored state and refuses with `ACTIVATION_BLOCKED` while: the restore run is not `restore-verified`; the project is suspended or being deleted; the source is already held; the source has unfinished execution/job/outbox work or unresolved (`intent`/`unknown`) effects; or the provider has no promotion capability (`PROMOTION_UNAVAILABLE`).
+
+The step is durable and ordered: (1) one transaction fences the source (recovery hold, activation epoch advance, running work marked unknown, grants revoked) and records the intent in `recovery_activations`; (2) the provider promotes the exact restored destination; (3) only after an independent `inspectPromotion` proof that matches the scope, allocation and environment, the restored environment takes the source's kind and loses its hold while the source becomes a held `recovery` environment kept as evidence. Any doubt leaves both environments held with state `fenced` or `unknown`; repeating the command resumes without fencing again. The platform never reads an empty or truncated journal as proof that nothing happened: the effect-coverage gap is always acknowledged by the owner.
+
+Not covered: the shipped pgBackRest provider has no promotion capability, so on a real stack activation is reported `blocked` (`PROMOTION_UNAVAILABLE`); the flow is exercised only with a fixture provider. Jobs, backend configuration and domain bindings stay with the fenced source and are not moved, and the restored database is not yet registered as a managed database allocation (no backup/rotation for it until adopted). Files, identities and configuration are not restored.
+
+Before this step existed, activation assessment always returned `activation: "blocked"`. Actual old-source producer/egress fencing, complete non-rewound business-effect reconciliation with stable logical effect IDs, ancillary snapshots and runtime-access adapters are unqualified. A future activation path must obtain fresh exact owner approval and a new non-rewound epoch, reconcile unknown/truncated intervals and prevent replay of restored pending effects. D08 is not completed by this data-recovery implementation.
 
 Read-only reconciliation material has its own exact current Foundation lease/fence/epoch, scope and persisted-intention checks. It does not reuse revoked mutation grants or authorize another backup/restore. If current independent inspection or its private material authority is unavailable, uncertainty remains visible.
 
@@ -63,7 +71,8 @@ All paths below are under `/api/v1`. The generated [OpenAPI](../contracts/contro
 | `POST /recovery/archives/preparations` | Prepare a check for exact project/source environment/backup and revisions; 201 |
 | `POST /recovery/restores/preparations` | Prepare exact backup/UTC target and new name; 201 |
 | `POST /recovery/admissions` | Admit `{ preparationId, expectedHash }`; 202 |
-| `GET /recovery/environments/:id/activation` | Assess a held environment; always blocked |
+| `GET /recovery/environments/:id/activation` | Assess a held restored environment: `blocked` with machine-readable reasons, or `ready`, plus the acknowledgements the owner must give |
+| `POST /recovery/environments/:id/activation` | Owner-confirmed activation (fresh passkey, idempotency key); see below |
 
 The backup DTO distinguishes `backup-created`, `archive-healthy`, `restore-verified`, `stale`, `failed` and `unavailable`. Freshness is reevaluated from the clock; unavailable qualification prevents a green readiness claim. Run states include `reserved`, `unknown`, `backup-created`, `archive-checked`, `restore-verified` and `released`. Inspect both run outcome and current backup/provider status. Errors expose safe codes, not private material or raw tool diagnostics.
 

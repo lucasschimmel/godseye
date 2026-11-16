@@ -37,6 +37,19 @@ function branchOf(actions: unknown[]): string | null {
   return null;
 }
 
+const COMMIT_SHA = /^[a-f0-9]{40}$/;
+const Revision = z.object({ lastBuiltRevision: z.object({ SHA1: z.string() }) });
+
+/** Commit the git plugin recorded for the build; null unless it is a full lowercase SHA-1. */
+function commitOf(actions: unknown[]): string | null {
+  for (const action of actions) {
+    const parsed = Revision.safeParse(action);
+    if (parsed.success && COMMIT_SHA.test(parsed.data.lastBuiltRevision.SHA1))
+      return parsed.data.lastBuiltRevision.SHA1;
+  }
+  return null;
+}
+
 function classify(error: unknown): PlatformBuildUnavailableReason {
   if (error instanceof JenkinsHttpError) {
     if (error.status === 401 || error.status === 403) return "UNAUTHORIZED";
@@ -52,11 +65,16 @@ function classify(error: unknown): PlatformBuildUnavailableReason {
 
 /** Read-only adapter from the private Jenkins controller to the platform build list. */
 export class JenkinsPlatformBuildSource implements PlatformBuildSource {
+  /** Origin of the configured controller; build links must stay on it. */
+  readonly origin: string;
+
   constructor(
     private readonly client: JenkinsClient,
     private readonly baseUrl: string,
     private readonly timeoutMs = PLATFORM_BUILDS_TIMEOUT_MS,
-  ) {}
+  ) {
+    this.origin = new URL(baseUrl).origin;
+  }
 
   async recentBuilds(job: string, limit: number): Promise<PlatformBuildView[]> {
     try {
@@ -80,6 +98,7 @@ export class JenkinsPlatformBuildSource implements PlatformBuildSource {
       startedAt: new Date(build.timestamp).toISOString(),
       durationMs: build.building ? null : build.duration,
       branch: branchOf(build.actions),
+      commitSha: commitOf(build.actions),
       url: `${this.baseUrl.replace(/\/+$/, "")}/job/${encodeURIComponent(job)}/${build.number}/`,
     };
   }

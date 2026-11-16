@@ -34,6 +34,11 @@ export const PlatformBuild = z.object({
   durationMs: z.number().int().nonnegative().nullable(),
   /** Value of the BRANCH build parameter; null when the job does not take one. */
   branch: z.string().min(1).max(200).nullable(),
+  /** Commit Jenkins reports as built (git plugin revision); null when it does not say. */
+  commitSha: z
+    .string()
+    .regex(/^[a-f0-9]{40}$/)
+    .nullable(),
   url: z.string().url().max(512),
 });
 

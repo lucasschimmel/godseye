@@ -85,8 +85,9 @@ export async function recoverySource(
   projectId: string,
   environmentId: string,
   allocationId: string,
+  allowHeldSource = false,
 ) {
-  const env = await environmentFor(tx, actor, projectId, environmentId);
+  const env = await environmentFor(tx, actor, projectId, environmentId, allowHeldSource);
   const [allocation] = await tx
     .select()
     .from(schema.databaseAllocations)
@@ -128,6 +129,7 @@ export async function recoveryScope(
   tx: DatabaseAccess,
   row: RecoveryPreparationRow,
   epoch: number,
+  allowHeldSource = false,
 ): Promise<RecoveryScope> {
   const source = await recoverySource(
     tx,
@@ -135,6 +137,7 @@ export async function recoveryScope(
     row.projectId,
     row.sourceEnvironmentId,
     row.sourceAllocationId,
+    allowHeldSource,
   );
   if (source.hash !== row.sourceHash)
     throw new DomainError("SOURCE_CHANGED", "Source physical scope changed", 409);

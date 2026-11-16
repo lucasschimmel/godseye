@@ -29,6 +29,7 @@ const build = (number: number, patch: Partial<PlatformBuildView> = {}): Platform
   startedAt: "2026-11-16T11:00:00.000Z",
   durationMs: 61_000,
   branch: null,
+  commitSha: null,
   url: `${BASE}/job/godseye-platform/${number}/`,
   ...patch,
 });

@@ -79,6 +79,16 @@ export interface RecoveryInspection {
     evidence: string;
   };
 }
+/** Independent physical proof that the exact restored destination left recovery and may open runtime access. */
+export interface RecoveryPromotion {
+  scopeHash: string;
+  allocationId: string;
+  environmentId: string;
+  promoted: true;
+  inRecovery: false;
+  runtimeAccessBlocked: false;
+  evidence: string;
+}
 /** Private physical backup transport, independent of the logical NOREPLICATION SQL backup role. */
 export interface RecoveryProvider {
   readonly binding: DatabaseProviderBinding;
@@ -87,8 +97,40 @@ export interface RecoveryProvider {
   check(scope: RecoveryScope, gate: () => Promise<void>): Promise<void>;
   restore(scope: RecoveryScope, gate: () => Promise<void>): Promise<void>;
   inspect(scope: RecoveryScope): Promise<RecoveryInspection | null>;
+  /**
+   * Optional activation capability. A provider implements both methods or neither: until it does, the
+   * control plane refuses activation (`PROMOTION_UNAVAILABLE`) rather than designating an unreachable
+   * database as active. `promote` ends recovery on the exact restored destination and must be idempotent
+   * for the same scope; `inspectPromotion` reports the physical outcome without mutating anything.
+   */
+  promote?(scope: RecoveryScope, gate: () => Promise<void>): Promise<void>;
+  inspectPromotion?(scope: RecoveryScope): Promise<RecoveryPromotion | null>;
 }
 export const recoveryScopeHash = (scope: RecoveryScope) => fingerprint(scope);
+export const canPromote = (provider: RecoveryProvider | undefined) =>
+  !!provider &&
+  typeof provider.promote === "function" &&
+  typeof provider.inspectPromotion === "function";
+export function assertRecoveryPromotion(
+  scopeInput: RecoveryScope,
+  valueInput: RecoveryPromotion | null,
+) {
+  const scope = immutableSnapshot(scopeInput),
+    value = immutableSnapshot(valueInput);
+  if (
+    scope.kind !== "restore" ||
+    !value ||
+    value.scopeHash !== recoveryScopeHash(scope) ||
+    value.allocationId !== scope.allocationId ||
+    value.environmentId !== scope.environmentId ||
+    value.promoted !== true ||
+    value.inRecovery !== false ||
+    value.runtimeAccessBlocked !== false ||
+    !value.evidence?.trim()
+  )
+    throw new Error("Recovery destination is not an independently promoted physical clone");
+  return value;
+}
 export function assertRecoveryInspection(
   scopeInput: RecoveryScope,
   valueInput: RecoveryInspection | null,
