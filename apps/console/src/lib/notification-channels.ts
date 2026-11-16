@@ -39,7 +39,7 @@ export function channelStatus(overview: IncidentOverviewView): ChannelStatus {
       lastAttemptAt,
       counts,
       ownerAction:
-        "Ouvrez cette page régulièrement. Pour être prévenu, un adaptateur de notification (e-mail ou webhook) doit être ajouté au contrôleur puis activé côté serveur : la console ne permet pas encore de le configurer, et aucune valeur de canal ne transite par elle.",
+        "Ouvrez cette page régulièrement. Pour être prévenu, ajoutez un canal webhook ci-dessous (clé d’accès récente requise) puis lancez un test d’arrivée : seul un test confirmé prouve que le récepteur répond.",
     };
   return {
     state: "configured",

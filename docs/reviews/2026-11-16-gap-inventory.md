@@ -16,7 +16,7 @@ Sources: three read-only audits (console, V1 spec/plan, dedicated-server spec/pl
 | A8 | Passkeys: no "add a passkey" flow; revoke disabled with no explanation; ticket creation is CLI-only | important | C |
 | A9 | Audit export/anchor exist in the API with no console surface | important | C |
 | A10 | Secrets: no remote import flow; "à connecter" rotation labels without a path | important | C |
-| A11 | Incidents/notifications: no channel configuration, no real delivery | important | C + O |
+| A11 | Incidents/notifications: webhook adapter, console configuration and arrival test now exist (owner API 1.21.0); email absent (no SMTP contract); no live receiver qualified | important | C + O |
 | A12 | Backend panel, project create/detail, repository form: stale "runtime non connecté", "validated locally" copy | important | C |
 | A13 | Custom domains: no cross-project list, no TLS expiry/state | polish | C |
 | A14 | Usage/jobs/Hermes copy ("fixture", "local"), English fragments, duplicate nav icons | polish | C |

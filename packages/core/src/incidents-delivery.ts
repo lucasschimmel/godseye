@@ -10,6 +10,7 @@ const physical = new WeakSet<IncidentNotifier>();
 /** A claim commits before invoking any external adapter. Expired/ambiguous claims never blindly replay. */
 export async function deliverIncidents(store: Store, now: () => Date, notifier?: IncidentNotifier) {
   if (!notifier) return;
+  if (notifier.configured && !(await notifier.configured())) return;
   if (busy.has(notifier)) return;
   busy.add(notifier);
   try {

@@ -144,16 +144,42 @@ bounded retries; unknown outcomes are never blindly retried. Restart/concurrent
 workers and expired mute/ack state cannot justify duplicate uncertain effects.
 
 The notifier and independent uptime observer are trusted private injected adapters,
-unconfigured by default. There is no public arbitrary notification/observer URL,
-remote plugin integration or actual message delivery in this checkpoint.
+unconfigured by default. There is no public arbitrary observer URL or remote plugin
+integration. Owner webhook channels are described at the end of this section; no live
+receiver has been qualified.
 The repository also carries an external uptime observer, `.github/workflows/external-observer.yml`
 (see [CI](ci.md#external-uptime-observer-github-actions)). It checks public edge health, certificate
 lifetime and closed admin ports from GitHub's runners and relies on GitHub's own failure email. It is
-independent of the notification outbox: the outbox adapter is still unconfigured and real message
-delivery remains unqualified. A dead
+independent of the notification outbox. A dead
 host cannot detect itself: separate external observation and real notification
 qualification remain operator work. Server-owned bounded collection, evaluation,
 delivery and pruning stop with the server and isolate expected source faults.
+
+### Owner webhook channels (owner API 1.21.0)
+
+The controller wires one real notification adapter: https webhooks managed from the console
+(`/notifications/channels`). Email is not offered because no SMTP configuration contract exists.
+
+- **Authority.** Creating, testing and removing a channel need a recent owner passkey session.
+- **Secrecy.** The URL (which usually embeds a token) and the optional HMAC signing secret are
+  sealed with AES-256-GCM under a key derived from the private `identity.key`; the database,
+  audit journal, logs and API responses hold only the display host and fixed result codes.
+- **SSRF.** https only, port 443 only, no credentials, public DNS names only (no IP literals,
+  `localhost`, `.internal`, `.local`). Every DNS answer is validated at connect time and the socket
+  connects to those validated addresses, so a private or rebinding answer is refused
+  (`TARGET_BLOCKED`). No redirects, no proxy, TLS 1.2+ with certificate verification.
+- **Bounds.** Five live channels, 3 s per attempt, two attempts (the second only after a connection
+  error, timeout or 408/429/5xx), delivered in parallel inside the outbox's 10 s window.
+- **Honest results.** `confirmed` means the receiver answered 2xx, nothing more. A failure after
+  the TLS handshake with no usable answer is `unknown`, never `failed` or `confirmed`. An incident
+  becomes `notified` only when at least one channel confirmed. Receivers get a stable
+  `Idempotency-Key` per incident and, when a secret is set, `X-Godseye-Timestamp` and
+  `X-Godseye-Signature: v1=HMAC-SHA256(secret, "<timestamp>.<body>")`.
+- **Alerts.** Archive, headroom, rotation-failure, health, budget and accounting incidents all use
+  this path. Incidents raised before any channel existed are picked up when the first one is added.
+
+Not qualified: delivery to a real external receiver. A confirmed webhook proves HTTP reception,
+not that a person read it.
 
 ## Resume and qualify
 
