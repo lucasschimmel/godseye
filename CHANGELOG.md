@@ -6,6 +6,10 @@
 
 - Console only (owner API unchanged): the CI/CD page lists the current release and deploy health per environment from the delivery journal and the latest builds, with a Jenkins link only when a build reference is recorded as a plain https URL. No redeploy or restart control was added because the existing operation and delivery intents contain no restart.
 
+### Domain TLS expiry
+
+- Owner API `1.20.0`: every `GET /domains` item carries `tls` (`state` valid, expiring within 14 days, expired or unknown; nullable `expiresAt`; `reason` when unknown). The date comes from a read-only, 3 s TLS handshake to the platform edge address with the registered host as SNI, only for served bindings whose DNS resolves to the edge, cached 60 s; with no probe (local mode) the state is `unknown` with a reason and no date is invented. The console Domaines table shows the expiry with a French warning badge. Not qualified against a live edge.
+
 ### Backup cadence
 
 - Owner API `1.19.0`: the server observation host digest now carries the host's recorded off-host (B2) copy state. The databases page shows a real backup cadence panel (last full, differential and WAL-check age per cell, pgBackRest repository check result, host B2 copy state) and the last platform-verified restore. Restore drills run on the host are not machine-recorded, so they are reported as absent rather than inferred.

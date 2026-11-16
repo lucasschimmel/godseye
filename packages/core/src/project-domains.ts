@@ -3,6 +3,7 @@ import {
   AddProjectDomain,
   type AddProjectDomainInput,
   type DomainOverviewView,
+  type DomainTlsView,
   isPublicHostname,
   MAX_DOMAINS_PER_PROJECT,
   type ProjectDomainListView,
@@ -29,6 +30,7 @@ import {
   isApexDomain,
   isPlatformHostname,
 } from "./project-domain-policy.js";
+import { type CertificateProbe, DomainTlsInspector } from "./project-domain-tls.js";
 import { loadProject } from "./project-lifecycle-view.js";
 
 export type {
@@ -42,6 +44,8 @@ export interface ProjectDomainOptions {
   resolver?: DomainResolver | undefined;
   publisher?: DomainRoutePublisher | undefined;
   target?: DomainTarget | undefined;
+  /** Read-only certificate probe against the edge; without it the overview reports `unknown`. */
+  probe?: CertificateProbe | undefined;
   /** Test seam for the challenge token (32 lowercase hex characters). */
   token?: () => string;
 }
@@ -70,10 +74,13 @@ const conflict = (code: string, message: string): never => {
  */
 export class ProjectDomainEngine {
   private readonly chains = new Map<string, Promise<unknown>>();
+  private readonly tls: DomainTlsInspector;
   constructor(
     private readonly store: Store,
     private readonly options: ProjectDomainOptions,
-  ) {}
+  ) {
+    this.tls = new DomainTlsInspector(options);
+  }
   private get fresh() {
     return foundationState(this.store, { now: this.options.now });
   }
@@ -162,8 +169,15 @@ export class ProjectDomainEngine {
       )
       .where(ne(schema.projectDomains.state, "removed"))
       .orderBy(asc(schema.projectDomains.createdAt));
+    const certificates = await this.tls.inspectAll(
+      rows.map(({ domain }) => ({ hostname: domain.hostname, state: domain.state })),
+    );
     return {
-      domains: rows.map(({ domain, ...names }) => ({ ...this.view(domain), ...names })),
+      domains: rows.map(({ domain, ...names }) => ({
+        ...this.view(domain),
+        ...names,
+        tls: certificates.get(domain.hostname) as DomainTlsView,
+      })),
     };
   }
 
