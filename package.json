@@ -46,6 +46,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
+    "test:e2e:sequential": "node scripts/e2e-sequential.mjs",
     "check": "bun run lint && bun run contracts:check && bun run typecheck && bun run test",
     "prepare": "husky",
     "db:generate": "drizzle-kit generate",

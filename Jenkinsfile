@@ -56,7 +56,8 @@ pipeline {
     stage('Browser journeys') {
       steps {
         sh 'bun run playwright install chromium'
-        sh 'bun run test:e2e'
+        // One isolated application at a time: the full parallel start-up exhausts the 6 GiB agent.
+        sh 'bun run test:e2e:sequential'
       }
     }
     stage('Independent PostgreSQL laboratory') {
