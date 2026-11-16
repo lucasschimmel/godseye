@@ -29,11 +29,24 @@ export const providerExplanations: Record<ProviderState, string> = {
   sealed:
     "Le coffre est scellé : les nouveaux accès sont bloqués, les services gardent les valeurs déjà montées. Descellez-le depuis le serveur.",
   uninitialized: "Le coffre n’est pas initialisé : il faut l’initialiser depuis le serveur.",
+  no_authority:
+    "Le coffre répond et il est descellé, mais le contrôleur n’a pas encore d’identité OpenBao. Créez-la depuis votre poste, avec l’autorité racine OpenBao, puis déposez-la dans l’état privé du contrôleur : la console ne demande ni n’affiche jamais de secret.",
   unauthorized:
     "Le coffre refuse l’autorité du contrôleur : vérifiez le jeton ou la politique côté serveur.",
   unavailable: "Le coffre ne répond pas : aucun état n’est présumé, réessayez après vérification.",
   invalid: "La réponse du coffre est invalide : aucun état n’est présumé.",
 };
+
+/**
+ * Why activations and reconciliations cannot run right now, or null when the vault is ready.
+ * Importing or activating a value always goes through the vault, so any non-ready state blocks it.
+ */
+export function providerActionBlock(state: ProviderState): string | null {
+  if (state === "ready") return null;
+  if (state === "no_authority")
+    return "Indisponible tant que le contrôleur n’a pas d’identité OpenBao (voir l’explication ci-dessus).";
+  return "Indisponible tant que le coffre n’est pas prêt (voir l’état ci-dessus).";
+}
 
 export interface SlotRow {
   id: string;
