@@ -32,8 +32,11 @@ TOKEN_PERIOD="${GODSEYE_CONTROLLER_TOKEN_PERIOD:-720h}"
 command -v jq >/dev/null || { echo "jq is required." >&2; exit 1; }
 trap 'unset BAO_ADMIN_TOKEN CONTROLLER_TOKEN POLICY' EXIT
 
-read -rs -p "Short-lived OpenBao admin token: " BAO_ADMIN_TOKEN
-echo >&2
+# The owner session script (p13-openbao-owner-session.sh) hands the token over in BAO_ADMIN_TOKEN so it is typed once.
+if [ -z "${BAO_ADMIN_TOKEN:-}" ]; then
+  read -rs -p "Short-lived OpenBao admin token: " BAO_ADMIN_TOKEN
+  echo >&2
+fi
 [ -n "$BAO_ADMIN_TOKEN" ] || { echo "Empty value refused." >&2; exit 1; }
 
 bao_send() { curl -fsS --cacert "$BAO_CACERT" -K <(printf 'header = "X-Vault-Token: %s"\n' "$BAO_ADMIN_TOKEN") -X "$1" --data @- "${BAO_ADDR}/v1/$2"; }
