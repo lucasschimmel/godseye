@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useOwner } from "@/components/owner-gate";
 import { Failure, Loading, PageHeading, SectionTitle } from "@/components/shared";
 import { Button } from "@/components/ui/button";
+import { WithReason } from "@/components/with-reason";
 import { api, resource, timestamp } from "@/lib/api";
 import {
   OWNER_RECOVER_COMMAND,
@@ -24,6 +25,10 @@ function OwnerSecurity() {
   const [busy, setBusy] = useState(false);
   const [failure, setFailure] = useState<Error | null>(null);
   const [message, setMessage] = useState("");
+  const [keyName, setKeyName] = useState("");
+  const freshReason = security.data?.fresh
+    ? null
+    : "Confirmez d’abord votre identité par passkey (moins de cinq minutes) pour effectuer cette action.";
   async function action(work: () => Promise<void>) {
     setBusy(true);
     setFailure(null);
@@ -86,23 +91,38 @@ function OwnerSecurity() {
       <section className="panel">
         <div className="panel-heading">
           <SectionTitle>Clés d’accès</SectionTitle>
-          <Button
-            size="sm"
-            variant="outline"
-            disabled={busy || !security.data?.fresh}
-            onClick={() =>
-              void action(async () => {
-                const result = await ownerAuth.passkey.addPasskey({
-                  createSession: true,
-                  name: "Clé propriétaire supplémentaire",
-                });
-                if (result.error) throw new Error("Passkey enrollment failed");
-                setMessage("Votre nouvelle clé d’accès est enregistrée.");
-              })
-            }
-          >
-            <KeyRound size={14} /> Ajouter une clé d’accès
-          </Button>
+          <div className="passkey-add">
+            <label className="sr-only" htmlFor="passkey-name">
+              Nom de la nouvelle clé
+            </label>
+            <input
+              id="passkey-name"
+              maxLength={60}
+              placeholder="Nom de la nouvelle clé (facultatif)"
+              value={keyName}
+              onChange={(event) => setKeyName(event.target.value)}
+            />
+            <WithReason reason={freshReason}>
+              <Button
+                size="sm"
+                variant="outline"
+                disabled={busy || !security.data?.fresh}
+                onClick={() =>
+                  void action(async () => {
+                    const result = await ownerAuth.passkey.addPasskey({
+                      createSession: true,
+                      name: keyName.trim() || "Clé propriétaire supplémentaire",
+                    });
+                    if (result.error) throw new Error("Passkey enrollment failed");
+                    setKeyName("");
+                    setMessage("Votre nouvelle clé d’accès est enregistrée.");
+                  })
+                }
+              >
+                <KeyRound size={14} /> Ajouter une clé d’accès
+              </Button>
+            </WithReason>
+          </div>
         </div>
         {security.isError ? (
           <Failure error={security.error} />
@@ -121,23 +141,31 @@ function OwnerSecurity() {
                       : "Date non disponible"}
                   </small>
                 </div>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  disabled={busy || !security.data.fresh || security.data.passkeys.length <= 1}
-                  onClick={() =>
-                    void action(async () => {
-                      await api(`/owner/passkeys/${key.id}/revoke`, {
-                        method: "POST",
-                        body: "{}",
-                        headers: { "idempotency-key": crypto.randomUUID() },
-                      });
-                      setMessage("Clé d’accès révoquée.");
-                    })
+                <WithReason
+                  reason={
+                    security.data.passkeys.length <= 1
+                      ? "Dernière clé d’accès : ajoutez-en une autre avant de la révoquer. La procédure de récupération reste le seul moyen de la remplacer."
+                      : freshReason
                   }
                 >
-                  Révoquer
-                </Button>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    disabled={busy || !security.data.fresh || security.data.passkeys.length <= 1}
+                    onClick={() =>
+                      void action(async () => {
+                        await api(`/owner/passkeys/${key.id}/revoke`, {
+                          method: "POST",
+                          body: "{}",
+                          headers: { "idempotency-key": crypto.randomUUID() },
+                        });
+                        setMessage("Clé d’accès révoquée.");
+                      })
+                    }
+                  >
+                    Révoquer
+                  </Button>
+                </WithReason>
               </div>
             ))}
           </div>
@@ -166,24 +194,26 @@ function OwnerSecurity() {
                     {timestamp(session.expiresAt)}
                   </small>
                 </div>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  disabled={busy || !security.data.fresh}
-                  onClick={() =>
-                    void action(async () => {
-                      if (session.current) await owner.logout();
-                      else
-                        await api(`/owner/sessions/${session.id}/revoke`, {
-                          method: "POST",
-                          body: "{}",
-                          headers: { "idempotency-key": crypto.randomUUID() },
-                        });
-                    })
-                  }
-                >
-                  {session.current ? "Déconnecter" : "Révoquer"}
-                </Button>
+                <WithReason reason={freshReason}>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    disabled={busy || !security.data.fresh}
+                    onClick={() =>
+                      void action(async () => {
+                        if (session.current) await owner.logout();
+                        else
+                          await api(`/owner/sessions/${session.id}/revoke`, {
+                            method: "POST",
+                            body: "{}",
+                            headers: { "idempotency-key": crypto.randomUUID() },
+                          });
+                      })
+                    }
+                  >
+                    {session.current ? "Déconnecter" : "Révoquer"}
+                  </Button>
+                </WithReason>
               </div>
             ))}
           </div>
