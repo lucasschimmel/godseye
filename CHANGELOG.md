@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Release visibility
+
+- Console only (owner API unchanged): the CI/CD page lists the current release and deploy health per environment from the delivery journal and the latest builds, with a Jenkins link only when a build reference is recorded as a plain https URL. No redeploy or restart control was added because the existing operation and delivery intents contain no restart.
+
 ### Backup cadence
 
 - Owner API `1.19.0`: the server observation host digest now carries the host's recorded off-host (B2) copy state. The databases page shows a real backup cadence panel (last full, differential and WAL-check age per cell, pgBackRest repository check result, host B2 copy state) and the last platform-verified restore. Restore drills run on the host are not machine-recorded, so they are reported as absent rather than inferred.

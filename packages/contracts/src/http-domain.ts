@@ -108,6 +108,8 @@ export interface CiRunView {
   trigger: "push" | "pull_request" | "manual" | "scheduled";
   pullRequestNumber?: number | null;
   eventAction?: string | null;
+  /** Reference recorded by the build provider; a build link is derived only from a plain https URL. */
+  providerRef?: string | null;
   createdAt: string;
   updatedAt: string;
   errorCode: string | null;
