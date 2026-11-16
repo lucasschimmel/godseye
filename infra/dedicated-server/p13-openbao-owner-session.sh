@@ -22,8 +22,11 @@ command -v jq >/dev/null || { echo "jq is required." >&2; exit 1; }
 curl -fsS --cacert "$BAO_CACERT" "${BAO_ADDR}/v1/sys/seal-status" | jq -e '.sealed == false' >/dev/null \
   || { echo "OpenBao is sealed or unreachable; unseal it first." >&2; exit 75; }
 
-read -rs -p "OpenBao admin token (the initial root token from your init file): " BAO_ADMIN_TOKEN
-echo >&2
+# p13-openbao-recover-admin.sh hands over a freshly generated token in BAO_ADMIN_TOKEN; otherwise ask for one.
+if [ -z "${BAO_ADMIN_TOKEN:-}" ]; then
+  read -rs -p "OpenBao admin token (the initial root token from your init file): " BAO_ADMIN_TOKEN
+  echo >&2
+fi
 [ -n "$BAO_ADMIN_TOKEN" ] || { echo "Empty value refused." >&2; exit 1; }
 
 lookup_code() { curl -s -o /dev/null -w '%{http_code}' --cacert "$BAO_CACERT" -K <(printf 'header = "X-Vault-Token: %s"\n' "$BAO_ADMIN_TOKEN") "${BAO_ADDR}/v1/auth/token/lookup-self"; }
