@@ -16,6 +16,13 @@ const Envelope = z
     fingerprint: z.string().regex(/^[a-f0-9]{64}$/),
   })
   .strict();
+/** Raised by a `proof` reader when this controller holds no OpenBao identity yet (nothing to present). */
+export class ProviderAuthorityAbsentError extends Error {
+  constructor() {
+    super("Provider authority is not provisioned");
+    this.name = "ProviderAuthorityAbsentError";
+  }
+}
 export interface BaoProviderOptions {
   address: string;
   proof: () => string | Promise<string>;
@@ -92,7 +99,12 @@ export class BaoAccessProvider implements AccessProvider {
       if (!state.initialized) return { state: "uninitialized" };
       if (state.sealed) return { state: "sealed" };
       if (health.status !== 200) return { state: "unavailable" };
-      const auth = await this.request("auth/token/lookup-self");
+      // The vault answers and is unsealed; only now does a missing identity mean "no authority yet".
+      const auth = await this.request("auth/token/lookup-self").catch((error: unknown) => {
+        if (error instanceof ProviderAuthorityAbsentError) return null;
+        throw error;
+      });
+      if (!auth) return { state: "no_authority" };
       if (auth.status !== 200) return { state: "unauthorized" };
       const identity = z
         .object({

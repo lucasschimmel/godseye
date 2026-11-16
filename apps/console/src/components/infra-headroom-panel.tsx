@@ -11,6 +11,11 @@ import {
   headroomUnits,
   pressureLabels,
 } from "@/lib/infra-headroom-labels";
+import {
+  type HeadroomEvidence,
+  headroomCallToAction,
+  headroomCallToActionDetail,
+} from "@/lib/infra-server-truth";
 
 type Row = InfrastructureHeadroomView["scopes"][number]["resources"][number];
 const amount = (value: number | null, unit: Row["unit"]) =>
@@ -21,8 +26,16 @@ interface Props {
   fresh: boolean;
   busy: boolean;
   onAdmission: (state: "open" | "paused", reason?: string) => void;
+  /** "table" shows the pressure tables; otherwise the missing step is shown instead of a wall of unknowns. */
+  evidence?: HeadroomEvidence;
 }
-export function InfrastructureHeadroomPanel({ data, fresh, busy, onAdmission }: Props) {
+export function InfrastructureHeadroomPanel({
+  data,
+  fresh,
+  busy,
+  onAdmission,
+  evidence = "table",
+}: Props) {
   const [reason, setReason] = useState("");
   const paused = data.admission.state === "paused";
   const queue = data.heavyQueue;
@@ -32,16 +45,27 @@ export function InfrastructureHeadroomPanel({ data, fresh, busy, onAdmission }: 
         <SectionTitle>
           <span id="headroom-title">Marge et pression</span>
         </SectionTitle>
-        <span className={`pressure-badge pressure-${data.pressure}`}>
-          <Gauge size={14} /> Pression globale : {pressureLabels[data.pressure]}
-        </span>
+        {evidence === "table" && (
+          <span className={`pressure-badge pressure-${data.pressure}`}>
+            <Gauge size={14} /> Pression globale : {pressureLabels[data.pressure]}
+          </span>
+        )}
       </div>
-      <p className="panel-note">
-        Seuils : sous tension à {Math.round(data.thresholds.warn * 100)} % d’occupation (engagé plus
-        réserve protégée), critique à {Math.round(data.thresholds.critical * 100)} %. Sans mesure
-        fiable, l’état reste inconnu et jamais sain.
-      </p>
-      {data.scopes.map((scope) => (
+      {evidence !== "table" && (
+        <div className="headroom-call" data-testid="headroom-call-to-action">
+          <h3>{headroomCallToAction[evidence]}</h3>
+          <p className="panel-note">{headroomCallToActionDetail[evidence]}</p>
+          {evidence === "declare" && <a href="#inventaire-souhaite">Aller à la déclaration</a>}
+        </div>
+      )}
+      {evidence === "table" && (
+        <p className="panel-note">
+          Seuils : sous tension à {Math.round(data.thresholds.warn * 100)} % d’occupation (engagé
+          plus réserve protégée), critique à {Math.round(data.thresholds.critical * 100)} %. Sans
+          mesure fiable, l’état reste inconnu et jamais sain.
+        </p>
+      )}
+      {(evidence === "table" ? data.scopes : []).map((scope) => (
         <div className="headroom-scope" key={scope.scope}>
           <h3>
             {headroomScopes[scope.scope]} · {pressureLabels[scope.pressure]}

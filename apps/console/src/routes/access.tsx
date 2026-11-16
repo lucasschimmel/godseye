@@ -15,6 +15,7 @@ import {
   bindingLabels,
   bindingRows,
   IMPORT_EXPLANATION,
+  providerActionBlock,
   providerExplanations,
 } from "@/lib/secrets-bindings";
 import { useDeployment } from "@/lib/use-deployment";
@@ -37,6 +38,7 @@ function AccessManagement() {
   const environment = environments.find((item) => item.id === environmentId) ?? environments[0];
   const fresh = security.data?.fresh ?? false;
   const bindings = projects.data && access.data ? bindingRows(projects.data, access.data) : [];
+  const vaultBlock = access.data ? providerActionBlock(access.data.provider.state) : null;
   async function action(work: () => Promise<void>) {
     setBusy(true);
     setFailure(null);
@@ -363,7 +365,9 @@ function AccessManagement() {
                         </p>
                         <small className="mono">{slot.id}</small>
                       </div>
-                      {slot.stagedVersion && access.data.adapters.length > 0 ? (
+                      {slot.stagedVersion && vaultBlock ? (
+                        <p role="status">{vaultBlock}</p>
+                      ) : slot.stagedVersion && access.data.adapters.length > 0 ? (
                         access.data.adapters.map((adapter) => (
                           <Button
                             key={adapter.id}
@@ -413,7 +417,10 @@ function AccessManagement() {
                     </p>
                     <small className="mono">{operation.id}</small>
                   </div>
-                  {["pending", "unknown"].includes(operation.state) && (
+                  {["pending", "unknown"].includes(operation.state) && vaultBlock && (
+                    <p role="status">{vaultBlock}</p>
+                  )}
+                  {["pending", "unknown"].includes(operation.state) && !vaultBlock && (
                     <Button
                       disabled={busy || !fresh}
                       variant="outline"
