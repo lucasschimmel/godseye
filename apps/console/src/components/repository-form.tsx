@@ -3,12 +3,14 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { GitBranch } from "lucide-react";
 import { useState } from "react";
 import { api } from "@/lib/api";
+import { useDeployment } from "@/lib/use-deployment";
 import { Failure } from "./shared";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 
 export function RepositoryForm({ project }: { project: ProjectView }) {
   const current = project.repository;
+  const deployment = useDeployment();
   const [validation, setValidation] = useState("");
   const cache = useQueryClient();
   const mutation = useMutation({
@@ -116,7 +118,7 @@ export function RepositoryForm({ project }: { project: ProjectView }) {
       {mutation.isError && <Failure error={mutation.error} />}
       {mutation.isSuccess && (
         <p className="success-message" role="status">
-          Association enregistrée localement.
+          {deployment.isLocal ? "Association enregistrée localement." : "Association enregistrée."}
         </p>
       )}
       <Button type="submit" disabled={mutation.isPending}>
