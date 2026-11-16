@@ -114,7 +114,7 @@ Correlation IDs must belong to the bound scope. Labels cannot relabel another pr
 Only fixed structured event types, bounded codes and allowlisted numeric metrics
 are stored. There is no arbitrary stdout, prompt or free-form message ingestion.
 Local controller samples measure process CPU, RSS/heap memory and local filesystem
-capacity. They do not measure the AX41, VM guests or remote containers;
+capacity. They do not measure the dedicated server (EX44), VM guests or remote containers;
 `remoteHostMetrics` remains `unavailable`.
 
 Health distinguishes fresh, stale, missing, unavailable and unknown, retaining

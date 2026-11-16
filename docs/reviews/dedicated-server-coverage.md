@@ -2,6 +2,8 @@
 
 Date: 2026-11-13. Scope: the owner's original hosting/agent/CI requests, current V1 F01–F46, isolation I01–I16, data D01–D10 and networking N01–N08. Artifacts: [server specification](../spec/dedicated-server.md), [installation plan](../plan/dedicated-server-installation.md).
 
+Update 2026-11-16: this recheck is a 2026-11-13 snapshot. Execution has since started ([execution ledger](../operations/dedicated-server-execution.md)); the machine is an EX44 (not AX41), Coolify was dropped ([ADR-021](../adr/ADR-021-direct-docker-runsc-delivery-and-server-decisions.md)) and F47 (custom domains) was added. Rows below keep the original wording.
+
 This is a documentation coverage check. **No server access or executed infrastructure acceptance is claimed.** All P00–P09 phases and DS01–DS18 execution evidence remain pending. Current local software implementation and its remaining gaps are tracked separately in the [V1 plan](../plan/v1-development.md).
 
 ## Original-request coverage

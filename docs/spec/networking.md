@@ -6,7 +6,7 @@ The local E02.S03 continuation prepares private IPv4/ULA allocations and collisi
 
 ## Physical and guest layout
 
-Proxmox is installed once on the AX41. It owns physical routing and outer firewall policy. The professional VM contains all ordinary pro projects and their container/data services; the games VM is separate. One optional disposable work VM is allocated directly by Proxmox for unsafe builds/tools. Nothing installs Proxmox inside the professional VM.
+Proxmox is installed once on the physical server (a Hetzner EX44; first assumed AX41). It owns physical routing and outer firewall policy. The professional VM contains all ordinary pro projects and their container/data services; the games VM is separate. One optional disposable work VM is allocated directly by Proxmox for unsafe builds/tools. Nothing installs Proxmox inside the professional VM.
 
 The host/public IPv4 is not allocated anew per VM or project. Both permanent VMs use private IPv4 routes and shared NAT44. Each can also have an address from the routed Hetzner IPv6 allocation. Prefer separate host-managed guest links and explicit static IPv6 `/128` routes if qualified; Hetzner's single internal `/64` bridge pattern is also documented but must not leave lateral access open. Record the selected route design before applying it, including upstream link-local gateway/interface scope.
 
