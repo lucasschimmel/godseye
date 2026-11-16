@@ -12,6 +12,7 @@ import { InfrastructureHeadroomPanel } from "@/components/infra-headroom-panel";
 import { InfrastructureInventoryForm } from "@/components/infra-inventory-form";
 import { InfrastructureWorkloadForm } from "@/components/infra-workload-form";
 import { useOwner } from "@/components/owner-gate";
+import { ServerPanel } from "@/components/server-panel";
 import { EmptyState, Failure, Loading, PageHeading, SectionTitle } from "@/components/shared";
 import { Button } from "@/components/ui/button";
 import { api, resource, timestamp } from "@/lib/api";
@@ -121,6 +122,7 @@ function Infrastructure() {
                 )}
               </div>
             </section>
+            <ServerPanel />
             <div className="infrastructure-grid">
               <section className="panel">
                 <div className="panel-heading">

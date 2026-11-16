@@ -11,6 +11,7 @@ import {
   PrepareInfrastructure,
   SetAdmission,
 } from "./infrastructure.js";
+import { ServerObservation } from "./server-observation.js";
 
 export const INFRASTRUCTURE_HTTP_ENDPOINTS = [
   {
@@ -78,5 +79,13 @@ export const INFRASTRUCTURE_HTTP_ENDPOINTS = [
     success: 200,
     access: "owner",
     idempotent: true,
+  },
+  {
+    method: "GET",
+    path: "/infrastructure/server",
+    operationId: "serverObservation",
+    response: ServerObservation,
+    success: 200,
+    access: "owner",
   },
 ] as const satisfies readonly ControlEndpoint[];

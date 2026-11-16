@@ -14,6 +14,7 @@ import {
   DomainError,
   type FoundationEngine,
   type InfrastructureEngine,
+  ServerObserver,
 } from "@godseye/core";
 import { APIError } from "better-auth/api";
 import { Hono } from "hono";
@@ -43,6 +44,7 @@ import { registerOpenApi } from "./openapi.js";
 import { registerOrchestrationRoutes } from "./orchestration-routes.js";
 import { registerProtectionRoutes } from "./protection-routes.js";
 import { registerRecoveryRoutes } from "./recovery-routes.js";
+import { registerServerObservationRoutes } from "./server-observation-routes.js";
 import { registerUsageRoutes } from "./usage-routes.js";
 
 const Uuid = z.string().uuid();
@@ -61,6 +63,7 @@ export function createApp(
   engine?: FoundationEngine,
   broker?: AccessBroker,
   infrastructure?: InfrastructureEngine,
+  serverObserver: ServerObserver = new ServerObserver(config.serverObservation),
 ) {
   if (config.mode === "server" && (!identity || !config.ownerOrigin.startsWith("https://")))
     throw new Error("Server mode requires owner identity and an https owner origin");
@@ -261,6 +264,7 @@ export function createApp(
   registerFoundationRoutes(app, engine);
   registerAccessRoutes(app, broker);
   registerInfrastructureRoutes(app, infrastructure);
+  registerServerObservationRoutes(app, serverObserver);
   registerDatabaseRoutes(app, core, infrastructure);
   registerBackendRoutes(app, core);
   registerRecoveryRoutes(app, infrastructure);
