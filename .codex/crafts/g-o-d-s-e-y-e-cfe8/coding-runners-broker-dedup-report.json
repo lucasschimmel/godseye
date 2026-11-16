@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "status": "durable-normalized-payload-dedup-implemented-and-verified",
+  "file": "scripts/coding_guest_broker.py",
+  "sha256": "353857c225cadb1c1dbd2d634e5ce08b765d4f90c092f349a52a36043d82e5f9",
+  "contract": [
+    "Wire body canonicalized with sorted object keys after fixed-model/output/stream normalization, then SHA256 fingerprinted",
+    "Same atomic fsynced locked debit ledger records fingerprints and pendingFingerprint before any upstream POST",
+    "Every duplicate normalized fingerprint is denied permanently for the exact task without an additional debit or HTTP attempt",
+    "Any pending effect blocks all subsequent payloads across process/in-memory-state restart; lost ACK, transport error, truncated/invalid SSE and failed durable completion retain charge and uncertainty",
+    "Only fully observed terminal Codex response.completed(status completed) or Claude message_stop clears pending atomically",
+    "Distinct legitimate next tool turns can proceed after complete previous response within all existing budget/request/time/output bounds",
+    "Old ledgers without fingerprint evidence fail closed; no reset, refund, retry or uncertain effect replay",
+    "A completion guard is fsynced with its directory before clearing pending; process death during completion replacement cannot lose the fence. Guard removal occurs only after the completed ledger and parent are fsynced. Failed cleanup can only retain a conservative rejection."
+  ],
+  "verification": [
+    "Python isolated compile passed",
+    "18 independent tests/helpers/coding-broker.py regression cases passed with fake HTTPS only; six new cases prove duplicate/normalized-equivalence/restart/lost-ACK/truncated-SSE denial and distinct completed turn progression",
+    "20 independent regressions passed, including failed completion directory fsync and simulated process death/reopen; no upstream calls",
+    "Final30/30 compatibility and durable-dedup regressions passed on updated broker",
+    "Final current-helper Codex metadata reasoning_effort accepted only as literal none then dropped; all31 pure broker cases passed using current22097-byte capture; older22033-byte exact replay also passed"
+  ],
+  "notTested": [
+    "No paid vendor calls",
+    "No new KVM CLI execution in this subtask; runtime must bind current broker source bytes into fresh final qualification"
+  ],
+  "publicInterface": "handle(request,state,config,limits) and validate(config,limits) unchanged; task-private state journalPath/deadline/correlationId/authorize unchanged",
+  "currentCodexMetadataDelta": {
+    "allowedDiagnostic": "reasoning_effort=none only",
+    "currentFixture": "artifacts/coding-composition-fixtures/synthetic-bx5057oo/request-1.json",
+    "brokerSha256": "353857c225cadb1c1dbd2d634e5ce08b765d4f90c092f349a52a36043d82e5f9",
+    "upstream": "entire client_metadata still removed; model reasoning none forced independently",
+    "unchanged": "all other metadata fields/shapes, opaque input denial, budget/debit/dedup/authority fences"
+  }
+}

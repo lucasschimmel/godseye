@@ -1,0 +1,63 @@
+{
+  "story": "CHAT01",
+  "status": "implemented-awaiting-gauntlet",
+  "date": "2026-11-13",
+  "scope": [
+    "strict versioned chat DTOs and JSON endpoints",
+    "migration 0019 durable conversations/turns/events/artifacts/proposals",
+    "atomic existing task+turn intention",
+    "separately Foundation-reserved turns",
+    "bounded successful immutable context",
+    "lease/grant/profile/epoch-gated durable deltas",
+    "successful-settlement-only structured outputs",
+    "atomic exact existing Foundation proposal approval",
+    "owner-only persistent readonly history"
+  ],
+  "limits": {
+    "conversations": 64,
+    "turnsPerConversation": 100,
+    "eventsPerConversation": 256,
+    "historyMessages": 4,
+    "historyUtf8Bytes": 16384,
+    "partialUtf8Bytes": 32768,
+    "deltaUtf8Bytes": 4096,
+    "outputsPerTurn": 8,
+    "artifactUtf8Bytes": 16384,
+    "proposalLifetimeMs": 3600000
+  },
+  "validation": {
+    "typescript": "passed node node_modules/typescript/bin/tsc --noEmit --pretty false",
+    "biome": "targeted changed source passed",
+    "tests": "delegated to GAUNTLET; no test authoring or test execution by core worker",
+    "gauntletObserved": {
+      "domain": "10/10 initial focused",
+      "proposals": "6/6 initial focused",
+      "transport": "5/5",
+      "realOwnerHttp": "4/4",
+      "physicalStoreReopen": "1/1",
+      "expandedCases": "in progress by test worker"
+    }
+  },
+  "authority": {
+    "providerSubmission": "existing one-request task and Foundation reservation",
+    "progress": "current lease plus real grant dispatch check; source vendor sequence dedup; no raw vendor IDs in browser events",
+    "artifact": "UTF8 only; immutable digest checked in detail/download; server-generated filename",
+    "proposal": "existing requiresApproval same-scope plan only; no enqueue/new plan/model self-approval",
+    "approval": "fresh owner, exact hash/target/revision/command/profile/source task/epoch/expiry; real Foundation approval and proposal decision share serialized transaction",
+    "rejection": "protective authenticated owner action, no fresh-stepup needed, no grant",
+    "readOnly": "owner history survives scope/profile drift, never renews execution authority",
+    "outputs": "Only actual successful Foundation settlement transaction creates artifacts/proposals; current profile/scope/epoch rechecked",
+    "eventReplay": "Conversation cursor and bounded event page read under the same serialized write-lock snapshot; no task/provider submission"
+  },
+  "integration": {
+    "facade": "AgentEngine.chatList/chatCreate/chatDetail/chatSend/chatEvents/chatArtifact/chatResolve",
+    "jsonRegistration": "registerAgentChatRoutes(app,infrastructure?)",
+    "rootOwns": "SSE, download transport, response validator, UI, docs",
+    "researcherOwns": "actual native SSE/IPC and conversation_history"
+  },
+  "remaining": [
+    "GAUNTLET behavioral and regression results",
+    "fresh adversarial review",
+    "root final static/build/scanner gates"
+  ]
+}

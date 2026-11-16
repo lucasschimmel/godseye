@@ -1,0 +1,41 @@
+{
+  "date": "2026-11-13",
+  "status": "passed-local-scans-with-explicit-degradations",
+  "gitleaks": {
+    "version": "8.30.1",
+    "publicChangedPaths": 123,
+    "findings": 0,
+    "artifact": "artifacts/security/hermes-chat-gitleaks.json",
+    "enumeration": "artifacts/security/hermes-chat-public-source-files.json",
+    "scope": "Cumulative uncommitted public source/docs/tests; private .local and machine-state hash reports excluded"
+  },
+  "nodeAudit": {
+    "tool": "Bun1.4.4 audit",
+    "packages": 495,
+    "advisories": 0
+  },
+  "python": {
+    "installedDistributions": 74,
+    "thirdPartyExactVersionQueries": 73,
+    "knownFindings": 0,
+    "completePagination": true,
+    "artifact": "artifacts/security/hermes-chat-python-osv.json",
+    "inventory": "artifacts/security/agent-center-python-inventory.json",
+    "sameFrozenEnvironmentReverified": true,
+    "firstPartyPinnedSourceExcludedFromPyPIQuery": true
+  },
+  "nativeIntegrity": {
+    "core": "install-hermes.mjs status verified installed files plus network-denied actual package smoke",
+    "execution": "hermes-runtime-install.mjs idempotent verification passed; frozen provenance/manifests unchanged",
+    "modelCalls": 0,
+    "artifact": "hermes-chat-native-integrity.json"
+  },
+  "sourceReview": "hermes-chat-code-review.json",
+  "degradations": [
+    "Semgrep unavailable: independent adversarial source/security review is model judgment, not automated SAST.",
+    "Direct OSV exact PyPI name/version queries are not first-party CVE/reachability qualification.",
+    "Installed inventory is not a full SBOM; Syft/cdxgen unavailable.",
+    "No paid provider, active hostile-code pentest, deployed containment or dedicated-host recovery qualification."
+  ],
+  "waiversAdded": 0
+}

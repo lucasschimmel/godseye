@@ -1,0 +1,52 @@
+{
+  "version": 1,
+  "status": "exact-pinned-Codex-request-compatibility-implemented; independent-pure-gate-passed; fresh-native-requalification-required",
+  "sourceHashes": {
+    "scripts/coding_guest_broker.py": "353857c225cadb1c1dbd2d634e5ce08b765d4f90c092f349a52a36043d82e5f9",
+    "scripts/coding_runner_config.mjs": "f451cdc1ca764fc9237b7308397df8771ac12ee236d67af4d56ed04c2f03b7f6"
+  },
+  "sources": [
+    "https://developers.openai.com/api/docs/models/gpt-5.4-mini",
+    "https://developers.openai.com/api/reference/resources/responses/methods/create",
+    "https://raw.githubusercontent.com/openai/codex/rust-v0.167.0-alpha.4.1/codex-rs/codex-api/src/common.rs",
+    "https://raw.githubusercontent.com/openai/codex/rust-v0.167.0-alpha.4.1/codex-rs/protocol/src/openai_models.rs"
+  ],
+  "officialFindings": [
+    "Current model documentation explicitly lists none as supported/default reasoning effort for gpt-5.4-mini",
+    "Responses documents namespace containers of function/custom definitions and encrypted reasoning include as an optional opaque output hint",
+    "Exact pinned Codex source models client_metadata as an optional map of strings; the broker validates only observed bounded diagnostic keys then drops it",
+    "Exact pinned protocol source has ReasoningEffort::None serialized as none, plus model catalog reasoning defaults/presets/summary-support fields"
+  ],
+  "normalization": [
+    "Known bounded client_metadata identifiers and nested turn diagnostics validated then removed; nothing in metadata grants authority or becomes upstream headers",
+    "Only []/null or the exact reasoning.encrypted_content include request hint accepted then removed; actual encrypted_content or remotely fetched input remains rejected",
+    "Only reviewed reasoning effort/summary enum shape accepted, then replaced with effort none; helper fixed argv and catalog independently select none and disable reasoning summaries",
+    "Codex namespace has exact type/name/description/tools fields, at most32 function/custom children, at most64 total tool definitions, no nested namespace/server/remote/MCP/web tool/extra URL properties",
+    "Validated local tool schemas are scrubbed separately from actual model inputs: schema property names type/image_url/encrypted_content are declarations; actual opaque/fetched inputs and external JSON Schema references remain denied",
+    "All original request bytes remain in conservative cost bound; canonical normalized fingerprints, pre-POST durable debit, completion guard and controller grant callbacks unchanged"
+  ],
+  "verification": [
+    "Python isolated compile passed",
+    "Full TypeScript and helper Biome checks passed",
+    "25 pure broker cases with both exact native captures enabled initially passed",
+    "Independent GAUNTLET final30/30 pure fake-HTTPS cases passed with no skips: exact Codex22033-byte and Claude4462-byte requests each POST once, plus malformed namespace/metadata/opaque-input/ref/field/cap cases denied before debit or POST",
+    "Final current-helper Codex metadata reasoning_effort accepted only as literal none then dropped; all31 pure broker cases passed using current22097-byte capture; older22033-byte exact replay also passed"
+  ],
+  "fixtures": [
+    "artifacts/coding-composition-fixtures/synthetic-ss0ot_mx/request-1.json",
+    "artifacts/coding-composition-fixtures/synthetic-cvv5_11y/request-2.json"
+  ],
+  "limits": [
+    "Zero paid vendor calls; fixture response variants do not establish vendor entitlement",
+    "Unexpected opaque reasoning in a later actual input fails closed; no opaque-context byte-to-token billing claim",
+    "Runtime must requalify both runners and actual Foundation/provider composition after these final broker/helper hashes",
+    "Production edits limited to broker and shared fixed guest helper; no host CLI/model execution"
+  ],
+  "currentCodexMetadataDelta": {
+    "allowedDiagnostic": "reasoning_effort=none only",
+    "currentFixture": "artifacts/coding-composition-fixtures/synthetic-bx5057oo/request-1.json",
+    "brokerSha256": "353857c225cadb1c1dbd2d634e5ce08b765d4f90c092f349a52a36043d82e5f9",
+    "upstream": "entire client_metadata still removed; model reasoning none forced independently",
+    "unchanged": "all other metadata fields/shapes, opaque input denial, budget/debit/dedup/authority fences"
+  }
+}

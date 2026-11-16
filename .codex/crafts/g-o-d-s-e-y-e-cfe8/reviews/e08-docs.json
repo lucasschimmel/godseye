@@ -1,0 +1,85 @@
+{
+  "role": "scribe",
+  "status": "complete-local-scope",
+  "written": [
+    "docs/development/usage-observability.md",
+    "docs/adr/ADR-019-local-usage-and-observability.md",
+    "docs/spec/v1.md",
+    "docs/plan/v1-development.md",
+    "docs/development/handoff.md",
+    "README.md",
+    "CHANGELOG.md",
+    "tests/STRATEGY.md"
+  ],
+  "verified": {
+    "checked": "Actual usage/usage-query/observability contracts, owner routes, client signatures, source collection engine, migration names, design and usage reports; relative file links in all eight documents; authoritative final test/security reports and root final static/build/smoke/security evidence",
+    "clean": true,
+    "drifted": [],
+    "scopedBiome": "passed: scoped invocation exited 0, checked two supported files; Markdown prose and links inspected separately",
+    "relativeFileLinksChecked": 201
+  },
+  "baseline": {
+    "date": "2026-11-14",
+    "apiVersion": "1.15.0",
+    "migrations": [
+      "0023_usage.sql",
+      "0024_observability.sql"
+    ],
+    "scope": "All three requested E08 local software parts complete and locally verified. Authoritative final e08-tests.json and independent e08-security.json incorporated; no nested/overlapping counts added."
+  },
+  "skipped": [
+    {
+      "what": "Scribe bash verifier and command example execution",
+      "why": "Windows adaptation uses PowerShell relative-link checks and actual source/signature inspection. No owner mutation, native install, private binding or paid request executed by documentation role."
+    },
+    {
+      "what": "Generated OpenAPI or source changes",
+      "why": "Outside assigned documentation ownership."
+    }
+  ],
+  "limitations": [
+    "Related local gates are not a whole-repository run or complete V1 T26/T40 certification; selected mutation kills are not a general mutation score.",
+    "Previous Hermes receipts and E07 Coding/KVM proofs do not cover changed accounting IPC/controller/helper closures.",
+    "Two actual ManagedHermesProvider/Foundation compositions passed against loopback upstream; complete current-source Coding KVM proof not claimed.",
+    "Billing administration, remote AX41 metrics and real independent observer/notifier integrations remain unconfigured; no actual messages or paid calls."
+  ],
+  "paidCalls": 0,
+  "remoteChanges": false,
+  "gitMutations": false,
+  "finalEvidence": {
+    "newFocused": {
+      "files": 18,
+      "passed": 76,
+      "skipped": 0,
+      "seconds": 173.13,
+      "nativeSubsetsIncluded": true
+    },
+    "browser": {
+      "passed": 5,
+      "skipped": 0,
+      "xmlSeconds": 85.119116
+    },
+    "relatedRegression": {
+      "files": 56,
+      "passed": 671,
+      "skipped": 1
+    },
+    "orchestrationDisjoint": {
+      "files": 7,
+      "passed": 60
+    },
+    "legacyCodingPython": {
+      "passed": 29,
+      "skipped": 2
+    },
+    "selectedMutations": {
+      "killed": 6,
+      "total": 6,
+      "generalScore": null
+    },
+    "review": "PASS zero open, four closed; lint delta rechecked",
+    "static": "lint733files/types/contracts1.15/build exit0",
+    "smoke": "original15s exit0 localhealth/remotedisconnected",
+    "scan": "854publicpaths zero new, one unchanged placeholder; audit0"
+  }
+}

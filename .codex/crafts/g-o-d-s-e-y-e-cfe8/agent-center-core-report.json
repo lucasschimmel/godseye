@@ -1,0 +1,45 @@
+{
+  "status": "implemented-awaiting-final-review-and-global-gates",
+  "date": "2026-11-13",
+  "scope": "Agent Center strict contracts, durable owner-bound profile/task core, Foundation composition, HTTP/private client and local runtime factory wiring",
+  "implemented": [
+    "Control API 1.10.0 with strict agents DTOs, nine endpoint contracts and generated OpenAPI",
+    "Checksummed 0018 migration and Drizzle profile/task/event tables",
+    "Real project/environment/revision/hold/lifecycle binding, exact pinned context skill and default gpt-6-luna policy",
+    "Profile create/configure/pause/resume with request receipts, expected revision, busy guards, audit references and 64-profile bound",
+    "Task admission uses existing Foundation plans, resource references, atomic budget reservation and run mapping; no second queue",
+    "Scope/grant/lease checks before physical provider submission and after asynchronous observations; provider receives a final assertActive callback",
+    "Stable private task/correlation ID and original persisted deadline, bounded result/history and 500-task retention capacity",
+    "Single live/uncertain task per profile; overview busy and activeTaskId derived from all retained nonterminal rows, not last100 history",
+    "Cancellation revokes existing Foundation authority, requests exact provider stop and retains uncertainty/budget until physical stop is proven",
+    "Read-only reconciliation retains provider identity and never resubmits; actual call and stop slots survive deadlines until promise settlement",
+    "Success requires stable nonnull provider run ID and physical stopped proof; missing identity retains unknown/no output",
+    "Private control client and authenticated Hono routes; configuredHermesProvider composition and close in server runtime"
+  ],
+  "foundationChanges": {
+    "packages/core/src/foundation-data.ts": "validateLease permits held scope only for readOnlyReconciliation AND exact local.hermes adapter AND agent.run command; mutation dispatch remains blocked",
+    "packages/core/src/foundation-effects.ts": "All three reconciliation scope checks use same exact local.hermes/agent.run exception; no new grants or mutation authority are issued",
+    "packages/core/src/infrastructure.ts": "Agent adapter and reserve/settlement/uncertainty/releaseQueued hooks composed with existing Foundation heavy-capacity/budget machinery"
+  },
+  "validation": {
+    "typecheck": "passed",
+    "ownedSourceLint": "passed",
+    "generatedOpenApi": "generated from current contracts",
+    "gauntletTargeted": "36/36 passed; caller-owned artifacts/test-results/agents-core-second.xml",
+    "existingFoundationRegression": {"passed":38,"files":5,"durationSeconds":62.45,"artifact":"artifacts/test-results/agents-foundation-regression.xml"},
+    "regression": "Missing correlated provider identity allowed false success; GAUNTLET RED then fixed to unknown with retained budget and no output",
+    "lastSmallHardening": "Admission-failure settlement now preserves a concurrent cancellation/terminal state rather than overwriting it; final typecheck/lint passed, dedicated race test remains caller-owned"
+  },
+  "costSemantics": "The full admitted ceiling is authorized before possible physical submission. Terminal and uncertain observations conservatively account at that ceiling; uncertainty also retains its reservation. This is not actual OpenAI billing and usage.costState explicitly says reserved-conservatively. Token counts remain null when missing. E08 pricing/billing reconciliation remains pending.",
+  "remaining": [
+    "Fresh independent source/security review and full regression/build/browser gates are caller-owned",
+    "Native runtime/provider implementation and qualification are researcher's ownership, not proven by this backend report",
+    "Conversation-only no-tools profile; system/browser/MCP/coding/publication skills remain disabled",
+    "Owner approval/clarification inbox and explicit upstream resolve-unknown admission generation are not implemented in this slice",
+    "No automatic destructive task/history purge; capacity refusal retains evidence",
+    "Local controller worker continues without browser; independent always-on dedicated-host qualification remains pending"
+  ],
+  "gitMutations": false,
+  "dedicatedServerChanged": false,
+  "paidModelCalls": 0
+}

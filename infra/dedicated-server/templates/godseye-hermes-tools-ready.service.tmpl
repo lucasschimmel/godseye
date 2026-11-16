@@ -1,0 +1,35 @@
+# TEMPLATE - not installed or enabled by any repository command. See the gateway unit for why this is
+# a readiness gate and not a daemon.
+#
+# Native Linux replacement for the foreground `hermes-tools-bootstrap` holder: lingering for the service
+# user (`loginctl enable-linger godseye`, done once by work-vm-coding-host-install / the P08 runbook)
+# keeps user@1000.service and its delegated cgroup alive; this unit orders after it and verifies the
+# prerequisites. The service user may have any unprivileged uid (the tools runtime derives it).
+#
+# Replace @@WORKSPACE@@ with the absolute, unlinked workspace (e.g. /opt/godseye).
+[Unit]
+Description=G.O.D.S.E.Y.E Hermes tools worker prerequisites
+After=local-fs.target user@1000.service godseye-bindings-render.service
+Wants=user@1000.service godseye-bindings-render.service
+Before=godseye-control-api.service
+StartLimitIntervalSec=300
+StartLimitBurst=10
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+User=godseye
+Group=godseye
+# Needs the per-user runtime directory for the user bus probe; systemd sets it for linger sessions.
+Environment=XDG_RUNTIME_DIR=/run/user/1000
+ExecStart=/usr/bin/python3 -I -B @@WORKSPACE@@/scripts/hermes_ready_check.py tools @@WORKSPACE@@
+# Backoff: fixed 5s retry; on Debian 13 (systemd 257) RestartSteps/RestartMaxDelaySec grow it to 2 min.
+Restart=on-failure
+RestartSec=5s
+RestartSteps=5
+RestartMaxDelaySec=120s
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

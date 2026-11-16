@@ -1,0 +1,45 @@
+import { integer, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
+
+const moment = (name: string) => timestamp(name, { withTimezone: true });
+/** Durable role-rotation intent; verifiers are public fingerprints, never credential material. */
+export const databaseRotations = pgTable("database_rotations", {
+  id: uuid("id").primaryKey(),
+  projectId: uuid("project_id").notNull(),
+  environmentId: uuid("environment_id").notNull(),
+  allocationId: uuid("allocation_id").notNull(),
+  role: text("role").notNull(),
+  slotId: uuid("slot_id"),
+  state: text("state").notNull(),
+  reason: text("reason"),
+  generation: integer("generation").notNull(),
+  attempts: integer("attempts").notNull(),
+  previousVerifier: text("previous_verifier"),
+  nextVerifier: text("next_verifier"),
+  createdAt: moment("created_at").notNull(),
+  updatedAt: moment("updated_at").notNull(),
+  settledAt: moment("settled_at"),
+});
+export const incidents = pgTable("incidents", {
+  id: uuid("id").primaryKey(),
+  key: text("key").notNull(),
+  kind: text("kind").notNull(),
+  severity: text("severity").notNull(),
+  projectId: uuid("project_id"),
+  environmentId: uuid("environment_id"),
+  allocationId: uuid("allocation_id"),
+  subject: text("subject"),
+  state: text("state").notNull(),
+  reason: text("reason").notNull(),
+  summary: text("summary").notNull(),
+  occurrences: integer("occurrences").notNull(),
+  revision: integer("revision").notNull(),
+  mutedUntil: moment("muted_until"),
+  resolution: text("resolution"),
+  deliveryState: text("delivery_state").notNull(),
+  deliveryAttempts: integer("delivery_attempts").notNull(),
+  deliveryAttemptedAt: moment("delivery_attempted_at"),
+  firstRaisedAt: moment("first_raised_at").notNull(),
+  lastRaisedAt: moment("last_raised_at").notNull(),
+  acknowledgedAt: moment("acknowledged_at"),
+  resolvedAt: moment("resolved_at"),
+});

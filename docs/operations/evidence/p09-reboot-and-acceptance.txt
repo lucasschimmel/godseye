@@ -1,0 +1,21 @@
+P09 Post-Reboot Recovery & Final Acceptance Summary (2026-11-15)
+================================================================
+
+1. VM 200 (godseye-games, 10.20.2.10) Reboot Drill:
+   - Executed: qm reboot 200 (from godseye-wg)
+   - Post-reboot uptime: up 0 min
+   - godseye-luanti: Up Less than a second, 10.20.2.10:30000->30000/udp
+   - godseye-games-backup.timer: active
+
+2. VM 100 (godseye-pro, 10.20.1.10) Reboot Drill:
+   - Executed: qm reboot 100 (from godseye-wg)
+   - Post-reboot uptime: up 0 min
+   - Services active: postgresql, openbao, redis-server, caddy, jenkins, godseye-control-api, godseye-console, docker
+   - OpenBao unseal post-reboot: Sealed=false (Storage Type: raft, HA Enabled: true)
+   - Representative runsc cells: godseye-cell-dev-app (Up 12s), godseye-cell-prod-app (Up 12s)
+   - Endpoints: CONSOLE_HTTP=200, JENKINS_HTTP=200, https://godseye.lucasschimmel.fr/healthz -> godseye-edge-ok
+
+3. Remaining / Continuous Observations (honest status):
+   - DS16 (72h soak): infrastructure is live; continuous 72h soak window starts from 2026-11-15T11:09Z.
+   - Jenkins build #5: vitest + infra-lab (4/4) + JUnit + artifacts passed; Playwright test:e2e failed at config.webServer ECONNRESET on godseye-work (pg-lab/recovery-lab skipped).
+   - Coding-runner Linux/Proxmox adapter: safely degraded (unavailableConfiguration, qualified: false) pending Linux KVM runner qualification; Hermes 0.23.1 runtime installed and verified.

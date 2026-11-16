@@ -1,0 +1,114 @@
+{
+  "verdict": "pass-with-findings",
+  "findings": [
+    {
+      "id": "BCR-001",
+      "criterion": "COR-01/COR-03",
+      "status": "CONFIRMED",
+      "severity": "major",
+      "category": "CWE-863",
+      "evidence": "packages/core/src/backend-configuration.ts:168-178 only rejects an expired environment through derived view.status; line 152 deliberately calls environmentFor with both hold exemptions. packages/core/src/projects.ts:138-146 returns active delivery/ready allocation status before checking environment.expiresAt. The metadata reader at backend-configuration.ts:29-35 uses the same derived status. An ordinary timed preview with an existing ready database allocation, no deliveryPreviews record and a deadline that has just elapsed remains available and is shown as prepared.",
+      "refutation_survived": true,
+      "refutation": "Delivery-managed previews do have a separate expiry-derived deliveryHold. That covers deliveryPreviews rows, not the independent preview environments created by the project/environment feature. configureBackend already checks raw environment.expiresAt at lines 88-90, but applicationLifecycleGuard and backendConfiguration do not call that mutation path. The bug therefore survives the existing guard and does not require forged inputs or deployment qualification.",
+      "suggestion": "Independently reject elapsed environment.expiresAt in the runtime guard and mark the metadata view held, regardless of allocation/delivery status; add a clock-crossing preview test with a ready allocation and current configuration revisions."
+    }
+  ],
+  "criteria_run": 21,
+  "criteria_passed": 19,
+  "not_reviewed": [
+    "Worker-owned application auth/files/events/runtime/SDK code is explicitly excluded while implementation is in flux.",
+    "No active security assessment, payload execution, external tooling, dependency scan or external target access was performed. Security-auditor is adapted to read-only local source tracing with CWE classification.",
+    "Tests are being rerun by the caller; their source was inspected for scenario coverage, but no new executable proof is claimed.",
+    "Visual rendering, screenshots, keyboard interaction and measured mobile clipping were not observed in this read-only source pass. Responsive source and existing browser assertions were inspected only.",
+    "COH-01/02 spacing and typography token strictness is limited by the established provisional design: colors are semantic, but the existing design has no complete semantic spacing/typography scale. No new isolated style defect was inferred from ordinary rem literals.",
+    "Public API operational documentation is still being authored by the documentation satellite; the current DTO/endpoint/client updates were checked, but final published documentation was not certified.",
+    "Runtime guard snapshot consistency across independently awaited control reads remains for the runtime integration review; this pass does not claim atomic runtime authority settlement."
+  ],
+  "review_context": {
+    "kind": [
+      "code",
+      "coherence"
+    ],
+    "criticity": "production",
+    "fresh_context": true,
+    "producing_conversation_read": false,
+    "scope": "Root-owned owner backend metadata contracts/store/core/API/control-client/console integration only.",
+    "passed_observations": [
+      "Origin validation requires canonical exact origins with HTTPS or explicitly enumerated loopback HTTP hosts, and rejects wildcards, paths, duplicates and noncanonical URL authority forms.",
+      "Desired settings contain no runtime credentials, physical roots, database selectors or caller-provided authority; disconnected runtime status is literal false in both response schema and implementation.",
+      "Control routes inherit actual owner identity, exact control Host/Origin, body caps, API version enforcement and first-party response validation before registration.",
+      "Configuration writes require recent verified owner passkey authority before parsing and again inside the database-serialized transaction.",
+      "The shared control lock serializes revision races, request digests include scope and configuration, idempotency collisions return conflicts, and audit/request/configuration writes share the transaction.",
+      "Foreign project/environment pairing is rejected before reading or adopting configuration; recovery and delivery HOLD plus project suspension and incompatible revisions are explicitly fenced.",
+      "The migration is registered through existing migration ownership rather than a second initialization path; schema includes foreign-key references and revision checks.",
+      "Console forms reset against configuration/project/environment revisions and environment selection remounts settings, preventing draft values from moving between cells.",
+      "UI text truthfully states prepared settings and disconnected hosting, uses semantic colors and shared controls, wraps action buttons, and collapses the form to one column on mobile."
+    ]
+  },
+  "file_hashes": [
+    {
+      "path": "packages/contracts/src/backend-configuration.ts",
+      "sha256": "31fbabbb60574a748c8f45fd09e94292a610cb2a7479d73f66422a79f86576c5"
+    },
+    {
+      "path": "packages/contracts/src/backend-endpoints.ts",
+      "sha256": "8f319586e85ed8a17a685613f0550a1a0d79bae32611727c38cc632f937fe8b2"
+    },
+    {
+      "path": "packages/contracts/src/http-endpoints.ts",
+      "sha256": "c4b5d83fb784ca7887babc5c86c5994c3f298649eff57a2eb33f609a24d5421b"
+    },
+    {
+      "path": "packages/store/src/backend-schema.ts",
+      "sha256": "6213448ce248a70cf1ed06966fa03df95cc2bb40a8e9cf2e63e8bfdc5eeb0369"
+    },
+    {
+      "path": "packages/store/migrations/0008_backend_configuration.sql",
+      "sha256": "05cc9f4bf81b7043d6d7a896134a4ff14d1c2abfbcd02e178b1ece8e75db0186"
+    },
+    {
+      "path": "packages/core/src/backend-configuration.ts",
+      "sha256": "c6d829cbc9a21e1bf56ca50ad60923152b12ff20c9af39f79b3a3a7f97ac11b9"
+    },
+    {
+      "path": "packages/core/src/index.ts",
+      "sha256": "a673efe957160fb15b149fcaf9ba8002c0dbd2553b88f79d66dd72dc2d4a3c68"
+    },
+    {
+      "path": "packages/core/src/projects.ts",
+      "sha256": "3571812ac5209761cbdbe7412d4b7a590c6638eea9870b24e6a321d036dfd3d1"
+    },
+    {
+      "path": "apps/control-api/src/backend-routes.ts",
+      "sha256": "bc5a6b6d57e962f1ac9c1e16d57ca50b4972ef97cc97db96ab72ffbffa8be97f"
+    },
+    {
+      "path": "apps/control-api/src/app.ts",
+      "sha256": "6684c7ccd173a78647841197f66f6da84ac470b99da90c18b8e8df9ed8bb97ec"
+    },
+    {
+      "path": "packages/control-client/src/index.ts",
+      "sha256": "800f280d39a701177d7f00d622f7773457b192c818d3b56309266e2347d7f97f"
+    },
+    {
+      "path": "apps/console/src/components/backend-panel.tsx",
+      "sha256": "c3d0897d2e0c53aa61d241d4407172d942666bce8c687808703b5bfe5147c9de"
+    },
+    {
+      "path": "apps/console/src/styles/backend.css",
+      "sha256": "b9d2b64cc820aea42916e978a26306c007e9733137a62fb34b420fc86a4480ad"
+    },
+    {
+      "path": "apps/console/src/routes/projects.$projectId.tsx",
+      "sha256": "5c45b9bcf46d05d265eb7b06918a1e3bcc91f1afcc5804e60cd85ee86f9dcafd"
+    },
+    {
+      "path": "apps/console/src/styles.css",
+      "sha256": "2ffe62cbdc40240b332171932172b265f30e2c04614cdd5111bec4d1cdfaf072"
+    },
+    {
+      "path": "DESIGN.md",
+      "sha256": "560d0bd9fe1829e599c9c2ece9fc2d627f0ef760c6d195b2a68d9f6838dc50ea"
+    }
+  ]
+}

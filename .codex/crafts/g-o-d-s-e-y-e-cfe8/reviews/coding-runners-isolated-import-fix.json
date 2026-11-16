@@ -1,0 +1,43 @@
+{
+  "status": "isolated-installer-import-fix-verified",
+  "previousFreeze": "coding-runners-startup-operator-freeze.json preserved unchanged",
+  "files": {
+    "scripts/coding_cli_install.py": "cd202b61a4eff622274579accdc3726f34770122c419af9780cc5b1ddf29cfa4",
+    "scripts/coding-runtime.mjs": "35a826b14ed2b1fd894eb3ca206cdee4299f9b0d44762cfe5fea820ee82de398"
+  },
+  "change": "CLI installer loads coding_guest_install through exact canonical sibling importlib spec; rejects alias source; keeps Python -I and does not append sys.path or use ambient PYTHONPATH. No runtimewrapper behavior changed.",
+  "actualOperatorSmoke": {
+    "command": "artifacts/tools/bun-1.4.4/package/bin/bun.exe run coding:cli:install",
+    "exitCode": 0,
+    "observedVersions": {
+      "codex": "codex-cli 0.167.0-alpha.4.1",
+      "claude": "2.1.215 (Claude Code)",
+      "node": "v24.22.1",
+      "git": "git version 2.53.0"
+    },
+    "assetEntries": 16,
+    "note": "Existing pinned cache was independently verified/re-extracted and version/help probed; signed Ubuntu catalog metadata refreshed by existing installer behavior. No project command or paid API call."
+  },
+  "isolatedImportSmoke": {
+    "python": "/usr/bin/python3 -I",
+    "distro": "Ubuntu",
+    "modules": [
+      "coding_cli_install",
+      "coding_guest_install",
+      "coding_guest_qualify",
+      "coding_guest_control",
+      "coding_guest_task",
+      "coding_guest_lab",
+      "coding_guest_source",
+      "coding_guest_broker"
+    ],
+    "passed": 8,
+    "mainExecuted": false
+  },
+  "otherOperators": "install-kvm has no sibling imports; qualifier/control/task already use exact importlib. Runtime owner confirms actual qualification under -I; duplicate native qualification avoided while current Codex probe active. No KVM assets or qualification files changed by this worker.",
+  "validation": {
+    "wrapperBiome": "passed",
+    "wrapperNodeSyntax": "passed"
+  },
+  "scope": "No global package installation, no persistent system configuration, no protected binding/key reads and no paid model call."
+}

@@ -1,0 +1,13 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "outDir": "../../.local/sdk-declarations",
+    "rootDir": "../..",
+    "types": []
+  },
+  "include": ["src/contracts.ts"],
+  "exclude": []
+}

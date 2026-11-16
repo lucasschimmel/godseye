@@ -1,0 +1,22 @@
+{
+  "name": "@godseye/control-api",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/server.ts"
+  },
+  "dependencies": {
+    "@godseye/app-backend": "workspace:*",
+    "drizzle-orm": "0.45.4",
+    "@godseye/contracts": "workspace:*",
+    "@godseye/core": "workspace:*",
+    "@godseye/store": "workspace:*",
+    "@hono/node-server": "2.1.7",
+    "hono": "4.13.18",
+    "zod": "4.6.7",
+    "better-auth": "1.7.20",
+    "@better-auth/passkey": "1.7.20",
+    "@better-auth/drizzle-adapter": "1.7.20"
+  }
+}

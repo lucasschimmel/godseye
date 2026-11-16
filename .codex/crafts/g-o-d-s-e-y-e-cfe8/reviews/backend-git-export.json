@@ -1,0 +1,136 @@
+{
+  "status": "private-develop-published-final-handoff-recorded",
+  "repository": "https://github.com/lucasschimmel/godseye",
+  "privacy": "private",
+  "owner": {
+    "login": "lucasschimmel",
+    "id": 62193295
+  },
+  "defaultBranch": "main",
+  "main": {
+    "commit": "b0a3300cdb5c6474e612276f1daf9058c36550fb",
+    "files": [
+      "README.md"
+    ],
+    "readback": "GitHub contents API, repository metadata and ls-remote agree",
+    "protection": {
+      "requiresPullRequest": true,
+      "enforceAdmins": true,
+      "requiredApprovingReviews": 0,
+      "allowForcePushes": false,
+      "allowDeletions": false,
+      "requiredStatusChecks": null,
+      "verifiedByIndependentGet": true
+    }
+  },
+  "publicationCorrection": {
+    "cause": "Existing local main referenced the first historical checkpoint. Presentation bootstrap refused it, but a subsequent PowerShell command continued and pushed that old branch to the newly created private repository.",
+    "resolution": "Preserved original local main; verified only the owner's initial remote branch existed; replaced exactly that erroneous branch using a lease bound to b641f51f3b4dd7829ed66827ba0a575e3504cd9c. No other work or collaborator history was overwritten. Main was protected after independent README-only readback.",
+    "workingSourceUntouched": true
+  },
+  "originalHistory": {
+    "baseline": "d3902e1c14be2249f33737e5db5024cd9d60dbd6",
+    "checkpointCount": 7,
+    "backupRef": "backup/pre-github-publication-20261112",
+    "originalMainBackupRef": "backup/original-main-before-publication",
+    "localE04Checkpoint": "387664f87fc6a0ff11308df9cf072db67c1f22a6",
+    "localE04BackupRef": "backup/local-e04-before-publication"
+  },
+  "developPlan": {
+    "artifact": "artifacts/git-publication/commit-plan.json",
+    "published": true,
+    "sourceImportCommit": "fabcd58f3dc17cbf9b1820f2968400e1ceaa8ff3",
+    "sourceImportTree": "6ae1ab33d24ee740a213531a5d2cc2efd1cfef3d",
+    "initialResponsibilityCommits": 100,
+    "finalHandoffMetadataCommits": 1,
+    "developmentCommitsAfterHandoff": 101,
+    "totalRemoteCommitsIncludingPresentationAfterHandoff": 102,
+    "trackedFiles": 543,
+    "maximumFilesPerImportCommit": 10,
+    "exactSourceTreeVerified": true,
+    "workingSourceBytesUnchanged": true,
+    "workingSourceSha256": "bbd222a610a839124562a78f96f36973eeb54397de0750f5719978425152da68",
+    "provenance": "Publication snapshots grouped by responsibility; intermediate commits are not claimed individually buildable or tested. Verification applies to the final source tree.",
+    "finalReference": "origin/develop; exact handoff SHA is verified and reported outside this self-referential commit"
+  },
+  "graph": {
+    "method": "grep",
+    "symbols": 965,
+    "reusables": 40,
+    "incrementallyRescannedFiles": 119,
+    "jsonLinesValidated": true,
+    "publicationAnchor": "cfad4f7971ff2df35bf995eb2defadf972411245",
+    "anchorReachableFromDevelop": true,
+    "anchorContainsCompleteSource": true
+  },
+  "scanner": {
+    "history": "Gitleaks 8.30.1, seven original commits, exit 0 and zero findings",
+    "preliminaryStaged": "Raw structured staged scan found one synthetic-placeholder false positive; raw redacted report retained",
+    "rawArtifact": "artifacts/security/backend-staged-preliminary-structured-gitleaks.json",
+    "classificationArtifact": "artifacts/security/backend-staged-effective-classification.json",
+    "exactFalsePositive": {
+      "file": "packages/app-backend/src/local.ts",
+      "line": 37,
+      "rule": "generic-api-key",
+      "literalSha256": "9b73983c1ccebb28bd2969b5b9d0db1bfc7081627b06e066071071167de0a27c",
+      "normalizedStagedSourceSha256": "fb588d0f362c17395c71d11125471c8b9f9f794c064d7fd20d9fe847ca497cc6",
+      "justification": "Temporary applicationState is used only for protected material-file opening; actual runtime authentication uses separately generated 48-random-byte material. The placeholder never becomes serving authority. Classification is bound to the frozen exact source/literal hash, path, line and scanner rule."
+    },
+    "effectiveCredentialFindings": 0,
+    "vulnerabilityWaivers": 0,
+    "sourceChangedForScanner": false,
+    "finalScans": {
+      "source": {
+        "files": 543,
+        "rawFindings": 1,
+        "effectiveCredentialFindings": 0,
+        "artifact": "artifacts/security/backend-source-final-gitleaks.json",
+        "classification": "artifacts/security/backend-source-final-effective.json"
+      },
+      "completeStagedImport": {
+        "rawFindings": 1,
+        "effectiveCredentialFindings": 0,
+        "artifact": "artifacts/security/backend-staged-final-gitleaks.json",
+        "classification": "artifacts/security/backend-staged-final-effective.json"
+      },
+      "allRefsBeforeHandoff": {
+        "commits": 109,
+        "rawFindings": 2,
+        "effectiveCredentialFindings": 0,
+        "artifact": "artifacts/security/backend-all-history-final-gitleaks.json",
+        "classification": "artifacts/security/backend-all-history-final-effective.json",
+        "note": "Two occurrences of the same exact synthetic source blob: granular import and retained local E04 checkpoint. Each historical blob hash was independently checked."
+      },
+      "postHandoffEvidence": "Final metadata-stage, refreshed source snapshot and all-ref history reports are retained under artifacts/security/backend-handoff-* after this metadata commit; no runtime source is changed."
+    }
+  },
+  "preliminarySourceSize": {
+    "checkedFirstPartySourceFiles": 367,
+    "maximumLines": 400,
+    "overLimit": 0,
+    "excluded": "Generated routeTree.gen.ts; sensitive filenames are never read"
+  },
+  "developProtection": {
+    "enforceAdmins": true,
+    "allowForcePushes": false,
+    "allowDeletions": false,
+    "requiresPullRequest": false,
+    "requiredStatusChecks": null,
+    "verifiedByIndependentGet": true,
+    "rationale": "Develop accepts ordinary fast-forward development pushes; main alone requires a release pull request. Feature PRs remain documented and available to the solo owner."
+  },
+  "finalSourceSize": {
+    "checkedFirstPartySourceFiles": 371,
+    "maximumLines": 400,
+    "overLimit": 0,
+    "excluded": "Generated routeTree.gen.ts; sensitive filenames are never read"
+  },
+  "handoff": {
+    "branch": "develop",
+    "tracking": "origin/develop",
+    "sourceCheckoutChangedByRefOnly": true,
+    "serverChanges": false,
+    "releaseTagOrMerge": false,
+    "originalRefsRetainedLocally": true
+  }
+}

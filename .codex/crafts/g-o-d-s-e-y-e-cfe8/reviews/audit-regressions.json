@@ -1,0 +1,68 @@
+{
+  "date": "2026-11-12",
+  "kind": "GAUNTLET audit remediation regression evidence",
+  "scope": "R1-R4 local behavior; no dedicated-server action",
+  "testFiles": [
+    "tests/jobs-definition-regression.test.ts",
+    "tests/jobs-outbox-deadline.test.ts",
+    "tests/infra-approval-capacity.test.ts",
+    "tests/jenkins-artifacts.test.ts"
+  ],
+  "newScenarios": 16,
+  "red": [
+    {
+      "findings": ["R1"],
+      "report": "artifacts/test-results/audit-r1-red.xml",
+      "passed": 2,
+      "failed": 1,
+      "durationSeconds": 6.02,
+      "expectedFailure": "A protected unknown effect accepted a changed idempotent definition instead of JOB_DEFINITION_BUSY"
+    },
+    {
+      "findings": ["R2", "R4"],
+      "report": "artifacts/test-results/audit-r2-r4-red.xml",
+      "passed": 0,
+      "failed": 5,
+      "durationSeconds": 9.71,
+      "expectedFailure": "All four bounded send/probe/cross-cell/pump scenarios stalled; configured browser diagnostics were outside the archive globs"
+    },
+    {
+      "findings": ["R3"],
+      "report": "artifacts/test-results/audit-r3-red.xml",
+      "passed": 1,
+      "failed": 1,
+      "durationSeconds": 4.46,
+      "expectedFailure": "Approval renewal succeeded when the heavy queue was full",
+      "authoringNote": "A preliminary fixture schema typo failed before reaching admission; it was corrected before this valid red run"
+    }
+  ],
+  "focusedGreen": {
+    "command": "bun run test tests/jobs-outbox-deadline.test.ts tests/jobs-definition-regression.test.ts tests/infra-approval-capacity.test.ts tests/jenkins-artifacts.test.ts --reporter=default --reporter=junit --outputFile.junit=artifacts/test-results/audit-r1-r4-focused.xml",
+    "report": "artifacts/test-results/audit-r1-r4-focused.xml",
+    "passed": 16,
+    "failed": 0,
+    "files": 4,
+    "durationSeconds": 17.73
+  },
+  "additionalBoundaries": [
+    "Identical registration remains valid; resolved terminal effects permit later definition changes",
+    "Queued policy, handler and limits cannot be changed",
+    "Late send/probe acknowledgements cannot replace timed-out uncertainty",
+    "Pump abort does not wait for a 10-second configured provider deadline",
+    "An unresolved call retains its slot without claiming later same-scope pending rows",
+    "A healthy destination progresses beyond 51 older rows belonging to an occupied destination",
+    "Failed approval renewal leaves approvals, audit, budget and request receipt unchanged; the same key succeeds after capacity is freed",
+    "The actual InfrastructureEngine composition enforces heavy requeue admission without executing the fixture restore"
+  ],
+  "mutation": {
+    "command": "node scripts/mutation-audit-check.mjs",
+    "report": ".codex/crafts/g-o-d-s-e-y-e-cfe8/reviews/mutations-audit.json",
+    "selected": 5,
+    "scope": "Selected behavioral checks only; not an exhaustive mutation or coverage score"
+  },
+  "notReviewed": [
+    "Whole-suite results are coordinated separately",
+    "No actual Jenkins execution, Inngest engine or dedicated-server qualification",
+    "No exhaustive security, coverage or mutation claim"
+  ]
+}

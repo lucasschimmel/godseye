@@ -1,0 +1,282 @@
+{
+  "status": "ok",
+  "operation": "read-only Git hygiene inventory",
+  "observedAt": "2026-11-14T12:46:32.693375+00:00",
+  "finalFreeze": true,
+  "inventoryWarning": "Final source/docs snapshot requested by root after implementation completion; prior dirty Hermes and Agent Center work remains preserved. Runtime-only activity can continue under ignored paths.",
+  "branch": "develop",
+  "authorization": {
+    "gitMutationsAllowed": false,
+    "gitMutationsPerformed": false,
+    "optionalLocks": "disabled for every Git invocation",
+    "reportWriteOnly": true
+  },
+  "attribution": "The dirty working tree includes substantial pre-existing Hermes and Agent Center work. These counts do not attribute every current change to coding runners.",
+  "counts": {
+    "modifiedTracked": 38,
+    "untracked": 283,
+    "staged": 0,
+    "trackedFiles": 750,
+    "codingNamedSourceDocsTests": 52,
+    "newlyIndexedProtectedBasenames": 0,
+    "untrackedProtectedBasenames": 0,
+    "trackedPrivateRuntimeOrArtifactPaths": 0,
+    "visibleDirtyGeneratedBinaryPaths": 0
+  },
+  "unstagedDiffSummary": "38 files changed, 12099 insertions(+), 404 deletions(-)",
+  "stagedDiffSummary": "",
+  "ignoredPathProbes": [
+    {
+      "path": "artifacts/coding-runners/hygiene-probe.png",
+      "ignored": true,
+      "rule": ".gitignore:27:/artifacts/"
+    },
+    {
+      "path": ".local/coding/bindings.json",
+      "ignored": true,
+      "rule": ".gitignore:25:/.local/"
+    },
+    {
+      "path": ".local/coding/runs/hygiene-probe.json",
+      "ignored": true,
+      "rule": ".gitignore:25:/.local/"
+    },
+    {
+      "path": ".cache/coding/hygiene-probe.bin",
+      "ignored": true,
+      "rule": ".gitignore:13:.cache/"
+    },
+    {
+      "path": "scripts/__pycache__/hygiene-probe.pyc",
+      "ignored": true,
+      "rule": ".gitignore:17:**/__pycache__/"
+    },
+    {
+      "path": ".local/coding/images/hygiene-probe.qcow2",
+      "ignored": true,
+      "rule": ".gitignore:25:/.local/"
+    },
+    {
+      "path": ".env.local",
+      "ignored": true,
+      "rule": ".gitignore:22:.env.*"
+    }
+  ],
+  "checks": {
+    "branchDevelop": true,
+    "indexEmpty": true,
+    "privateRuntimeArtifactsNotTracked": true,
+    "noNewProtectedBasenames": true,
+    "noVisibleDirtyGeneratedBinaries": true
+  },
+  "codingNamedSourceDocsTests": [
+    "apps/console/src/components/agents-coding.tsx",
+    "apps/console/src/styles/agents-coding.css",
+    "apps/control-api/src/coding-protocol.ts",
+    "apps/control-api/src/coding-provider.ts",
+    "apps/control-api/src/coding-routes.ts",
+    "apps/control-api/src/coding-startup.ts",
+    "docs/adr/ADR-017-local-coding-runners.md",
+    "docs/development/coding-runners.md",
+    "packages/contracts/src/coding-endpoints.ts",
+    "packages/contracts/src/coding.ts",
+    "packages/core/src/coding-execution.ts",
+    "packages/core/src/coding-preparation.ts",
+    "packages/core/src/coding-state.ts",
+    "packages/core/src/coding.ts",
+    "packages/store/migrations/0021_coding.sql",
+    "packages/store/src/coding-schema.ts",
+    "playwright.coding.config.ts",
+    "scripts/coding-bindings.mjs",
+    "scripts/coding-runtime.mjs",
+    "scripts/coding_cli_fixture.py",
+    "scripts/coding_cli_install.py",
+    "scripts/coding_guest_adversary.mjs",
+    "scripts/coding_guest_broker.py",
+    "scripts/coding_guest_control.py",
+    "scripts/coding_guest_drop.mjs",
+    "scripts/coding_guest_install.py",
+    "scripts/coding_guest_lab.py",
+    "scripts/coding_guest_proxy.mjs",
+    "scripts/coding_guest_qualify.py",
+    "scripts/coding_guest_source.py",
+    "scripts/coding_guest_task.py",
+    "scripts/coding_guest_worker.mjs",
+    "scripts/coding_runner_config.d.mts",
+    "scripts/coding_runner_config.mjs",
+    "tests/coding-bindings.test.ts",
+    "tests/coding-composition-native.test.ts",
+    "tests/coding-contracts.test.ts",
+    "tests/coding-http.test.ts",
+    "tests/coding-native-regressions.py",
+    "tests/coding-protocol.test.ts",
+    "tests/coding-provider.test.ts",
+    "tests/coding-tasks.test.ts",
+    "tests/e2e/coding.spec.ts",
+    "tests/helpers/coding-broker.py",
+    "tests/helpers/coding-composition-launcher.py",
+    "tests/helpers/coding-composition-source.py",
+    "tests/helpers/coding-fixture.ts",
+    "tests/helpers/coding-readiness.py",
+    "tests/helpers/coding-source.py",
+    "tests/helpers/run-coding-mutations.mjs",
+    "vitest.coding-native.config.ts",
+    "vitest.coding.config.ts"
+  ],
+  "scopeLimits": [
+    "No protected file contents or private bindings/journals were read.",
+    "No history or secret content scan was performed.",
+    "Ignore probes use synthetic paths; they confirm parent ignore rules without reading runtime files.",
+    "Release strategy and README modifications are not attributed or changed by this inventory."
+  ],
+  "applied": [],
+  "verified": [
+    "Current branch read with optional locks disabled.",
+    "Index contains no staged changes.",
+    "Private runtime and generated artifact ignore rules verified with git check-ignore."
+  ],
+  "skipped": [
+    {
+      "what": "commit/branch/index/push/config changes",
+      "why": "Not authorized this turn."
+    }
+  ],
+  "inventoryHistory": [
+    {
+      "status": "ok",
+      "operation": "read-only Git hygiene inventory",
+      "observedAt": "2026-11-14T10:25:39.896106+00:00",
+      "finalFreeze": false,
+      "inventoryWarning": "Runtime and tests were active. Counts are an observation before final freeze and may change.",
+      "branch": "develop",
+      "authorization": {
+        "gitMutationsAllowed": false,
+        "gitMutationsPerformed": false,
+        "optionalLocks": "disabled for every Git invocation",
+        "reportWriteOnly": true
+      },
+      "attribution": "The dirty working tree includes substantial pre-existing Hermes and Agent Center work. These counts do not attribute every current change to coding runners.",
+      "counts": {
+        "modifiedTracked": 38,
+        "untracked": 259,
+        "staged": 0,
+        "trackedFiles": 750,
+        "codingNamedSourceDocsTests": 44,
+        "newlyIndexedProtectedBasenames": 0,
+        "untrackedProtectedBasenames": 0,
+        "trackedPrivateRuntimeOrArtifactPaths": 0,
+        "visibleDirtyGeneratedBinaryPaths": 0
+      },
+      "unstagedDiffSummary": "38 files changed, 12036 insertions(+), 404 deletions(-)",
+      "stagedDiffSummary": "",
+      "ignoredPathProbes": [
+        {
+          "path": "artifacts/coding-runners/hygiene-probe.png",
+          "ignored": true,
+          "rule": ".gitignore:27:/artifacts/"
+        },
+        {
+          "path": ".local/coding/bindings.json",
+          "ignored": true,
+          "rule": ".gitignore:25:/.local/"
+        },
+        {
+          "path": ".local/coding/runs/hygiene-probe.json",
+          "ignored": true,
+          "rule": ".gitignore:25:/.local/"
+        },
+        {
+          "path": ".cache/coding/hygiene-probe.bin",
+          "ignored": true,
+          "rule": ".gitignore:13:.cache/"
+        },
+        {
+          "path": "scripts/__pycache__/hygiene-probe.pyc",
+          "ignored": true,
+          "rule": ".gitignore:17:**/__pycache__/"
+        },
+        {
+          "path": ".local/coding/images/hygiene-probe.qcow2",
+          "ignored": true,
+          "rule": ".gitignore:25:/.local/"
+        },
+        {
+          "path": ".env.local",
+          "ignored": true,
+          "rule": ".gitignore:22:.env.*"
+        }
+      ],
+      "checks": {
+        "branchDevelop": true,
+        "indexEmpty": true,
+        "privateRuntimeArtifactsNotTracked": true,
+        "noNewProtectedBasenames": true,
+        "noVisibleDirtyGeneratedBinaries": true
+      },
+      "codingNamedSourceDocsTests": [
+        "apps/console/src/components/agents-coding.tsx",
+        "apps/console/src/styles/agents-coding.css",
+        "apps/control-api/src/coding-protocol.ts",
+        "apps/control-api/src/coding-provider.ts",
+        "apps/control-api/src/coding-routes.ts",
+        "apps/control-api/src/coding-startup.ts",
+        "docs/adr/ADR-017-local-coding-runners.md",
+        "docs/development/coding-runners.md",
+        "packages/contracts/src/coding-endpoints.ts",
+        "packages/contracts/src/coding.ts",
+        "packages/core/src/coding-execution.ts",
+        "packages/core/src/coding-preparation.ts",
+        "packages/core/src/coding-state.ts",
+        "packages/core/src/coding.ts",
+        "packages/store/migrations/0021_coding.sql",
+        "packages/store/src/coding-schema.ts",
+        "playwright.coding.config.ts",
+        "scripts/coding-bindings.mjs",
+        "scripts/coding-runtime.mjs",
+        "scripts/coding_cli_fixture.py",
+        "scripts/coding_cli_install.py",
+        "scripts/coding_guest_adversary.mjs",
+        "scripts/coding_guest_broker.py",
+        "scripts/coding_guest_control.py",
+        "scripts/coding_guest_drop.mjs",
+        "scripts/coding_guest_install.py",
+        "scripts/coding_guest_lab.py",
+        "scripts/coding_guest_proxy.mjs",
+        "scripts/coding_guest_qualify.py",
+        "scripts/coding_guest_source.py",
+        "scripts/coding_guest_task.py",
+        "scripts/coding_guest_worker.mjs",
+        "tests/coding-bindings.test.ts",
+        "tests/coding-contracts.test.ts",
+        "tests/coding-http.test.ts",
+        "tests/coding-protocol.test.ts",
+        "tests/coding-provider.test.ts",
+        "tests/coding-tasks.test.ts",
+        "tests/e2e/coding.spec.ts",
+        "tests/helpers/coding-broker.py",
+        "tests/helpers/coding-fixture.ts",
+        "tests/helpers/coding-source.py",
+        "tests/helpers/run-coding-mutations.mjs",
+        "vitest.coding.config.ts"
+      ],
+      "scopeLimits": [
+        "No protected file contents or private bindings/journals were read.",
+        "No history or secret content scan was performed.",
+        "Ignore probes use synthetic paths; they confirm parent ignore rules without reading runtime files.",
+        "Release strategy and README modifications are not attributed or changed by this inventory."
+      ],
+      "applied": [],
+      "verified": [
+        "Current branch read with optional locks disabled.",
+        "Index contains no staged changes.",
+        "Private runtime and generated artifact ignore rules verified with git check-ignore."
+      ],
+      "skipped": [
+        {
+          "what": "commit/branch/index/push/config changes",
+          "why": "Not authorized this turn."
+        }
+      ]
+    }
+  ]
+}

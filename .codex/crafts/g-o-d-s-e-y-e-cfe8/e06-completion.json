@@ -1,0 +1,76 @@
+{
+  "scope": "Complete E06 locally: autonomous application workers and external Inngest PostgreSQL/Redis",
+  "status": "local-request-complete",
+  "authorization": "User explicitly requests continuation; local-only; no Git mutation or dedicated server action",
+  "prediction": "prediction-1794515651-cf3f9e5f",
+  "baseline": {
+    "browserTests": 41,
+    "ordinaryTests": 1191,
+    "preserveUncommittedAuditAndInngestChanges": true,
+    "nativeTests": 2
+  },
+  "assumptions": [
+    "ASSUMED: Trusted supervisor remains Foundation authority; independence means owner HTTP/dashboard can be stopped while supervisor and cell workers operate.",
+    "ASSUMED: Hostile-code containment remains Docker/gVisor target qualification, distinct from local first-party process boundary.",
+    "ASSUMED: Shared owner PostgreSQL journal required for concurrent controller/supervisor; no unsafe PGlite multi-process access.",
+    "ASSUMED: External service launch must require both PostgreSQL and Redis, never silent embedded fallback.",
+    "ASSUMED: Existing scope/lifecycle/approval/effect uncertainty rules remain mandatory."
+  ],
+  "stories": [
+    {
+      "id": "E06.autonomy",
+      "status": "verified",
+      "checkpoint": "Independent supervisor/cell subprocesses complete app work with owner HTTP down; no owner authority in cell process; current leases/HOLD/cancel enforced",
+      "failure": "Refuse startup before admission on invalid scope/storage; stop only owned children/listeners. Hard-kill must close child-owned engine via IPC disconnect; retain journal/payload and protected unknown effects."
+    },
+    {
+      "id": "E06.persistence",
+      "status": "verified",
+      "dependsOn": "E06.autonomy",
+      "checkpoint": "Real PostgreSQL and Redis persist native Inngest state and resume after restart, per-cell scoped isolation and failure refusal",
+      "failure": "Unavailable PostgreSQL/Redis prevents admission without embedded fallback; preserve exact source directories/immutable event identity and reopen only the same owned state."
+    },
+    {
+      "id": "E06.completion",
+      "status": "verified",
+      "dependsOn": "E06.persistence",
+      "checkpoint": "Dynamic cron/platform engine, regressions, mutations, fresh security review, build and truthful docs",
+      "failure": "Keep epic incomplete on failing required proof; retain scanner/review failures and fix scoped source before marking verified. No automatic server activation or publication."
+    }
+  ],
+  "swarm": {
+    "productionEpics": false,
+    "reason": "One dependent epic/shared contracts; one production executor, mandatory CRAFTS satellites"
+  },
+  "graph": {
+    "full": "Legacy grep/stale",
+    "policy": "Scoped existing graph/symbol adjacency consulted before additions; do not enumerate private material"
+  },
+  "reports": {
+    "research": "e06-completion-research.md",
+    "tests": "reviews/e06-completion-test-strategy.md",
+    "design": "e06-completion-design.md"
+  },
+  "planReview": "reviews/e06-completion-plan-review.json; standard FABER validator VALID; IPC schema/lifetime and hard-kill proof required before completion",
+  "verification": {
+    "stage": "preliminary",
+    "partition": "8/8 targeted pass; includes unmanaged same-adapter queued and expired runs",
+    "ipcConfig": "14/14 targeted pass",
+    "externalPersistence": "1/1 actual native pass,40.372s test,41.41s wall; separate PostgreSQL/Redis restart persisted sleep resumes once",
+    "externalArtifact": "artifacts/test-results/e06-persistence-native.xml",
+    "installerReview": "PASS frozen installer files; standard validator VALID",
+    "sourceReview": "preliminary only; source changing, shutdown/lease/lock lifetime proof still required",
+    "full": "not run current source",
+    "build": "not run current source",
+    "mutation": "pending",
+    "dependencies": "pre-workspace-addition audit0/495; rerun final"
+  },
+  "finalGates": "reviews/e06-completion-final-gates.json",
+  "completedAt": "2026-11-12T21:47:40.516Z",
+  "outcome": "outcome-1794520013-c51e64b6",
+  "remaining": [
+    "Dedicated-server/VM/gVisor/network/quota/capacity qualification remains explicitly deferred",
+    "Coordinated all-service recovery/activation remains E03/E12 release work; existing held recovery is not activated",
+    "Existing PGlite owner state is preserved; explicit PostgreSQL journal required, no implicit migration"
+  ]
+}

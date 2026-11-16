@@ -1,0 +1,35 @@
+{
+  "status": "read-only-diagnosis-complete-original-gate-passed",
+  "productionChanges": [],
+  "diagnostic": {
+    "command": "node artifacts/coding-startup-diagnostic/observe.mjs",
+    "limitMs": 60000,
+    "countsAsSmokeGate": false,
+    "tcpReadyMs": 13525,
+    "stdoutReadyMs": 13509,
+    "osAclSubprocessesMs": [
+      644,
+      556,
+      588
+    ],
+    "firstOsSubprocessMs": 5521,
+    "cleanupCompletedMs": 13909,
+    "removedOptionalEnvironmentNames": [],
+    "noHttpOrModelRequest": true,
+    "exactTimings": "artifacts/coding-startup-diagnostic/result.json"
+  },
+  "sourceFindings": [
+    "Built configuredCodingProvider returns empty object before filesystem/WSL work when GODSEYE_CODING_BINDINGS_FILE is absent.",
+    "Observed only three existing Windows ACL PowerShell subprocesses, no coding/WSL subprocess; default coding startup adds no native readiness wait.",
+    "The measured diagnostic startup was near the existing 15-second bound while native image/probe activity overlapped. This supports resource contention as an inference; it does not prove a specific resource bottleneck."
+  ],
+  "canonicalQuiescentRetest": {
+    "command": "artifacts/tools/bun-1.4.4/package/bin/bun.exe run smoke:built",
+    "originalDeadlineMs": 15000,
+    "exitCode": 0,
+    "output": "Built API smoke passed: local health is reachable, remote server remains disconnected",
+    "nativeWork": "Runtime owner confirmed Codex probe physically stopped and no VM/image work, with Claude held before retest.",
+    "modifiedAssertionsOrTimeouts": false
+  },
+  "safety": "Only diagnostic helpers/artifacts authored; owned temporary data cleaned after child shutdown; no protected configuration/key reads, model calls, VM/image work, production source changes or Git operations."
+}

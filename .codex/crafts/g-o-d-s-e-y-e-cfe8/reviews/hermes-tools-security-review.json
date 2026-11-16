@@ -1,0 +1,153 @@
+{
+  "kind": "independent-scoped-security-review",
+  "date": "2026-11-14",
+  "reviewer": "hermes_tools_security satellite",
+  "mode": "security-auditor -a -report; sequential, read-only production review",
+  "verdict": "pass-with-evidence-limitations",
+  "summary": "No new confirmed exploitable security finding in the frozen fixed-tool path. HTR-001 is resolved in source and supported by a selected real-executor regression. This is scoped source judgment plus review of supplied local physical evidence, not an independent physical rerun or general-code containment qualification.",
+  "findings_summary": {
+    "critical": 0,
+    "high": 0,
+    "medium": 0,
+    "low": 0,
+    "new_confirmed": 0,
+    "previous_confirmed_resolved": 1
+  },
+  "findings_table": [],
+  "findings": [],
+  "scope": {
+    "stack": "TypeScript strict / Node24 / Hono / Zod / Drizzle / PostgreSQL-PGlite; pinned Hermes0.23.1 / Python3.14.9 / rootless gVisor systrap in verified systemd user-service cgroup",
+    "source_freeze": "hermes-tools-source-freeze.json",
+    "frozen_public_paths": 68,
+    "sha256_checked_by_this_reviewer": 68,
+    "sha256_mismatches": [],
+    "focus": [
+      "Five fixed typed operations, copied seed data and private scratch/artifacts namespace",
+      "Profile ceiling, explicit immutable task grant, Foundation dispatch and settlement",
+      "Provider callback sequence, bounded model broker, native registry/dispatch exclusions",
+      "Exact task/unit/invocation/OCI ownership, durable uncertainty and protective cleanup",
+      "Physical probe and native test source-to-claim mapping"
+    ],
+    "excluded": [
+      "Whole-repository security re-audit or requalification of previously accepted authentication/chat baseline",
+      "Paid provider requests, external active tests, global installs, persistent/system configuration",
+      "Private runtime data, protected basenames, .env files or real provider material",
+      "General arbitrary shell/build/project-code execution, KVM or deployed-host qualification"
+    ],
+    "production_changes": false,
+    "new_native_execution_by_reviewer": false
+  },
+  "threat_model": {
+    "untrusted": ["Owner-submitted task text, seed names/content and requested policy", "Model response text, call names/IDs/arguments, fragmented SSE", "Retried requests and stale/lost acknowledgments"],
+    "trusted_boundary": ["Authenticated local owner and first-party controller", "Sealed pinned runtime and fixed helper sources", "OS/kernel/runsc and operator-configured local execution account"],
+    "assets": ["Host files and provider material", "Cross-task/project/environment data", "Immutable task authority and Foundation journal", "Reserved capacity/budget and inert artifact provenance"],
+    "assumption": "The fixed helper is the only guest workspace writer; untrusted task bytes never execute. A malicious host process with the same OS account, malicious administrator or kernel compromise is outside this task boundary. Native Hermes/model orchestration runs outside the tool sandbox and is trusted first-party code, not qualified general-code execution.",
+    "data_flow": [
+      "Owner HTTP input -> strict launch/chat schemas -> profile ceiling refinement -> immutable task toolGrant -> exact Foundation tool/destination plan",
+      "Pinned Hermes model reply -> bounded validated SSE/exact_call -> private sequenced tool callback -> current Foundation/profile/task checks -> durable intended call/input/allocation identity",
+      "Strict native request -> exact retained allocation -> sealed fixed worker under verified outer cgroup -> logical/no-follow regular-file operations in isolated tmpfs",
+      "Actual worker observation -> exact receipt/digest/byte checks -> current authority and closing transaction fence -> immutable journal -> successful nonrevoked parent settlement -> scoped inert text artifact"
+    ],
+    "stride": [
+      {"category": "Spoofing", "judgment": "Strict owner admission; shared schemas do not accept caller units, endpoints, receipts or host paths. Native callbacks bind sequence and prepared task; Foundation checks actor/tool/destination/run/epoch/lease.", "sources": ["packages/core/src/agents-runs.ts", "packages/core/src/agents.ts", "apps/control-api/src/hermes-provider.ts", "packages/contracts/src/agents-tools.ts"]},
+      {"category": "Tampering", "judgment": "Retained requests and observations have canonical hashes; changed duplicates conflict. Native request identity, task UUID-derived unit/container and retained invocation receipt prevent scope substitution.", "sources": ["packages/core/src/agents-tools.ts", "scripts/hermes_tools_runtime.py", "apps/control-api/src/hermes-tool-executor.ts"]},
+      {"category": "Repudiation", "judgment": "Intent and input digest are durably journaled before dispatch. Audit text contains references rather than private arguments. Uncertain post-effect results remain unknown and cannot authorize replay.", "sources": ["packages/core/src/agents-tools.ts", "packages/core/src/journal.ts", "scripts/hermes_tools_runtime.py"]},
+      {"category": "Information disclosure", "judgment": "Only copied task inputs enter a fresh scratch/artifacts tmpfs. No host bind mount or model material is passed to the worker. Error responses are bounded generic classifications. Artifact content is deliberately owner-visible task data.", "sources": ["scripts/hermes_tools_runtime.py", "scripts/hermes_tools_worker.py", "scripts/hermes_gateway.py", "packages/core/src/agents-tools-artifacts.ts"]},
+      {"category": "Denial of service", "judgment": "Finite calls/requests and UTF-8/file/entry/depth/read/write/output bounds complement fixed physical cgroup/tmpfs/time limits. Unknown outcomes retain reservations. Resource evidence limits are recorded below; no production exhaustion claim is made.", "sources": ["packages/contracts/src/agents-tools.ts", "scripts/hermes_tools_worker.py", "scripts/hermes_tools_service.py", "scripts/hermes_gateway_broker.py"]},
+      {"category": "Elevation of privilege", "judgment": "No task-controlled import/eval/command/argv or native registry dispatch. Fixed isolated Python starts with -I -S -B; task data is parsed as text/JSON. Empty capabilities, nonroot UID, noNewPrivileges, RO root and network-none are fixed runtime controls. General shell/KVM remains unavailable.", "sources": ["scripts/hermes_agent_boot.py", "scripts/hermes_tools_runtime.py", "scripts/hermes_tools_worker.py"]}
+    ]
+  },
+  "adversarial_refutations": [
+    {
+      "candidate": "Model bypasses the fixed tools through native Hermes registry or Python imports",
+      "cwe": ["CWE-94", "CWE-78", "CWE-829"],
+      "status": "refuted-within-reviewed-boundary",
+      "evidence": "BoundedAgent requires native toolsets empty before construction, checks self.tools empty, installs only tool_schemas(grant), overrides entire-batch dispatch, denies sequential/concurrent handlers and model_tools.handle_function_call. The worker contains only fixed JSON/file logic and never imports or evaluates seed contents.",
+      "limit": "These Python overrides constrain trusted pinned Hermes; they are not an OS sandbox for arbitrary hostile Python code. Such code is never admitted."
+    },
+    {
+      "candidate": "Traversal, links, special files or seed aliases escape the workspace",
+      "cwe": ["CWE-22", "CWE-59", "CWE-367"],
+      "status": "refuted-in-source; physical-injection-coverage-limited",
+      "evidence": "Strict relative scratch/artifacts paths exclude traversal, separators, absolute/drive/UNC and excessive depth. Worker independently rejects sensitive basenames, links, special files and multiply linked regular files. Reads use O_NOFOLLOW plus fstat; writes use O_EXCL/O_NOFOLLOW temporary creation and atomic replace. Parent-path check/open races cannot be induced by task contents because only this single trusted worker writes the private tmpfs.",
+      "limit": "Contract path cases are not an injected physical symlink/hardlink proof; no link-creation operation is offered."
+    },
+    {
+      "candidate": "Stale task or grant publishes late result across awaits",
+      "cwe": ["CWE-863", "CWE-367"],
+      "status": "previous-finding-resolved",
+      "evidence": "executeTaskTool rechecks active Foundation/profile/task/allocation authority before dispatch and after executor return. assertToolCommitFence revalidates the exact grant and run, then checks signal, grant expiry, lease expiry and allocation deadline synchronously after its final await. It closes intent, receipt replay, preparation and result transactions. control_lock serializes logical control mutations.",
+      "regression": "artifacts/test-results/hermes-tools-final-tx-regression.xml: one selected passing real-executor test, three skipped. It advances time after the actual succeeded journal update and proves rollback/no output/no artifact/unknown call/seed-only write quota.",
+      "previous_id": "HTR-001"
+    },
+    {
+      "candidate": "Lost acknowledgment or restart repeats physical work",
+      "cwe": ["CWE-841", "CWE-362"],
+      "status": "refuted-in-reviewed-path",
+      "evidence": "Core commits intended call and exact digest before native dispatch; unknown nonterminal calls block workspace reuse. Exact known observations may replay as receipts only. Native owner records call ID before worker input, refuses existing live task directories for relaunch, and inspect does not launch, renew authority or install runtime.",
+      "tests": "agents-tools-journal-native.test.ts deliberately loses one real post-effect acknowledgment, reopens the actual store, reconciles and asserts one physical execute/submission with no output/artifacts. Exact replay and changed-duplicate rejection are independently exercised."
+    },
+    {
+      "candidate": "Cleanup kills an unrelated process or frees capacity on acknowledgment alone",
+      "cwe": ["CWE-664", "CWE-269"],
+      "status": "refuted-with-physical-evidence-limits",
+      "evidence": "Unit/container derive solely from server UUID; retained request hash, executable/container/cgroup and boot/invocation identity are verified. No saved PID authorizes a kill. stop_owned refuses mismatched invocation and requires inactive/failed unit plus empty exact cgroup before OCI deletion and stopped=true. Unknown stop keeps stopped=false; core does not settle successful tools without stopped allocation.",
+      "physical": "Supplied production owner-death probe kills only its own live Popen handle, observes empty target cgroup, retains an unrelated owned sentinel, then performs exact reconciliation. This reviewer inspected that probe source and the supplied evidence report, not private retained state."
+    },
+    {
+      "candidate": "Model provider material enters sandbox or task widens outbound network authority",
+      "cwe": ["CWE-200", "CWE-918"],
+      "status": "refuted-in-source",
+      "evidence": "Tool executor environment is allowlisted; fixed worker OCI env contains no provider material and no host bind mount. Hermes child receives a scoped broker key, not the provider key. Provider key stays in outer Broker. Fixed OpenAI destination or explicit private loopback fixture, redirect denial, exact schema and per-attempt authority fences precede model POST. Tool sandbox uses fresh network namespace and runsc network none."
+    },
+    {
+      "candidate": "Continuation bypasses whole-task spend or call cap",
+      "cwe": ["CWE-400", "CWE-770"],
+      "status": "refuted-in-reviewed-path",
+      "evidence": "Grant maxModelRequests is bounded2..4, tools<=3; outgoing transcript is bounded and exactly correlates known calls. Broker persists requests and conservative accumulated reservedCostMicros under lock before POST and rechecks authority immediately before network I/O. Unknown usage does not refund the conservative reservation; retries/redirects/fallback cannot create unjournaled external attempts.",
+      "limit": "This reviews implementation of the project's fixed model pricing policy; no live pricing/paid entitlement claim is made."
+    }
+  ],
+  "evidence_review": {
+    "method": "Read scoped production, probe and test sources; verify all68 frozen public hashes; parse selected JUnit artifacts. No native tests rerun to duplicate ongoing GAUNTLET.",
+    "actual_executor": {"artifact": "artifacts/test-results/hermes-tools-executor-native.xml", "passed": 4, "failed": 0, "skipped": 0, "meaning": "Actual copied-data isolation across task/environment/project, own seed read, exact stop and forged scope inspect/cleanup denial."},
+    "actual_journal": {"artifact": "artifacts/test-results/hermes-tools-journal-native-final.xml", "passed": 3, "failed": 0, "skipped": 0, "meaning": "Actual lost acknowledgment plus physical store reopen/no replay, exact receipt replay, post-executor epoch revocation."},
+    "actual_commit_expiry": {"artifact": "artifacts/test-results/hermes-tools-final-tx-regression.xml", "passed": 1, "failed": 0, "skipped": 3},
+    "foundation_chain": {"artifact": "artifacts/test-results/hermes-tools-foundation-native-final.xml", "passed": 3, "failed": 0, "skipped": 0, "meaning": "Historical test identities: two journal scenarios plus one real Foundation/Hermes/isolated-tool success chain; not three distinct complete model-chain scenarios."},
+    "model_loop": {"artifact": "artifacts/test-results/hermes-tools-native-loop-final.xml", "passed": 2, "failed": 1, "meaning": "Success and cost-limit pass; call-limit fixture originally hit cost first. Do not claim all three passed in this artifact."},
+    "call_limit_correction": {"artifact": "artifacts/test-results/hermes-tools-native-call-limit.xml", "passed": 1, "failed": 0, "skipped": 2, "meaning": "Selected call-limit case uses sufficient fixture cost ceiling; four actual model requests, three succeeded tool calls, failed task with no final output/artifacts and stopped allocation. Supersedes the failed call-limit case only."},
+    "contracts": {"artifact": "artifacts/test-results/hermes-tools-contracts-final.xml", "passed": 57, "failed": 0, "skipped": 0, "meaning": "Strict schemas and path/byte/correlation policy tests; not physical link or containment probes."},
+    "physical_probes": {
+      "artifacts": ["hermes-tools-production-native-evidence.md", "hermes-tools-native-capability-probes.json", "artifacts/hermes-tools-worker-probe.py", "artifacts/hermes-tools-owner-death-probe.py", "artifacts/hermes-tools-limits-probe.py", "artifacts/hermes-tools-probe.py", "tests/runsc-lab.py"],
+      "production": "Supplied evidence records actual sealed worker write/read digest, exact stable receipt, successful stop, owner death with empty target cgroup and unaffected sentinel. Service source checks effective512MiB/swap0/500mCPU/128tasks before runsc. Worker checks actual UID1000 and gVisor marker.",
+      "sampled": "Gofer/sentry role identification and same-cgroup observations are sampled membership evidence. All-time descendant membership follows the fixed wrapper/OS cgroup inheritance boundary, not exhaustive polling.",
+      "lab": "Pinned Alpine lab under the same outer hardcap profile supplies RO-root, cross-root, IPv4/IPv6 negative tests with host positive controls, CPU throttling and1MiB tmpfs ENOSPC. These are lab evidence, not direct production-rootfs syscall probes or4MiB production exhaustion.",
+      "small_negative_controls": "Disposable64MiB/swap0 unit suffers OOM on128MiB allocation; pids.max8 refuses after parent+7children. Source bounds lifetime, CPU, memory and pids; these do not exhaust production512MiB/128tasks.",
+      "provenance_limit": "This reviewer read scripts and supplied reports; raw private runtime state was intentionally not opened, and these probes were not independently rerun."
+    },
+    "scanner_inputs": {
+      "source": "Parent-provided AEGIS/root scan results; no duplicate scanner execution",
+      "bun_audit_advisories": 0,
+      "python_osv_exact_third_party_versions": 73,
+      "python_osv_findings": 0,
+      "python_osv_artifact": "artifacts/security/hermes-tools-python-osv.json",
+      "gitleaks": "One unchanged previously classified synthetic placeholder at app-backend/src/local.ts:37; no new real secret finding reported by parent.",
+      "semgrep": "Unavailable. Manual bounded source-to-sink review does not replace full SAST."
+    }
+  },
+  "remaining_evidence_gaps": [
+    "No injected physical symlink/hardlink/device fixture; schema tests and single-writer source reasoning are the present evidence.",
+    "No production4MiB tmpfs exhaustion or full512MiB/128task exhaustion. Effective production settings, bounded footprint, throttling and smaller safe negative controls are distinct evidence.",
+    "Production empty capability/noNewPrivileges/ROroot/network configuration is source inspected; direct negative guest syscall evidence uses the separate pinned lab rootfs.",
+    "All descendants at every instant are not empirically enumerated; do not relabel sampled process membership as exhaustive measurement.",
+    "Final global/build/browser/mutation aggregation remains parent/GAUNTLET responsibility; incomplete or superseded XML artifacts must not be summed as final unique passes.",
+    "No paid provider qualification, deployed Linux host qualification or KVM/general-shell qualification. Cold WSL user-manager unavailability must continue to fail closed."
+  ],
+  "bounded_followups": [
+    "Preserve current fixed-catalog scope and default-disabled general shell/KVM; require separate qualification before adding any task code or command execution.",
+    "If stronger AC-764/765 physical claims are desired, add independently bounded production-rootfs syscall and harmless link fixtures, labeling each new result precisely.",
+    "Finalize unique test-identity/supersession mapping and keep per-artifact skips/failures visible; retain frozen hashes alongside final gates.",
+    "Run a supported scoped SAST scanner when available; keep dependency and synthetic-placeholder classifications tied to exact public snapshot scope."
+  ],
+  "approval_boundary": "This security review does not authorize deployment, external effects or additional capability. It supports the scoped local fixed-tool change subject to the recorded evidence limits and final parent gates."
+}

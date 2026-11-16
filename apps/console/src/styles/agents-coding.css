@@ -1,0 +1,41 @@
+.agents-coding > *,
+.agents-coding article > *,
+.agents-coding details > * {
+  min-width: 0;
+  max-width: 100%;
+}
+.agents-coding p,
+.agents-coding summary,
+.agents-coding code,
+.agents-coding button {
+  overflow-wrap: anywhere;
+}
+.agents-coding > h3 {
+  font-size: 14px;
+  margin-top: 6px;
+}
+.agents-coding > .agents-form {
+  padding: 0;
+}
+.agents-coding article {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+}
+.agents-coding summary {
+  cursor: pointer;
+  font: 11px / 1.75 var(--font-data);
+}
+.agents-coding pre {
+  min-width: 0;
+  max-width: 100%;
+  max-height: 320px;
+  overflow: auto;
+  padding: 12px;
+  margin: 12px 0;
+  background: var(--surface-subtle);
+  font: 11px / 1.75 var(--font-data);
+}
+.agents-coding button {
+  justify-self: start;
+}

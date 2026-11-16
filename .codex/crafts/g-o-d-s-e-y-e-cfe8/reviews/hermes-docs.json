@@ -1,0 +1,22 @@
+{
+  "status": "pass",
+  "date": "2026-11-13",
+  "files": {
+    "README.md": "92292e3a4d1728f634e7f01f3af344b74e47d92ec0d432a68f5865d550f494d9",
+    "docs/development/hermes.md": "71683f208b54d789ad5a9b8eb75561128d200867ec1f09a835882704edb87a0b",
+    "docs/development/handoff.md": "eed261256f00afbc11555e5e115e1741b8c85d22a1d40660f6d38209550e6ed4",
+    "docs/adr/ADR-013-local-hermes-setup.md": "9399f245db671ccd4ac7d57d667d77204e1a9fdc6bdaaf235c379b664379e4f7",
+    "docs/spec/v1.md": "1b92f4b68def6ec6725c5c551e1a1f531f52faca95c249cfadcbd85defbf23be",
+    "docs/plan/v1-development.md": "1b5cc407a54a8e393100d4ffc7b6a18b3cc0e8b223482e6c9d98490654e5d7bc",
+    "CHANGELOG.md": "f4c50924f78e2134a4c3afa103a66ff46334d7e73b1b08527fddb8767d81fc9c",
+    "tests/STRATEGY.md": "e5a0575e9ff0b1110280a9c605658db6e30f2f8846725f4e3e9003a2011b5d0a",
+    "THIRD_PARTY_NOTICES.md": "433201bfba7b8945697692847ce7d33e89a911cb562520b5faeb9aa32dd73d97"
+  },
+  "relativeFileLinksChecked": 147,
+  "missing": [],
+  "notes": [
+    "Existing anchor qualification remains prior evidence; new local links resolve",
+    "No full E07/S01 or mutable runtime-home completion claim",
+    "Profile/CLI native fixtures use copied mutable probe homes; immutable snapshots preserved"
+  ]
+}

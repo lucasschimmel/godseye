@@ -1,0 +1,485 @@
+{
+  "run": "godseye-e08-independent-gauntlet",
+  "phase": "complete-focused-validation",
+  "criticity": "production",
+  "adversarialAuthoring": "Cases drafted from e08-design AC-801..818 before implementation reads",
+  "frameworks": [
+    "Vitest 5.1.0 / Node24",
+    "Playwright 1.65.0"
+  ],
+  "layersPlanned": [
+    "pure invariants",
+    "actual PGlite integration",
+    "actual Foundation Agent Coding composition",
+    "authenticated HTTP",
+    "responsive owner browser",
+    "curated source-copy mutation"
+  ],
+  "behaviorList": {
+    "T-AC-801": [
+      "durable intent visible before provider effect",
+      "same identity replay stable",
+      "conflicting identity denied",
+      "cross-scope relabel denied"
+    ],
+    "T-AC-802": [
+      "input/output/cache-read/cache-write/reasoning preserved",
+      "missing usage remains unknown",
+      "failed streams retain uncertain exposure",
+      "retry ancestry immutable"
+    ],
+    "T-AC-803": [
+      "exact revision prices immutable",
+      "rounding cannot undercount",
+      "overflow rejected",
+      "expired or absent prices stay unknown",
+      "estimates and Foundation charges separate"
+    ],
+    "T-AC-804": [
+      "invoice identities immutable",
+      "duplicate replay stable",
+      "line conflicts and scope currency mismatches denied",
+      "unmatched evidence visible",
+      "Foundation charge never refunded"
+    ],
+    "T-AC-805": [
+      "concurrent aggregate reservations atomic",
+      "project profile runner all bind",
+      "window and rate caps expire correctly",
+      "unknown holds survive reductions",
+      "expansion needs fresh owner"
+    ],
+    "T-AC-806": [
+      "actual Foundation admission and provider dispatch obey accounting",
+      "journal failure blocks new effect",
+      "cancel and cleanup remain available",
+      "unknown settlement retains obligations"
+    ],
+    "T-AC-807": [
+      "observations expose source units completeness",
+      "observed resources differ from allocations",
+      "active unknown evidence survives retention"
+    ],
+    "T-AC-808": [
+      "bound source identity checked",
+      "A cannot ingest query or export B",
+      "administration owner only"
+    ],
+    "T-AC-809": [
+      "sensitive text removed before storage",
+      "cursor monotone replay deterministic",
+      "retention produces gap",
+      "bounded input rejects overflow"
+    ],
+    "T-AC-810": [
+      "fresh observation available",
+      "stale or absent never healthy",
+      "desired state cannot substitute observed state",
+      "source outage visible"
+    ],
+    "T-AC-811": [
+      "real project/env deployment job agent coding operation incident joins",
+      "overview counts and spend from real records",
+      "freshness provenance visible"
+    ],
+    "T-AC-812": [
+      "existing incident dedup recurrence",
+      "CAS acknowledge mute resolve",
+      "mute expiry",
+      "partial detector fault cannot falsely clear"
+    ],
+    "T-AC-813": [
+      "durable claim visible before delivery",
+      "concurrent claim once",
+      "restart does not blindly retry uncertain effect",
+      "acknowledged failed unknown outcomes distinct",
+      "stale ack mute suppress delivery"
+    ],
+    "T-AC-814": [
+      "no arbitrary URL notifier",
+      "default unconfigured",
+      "independent external observer detects loss",
+      "delivery failures visible"
+    ],
+    "T-AC-815": [
+      "collection faults isolated",
+      "start stop lifecycle bounded",
+      "unknown cleanup retained",
+      "monitoring cannot grant execution authority"
+    ],
+    "T-AC-816": [
+      "anonymous service CSRF denied",
+      "strict request limits",
+      "versioned client and OpenAPI",
+      "idempotency CAS freshness"
+    ],
+    "T-AC-817": [
+      "responsive real owner navigation",
+      "honest unknown totals",
+      "filters and drilldowns",
+      "stale mutation errors",
+      "safe text"
+    ],
+    "T-AC-818": [
+      "focused tests run",
+      "curated meaningful mutants",
+      "preliminary survivors retained honestly",
+      "qualification limits explicit"
+    ]
+  },
+  "coverage": {
+    "line": null,
+    "branch": null,
+    "note": "Instrumentation coverage was not measured; behavior and curated source-copy sensitivity are reported separately."
+  },
+  "mutation": {
+    "restoredPassed": true,
+    "killed": 6,
+    "allOriginalsUnchanged": true,
+    "preliminaryReport": "artifacts/e08-mutation/preliminary-summary.json",
+    "report": "artifacts/e08-mutation/summary.json",
+    "kind": "curated-source-copy-behavioral-sensitivity",
+    "baselinePassed": true,
+    "selected": 6,
+    "preliminarySurvivors": [
+      {
+        "mutant": "floor-fractional-cost",
+        "why_survived": "Behavior suite did not reject mutation",
+        "suggested_test": "Inspect test/source-copy reachability before expanding coverage"
+      },
+      {
+        "mutant": "missing-usage-as-zero",
+        "why_survived": "Behavior suite did not reject mutation",
+        "suggested_test": "Inspect test/source-copy reachability before expanding coverage"
+      },
+      {
+        "mutant": "saturate-overflow-cost",
+        "why_survived": "Behavior suite did not reject mutation",
+        "suggested_test": "Inspect test/source-copy reachability before expanding coverage"
+      }
+    ],
+    "preliminaryExplanation": "Three pricing mutants initially survived because direct test imports bypassed source-copy interception. Import interception was corrected; all six operators then produced behavioral assertion failures. Preliminary survivors remain in the retained report. No repository-wide or touched-line mutation score is claimed.",
+    "survivors": [],
+    "score": null
+  },
+  "flaky": [],
+  "layers_run": [
+    "exact monetary invariants",
+    "PGlite immutable accounting and telemetry integration",
+    "actual Foundation Agent Coding Delivery composition",
+    "authenticated owner HTTP and typed client",
+    "production native Hermes broker with durable Node parent ACK",
+    "actual pinned Hermes0.23.1 plus production HermesProvider/Foundation/PGlite/loopback model",
+    "production coding broker with synthetic HTTPS boundary only",
+    "responsive real owner Playwright desktop/mobile and actual telemetry",
+    "curated source-copy mutation",
+    "scoped Biome and TypeScript validation"
+  ],
+  "gaps": [
+    "No paid provider calls, external notifications, actual vendor invoices, external host qualification or KVM/VM qualification was performed.",
+    "Browser telemetry fixture shows explicit absence of execution correlation; actual Agent/Coding execution correlation is verified in PGlite composition tests.",
+    "Instrumentation line/branch coverage and a repository-wide mutation score were not measured. Root owns broad regressions/build/smoke/security review."
+  ],
+  "draftTests": {
+    "files": [
+      "tests/e08-usage.test.ts",
+      "tests/e08-invoices.test.ts",
+      "tests/e08-observability.test.ts"
+    ],
+    "helperFiles": [
+      "tests/helpers/e08-usage.ts",
+      "tests/helpers/e08-observability.ts"
+    ],
+    "execution": "Historical contract-first draft: expanded and definitively executed in final batch.",
+    "cases": 21
+  },
+  "independentPlanCritique": {
+    "verdict": "pass-with-findings",
+    "not_reviewed": [
+      "runtime correctness pending focused execution",
+      "original user brief not inherited in this subtask",
+      "native host qualification"
+    ],
+    "degraded": "same-context independent author",
+    "findings": [
+      {
+        "id": "E08-SPC-01",
+        "remediation": "backend contract clarified",
+        "criterion": "SPC-01",
+        "severity": "major",
+        "status": "CONFIRMED",
+        "suggestion": "Pin exclusive categories at broker normalization boundary; usage.ts now explicitly documents exclusivity",
+        "refutation_survived": true,
+        "evidence": "e08-design.md:17-18 AC-802/803 category names omit exclusive versus inclusive semantics"
+      },
+      {
+        "severity": "minor",
+        "criterion": "SPC-01",
+        "id": "E08-SPC-02",
+        "suggestion": "Cursor gaps should mean lost retained records, not ordinary filter omissions",
+        "refutation_survived": true,
+        "evidence": "e08-design.md:24 AC-809 cursor/replay/gap semantics omit source-filter gaps versus retention gaps",
+        "status": "CONFIRMED"
+      }
+    ]
+  },
+  "results": {
+    "focused": {
+      "durationSeconds": 173.13,
+      "fileResults": [
+        {
+          "passed": 7,
+          "criteria": [
+            "T-AC-805",
+            "T-AC-806"
+          ],
+          "file": "tests/e08-budgets.test.ts",
+          "tests": 7
+        },
+        {
+          "passed": 1,
+          "criteria": [
+            "T-AC-801",
+            "T-AC-802"
+          ],
+          "file": "tests/e08-coding-native.test.ts",
+          "tests": 1
+        },
+        {
+          "passed": 2,
+          "criteria": [
+            "T-AC-805",
+            "T-AC-806"
+          ],
+          "file": "tests/e08-coding.test.ts",
+          "tests": 2
+        },
+        {
+          "passed": 7,
+          "criteria": [
+            "T-AC-803"
+          ],
+          "file": "tests/e08-evidence.test.ts",
+          "tests": 7
+        },
+        {
+          "passed": 2,
+          "criteria": [
+            "T-AC-802",
+            "T-AC-806"
+          ],
+          "file": "tests/e08-hermes.test.ts",
+          "tests": 2
+        },
+        {
+          "passed": 4,
+          "criteria": [
+            "T-AC-816"
+          ],
+          "file": "tests/e08-http.test.ts",
+          "tests": 4
+        },
+        {
+          "passed": 6,
+          "criteria": [
+            "T-AC-812",
+            "T-AC-813",
+            "T-AC-814"
+          ],
+          "file": "tests/e08-incidents.test.ts",
+          "tests": 6
+        },
+        {
+          "passed": 4,
+          "criteria": [
+            "T-AC-804"
+          ],
+          "file": "tests/e08-invoices.test.ts",
+          "tests": 4
+        },
+        {
+          "passed": 4,
+          "criteria": [
+            "T-AC-801",
+            "T-AC-802"
+          ],
+          "file": "tests/e08-native.test.ts",
+          "tests": 4
+        },
+        {
+          "passed": 2,
+          "criteria": [
+            "T-AC-813"
+          ],
+          "file": "tests/e08-notification-fairness.test.ts",
+          "tests": 2
+        },
+        {
+          "passed": 8,
+          "criteria": [
+            "T-AC-808",
+            "T-AC-809",
+            "T-AC-810"
+          ],
+          "file": "tests/e08-observability.test.ts",
+          "tests": 8
+        },
+        {
+          "passed": 3,
+          "criteria": [
+            "T-AC-814",
+            "T-AC-815",
+            "T-AC-810"
+          ],
+          "file": "tests/e08-observer.test.ts",
+          "tests": 3
+        },
+        {
+          "passed": 4,
+          "criteria": [
+            "T-AC-803"
+          ],
+          "file": "tests/e08-pricing.test.ts",
+          "tests": 4
+        },
+        {
+          "passed": 6,
+          "criteria": [
+            "T-AC-811",
+            "T-AC-808",
+            "T-AC-801",
+            "T-AC-809",
+            "T-AC-803"
+          ],
+          "file": "tests/e08-query.test.ts",
+          "tests": 6
+        },
+        {
+          "passed": 2,
+          "criteria": [
+            "T-AC-807"
+          ],
+          "file": "tests/e08-resources.test.ts",
+          "tests": 2
+        },
+        {
+          "passed": 3,
+          "criteria": [
+            "T-AC-809",
+            "T-AC-812"
+          ],
+          "file": "tests/e08-retention.test.ts",
+          "tests": 3
+        },
+        {
+          "passed": 2,
+          "criteria": [
+            "T-AC-815"
+          ],
+          "file": "tests/e08-scheduler.test.ts",
+          "tests": 2
+        },
+        {
+          "passed": 9,
+          "criteria": [
+            "T-AC-801",
+            "T-AC-802",
+            "T-AC-803"
+          ],
+          "file": "tests/e08-usage.test.ts",
+          "tests": 9
+        }
+      ],
+      "failed": 0,
+      "skipped": 0,
+      "success": true,
+      "passed": 76,
+      "files": 18,
+      "nativeSubsets": {
+        "codingPythonWrapper": 1,
+        "managedHermes": 2,
+        "ordinaryVitest": 69,
+        "productionBrokerCustomNode": 4,
+        "codingPythonNestedProbes": 4
+      },
+      "tests": 76,
+      "report": "artifacts/test-results/e08-focused.json"
+    },
+    "legacyIncidents": {
+      "passed": 15,
+      "note": "Intentional definitive-failure fixture adaptation only; these overlap root regression coverage and are not added to the E08 total."
+    },
+    "legacyCodingPython": {
+      "command": "wsl.exe -d Ubuntu --exec /usr/bin/python3 /mnt/d/Developer/Projects/G.O.D.S.E.Y.E/tests/helpers/coding-broker.py",
+      "discovered": 31,
+      "failed": 0,
+      "skips": "Explicit opt-in exact native-captured synthetic payload fixtures were not selected",
+      "skipped": 2,
+      "passed": 29,
+      "adaptation": "Mandatory attempt callback log/ACK and accurate Content-Type versus request-ID fixture header behavior only"
+    },
+    "static": {
+      "biome": "26 scoped files clean",
+      "typescript": "No E08 errors; root global check authoritative"
+    },
+    "browser": {
+      "report": "artifacts/test-results/e08-e2e.xml",
+      "failed": 0,
+      "skipped": 0,
+      "passed": 5,
+      "durationSeconds": 85.119116,
+      "tests": 5,
+      "journeys": [
+        "desktop scoped budget creation / honest unknown totals / observability",
+        "mobile scoped budget creation / clipping checks / observability",
+        "actual owner stale CAS mutation error",
+        "actual external revision + refetch resets stale draft",
+        "actual source and metric123/status/time/event/incident owner acknowledgment"
+      ]
+    }
+  },
+  "failureHistory": [
+    {
+      "kind": "test fixture",
+      "detail": "Initial Foundation invoice/Hermes assertion used nonexistent chargedMicros; corrected to spentMicros, with nonzero charge verification before reconciliation."
+    },
+    {
+      "kind": "contract drift",
+      "detail": "Known-not-applicable OpenAI cacheWrite category is 0; absent supported subsets remain null. Positive cache writes require matching explicit catalog TTL."
+    },
+    {
+      "kind": "real regression",
+      "detail": "Notification exhausted-first starvation test failed before O producer SQL eligibility fix, then passed."
+    },
+    {
+      "kind": "test locator",
+      "detail": "Initial wrapping-label exact lookup and shared-instance duplicate budget assertions were corrected to accessible combobox lookup plus real project filters."
+    },
+    {
+      "kind": "test attribution",
+      "detail": "Delivery resource run ID assertion corrected from delivery task ID to actual Foundation runId."
+    },
+    {
+      "kind": "test expectation",
+      "detail": "Unavailable-source provider incident conservatively displays source evidence uncertainty; browser verifies persisted typed incident/source identity rather than requiring raw code in the incident card."
+    }
+  ],
+  "boundaries": {
+    "paidCalls": 0,
+    "syntheticOnly": true,
+    "realCredentialsRead": 0,
+    "runtimeRefresh": "Root-authorized existing workspace Hermes execution runtime receipt refreshed; installed version0.23.1",
+    "externalMessages": 0,
+    "vmRuns": 0,
+    "gitMutations": 0
+  },
+  "artifacts": [
+    "artifacts/test-results/e08-focused.json",
+    "artifacts/test-results/e08-e2e.xml",
+    "artifacts/e08-mutation/summary.json",
+    "artifacts/e08-mutation/preliminary-summary.json",
+    "artifacts/e08-playwright-results/e08-T-AC-817-desktop-real--957b7-honest-unknown-observations-agents/usage-desktop.png",
+    "artifacts/e08-playwright-results/e08-T-AC-817-mobile-real-o-491a3-honest-unknown-observations-agents/usage-mobile.png",
+    "artifacts/e08-playwright-results/e08-T-AC-817-real-owner-in-31c71-dges-its-persisted-incident-agents/observability-positive-evidence.png"
+  ]
+}

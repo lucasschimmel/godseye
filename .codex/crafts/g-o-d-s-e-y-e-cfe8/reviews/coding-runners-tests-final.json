@@ -1,0 +1,526 @@
+{
+  "status": "independent-final-gates-passed",
+  "run": "godseye-local-coding-runners",
+  "focused": {
+    "command": "node node_modules/vitest/vitest.mjs run --config vitest.coding.config.ts",
+    "passed": 87,
+    "failed": 0,
+    "skipped": 0,
+    "files": 6,
+    "seconds": 43.77,
+    "junit": "artifacts/test-results/coding-runners-focused-final.xml",
+    "disjointFromRootExistingRegression": true,
+    "countsByFile": {
+      "tests/coding-contracts.test.ts": 22,
+      "tests/coding-tasks.test.ts": 24,
+      "tests/coding-protocol.test.ts": 17,
+      "tests/coding-http.test.ts": 8,
+      "tests/coding-bindings.test.ts": 9,
+      "tests/coding-provider.test.ts": 7
+    }
+  },
+  "separateMechanismChecks": {
+    "linuxInertSourceStaging": {
+      "passed": 10,
+      "failed": 0,
+      "seconds": 0.022,
+      "command": "wsl.exe -d Ubuntu -- python3 /mnt/d/Developer/Projects/G.O.D.S.E.Y.E/tests/helpers/coding-source.py",
+      "boundary": "Actual Linux temporary filesystem and copied Git objects/archive. No host Git, project code, real checkout changes or guest checkout qualification."
+    },
+    "boundedBroker": {
+      "passed": 31,
+      "failed": 0,
+      "seconds": 0.084,
+      "command": "wsl.exe -d Ubuntu --exec /usr/bin/env GODSEYE_TEST_CODING_SYNTHETIC_PAYLOAD=/mnt/d/Developer/Projects/G.O.D.S.E.Y.E/artifacts/coding-composition-fixtures/synthetic-cvv5_11y/request-2.json GODSEYE_TEST_CODING_SYNTHETIC_CODEX_PAYLOAD=/mnt/d/Developer/Projects/G.O.D.S.E.Y.E/artifacts/coding-composition-fixtures/synthetic-bx5057oo/request-1.json /usr/bin/python3 -I /mnt/d/Developer/Projects/G.O.D.S.E.Y.E/tests/helpers/coding-broker.py",
+      "boundary": "Actual private durable debit journal and broker policy; external HTTPS replaced with synthetic transport, zero paid calls.",
+      "finalDedupScope": "Canonical payload fingerprints durably prevent duplicate POST after success/lost ACK/reopen; uncertain/truncated request fences all followups; distinct known next turn allowed. OSError and abrupt process death after actual completion replacement both remain fenced through reconstruction."
+    },
+    "curatedMutation": {
+      "selected": 3,
+      "killed": 3,
+      "baselinePassed": true,
+      "restoredPassed": true,
+      "productionHashesUnchanged": true,
+      "report": "artifacts/coding-mutation/summary.json",
+      "scope": "Final publication fence, artifact hash and VMM memory overhead; not a full or touched-line mutation score."
+    },
+    "browser": {
+      "passed": 2,
+      "failed": 0,
+      "seconds": 32.9,
+      "source": "Root/core rerun after UI fix and final polish; root inspected renewed desktop/mobile screenshots",
+      "boundary": "Actual owner enrollment, repository binding and UI preparation; explicitly labeled completed-execution/result fixtures, keyboard exact inert UTF-8 patch/log downloads, descendant text bounds."
+    },
+    "operator": {
+      "source": "reviews/coding-runners-isolated-import-fix.json",
+      "boundary": "Core executed the documented Bun coding:cli:install command with Python -I after isolated-import fix; eight sibling-module imports and pinned asset verification passed. No duplicated native qualifier while runtime owner probes."
+    },
+    "typecheck": "passed after all test additions",
+    "scopedBiome": "14 owned TypeScript/JavaScript/config files checked; no fixes required",
+    "actualNativeRegressions": {
+      "passed": 5,
+      "failed": 0,
+      "boundary": "Five unique real KVM security mechanism cases, each on its recorded source recipe; separate from final Foundation composition and runtime final normal qualification.",
+      "pids-failure": {
+        "taskId": "f71f6fbe-f766-4f42-9001-ad63ce789a78",
+        "seconds": 37.073,
+        "report": "artifacts/coding-native-regressions/codex-pids-failure.json",
+        "assertionsPassed": true,
+        "paidCalls": 0
+      },
+      "index": {
+        "taskId": "50983947-4b43-495f-9ca4-f4f3f8f19c4d",
+        "seconds": 115.427,
+        "report": "artifacts/coding-native-regressions/claude-code-index.json",
+        "assertionsPassed": true,
+        "paidCalls": 0
+      },
+      "test-mutation": {
+        "taskId": "47692fad-484f-4425-b227-e1c4b76f2cc7",
+        "seconds": 35.354,
+        "report": "artifacts/coding-native-regressions/claude-code-test-mutation.json",
+        "assertionsPassed": true,
+        "paidCalls": 0
+      },
+      "background": {
+        "taskId": "43a6bb0f-6aa5-4d85-ad84-6afc297c4384",
+        "seconds": 35.243,
+        "report": "artifacts/coding-native-regressions/claude-code-background.json",
+        "assertionsPassed": true,
+        "paidCalls": 0
+      },
+      "attributes": {
+        "taskId": "01a500a0-d617-42a9-8cd7-7ebded8ced3d",
+        "seconds": 35.205,
+        "report": "artifacts/coding-native-regressions/claude-code-attributes.json",
+        "assertionsPassed": true,
+        "paidCalls": 0
+      }
+    },
+    "readinessAndStopPolicy": {
+      "passed": 13,
+      "failed": 0,
+      "seconds": 0.036,
+      "boundary": "Pure synthetic host/process facts; actual controller main/build/jail code. Cheap availability, mandatory startup-byte checks, exclusive authorization stdin, boot-strict exact stop and integrity disposition preservation. Not physical qualification."
+    }
+  },
+  "coverage": {
+    "line": null,
+    "branch": null,
+    "scope": "not measured"
+  },
+  "mutation": {
+    "score": null,
+    "survivors": []
+  },
+  "flaky": [],
+  "canonicalMatrix": [
+    {
+      "id": "T-AC-781",
+      "implementation": "passed: strict contracts, real owner HTTP/service proof denial, private binder argv/auth metadata denial",
+      "physical": "Real owner HTTP/Foundation; private model bindings synthetic, no actual credentials read."
+    },
+    {
+      "id": "T-AC-782",
+      "implementation": "passed: exact source SHA/binding, stale repository revision/HOLD, qualification source mismatch and actual loose-object hash refusal",
+      "physical": "Actual preflight/RUN exact synthetic source and scope; final epoch after successful tool result suppresses late result and stops guest."
+    },
+    {
+      "id": "T-AC-783",
+      "implementation": "passed: real Foundation idempotency/budget and coding capacity admission, protected binder lock exclusion",
+      "physical": "Actual Foundation journal/admission/budget and native task/worktree identity; idempotency fixture proves no duplicate admission."
+    },
+    {
+      "id": "T-AC-784",
+      "implementation": "passed: actual source A/B/canary bytes unchanged, independent copied archive, links/hardlinks/alternates refused",
+      "physical": "Five actual KVM adversarial mechanisms passed: PID refusal, mutable index, test mutation, background writer and exact source attributes/nested payload. Source-only10 verifies original/sibling bytes preserved."
+    },
+    {
+      "id": "T-AC-785",
+      "implementation": "passed: Codex bounded stream parsing and strict provider IPC fixture; actual pinned version/help verification exists separately",
+      "physical": "Final genuine Foundation/provider/native RUN/real broker/Codex/KVM passed: actual edit, independent Node test, patch,3 synthetic HTTPS responses, stopped allocation."
+    },
+    {
+      "id": "T-AC-786",
+      "implementation": "passed: Claude Code bounded stream parsing and fixed broker request policy; pinned version/help verification separate",
+      "physical": "Final genuine Foundation/provider/native RUN/real broker/Claude/KVM passed: actual edit, independent Node test, patch,3 synthetic HTTPS responses, stopped allocation."
+    },
+    {
+      "id": "T-AC-787",
+      "implementation": "passed: unavailable/missing pool/oversized/stale/non-broker qualification fail closed without admission; default no config/provider; invalid config preserves actual owner HTTP",
+      "physical": "Both current normal qualification receipts and final actual Foundation dispatch passed; real PID setup refusal before Node and corrupt-byte startup refusals separately tested; no execution fallback."
+    },
+    {
+      "id": "T-AC-788",
+      "implementation": "passed: unknown exact-correlation read-only inspect across engine rebuild, no resubmit; actual broker lost ACK durable debit no retry/refund",
+      "physical": "Actual native exact-scope inspect/stop and reconciliation exercised. Real durable broker journal loss/reopen/uncertain completion mechanisms tested with synthetic HTTPS; no paid vendor restart claim."
+    },
+    {
+      "id": "T-AC-789",
+      "implementation": "passed: real Foundation generic/queued/submit-race cancellation, expiry/HOLD read-only stop reconciliation, no old result; child IPC wrong correlation/revocation sends no ACK; broker second authorization revoke retains debit",
+      "physical": "Final Claude epoch after2 successful synthetic POSTs including actual successful tool result: cancelled/stopped, no result, stale tick cannot resume. Pure tests preserve integrity quarantine and boot identity."
+    },
+    {
+      "id": "T-AC-790",
+      "implementation": "passed: result/hash/size/scope contracts, forged digest refusal, real result-write-await rollback on expiry and selected mutant killed",
+      "physical": "Actual native root-owned independent tree/patch/test evidence crossed real provider/core; index, test mutation, attributes/nested payload and final publication fence independently tested."
+    },
+    {
+      "id": "T-AC-791",
+      "implementation": "passed: actual Foundation conservative budget, broker durable requests/cost/byte/deadline/model/tool/endpoint bounds, unknown billing explicit, synthetic material nondisclosure",
+      "physical": "Actual real broker debit and repeated authorization exercised with synthetic HTTPS only;31 policy/durability tests. Zero paid calls; vendor entitlement/billing reconciliation untested."
+    },
+    {
+      "id": "T-AC-792",
+      "implementation": "passed: failed checks retain patch for owner review, not-run cannot become passed, preview links cannot assert verified preview",
+      "physical": "Both final real CLIs edited files and passed independently trusted Node checks; patch/test evidence returned. Failed-check retention is separately verified by core fixture."
+    },
+    {
+      "id": "T-AC-793",
+      "implementation": "passed: real HTTP typed client and root-reviewed desktop/mobile UI, exact inert downloads, strengthened descendant no-clipping check after UI fix",
+      "physical": "Actual owner HTTP/client and root-reviewed desktop/mobile journeys passed; completed UI download data is explicitly fixture evidence."
+    },
+    {
+      "id": "T-AC-794",
+      "implementation": "passed: final ordinary87/87 across6files; actual local composition3/3 separate; root global gates independently recorded",
+      "physical": "Final coding87/87 across6files, native3/3 separate. Root1426 existing passes/28legacy skips and static/build/contracts/public scan independently recorded."
+    }
+  ],
+  "gaps": [
+    "No paid requests, real vendor entitlement or billing reconciliation exercised.",
+    "Native adversarial five-case mechanism evidence uses each recorded source recipe; final three composition cases and runtime normal receipts bind the final recipe."
+  ],
+  "actionsExcluded": [
+    "Paid model requests",
+    "Real checkout Git mutation",
+    "Actual private file reads",
+    "Global installation",
+    "Shared artifact builders"
+  ],
+  "testSourceSha256": {
+    "scripts/coding_guest_adversary.mjs": "0dfec339e01f79d325b430e7d6809cdf636b53344af7e259379b47875aab87b8",
+    "tests/coding-protocol.test.ts": "3b57f637d06f7bd6736577be9c5533533aef6755b46edc41c1f14a8154f707f4",
+    "vitest.coding.config.ts": "b5172ce6c89339e6986f85dc29e8f6e020b56063b73be9a21b1b266e6b4a04dc",
+    "tests/coding-tasks.test.ts": "91072373e07073cf96b1da33959bbed31fa1418081f7c669c3726fd5af95c873",
+    "tests/e2e/coding.spec.ts": "a1fd30b77626481d9e1d075dde9f0d90d5d52dfc18638f50bdb9a5c4fd777862",
+    "playwright.coding.config.ts": "2e3faf502a9868a597bab95cd74acfc76f977d87abfcbd086e6ce7bbd752207c",
+    "tests/coding-provider.test.ts": "8604541050aed899c715631be27a652326a9d0346f418dfdc9b3a4342ab2652b",
+    "tests/coding-contracts.test.ts": "91ca6f3795dbb5722e67dca7301e0f5c5f924f2f0d337839aaa792b96c133d11",
+    "tests/coding-http.test.ts": "003c0b5a4709d1c0d545805267025e511f97936c765c8b1082dfb6c107e96927",
+    "tests/helpers/coding-source.py": "089ba5bad53ef5753eec305e7dd8187c5bb744f75dcdb05e27277a69ed90eb76",
+    "tests/helpers/coding-fixture.ts": "6d35e208154e522eefead8d9020b53151d454dd4ae5298f835376379a8f28446",
+    "tests/helpers/run-coding-mutations.mjs": "f61251dfdd75584484649954a4042ec6994540d74aa90c33495abab1fe5e66c0",
+    "tests/helpers/coding-broker.py": "181b1f00fd128cc39d75a8dab075a1e557f29d9d0eb6fac17ec260e390466319",
+    "tests/coding-native-regressions.py": "b60ac24bf4db565f48337be4d566838860e78e5532ea5ccd56f98e6f2e21a830",
+    "tests/coding-bindings.test.ts": "3be11b29f768022af8cfd500eff41b66b463fe2e001d7311a4b16991a9ccfe6d",
+    "tests/coding-composition-native.test.ts": "2d3dd44a8223672c2a0788b322e42496dce8501ac18141dcd1260505caec1545",
+    "tests/helpers/coding-composition-launcher.py": "823a9a59d223de24d08e0c59b69cb17de99f25ddb7a220c954ed8b4dcabec6a6",
+    "tests/helpers/coding-composition-source.py": "d62930e22e93b09c60fd1d2168735255de4b7466eb0e275de9e7080baaf81dd6",
+    "tests/helpers/coding-readiness.py": "062cbe9131a08511d0d1cb6bd9d3259fea0e51f5b3854e969111381b9219cb0e",
+    "vitest.coding-native.config.ts": "8ea7c2c15271d87a98021300cbd34d07443da8c6d4d427ea129778f90afbf771"
+  },
+  "latestProtocolDelta": "Final87 independently rerun after absolute Windows executable selection, required treeHash, Ubuntu-only distro, and fixed Codex reasoning-none helper. Supersedes prior84/86.",
+  "finalOrdinaryAndBrokerTestedProductionSha256": {
+    "apps/control-api/src/coding-protocol.ts": "d62353936d97058a95936cc1e5457f3dcb36cd66654b861bdd7d8621b12d1574",
+    "apps/control-api/src/coding-provider.ts": "b56da7f654b8be63ad632274f1fa415506656952b423984446fb14dd46497371",
+    "scripts/coding_runner_config.mjs": "f451cdc1ca764fc9237b7308397df8771ac12ee236d67af4d56ed04c2f03b7f6",
+    "scripts/coding_guest_broker.py": "353857c225cadb1c1dbd2d634e5ce08b765d4f90c092f349a52a36043d82e5f9",
+    "scripts/coding_guest_control.py": "0840fc8c30a6b9ac065c62a3c430db29f50695f2c2bb17b84e3c667fd893b934",
+    "scripts/coding_guest_source.py": "79e1b9656abb014f9f3493c6862d7a34d7c6ce930e4a9925a942cc59c46425a5",
+    "scripts/coding_guest_task.py": "4abedb3b4fdcd6501db4bb94984b794eb09db9e62e376d90bbcaf15e953f6e65"
+  },
+  "fullComposition": {
+    "status": "passed",
+    "junit": "artifacts/test-results/coding-runners-composition-native.xml",
+    "cases": [
+      "Claude happy",
+      "Codex happy",
+      "Claude epoch after real successful tool result"
+    ],
+    "historicalClaudeHappyTask": "330836ba-b2ee-48a1-a5fc-0a282ff33c5e",
+    "historicalEpochTask": "692c7984-0b86-430b-9010-29fc4565ff3e",
+    "historicalEpochFailure": "Actual stopped/revoked allocation remained initial quarantined disposition; core correctly retained cancel_requested. Runtime narrow projection fixed; final receipt refresh pending.",
+    "boundary": "Actual Foundation journal/preparation/admission, actual provider and native RUN, actual broker policy/debit/dedup/authorization, real KVM and CLI. Only external HTTPS is synthetic; zero paid calls. These three opt-in native cases are counted separately from ordinary suite.",
+    "latestAttempt": {
+      "session": 57354,
+      "passed": 1,
+      "failed": 1,
+      "notRun": 1,
+      "seconds": 96.51,
+      "claudeTaskId": "0fc2cce6-1935-40e7-a7fb-ff1a9a778221",
+      "codexTaskId": "54a92214-3b01-40f2-9623-dfd99e54040a",
+      "codexUpstreamPosts": 0,
+      "codexStopped": true,
+      "payload": "artifacts/coding-composition-fixtures/synthetic-bx5057oo/request-1.json",
+      "observedFailure": "New fixed helper reasoning none also emits nested turn diagnostic reasoning_effort:none; strict known metadata fields reject it. Exact current payload and minimal diagnostic replay both red,29 other broker cases green.",
+      "historicalJunit": "artifacts/test-results/coding-runners-composition-native-before-codex-metadata-delta.xml",
+      "paidCalls": 0
+    },
+    "final": {
+      "passed": 3,
+      "failed": 0,
+      "skipped": 0,
+      "files": 1,
+      "wallSeconds": 126.52,
+      "junitTestSeconds": 123.9464835,
+      "junit": "artifacts/test-results/coding-runners-composition-native.xml",
+      "cases": [
+        {
+          "name": "T-AC-787 T-AC-788 T-AC-790 real Foundation and real provider execute qualified claude-code KVM CLI through only a synthetic upstream HTTPS seam",
+          "seconds": 38.3968434,
+          "taskId": "8d69cb05-36ae-45d8-85d2-40f88c7972c0",
+          "authorizations": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
+          "upstreamRequests": [
+            {
+              "requests": 1,
+              "observedToolResult": false,
+              "status": 200,
+              "paidCalls": 0
+            },
+            {
+              "requests": 2,
+              "observedToolResult": true,
+              "status": 200,
+              "paidCalls": 0
+            },
+            {
+              "requests": 3,
+              "observedToolResult": true,
+              "status": 200,
+              "paidCalls": 0
+            }
+          ],
+          "frames": [
+            {
+              "action": "readiness",
+              "available": true,
+              "reason": "Pinned CLI protocols qualified in disposable KVM; private bounded API broker configured"
+            },
+            {
+              "action": "readiness",
+              "available": true,
+              "reason": "Pinned CLI protocols qualified in disposable KVM; private bounded API broker configured"
+            },
+            {
+              "action": "preflight"
+            },
+            {
+              "action": "source"
+            },
+            {
+              "action": "readiness",
+              "available": true,
+              "reason": "Pinned CLI protocols qualified in disposable KVM; private bounded API broker configured"
+            },
+            {
+              "action": "preflight"
+            },
+            {
+              "action": "readiness",
+              "available": true,
+              "reason": "Pinned CLI protocols qualified in disposable KVM; private bounded API broker configured"
+            },
+            {
+              "action": "preflight"
+            },
+            {
+              "action": "run",
+              "state": "succeeded",
+              "stopped": true
+            }
+          ],
+          "paidCalls": 0
+        },
+        {
+          "name": "T-AC-787 T-AC-788 T-AC-790 real Foundation and real provider execute qualified codex KVM CLI through only a synthetic upstream HTTPS seam",
+          "seconds": 46.6557585,
+          "taskId": "c750bb9b-686a-43ac-a5c5-a75f02fed3e7",
+          "authorizations": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12
+          ],
+          "upstreamRequests": [
+            {
+              "requests": 1,
+              "observedToolResult": false,
+              "status": 200,
+              "paidCalls": 0
+            },
+            {
+              "requests": 2,
+              "observedToolResult": true,
+              "status": 200,
+              "paidCalls": 0
+            },
+            {
+              "requests": 3,
+              "observedToolResult": true,
+              "status": 200,
+              "paidCalls": 0
+            }
+          ],
+          "frames": [
+            {
+              "action": "readiness",
+              "available": true,
+              "reason": "Pinned CLI protocols qualified in disposable KVM; private bounded API broker configured"
+            },
+            {
+              "action": "readiness",
+              "available": true,
+              "reason": "Pinned CLI protocols qualified in disposable KVM; private bounded API broker configured"
+            },
+            {
+              "action": "preflight"
+            },
+            {
+              "action": "source"
+            },
+            {
+              "action": "readiness",
+              "available": true,
+              "reason": "Pinned CLI protocols qualified in disposable KVM; private bounded API broker configured"
+            },
+            {
+              "action": "preflight"
+            },
+            {
+              "action": "readiness",
+              "available": true,
+              "reason": "Pinned CLI protocols qualified in disposable KVM; private bounded API broker configured"
+            },
+            {
+              "action": "preflight"
+            },
+            {
+              "action": "run",
+              "state": "succeeded",
+              "stopped": true
+            }
+          ],
+          "paidCalls": 0
+        },
+        {
+          "name": "T-AC-789 real epoch revocation during native authorization suppresses output and stops only its actual guest",
+          "seconds": 38.8924391,
+          "taskId": "130edbf6-f502-4a99-a9c2-a70a1f248475",
+          "authorizations": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10
+          ],
+          "upstreamRequests": [
+            {
+              "requests": 1,
+              "observedToolResult": false,
+              "status": 200,
+              "paidCalls": 0
+            },
+            {
+              "requests": 2,
+              "observedToolResult": true,
+              "status": 200,
+              "paidCalls": 0
+            }
+          ],
+          "frames": [
+            {
+              "action": "readiness",
+              "available": true,
+              "reason": "Pinned CLI protocols qualified in disposable KVM; private bounded API broker configured"
+            },
+            {
+              "action": "readiness",
+              "available": true,
+              "reason": "Pinned CLI protocols qualified in disposable KVM; private bounded API broker configured"
+            },
+            {
+              "action": "preflight"
+            },
+            {
+              "action": "source"
+            },
+            {
+              "action": "readiness",
+              "available": true,
+              "reason": "Pinned CLI protocols qualified in disposable KVM; private bounded API broker configured"
+            },
+            {
+              "action": "preflight"
+            },
+            {
+              "action": "readiness",
+              "available": true,
+              "reason": "Pinned CLI protocols qualified in disposable KVM; private bounded API broker configured"
+            },
+            {
+              "action": "preflight"
+            },
+            {
+              "action": "stop",
+              "state": "cancelled",
+              "stopped": true
+            },
+            {
+              "action": "stop",
+              "state": "cancelled",
+              "stopped": true
+            },
+            {
+              "action": "inspect",
+              "state": "cancelled",
+              "stopped": true
+            }
+          ],
+          "paidCalls": 0
+        }
+      ],
+      "idleVerified": true,
+      "cleanupObservation": "All exact task states stopped/revoked/retained. Epoch socket directory briefly remained during teardown then disappeared naturally; follow-up confirmed all three socket directories absent, no coding units or controller processes. No manual deletion."
+    }
+  },
+  "rootFinalGates": {
+    "ordinaryExistingPassed": 1426,
+    "codingPassed": 87,
+    "ordinaryTotalPassed": 1513,
+    "legacySkipped": 28,
+    "nativeCompositionSeparatelyPassed": 3,
+    "finalLintFiles": 649,
+    "publicScanPaths": 762,
+    "publicScanNewFindings": 0,
+    "builtSmokeOriginalDeadlineSeconds": 15,
+    "builtSmoke": "passed exit0 after true-idle handoff",
+    "source": "Root reported independently; not rerun by tests agent"
+  }
+}

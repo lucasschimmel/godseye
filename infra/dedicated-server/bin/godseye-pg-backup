@@ -1,0 +1,77 @@
+#!/usr/bin/env bash
+# Runs one pgBackRest obligation for one PostgreSQL cell and records its outcome.
+# Usage: godseye-pg-backup <full|diff|check> <allocation-uuid>
+# TEMPLATE ONLY: installed to /usr/local/sbin by p10-install-pg-cells.sh; runs as the postgres user
+# under godseye-pg-backup-<kind>@<allocation>.service. The repository cipher passphrase arrives only
+# through the unit's EnvironmentFile (PGBACKREST_REPO1_CIPHER_PASS) and is never printed or logged.
+set -euo pipefail
+
+KIND="${1:?kind required}"
+ALLOCATION="${2:?allocation required}"
+case "${KIND}" in full | diff | check) ;; *) echo "invalid kind" >&2; exit 64 ;; esac
+[[ "${ALLOCATION}" =~ ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$ ]] || { echo "invalid allocation" >&2; exit 64; }
+
+CONFIG_ROOT="/etc/godseye/pg/${ALLOCATION}"
+STATUS_DIR="/var/lib/godseye/pg-backup"
+STATUS_FILE="${STATUS_DIR}/${ALLOCATION}.json"
+STANZA="g_${ALLOCATION//-/}"
+HOST_FILE="/etc/godseye/pg/host.json"
+PGBACKREST_BIN="$(jq -r '.pgBackRestExecutable // "/usr/bin/pgbackrest"' "${HOST_FILE}")"
+# The bootstrap role authenticates over the local socket with SCRAM; the password file is
+# group-readable by the service user only and the value never leaves this process environment.
+PGPASSWORD="$(tr -d '\n' <"${CONFIG_ROOT}/admin.pass")"
+export PGPASSWORD
+PGBACKREST=("${PGBACKREST_BIN}"
+  "--config=${CONFIG_ROOT}/pgbackrest.conf"
+  "--config-include-path=${CONFIG_ROOT}/pgbackrest.conf.d"
+  "--stanza=${STANZA}")
+# Same argument shape as packages/core pgBackRestArguments: --repo=1 only for backup.
+
+record() { # record <field> <ok:true|false>
+  local field="$1" ok="$2" now tmp
+  now="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+  install -d -m 0750 "${STATUS_DIR}"
+  (
+    flock -x 9
+    [ -s "${STATUS_FILE}" ] || echo '{}' >"${STATUS_FILE}"
+    tmp="$(mktemp "${STATUS_FILE}.XXXXXX")"
+    if [ "${ok}" = true ]; then
+      jq --arg f "${field}" --arg t "${now}" \
+        '.[$f]=$t | (if $f=="archiveCheckAt" then .archiveCheckOk=true else . end)' \
+        "${STATUS_FILE}" >"${tmp}"
+    else
+      jq --arg t "${now}" --arg f "${field}" \
+        '.lastFailureAt=$t | (if $f=="archiveCheckAt" then .archiveCheckOk=false else . end)' \
+        "${STATUS_FILE}" >"${tmp}"
+    fi
+    chmod 0640 "${tmp}"
+    mv -f "${tmp}" "${STATUS_FILE}"
+  ) 9>"${STATUS_FILE}.lock"
+}
+
+case "${KIND}" in
+  full) FIELD=fullAt ;;
+  diff) FIELD=differentialAt ;;
+  check) FIELD=archiveCheckAt ;;
+esac
+
+# stanza-create is idempotent and only does work for a brand-new repository.
+if ! "${PGBACKREST[@]}" stanza-create >/dev/null 2>&1 && [ "${KIND}" != check ]; then
+  record "${FIELD}" false
+  echo "stanza-create failed for ${ALLOCATION}" >&2
+  exit 1
+fi
+
+# Automatic expiry stays disabled; retention is an explicit, separately reviewed operation.
+if [ "${KIND}" = check ]; then
+  COMMAND=("${PGBACKREST[@]}" check)
+else
+  COMMAND=("${PGBACKREST[@]}" --repo=1 "--type=${KIND}" --no-expire-auto backup)
+fi
+if "${COMMAND[@]}" >/dev/null; then
+  record "${FIELD}" true
+else
+  record "${FIELD}" false
+  echo "pgBackRest ${KIND} failed for ${ALLOCATION}" >&2
+  exit 1
+fi

@@ -1,0 +1,37 @@
+{
+  "status": "FROZEN",
+  "documents": 7,
+  "localLinks": 115,
+  "anchorsChecked": 1,
+  "missingLinks": [],
+  "scriptMentions": 52,
+  "missingScripts": [],
+  "pendingEvidenceClaims": [],
+  "safeCommandEvidence": "bun run backend:dev --help: exit 0",
+  "formatter": "README.md and CHANGELOG.md: pass, no changes",
+  "verified": {
+    "unit": "972/972 across72files;751.83s Vitest;752.705s wholecommand;JUnit1386.4307773s summedworkers notwall",
+    "unitXml": "artifacts/test-results/backend-unit-full.xml",
+    "browser": "31/31;181.393319s JUnit",
+    "mutations": "13/13 selected M74-M86;257.091s baseline/restored13 source unchanged",
+    "sourceReview": "78 code+12 UI hashes stable",
+    "build": "canonical+final affected rebuild+actual compiled-template HTTP/restart+SDK consumer",
+    "static": "381 linted files;types;OpenAPI1.6",
+    "trace": "62/62 local",
+    "maxSourceLines": 400
+  },
+  "ownerGitFilesUntouched": [
+    "docs/development/git-workflow.md",
+    ".github/PULL_REQUEST_TEMPLATE.md"
+  ],
+  "remotePublication": "Private repository/branch workflow documented; final develop push/commit count not claimed",
+  "hashes": {
+    "docs/development/application-backend.md": "814da64611ff09bb196b832ea6b2e1775246d0821dc528f448b52755f891ca49",
+    "docs/adr/ADR-010-independent-application-backend.md": "fdb25868bc8d78b2c8c872a82a4564ae409c9a2baaf68fee52dc4ec73588b09f",
+    "README.md": "e274365ee2f20c02379bd59ff29f0dcf18b1a0d275b0db8abcf3dfe6f2d53f8e",
+    "CHANGELOG.md": "1a31a4665591d56072b5278cc7bb1081ac76ee3759ad71bb1ed7c34b1eb95d30",
+    "docs/development/local.md": "b556968e71097709f6b09bc5b20f11d40198800e09ecefb354e9b252af19449c",
+    "docs/spec/v1.md": "0e3e767a73a65933f8f0fa8aed88d5b9b8c487e2a4d98a1f065c6a776a269b9a",
+    "docs/plan/v1-development.md": "901d252e130eb1bb172679d4f8ab83f469880e3a2f7439bbd2b90d99f3c7a38a"
+  }
+}

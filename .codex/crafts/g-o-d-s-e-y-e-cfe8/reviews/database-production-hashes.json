@@ -1,0 +1,232 @@
+{
+  "generatedAt": "2026-11-11T20:49:29.0081783Z",
+  "sourceCount": 44,
+  "productionFrozen": true,
+  "validation": {
+    "touchedBiome": "passed",
+    "fullValidation": "orchestrated by root",
+    "typecheck": "passed"
+  },
+  "files": [
+    {
+      "path": "packages/core/src/project-management.ts",
+      "sha256": "029e2998f519fb86e7524dbaf6963b0f29376b07b2a0c491a60cb4f36ed9cf3b",
+      "lines": 177
+    },
+    {
+      "path": "packages/core/src/projects.ts",
+      "sha256": "bc16a3594a2d134bd68a8bd7f1c67e1cdd437f6bcaa7b3f5a2cb8df274c22b32",
+      "lines": 162
+    },
+    {
+      "path": "packages/core/src/index.ts",
+      "sha256": "ed936d0aeb813b6104a5447a949b3a8e5ed67a2efb43287a0840f335eda91f73",
+      "lines": 183
+    },
+    {
+      "path": "packages/core/src/infrastructure.ts",
+      "sha256": "6400e8fef92a46237f6cf4928ae01fa2b48a8e6c14e72a050664b270a0b6b268",
+      "lines": 108
+    },
+    {
+      "path": "packages/core/src/infra-state.ts",
+      "sha256": "0e06695c854ae2603a3a4270de49bb71cf098dbb0632d1748187f9b5658d41d7",
+      "lines": 273
+    },
+    {
+      "path": "packages/core/src/infra-preparation.ts",
+      "sha256": "2620f10a8300a5f8c1f9c3c8142813e1c4fa678de6f78afa3c1fb866e5fcbb34",
+      "lines": 357
+    },
+    {
+      "path": "packages/core/src/access-redemption.ts",
+      "sha256": "c26b6024d0b5a47f29ef501445d9cf1c93f4fb1dc295470d0673fd382293a9d9",
+      "lines": 256
+    },
+    {
+      "path": "packages/contracts/src/index.ts",
+      "sha256": "0221fe608f74925d28dcb40e20d18a9e4559d0c2cc5b39451dcba5adf1d1dd21",
+      "lines": 8
+    },
+    {
+      "path": "packages/contracts/src/foundations.ts",
+      "sha256": "9bd0427089b70ea2d74d7b8829b0e55cc31417e4ccb7f47bcd5a2d1446b16769",
+      "lines": 183
+    },
+    {
+      "path": "packages/contracts/src/http-domain.ts",
+      "sha256": "73397fbca7f9c4af9e67ffa3ff33411da96af89bc5228538d9cbbb5534b88d5c",
+      "lines": 142
+    },
+    {
+      "path": "packages/contracts/src/http-schemas.ts",
+      "sha256": "2acb21503a50ed15d12132c55694ff0cc2789b343fc079f766f416a916c6aea7",
+      "lines": 248
+    },
+    {
+      "path": "packages/contracts/src/http-endpoints.ts",
+      "sha256": "272e92f3abf136b47882aa3357743ea321138d9bd04cf759105e7390e3713d75",
+      "lines": 340
+    },
+    {
+      "path": "packages/store/src/database-schema.ts",
+      "sha256": "7bbe83534ba27f8bea41b9a994375313e7204920c8d51a4edbaffa310d28780b",
+      "lines": 54
+    },
+    {
+      "path": "packages/store/src/schema.ts",
+      "sha256": "448ef325d4f1e0d9fbb6ff6111fd803418e00bf95eb6d7cf4730bc4f452bfb6d",
+      "lines": 157
+    },
+    {
+      "path": "packages/store/migrations/0005_database.sql",
+      "sha256": "57fa64191a0dc9bcfb32b78437ba9a9d7d562fcead55d929f84ff3a061cac3e1",
+      "lines": 31
+    },
+    {
+      "path": "apps/control-api/src/database-routes.ts",
+      "sha256": "5facb74db55147c27770871ab7ee1fa0304940f934a9c5f7b3397b1f161a7ca0",
+      "lines": 81
+    },
+    {
+      "path": "apps/control-api/src/app.ts",
+      "sha256": "206071adb89123404dfa664e5a979d9bcab33d7fad7b2f450bc7b32ae145b07b",
+      "lines": 277
+    },
+    {
+      "path": "packages/control-client/src/index.ts",
+      "sha256": "f782b0452eb7063ff63ee59e961da2081cecc796d0ec635fa6e2b87a1ecc2082",
+      "lines": 206
+    },
+    {
+      "path": "apps/console/src/components/project-management.tsx",
+      "sha256": "9d15d105fd1458d476cf0e987e0b51104844732744673465f4d215a23e8f2336",
+      "lines": 243
+    },
+    {
+      "path": "apps/console/src/components/database-profile-form.tsx",
+      "sha256": "9c75342c7d2222c5d6e6849624f0822ef30aa1e4df7462bf68fd9ba726370f7b",
+      "lines": 114
+    },
+    {
+      "path": "apps/console/src/routes/databases.tsx",
+      "sha256": "9961fee826ff99b5db83e053664069bb3dcfaea7cc107c95f283a67a34d8fbde",
+      "lines": 221
+    },
+    {
+      "path": "apps/console/src/components/shell.tsx",
+      "sha256": "8757bff12a9aee440dfd059ab42b64f240a075bfea5916d4a103411ed95c7676",
+      "lines": 127
+    },
+    {
+      "path": "apps/console/src/components/shared.tsx",
+      "sha256": "d24c6422b55e87b93c8017357fac762697a65a03a6c5120758051f933cfc2b7e",
+      "lines": 128
+    },
+    {
+      "path": "apps/console/src/lib/api.ts",
+      "sha256": "d6510ba56dbcb36cbbfb823291b86fa0f5b31537fb3479ad4b86bae06227f5f7",
+      "lines": 66
+    },
+    {
+      "path": "apps/console/src/routes/projects.$projectId.tsx",
+      "sha256": "d55dac7142634a1d1fa77d56e91f0443ae341d6c167b93bb0c48f66ec0b00fc6",
+      "lines": 160
+    },
+    {
+      "path": "apps/console/src/routeTree.gen.ts",
+      "sha256": "7a2a64e01cc012b42052ec4e519f02187f4c7201f96d93f32a7928b17cc88700",
+      "lines": 282
+    },
+    {
+      "path": "package.json",
+      "sha256": "2423d3fb5c425be49b35fbcf8ab9e4073eeb2fc53b25ad5eda1a67b61a9ed896",
+      "lines": 80
+    },
+    {
+      "path": "vitest.config.ts",
+      "sha256": "5bcc5e7b46d2755449123de1785815c56832eeff241ba07b1d203828d8f77e6f",
+      "lines": 13
+    },
+    {
+      "path": "Jenkinsfile",
+      "sha256": "68536dc1ddda361f03029331e4f43cf72218029a421e754fb690988a588d9b16",
+      "lines": 89
+    },
+    {
+      "path": "packages/core/src/database-acl-inspection.ts",
+      "sha256": "97654762b346fcfe009fd28482ca234be815bc639d5c791fd8d4585601cbe634",
+      "lines": 120
+    },
+    {
+      "path": "packages/core/src/database-execution.ts",
+      "sha256": "07398c4d7692d083ea5c5971594c2030002a6f4689f376db64237f3f405588b3",
+      "lines": 306
+    },
+    {
+      "path": "packages/core/src/database-hba-inspection.ts",
+      "sha256": "52709cf1b8c74e888fa208e177983be3dbe0b769b74793e0b530a4b2907d8791",
+      "lines": 105
+    },
+    {
+      "path": "packages/core/src/database-inspection.ts",
+      "sha256": "7d901ea6a509250dfe28239cd65f35c2b1c0f369743e2c606be7b833a2a99e90",
+      "lines": 211
+    },
+    {
+      "path": "packages/core/src/database-material.ts",
+      "sha256": "e1ad13fe9cc0f322ac67caa843b6bdc5c75a447d5196b0a7733e4233c31be2ea",
+      "lines": 64
+    },
+    {
+      "path": "packages/core/src/database-policy.ts",
+      "sha256": "51ba4dc4fe5d0c88b3e94ad70bda8a5ef474fe09ec9b4eeded82e21d7eb64f25",
+      "lines": 144
+    },
+    {
+      "path": "packages/core/src/database-postgres.ts",
+      "sha256": "bdbfb01018d3359463ce8158d448247df7cce6266d6d57e2538be580f476dad4",
+      "lines": 102
+    },
+    {
+      "path": "packages/core/src/database-preparation.ts",
+      "sha256": "dfa031e02f05956d2543a40470fbe8c6d6f9149480e91ab974112dfdb821a71d",
+      "lines": 299
+    },
+    {
+      "path": "packages/core/src/database-provider.ts",
+      "sha256": "056d0ce85a19ea5fec4f50e093744f14cec6fb3025c886cea21d65069e3db388",
+      "lines": 176
+    },
+    {
+      "path": "packages/core/src/database-sql.ts",
+      "sha256": "96d84499c26f0f1edafe3700fa6af59ee21914b2d4613c52b7f0f8d58e1b1cad",
+      "lines": 142
+    },
+    {
+      "path": "packages/core/src/database-state.ts",
+      "sha256": "1d15121dae3f4841e1c8d719a419bbf86b530f28ea9b0e67e44168d242970f3a",
+      "lines": 205
+    },
+    {
+      "path": "packages/core/src/database.ts",
+      "sha256": "5f2676491abe29e5c4c62feaf83ae15683e2b80726a46fda7e65c4af8548563d",
+      "lines": 185
+    },
+    {
+      "path": "packages/contracts/src/database-endpoints.ts",
+      "sha256": "d61b2b3caee5837a7eecc9645b07dff1d8fae1eb30ee3ca14bb8f4d2f137d668",
+      "lines": 72
+    },
+    {
+      "path": "packages/contracts/src/database.ts",
+      "sha256": "4acba4a88cc93a53ebdf7f19b147bb14ced7d5ec9a42e08a30d9575012432bf8",
+      "lines": 121
+    },
+    {
+      "path": "apps/console/src/components/repository-form.tsx",
+      "sha256": "b0d2d3f8b47f30cbcbebf6c8e7de49a1dc0e403cbfd350fadac38601d09402f8",
+      "lines": 126
+    }
+  ]
+}

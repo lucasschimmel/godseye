@@ -1,0 +1,134 @@
+{
+  "date": "2026-11-14",
+  "scope": "Local fixed Hermes workspace/data tools with explicit per-task permissions and physically isolated execution",
+  "phase": "local-request-complete",
+  "contract": "hermes-tools-design.md",
+  "prediction": "prediction-1794645765-5cfb1665",
+  "orchestration": {
+    "owner": "root: architecture, assignment, review and validation; no primary production development",
+    "workers": {
+      "hermes_tools_core": "contracts/store/core/API, then UI",
+      "hermes_tools_runtime": "native isolated executor, setup/bootstrap and pinned Hermes bridge",
+      "hermes_tools_tests": "independent plan critique, tests/fixtures/native/browser/mutations"
+    },
+    "context": "Focused fork-none orders with only relevant bus/paths; interfaces before dependent edits"
+  },
+  "planReview": "reviews/hermes-tools-plan-review.json",
+  "baseline": {
+    "ordinaryPassed": 1360,
+    "nativeDefaultSkipped": 17,
+    "collectedFiles": 127,
+    "previousFinalGates": "reviews/hermes-chat-final-gates.json"
+  },
+  "catalog": [
+    "godseye_workspace_list",
+    "godseye_workspace_read",
+    "godseye_workspace_write",
+    "godseye_workspace_search",
+    "godseye_json_validate"
+  ],
+  "fixedResources": {
+    "memoryMiB": 512,
+    "swapMiB": 0,
+    "pids": 128,
+    "cpuMilliCores": 500,
+    "physicalTmpfsMiB": 4
+  },
+  "criteria": [
+    {
+      "id": "AC-761",
+      "testId": "T-AC-761",
+      "status": "validated-for-fixed-local-catalog-with-recorded-limits"
+    },
+    {
+      "id": "AC-762",
+      "testId": "T-AC-762",
+      "status": "validated-for-fixed-local-catalog-with-recorded-limits"
+    },
+    {
+      "id": "AC-763",
+      "testId": "T-AC-763",
+      "status": "validated-for-fixed-local-catalog-with-recorded-limits"
+    },
+    {
+      "id": "AC-764",
+      "testId": "T-AC-764",
+      "status": "validated-for-fixed-local-catalog-with-recorded-limits"
+    },
+    {
+      "id": "AC-765",
+      "testId": "T-AC-765",
+      "status": "validated-for-fixed-local-catalog-with-recorded-limits"
+    },
+    {
+      "id": "AC-766",
+      "testId": "T-AC-766",
+      "status": "validated-for-fixed-local-catalog-with-recorded-limits"
+    },
+    {
+      "id": "AC-767",
+      "testId": "T-AC-767",
+      "status": "validated-for-fixed-local-catalog-with-recorded-limits"
+    },
+    {
+      "id": "AC-768",
+      "testId": "T-AC-768",
+      "status": "validated-for-fixed-local-catalog-with-recorded-limits"
+    },
+    {
+      "id": "AC-769",
+      "testId": "T-AC-769",
+      "status": "validated-for-fixed-local-catalog-with-recorded-limits"
+    },
+    {
+      "id": "AC-770",
+      "testId": "T-AC-770",
+      "status": "validated-for-fixed-local-catalog-with-recorded-limits"
+    },
+    {
+      "id": "AC-771",
+      "testId": "T-AC-771",
+      "status": "validated-for-fixed-local-catalog-with-recorded-limits"
+    },
+    {
+      "id": "AC-772",
+      "testId": "T-AC-772",
+      "status": "validated-for-fixed-local-catalog-with-recorded-limits"
+    },
+    {
+      "id": "AC-773",
+      "testId": "T-AC-773",
+      "status": "validated-for-fixed-local-catalog-with-recorded-limits"
+    },
+    {
+      "id": "AC-774",
+      "testId": "T-AC-774",
+      "status": "validated-for-fixed-local-catalog-with-recorded-limits"
+    }
+  ],
+  "serverChanged": false,
+  "paidCalls": 0,
+  "gitMutations": false,
+  "qualifiedScopeRemaining": [],
+  "wholeE07Remaining": [
+    "General shell/build under disposable KVM guests",
+    "Remote coding runners",
+    "E09 operational skill catalog",
+    "Dedicated-host deployment and containment/recovery qualification"
+  ],
+  "validation": {
+    "globalRemainderSession": 98408,
+    "globalBuildersPassed": 2,
+    "frozenSourcePaths": 68,
+    "review": "reviews/hermes-tools-independent-review.json",
+    "reviewFinding": "HTR-001 corrected and actual native regression reviewed",
+    "nativeUniqueNew": 11,
+    "browserSelected": 3,
+    "curatedMutationKills": 5,
+    "globalFinal": "1426 pass / 28 default-native skips / 132 files / zero failures",
+    "build": "canonical and first built smoke passed"
+  },
+  "finalGates": "reviews/hermes-tools-final-gates.json",
+  "outcome": "outcome-1794648611-75faf710",
+  "evidenceMatrix": "reviews/hermes-tools-test-matrix.md"
+}

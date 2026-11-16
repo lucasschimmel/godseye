@@ -1,0 +1,71 @@
+# Autonomous jobs supervisor (apps/jobs-runtime): per-cell Inngest engines, workers and the platform
+# engine, outside the owner HTTP process. TEMPLATE ONLY: installed by p10-install-jobs.sh.
+#
+# Environment (EnvironmentFile, mode 0600 godseye:godseye; never committed):
+#   GODSEYE_MODE=local
+#   GODSEYE_JOBS_RUNTIME=autonomous
+#   GODSEYE_JOBS_CONTROL_FILE=/etc/godseye/jobs/control.json   (owner control DB binding, private JSON)
+#   GODSEYE_INNGEST_CELLS=[...]                                (existing application cells, JSON)
+#   GODSEYE_JOBS_PLATFORM={...}                                (independent platform cell, JSON)
+#   GODSEYE_JOBS_STORAGE_FILE=/etc/godseye/jobs/storage.json   (per-cell PostgreSQL/Redis bindings)
+#   NODE_EXTRA_CA_CERTS=/etc/godseye/pki/cells-ca.crt          (verifies per-cell TLS endpoints)
+#   GODSEYE_DATA_DIR / GODSEYE_STATE_DIR
+# The control-api unit must set GODSEYE_JOBS_RUNTIME=autonomous too so it excludes the jobs adapter.
+[Unit]
+Description=G.O.D.S.E.Y.E autonomous jobs runtime
+Documentation=file:///opt/godseye/docs/development/application-jobs.md
+After=network-online.target postgresql.service redis-server.service openbao.service godseye-control-api.service
+Wants=network-online.target postgresql.service openbao.service
+# Per-cell stores are separate units; the runtime verifies readiness itself and exits on failure,
+# so systemd (not an ordering guess) provides the retry.
+StartLimitIntervalSec=600
+StartLimitBurst=8
+
+[Service]
+Type=simple
+User=godseye
+Group=godseye
+WorkingDirectory=/opt/godseye
+EnvironmentFile=/etc/godseye/jobs.env
+ExecStart=/usr/bin/node /opt/godseye/dist/jobs-runtime/server.mjs
+Restart=on-failure
+RestartSec=3s
+RestartSteps=6
+RestartMaxDelaySec=120s
+TimeoutStopSec=30
+KillSignal=SIGTERM
+
+# Hardening: write only to the owner state and the pinned engine tool directory.
+NoNewPrivileges=true
+CapabilityBoundingSet=
+AmbientCapabilities=
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+PrivateDevices=true
+ReadWritePaths=/var/lib/godseye
+ReadOnlyPaths=/etc/godseye /opt/godseye
+InaccessiblePaths=/etc/openbao /var/lib/openbao /etc/godseye/pki/cells-ca.key
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectKernelLogs=true
+ProtectControlGroups=true
+ProtectClock=true
+ProtectHostname=true
+LockPersonality=true
+RestrictRealtime=true
+RestrictSUIDSGID=true
+RestrictNamespaces=true
+SystemCallArchitectures=native
+SystemCallFilter=@system-service
+SystemCallFilter=~@privileged @resources
+# Loopback for the local engine ports plus the private cell bridges; no other families.
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+IPAddressDeny=any
+IPAddressAllow=localhost 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16 fc00::/7
+UMask=0077
+MemoryMax=2G
+TasksMax=512
+
+[Install]
+WantedBy=multi-user.target

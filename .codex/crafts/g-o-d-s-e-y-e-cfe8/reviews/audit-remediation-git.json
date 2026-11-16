@@ -1,0 +1,136 @@
+{
+  "status": "ok",
+  "operation": "read-only-local-hygiene",
+  "date": "2026-11-12",
+  "applied": [
+    "Saved this local report only; existing graph artifacts remain unchanged"
+  ],
+  "verified": [
+    "git diff --check passed (exit 0)",
+    "Branch status: develop...origin/develop, no ahead/behind marker observed",
+    "Mutation runner diff preserves historical default and historical/delivery/backend/jobs selection; audit selection and sandbox file copies are additive",
+    "Graph git status clean after interrupted refresh"
+  ],
+  "skipped": [
+    {
+      "what": "Commit, push, branch, remote mutation, fetch",
+      "why": "Local corrections/spec-plan scope only"
+    },
+    {
+      "what": "Full tests",
+      "why": "Coordinator owns running regression checks"
+    },
+    {
+      "what": "Complete graph refresh",
+      "why": "Existing grep script excludes untracked helper/tests and mjs; refresh interrupted; metadata remains at earlier ancestor"
+    }
+  ],
+  "evidence": {
+    "head": "7cc3099a25351a2271a58f6633e265a4e7f96c33",
+    "trackedChanged": [
+      ".codex/crafts/g-o-d-s-e-y-e-cfe8/plan.json",
+      "CHANGELOG.md",
+      "Jenkinsfile",
+      "docs/adr/ADR-011-durable-jobs-and-outbox.md",
+      "docs/development/application-jobs.md",
+      "docs/development/ci.md",
+      "docs/development/foundations.md",
+      "docs/plan/v1-development.md",
+      "docs/spec/v1.md",
+      "packages/core/src/foundation-data.ts",
+      "packages/core/src/foundation-plans.ts",
+      "packages/core/src/infrastructure.ts",
+      "packages/core/src/jobs-definitions.ts",
+      "packages/core/src/jobs-outbox.ts",
+      "packages/core/src/jobs-scheduler.ts",
+      "packages/core/src/jobs-state.ts",
+      "packages/core/src/jobs.ts",
+      "scripts/mutation-check.mjs",
+      "tests/STRATEGY.md"
+    ],
+    "untracked": [
+      ".codex/crafts/g-o-d-s-e-y-e-cfe8/audit-remediation.json",
+      ".codex/crafts/g-o-d-s-e-y-e-cfe8/reviews/audit-regressions.json",
+      ".codex/crafts/g-o-d-s-e-y-e-cfe8/reviews/audit-remediation-review.json",
+      ".codex/crafts/g-o-d-s-e-y-e-cfe8/reviews/mutations-audit.json",
+      "docs/reviews/2026-11-12-e01-e06-audit.md",
+      "packages/core/src/jobs-outbox-call.ts",
+      "scripts/mutation-audit-cases.mjs",
+      "scripts/mutation-audit-check.mjs",
+      "tests/infra-approval-capacity.test.ts",
+      "tests/jenkins-artifacts.test.ts",
+      "tests/jobs-definition-regression.test.ts",
+      "tests/jobs-outbox-deadline.test.ts"
+    ],
+    "coreAndJenkins": [
+      "packages/core/src/foundation-data.ts",
+      "packages/core/src/foundation-plans.ts",
+      "packages/core/src/infrastructure.ts",
+      "packages/core/src/jobs-definitions.ts",
+      "packages/core/src/jobs-outbox.ts",
+      "packages/core/src/jobs-scheduler.ts",
+      "packages/core/src/jobs-state.ts",
+      "packages/core/src/jobs.ts",
+      "packages/core/src/jobs-outbox-call.ts",
+      "Jenkinsfile"
+    ],
+    "newRegressionTests": [
+      "tests/infra-approval-capacity.test.ts",
+      "tests/jenkins-artifacts.test.ts",
+      "tests/jobs-definition-regression.test.ts",
+      "tests/jobs-outbox-deadline.test.ts"
+    ],
+    "documentation": [
+      "CHANGELOG.md",
+      "docs/adr/ADR-011-durable-jobs-and-outbox.md",
+      "docs/development/application-jobs.md",
+      "docs/development/ci.md",
+      "docs/development/foundations.md",
+      "docs/plan/v1-development.md",
+      "docs/spec/v1.md",
+      "tests/STRATEGY.md",
+      "docs/reviews/2026-11-12-e01-e06-audit.md"
+    ],
+    "mutationScripts": [
+      "scripts/mutation-check.mjs",
+      "scripts/mutation-audit-cases.mjs",
+      "scripts/mutation-audit-check.mjs"
+    ],
+    "graph": {
+      "method": "grep",
+      "fresh": false,
+      "commit": "cfad4f7971ff2df35bf995eb2defadf972411245",
+      "scopedDeltaPaths": [
+        "packages/core/src/foundation-data.ts",
+        "packages/core/src/foundation-plans.ts",
+        "packages/core/src/infrastructure.ts",
+        "packages/core/src/jobs-definitions.ts",
+        "packages/core/src/jobs-outbox.ts",
+        "packages/core/src/jobs-scheduler.ts",
+        "packages/core/src/jobs-state.ts",
+        "packages/core/src/jobs.ts",
+        "packages/core/src/jobs-outbox-call.ts",
+        "tests/infra-approval-capacity.test.ts",
+        "tests/jenkins-artifacts.test.ts",
+        "tests/jobs-definition-regression.test.ts",
+        "tests/jobs-outbox-deadline.test.ts",
+        "Jenkinsfile"
+      ]
+    }
+  },
+  "provenance": "No pre-remediation working-tree baseline was available to this satellite. Listed scope agrees with coordinator audit assignment, but individual hunks cannot be attributed uniquely; preserve all prior work. No remote freshness or perfect synchronization claim.",
+  "mutationReview": {
+    "kind": "Static diff review only",
+    "finding": "No old-suite integration regression identified",
+    "limitation": "The new static import means all suite invocations require mutation-audit-cases.mjs to be included alongside mutation-check.mjs. No old-suite runtime was rerun."
+  },
+  "warnings": [
+    "Git emitted CRLF-to-LF normalization notices for plan.json and docs/development/foundations.md; no whitespace-error findings."
+  ],
+  "finalChecks": {
+    "checkedAt": "2026-11-12T18:15:44.0721569Z",
+    "diffCheckExitCode": 0,
+    "status": "passed",
+    "regressionReportedByCoordinator": "1146 unit tests across 93 files and 41 browser tests passed"
+  }
+}

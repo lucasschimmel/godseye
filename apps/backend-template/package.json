@@ -1,0 +1,14 @@
+{
+  "name": "@godseye/backend-template",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node --import tsx src/server.ts"
+  },
+  "dependencies": {
+    "@godseye/app-backend": "workspace:*",
+    "@hono/node-server": "2.1.7",
+    "zod": "4.6.7"
+  }
+}

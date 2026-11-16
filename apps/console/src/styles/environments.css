@@ -1,0 +1,115 @@
+.project-summary {
+  display: flex;
+  gap: 22px;
+  align-items: center;
+  padding-bottom: 26px;
+  color: var(--text-secondary);
+  font-size: 11px;
+  flex-wrap: wrap;
+}
+.project-summary > span:last-child {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.environment-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+.environment-card {
+  padding: 22px;
+}
+.environment-heading {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+.environment-heading h3 {
+  font-size: 12px;
+  font-weight: 600;
+}
+.environment-heading .state {
+  margin-left: auto;
+}
+.environment-card dl {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  padding: 22px 0;
+}
+.environment-card dt {
+  font-size: 10px;
+  color: var(--text-secondary);
+}
+.environment-card dd {
+  margin: 8px 0 0;
+  font-family: var(--font-data);
+  font-size: 15px;
+}
+.environment-profile {
+  display: flex;
+  gap: 7px;
+  align-items: center;
+  font-size: 10px;
+  padding: 14px 0;
+  border-top: 1px solid var(--border-default);
+}
+.environment-card > p {
+  font-size: 10px;
+  line-height: 1.6;
+}
+.detail-grid {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 24px;
+  align-items: start;
+}
+.detail-note {
+  padding: 26px;
+}
+.detail-note > svg {
+  color: var(--accent-ink);
+  margin-bottom: 18px;
+}
+.detail-note h2 {
+  font-size: 14px;
+  margin-bottom: 13px;
+}
+.detail-note p {
+  color: var(--text-secondary);
+  font-size: 11px;
+  line-height: 1.9;
+  margin-bottom: 18px;
+}
+
+.repository-form {
+  padding: 26px;
+}
+.repository-form .form-section > svg {
+  color: var(--accent-ink);
+  margin-bottom: 12px;
+}
+.field-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+.checkbox-field {
+  display: flex;
+  align-items: start;
+  gap: 10px;
+  font-size: 11px;
+  margin-bottom: 23px;
+}
+.checkbox-field input {
+  accent-color: var(--accent-ink);
+  margin-top: 2px;
+}
+.checkbox-field small {
+  display: block;
+  font-size: 10px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin-top: 7px;
+}

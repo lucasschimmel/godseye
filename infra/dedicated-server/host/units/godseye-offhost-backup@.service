@@ -1,0 +1,11 @@
+[Unit]
+Description=G.O.D.S.E.Y.E encrypted off-host backup (%i)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/godseye-offhost-backup %i
+Nice=15
+IOSchedulingClass=idle
+TimeoutStartSec=6h

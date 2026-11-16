@@ -1,0 +1,59 @@
+{
+  "verdict": "pass-with-findings",
+  "findings": [
+    {
+      "id": "BPL-001",
+      "criterion": "PLN-07",
+      "status": "CONFIRMED",
+      "severity": "major",
+      "evidence": "docs/spec/v1.md:94 requires idempotency keys for F03-F41 mutations, expected revisions for resource updates, and 409 for parameter collisions/stale revisions. backend-design.md:29-34 defines file commit/delete, trusted event publishing, custom routes and SDK contracts without any acceptance criterion for these inherited mutation semantics.",
+      "refutation_survived": true,
+      "refutation": "The opening sentence incorporates existing V1 requirements, and file reservations may provide an upload identity. However, neither specifies retry/collision/revision behavior for the new mutating application contracts or a named test proving it; an upload ID alone does not prevent duplicate commits/events or stale metadata writes. The local-first scope does not waive the explicitly universal mutation contract.",
+      "suggestion": "Define the applicable idempotency, collision and expected-revision contract for application mutations and typed SDK calls, with named retry/concurrent/stale-write tests; explicitly resolve any native Better Auth endpoint exception."
+    },
+    {
+      "id": "BPL-002",
+      "criterion": "PLN-07",
+      "status": "CONFIRMED",
+      "severity": "major",
+      "evidence": "backend-design.md:8 leaves OAuth as opt-in configuration, while AC-54 at line 27 only names signup/signin/session/signout. tests/STRATEGY.md:28 requires a per-cell OAuth fixture in T14, including issuer/audience/origin/cookie isolation. docs/spec/v1.md:48 includes configured optional OAuth in F16.",
+      "refutation_survived": true,
+      "refutation": "OAuth provider enrollment is properly excluded from this local tranche, and optional integrations need not be enabled by default. A disposable local provider fixture needs no real account enrollment, however, and is the acceptance evidence specifically requested by T14. Email/password success cannot demonstrate callback/state/provider identity scoping.",
+      "suggestion": "Add a local configured OAuth fixture acceptance case covering successful callback/session creation and wrong state/origin/provider/cell rejection; keep real provider enrollment unqualified."
+    },
+    {
+      "id": "BPL-003",
+      "criterion": "PLN-07",
+      "status": "CONFIRMED",
+      "severity": "major",
+      "evidence": "backend-design.md:30 limits AC-57 recovery evidence to manifests preserving metadata and identifying missing/incomplete files, and line 35 requires restart journeys. tests/STRATEGY.md:44 requires backup/restore of file/auth/config recovery sets and database-versus-file timestamp-gap display (T30); docs/spec/v1.md:88 requires validating restored identity/API flows in a separate recovery cell.",
+      "refutation_survived": true,
+      "refutation": "Off-host recovery and automatic restore activation are correctly outside this tranche, and manifests are useful prerequisites. Actual local backup/restore into an isolated held destination can be verified without either remote qualification or activation. A restart of the source store/files cannot prove restored identity, committed object bytes, configuration binding or timestamp-gap handling.",
+      "suggestion": "Add a disposable local file/auth/config recovery round trip into a held destination, checking committed bytes/metadata, unfinished or missing objects, restored identity behavior and explicit timestamp-gap evidence; keep promotion blocked."
+    }
+  ],
+  "criteria_run": 8,
+  "criteria_passed": 7,
+  "not_reviewed": [
+    "PLN-08 inactive: implementation is explicitly sequential; satellites have disjoint review/test/git responsibilities.",
+    "PLN-05 inspected but no new numerical estimates exist; E04 reuses the established high-risk L estimate and records prior project lessons.",
+    "Source implementation, executable correctness and final test coverage: this review covers the plan only.",
+    "Security testing, external targets, remote OAuth enrollment, deployed containment, quotas, TLS/IPv6 and off-host recovery: outside the authorized local software-design review.",
+    "F18 job-update production remains dependent on E06; this review accepts the current trusted domain-event boundary and does not certify a job producer or frontend job-gap handling."
+  ],
+  "review_context": {
+    "kind": "plan",
+    "criticity": "production",
+    "fresh_context": true,
+    "producing_conversation_read": false,
+    "scope": "Local E04 auth, files, SSE, custom TypeScript SDK and template design against F16-F19, T14-T17/T30/T34 and inherited V1 mutation contracts.",
+    "passed_observations": [
+      "Per-cell independent application persistence and immutable server-owned configuration separate application users from owner identity and authority.",
+      "Private file defaults, server-owned physical names, finite concurrent quotas, resumable staging and committed-object preservation are explicit.",
+      "Authenticated durable SSE uses bounded cursors, explicit refetch gaps, lifecycle/revocation checks and finite stream resources.",
+      "SDK and control client have separate package ownership; the template requires explicit application authentication for route extensions.",
+      "Story order is acyclic and begins with identity/store authority; the E04 plan provides preservation/refetch/pinning failure checkpoints.",
+      "Every new acceptance criterion has a named T-AC identifier and remote qualification is explicitly excluded."
+    ]
+  }
+}

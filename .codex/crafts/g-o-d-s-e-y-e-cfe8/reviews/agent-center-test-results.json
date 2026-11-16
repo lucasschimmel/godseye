@@ -1,0 +1,140 @@
+{
+  "run": "godseye-local-agent-center",
+  "date": "2026-11-13",
+  "author": "gauntlet",
+  "scope": "Local owner-bound profiles and Foundation-backed task lifecycle",
+  "ordinary": {
+    "batch": {
+      "passed": 46,
+      "skippedNative": 1,
+      "seconds": 46.9,
+      "artifact": "artifacts/test-results/agents-targeted-final.xml"
+    },
+    "additionalDeadlineRegression": {
+      "passed": 1,
+      "artifact": "artifacts/test-results/agents-deadline.xml"
+    },
+    "currentOrdinaryCases": 47,
+    "files": [
+      "tests/agents-contracts.test.ts",
+      "tests/agents-profiles.test.ts",
+      "tests/agents-tasks.test.ts",
+      "tests/agents-http.test.ts",
+      "tests/agents-persistence.test.ts",
+      "tests/agents-bindings.test.ts"
+    ]
+  },
+  "browser": {
+    "passed": 7,
+    "actualBackendCases": 4,
+    "responseFixtureCases": 3,
+    "cleanScreenshotRerunPassed": 2,
+    "screenshots": [
+      "artifacts/agents-desktop.png",
+      "artifacts/agents-mobile.png",
+      "artifacts/agents-task-result.png"
+    ],
+    "caveat": "Task launch/result/cancellation browser states use labeled response fixtures after actual owner enrollment and scoped profile creation. They do not prove a native task traverses HTTP and Hermes end to end.",
+    "existingConsoleNavigationAndMobile": {
+      "passed": 2,
+      "seconds": 24
+    },
+    "securityRefetchFailure": {
+      "passed": 1,
+      "seconds": 28.5
+    }
+  },
+  "native": {
+    "qualified": true,
+    "latestArtifact": "artifacts/test-results/agents-native-execution-seventh.xml",
+    "latestObservation": {
+      "state": "succeeded",
+      "stopped": true,
+      "correlated": true,
+      "authorizations": 7,
+      "fixtureModelRequests": 1,
+      "skillLoaded": true
+    },
+    "caveat": "Three actual pinned transport measurements passed: positive, hostile tool reply and controlled hanging cancellation. Authorization callback is counted stub transport qualification; real Foundation composition is tested separately. Cancellation fixture releases its upstream explicitly after stop observation: this proves actual settlement/no replay and does not claim instantaneous remote socket abortion. No paid request was made.",
+    "replyBoundary": {
+      "passed": 1,
+      "allowedTextCases": 2,
+      "refusedCases": 6,
+      "artifact": "artifacts/test-results/agents-native-reply.xml",
+      "attemptFencePreserved": true
+    },
+    "positive": {
+      "testSeconds": 41.66,
+      "wallSeconds": 45.12
+    },
+    "hostileReply": {
+      "passed": true,
+      "testSeconds": 47.93,
+      "wallSeconds": 50.31,
+      "requests": 1,
+      "diagnosticReason": "unauthorized-tool-reply",
+      "artifact": "artifacts/test-results/agents-native-hostile-reply.xml"
+    },
+    "hangingCancellation": {
+      "passed": true,
+      "testSeconds": 50.66,
+      "wallSeconds": 53.62,
+      "requests": 1,
+      "postStopReadOnlyInspections": 2,
+      "explicitControlledUpstreamRelease": true,
+      "artifact": "artifacts/test-results/agents-native-hang-cancel.xml"
+    },
+    "optionalDefaultSkips": 2
+  },
+  "mutation": {
+    "selected": 4,
+    "killedByBehavioralAssertions": 4,
+    "isolatedBaselinePassed": true,
+    "productionHashUnchanged": true,
+    "artifact": "artifacts/agents-mutation/summary.json",
+    "operators": [
+      "accept successful completion without provider identity",
+      "accept terminal label without physical stop proof",
+      "remove UTF-8 output byte cap",
+      "ignore epoch revocation during read-only reconciliation"
+    ],
+    "caveat": "Curated sensitivity only; this is not a repository-wide mutation score. Sources were copied into artifacts and selected via an isolated Vitest alias; shared production source was never edited."
+  },
+  "regressionsProvedRedThenGreen": [
+    {
+      "case": "Successful completion without stable provider identity",
+      "red": "artifacts/test-results/agents-identity-red.xml",
+      "green": "artifacts/test-results/agents-targeted-final.xml"
+    },
+    {
+      "case": "Generic Foundation epoch revocation survives later physical success",
+      "red": "artifacts/test-results/agents-generic-revocation-red.xml",
+      "green": "artifacts/test-results/agents-targeted-final.xml"
+    },
+    {
+      "case": "Generic Foundation cancellation of uncertain task survives later physical success",
+      "red": "artifacts/test-results/agents-generic-revocation-red.xml",
+      "green": "artifacts/test-results/agents-targeted-final.xml"
+    }
+  ],
+  "checks": {
+    "typescript": "passed",
+    "changedTestFormatting": "passed",
+    "fullSharedRegression": "coordinated by root; not claimed by this report",
+    "ownedFilesFrozen": true
+  },
+  "remainingEvidence": [
+    "Real provider entitlement and billing are outside this no-paid-call test run",
+    "Server deployment/confinement remain outside local scope",
+    "Actual TTY rejection and injected binding publication fsync failure are not directly exercised",
+    "Native helper exception preserves correlated final observation by source hardening; no isolated new orchestration-failure regression was authored",
+    "No separate real-clock last-await lease-expiry race or pre-enqueue cancellation race regression was added"
+  ],
+  "finalRootHelperRerun": {
+    "passed": 1,
+    "testSeconds": 4.253,
+    "vitestSeconds": 4.53,
+    "artifact": "artifacts/test-results/agents-native-reply-final.xml",
+    "scope": "Actual final Python reply parser plus monotone physical attempt merge assertion; no model request"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "verdict": "pass",
+  "kind": "code",
+  "criticity": "production",
+  "scope": "Remediation recheck of CORE-001 only; no repeat whole-artifact audit.",
+  "findings": [],
+  "criteria_run": 3,
+  "criteria_passed": 3,
+  "criteria": ["COR-01", "COR-04", "SAF-03"],
+  "remediation_verified": [{
+    "finding_id": "CORE-001",
+    "evidence": "packages/core/src/github.ts:90-101 now selects every matching project; :109-130 inserts one run and project-scoped audit entry per match within the existing locked transaction. packages/store/migrations/0000_control.sql:43-44 removes the former delivery-only unique constraint and enforces unique(delivery_id, project_id). The unchanged delivery duplicate check at github.ts:77-88 prevents replay fan-out. Every inserted run remains pending_verification at :118.",
+    "validation": "Ran pnpm exec vitest run tests/policy-audit.test.ts -t 'fans out a matching push': 1 regression passed, 8 unrelated cases skipped. tests/policy-audit.test.ts:87-100 binds two projects to the same repository, delivers and replays a push, and verifies exactly two distinct project runs that remain pending_verification.",
+    "refutation": "A loop alone would still fail under the old delivery-only uniqueness constraint; the actual executed SQL drops that constraint and establishes the composite uniqueness boundary, and the real PGlite regression proves the two inserts commit. The existing locked transaction retains atomicity and replay serialization."
+  }],
+  "not_reviewed": [
+    "Other findings, changes or rubric items: this is a bounded CORE-001 remediation check, not a new audit.",
+    "PostgreSQL multiprocess runtime behavior and injected transaction failure: not executed in this follow-up.",
+    "Future Drizzle index metadata changes: producer reports a pending schema-metadata alignment; actual migration SQL was checked and exercised.",
+    "Production authentication, external adapters, dispatch, branch-head verification and infrastructure qualification remain outside scope."
+  ]
+}

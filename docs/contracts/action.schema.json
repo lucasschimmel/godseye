@@ -1,0 +1,131 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:godseye:action-request:v1",
+  "title": "Proposed V1 authorized action envelope",
+  "type": "object", "additionalProperties": false,
+  "required": ["schemaVersion", "requestId", "projectId", "environmentId", "targetId", "expectedRevision", "idempotencyKey", "command"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "requestId": { "type": "string", "format": "uuid" },
+    "projectId": { "type": ["string", "null"], "format": "uuid" },
+    "environmentId": { "type": ["string", "null"], "format": "uuid" },
+    "targetId": { "type": "string", "format": "uuid" },
+    "expectedRevision": { "type": "integer", "minimum": 0 },
+    "idempotencyKey": { "type": "string", "minLength": 16, "maxLength": 128 },
+    "approvalId": { "type": "string", "format": "uuid" },
+    "command": {
+      "oneOf": [
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["kind", "intent", "manifestRef"],
+          "properties": {
+            "kind": { "const": "project.lifecycle" },
+            "intent": { "enum": ["provision", "suspend", "resume", "export", "quarantine", "purge"] },
+            "manifestRef": { "type": "string", "format": "uuid" }
+          }
+        },
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["kind", "intent", "manifestRef"],
+          "properties": {
+            "kind": { "const": "cell.lifecycle" },
+            "intent": { "enum": ["provision", "stop", "start", "quarantine", "purge"] },
+            "manifestRef": { "type": "string", "format": "uuid" }
+          }
+        },
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["kind", "intent", "artifactDigest", "configurationRef"],
+          "properties": {
+            "kind": { "const": "deployment.release" },
+            "intent": { "enum": ["deploy", "restart", "rollback"] },
+            "artifactDigest": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+            "configurationRef": { "type": "string", "format": "uuid" }
+          }
+        },
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["kind", "intent", "planRef"],
+          "properties": {
+            "kind": { "const": "database.operation" },
+            "intent": { "enum": ["migrate", "rotate", "backup", "restore", "export"] },
+            "planRef": { "type": "string", "format": "uuid" }
+          }
+        },
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["kind", "intent", "definitionRef"],
+          "properties": {
+            "kind": { "const": "job.operation" },
+            "intent": { "enum": ["configure", "trigger", "pause", "resume", "cancel"] },
+            "definitionRef": { "type": "string", "format": "uuid" }
+          }
+        },
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["kind", "profileId", "skillVersionId", "inputRef", "grantRef"],
+          "properties": {
+            "kind": { "const": "agent.run" },
+            "profileId": { "type": "string", "format": "uuid" },
+            "skillVersionId": { "type": "string", "format": "uuid" },
+            "inputRef": { "type": "string", "format": "uuid" },
+            "grantRef": { "type": "string", "format": "uuid" }
+          }
+        },
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["kind", "runId"],
+          "properties": { "kind": { "const": "agent.cancel" }, "runId": { "type": "string", "format": "uuid" } }
+        },
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["kind", "skillVersionId"],
+          "properties": { "kind": { "const": "skill.promote" }, "skillVersionId": { "type": "string", "format": "uuid" } }
+        },
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["kind", "approvalId", "decision"],
+          "properties": {
+            "kind": { "const": "approval.resolve" },
+            "approvalId": { "type": "string", "format": "uuid" },
+            "decision": { "enum": ["approve", "reject"] }
+          }
+        },
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["kind", "configurationRef"],
+          "properties": {
+            "kind": { "enum": ["domain.configure", "storage.configure", "settings.update"] },
+            "configurationRef": { "type": "string", "format": "uuid" }
+          }
+        },
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["kind", "intent"],
+          "properties": {
+            "kind": { "const": "personal.lifecycle" },
+            "intent": { "enum": ["start", "stop", "restart"] }
+          }
+        },
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["kind", "intent", "expiresAt"],
+          "properties": {
+            "kind": { "const": "incident.update" },
+            "intent": { "enum": ["acknowledge", "mute", "unmute"] },
+            "expiresAt": { "type": ["string", "null"], "format": "date-time" }
+          }
+        },
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["kind", "artifactId", "integrationId"],
+          "properties": {
+            "kind": { "const": "publication.publish" },
+            "artifactId": { "type": "string", "format": "uuid" },
+            "integrationId": { "type": "string", "format": "uuid" }
+          }
+        }
+      ]
+    }
+  }
+}

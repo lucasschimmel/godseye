@@ -1,0 +1,12 @@
+{
+  "date": "2026-11-14",
+  "status": "selected-mobile-result-view-inspected",
+  "screenshot": "artifacts/hermes-tools-mobile.png",
+  "observed": [
+    "Unknown task outcome and protective stop/verification actions remain readable.",
+    "Expanded tool history shows cleanup uncertainty and call/read/write/result counters.",
+    "Retained budget/profile warning is visible inside the mobile card without clipping."
+  ],
+  "browserEvidence": "reviews/hermes-tools-test-results.json",
+  "qualification": "Root visually inspected the retained unmodified mobile screenshot. Three selected browser cases separately verify one actual owner/backend setup flow and two labeled task/result UI contract flows. No full browser-to-native-provider or all-screen visual audit is claimed."
+}

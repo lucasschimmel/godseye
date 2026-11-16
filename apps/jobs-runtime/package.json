@@ -1,0 +1,12 @@
+{
+  "name": "@godseye/jobs-runtime",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@godseye/app-backend": "workspace:*",
+    "@godseye/contracts": "workspace:*",
+    "@godseye/core": "workspace:*",
+    "@godseye/store": "workspace:*"
+  }
+}

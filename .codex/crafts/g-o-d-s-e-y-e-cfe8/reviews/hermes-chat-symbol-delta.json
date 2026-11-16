@@ -1,0 +1,823 @@
+{
+  "mode": "Grep-based scoped context-graph delta; tree-sitter unavailable",
+  "sourcePaths": [
+    "apps/console/src/components/agents-chat-outputs.tsx",
+    "apps/console/src/components/agents-chat-stream.ts",
+    "apps/console/src/components/agents-chat-transcript.tsx",
+    "apps/console/src/components/agents-chat.tsx",
+    "apps/console/src/components/agents-panel.tsx",
+    "apps/console/src/styles/agents-chat.css",
+    "apps/control-api/src/agent-chat-routes.ts",
+    "apps/control-api/src/agent-chat-transport.ts",
+    "apps/control-api/src/hermes-provider.ts",
+    "packages/contracts/src/agents-chat-endpoints.ts",
+    "packages/contracts/src/agents-chat-transport-endpoints.ts",
+    "packages/contracts/src/agents-chat.ts",
+    "packages/core/src/agents-chat-outputs.ts",
+    "packages/core/src/agents-chat-progress.ts",
+    "packages/core/src/agents-chat-state.ts",
+    "packages/core/src/agents-chat.ts",
+    "packages/core/src/agents-execution.ts",
+    "packages/core/src/agents-provider.ts",
+    "packages/core/src/agents-runs.ts",
+    "packages/core/src/agents-state.ts",
+    "packages/core/src/agents.ts",
+    "packages/store/migrations/0019_agent_chat.sql",
+    "packages/store/src/agent-chat-schema.ts",
+    "scripts/hermes_gateway.py",
+    "scripts/hermes_gateway_broker.py",
+    "scripts/hermes_gateway_events.py",
+    "scripts/hermes_gateway_reply.py",
+    "scripts/hermes_gateway_state.py",
+    "apps/console/src/lib/api.ts",
+    "apps/console/src/styles.css",
+    "apps/control-api/src/api-types.ts",
+    "apps/control-api/src/app.ts",
+    "packages/contracts/src/http-endpoints.ts",
+    "packages/contracts/src/http-openapi.ts",
+    "packages/contracts/src/index.ts",
+    "packages/core/src/foundation-plans.ts",
+    "packages/core/src/foundations.ts",
+    "packages/store/src/schema.ts"
+  ],
+  "reuse": [
+    "AgentEngine / FoundationEngine authoritative task queue, grants, leases, budgets and heavy admission",
+    "Shared journal write serialization / original checksummed migrations",
+    "Owner identity.actor reauthentication / existing safe HTTP middleware",
+    "Existing profile/task private native runtime / exact scoped bindings",
+    "Existing console atlas tokens, Query cache and shared idempotency intention map"
+  ],
+  "edges": [
+    "Native model SSE -> broker validation -> pinned Runs message.delta -> one-ack IPC -> chatProgress current authority -> durable journal",
+    "Owner EventSource -> readChatEvents atomic snapshot -> cursor replay/reset -> scoped console cache",
+    "Successful nonrevoked Foundation settlement -> typed draft/proposal extraction -> immutable private records",
+    "Owner exact-plan decision -> approveInTransaction + proposal update -> existing awaiting operation requeue only"
+  ],
+  "symbols": [
+    {
+      "file": "apps/console/src/components/agents-chat-outputs.tsx",
+      "line": 14,
+      "declaration": "export function AgentsChatOutputs({"
+    },
+    {
+      "file": "apps/console/src/components/agents-chat-stream.ts",
+      "line": 10,
+      "declaration": "export function useAgentChatStream(id: string, loaded: boolean) {"
+    },
+    {
+      "file": "apps/console/src/components/agents-chat-transcript.tsx",
+      "line": 5,
+      "declaration": "export function AgentsChatTranscript({"
+    },
+    {
+      "file": "apps/console/src/components/agents-chat.tsx",
+      "line": 19,
+      "declaration": "export function AgentsChat({"
+    },
+    {
+      "file": "apps/console/src/components/agents-panel.tsx",
+      "line": 16,
+      "declaration": "export function AgentsPanel() {"
+    },
+    {
+      "file": "apps/control-api/src/agent-chat-routes.ts",
+      "line": 11,
+      "declaration": "export function registerAgentChatRoutes("
+    },
+    {
+      "file": "apps/control-api/src/agent-chat-transport.ts",
+      "line": 12,
+      "declaration": "export const CHAT_STREAM_DEFAULTS = {"
+    },
+    {
+      "file": "apps/control-api/src/agent-chat-transport.ts",
+      "line": 21,
+      "declaration": "export type ChatStreamOptions = { [K in keyof typeof CHAT_STREAM_DEFAULTS]?: number };"
+    },
+    {
+      "file": "apps/control-api/src/agent-chat-transport.ts",
+      "line": 34,
+      "declaration": "export function registerAgentChatTransport("
+    },
+    {
+      "file": "apps/control-api/src/hermes-provider.ts",
+      "line": 25,
+      "declaration": "export type HermesBinding = z.infer<typeof Binding>;"
+    },
+    {
+      "file": "apps/control-api/src/hermes-provider.ts",
+      "line": 72,
+      "declaration": "export interface HermesProviderOptions {"
+    },
+    {
+      "file": "apps/control-api/src/hermes-provider.ts",
+      "line": 79,
+      "declaration": "export interface ManagedHermesProvider extends AgentProvider {"
+    },
+    {
+      "file": "apps/control-api/src/hermes-provider.ts",
+      "line": 131,
+      "declaration": "export function createHermesProvider(options: HermesProviderOptions): ManagedHermesProvider {"
+    },
+    {
+      "file": "apps/control-api/src/hermes-provider.ts",
+      "line": 363,
+      "declaration": "export function configuredHermesProvider("
+    },
+    {
+      "file": "packages/contracts/src/agents-chat-endpoints.ts",
+      "line": 11,
+      "declaration": "export const AGENT_CHAT_HTTP_ENDPOINTS = ["
+    },
+    {
+      "file": "packages/contracts/src/agents-chat-transport-endpoints.ts",
+      "line": 5,
+      "declaration": "export const AGENT_CHAT_TRANSPORT_ENDPOINTS = ["
+    },
+    {
+      "file": "packages/contracts/src/agents-chat.ts",
+      "line": 4,
+      "declaration": "export const AGENT_CHAT_LIMITS = {"
+    },
+    {
+      "file": "packages/contracts/src/agents-chat.ts",
+      "line": 19,
+      "declaration": "export const CreateAgentConversation = z"
+    },
+    {
+      "file": "packages/contracts/src/agents-chat.ts",
+      "line": 22,
+      "declaration": "export const SendAgentChatTurn = z"
+    },
+    {
+      "file": "packages/contracts/src/agents-chat.ts",
+      "line": 25,
+      "declaration": "export const ResolveAgentProposal = z"
+    },
+    {
+      "file": "packages/contracts/src/agents-chat.ts",
+      "line": 28,
+      "declaration": "export const AgentConversation = z"
+    },
+    {
+      "file": "packages/contracts/src/agents-chat.ts",
+      "line": 43,
+      "declaration": "export const AgentChatTurn = z"
+    },
+    {
+      "file": "packages/contracts/src/agents-chat.ts",
+      "line": 53,
+      "declaration": "export const AgentChatArtifact = z"
+    },
+    {
+      "file": "packages/contracts/src/agents-chat.ts",
+      "line": 67,
+      "declaration": "export const AgentChatProposal = z"
+    },
+    {
+      "file": "packages/contracts/src/agents-chat.ts",
+      "line": 87,
+      "declaration": "export const AgentChatEvent = z"
+    },
+    {
+      "file": "packages/contracts/src/agents-chat.ts",
+      "line": 104,
+      "declaration": "export const AgentConversationList = z"
+    },
+    {
+      "file": "packages/contracts/src/agents-chat.ts",
+      "line": 107,
+      "declaration": "export const AgentConversationDetail = z"
+    },
+    {
+      "file": "packages/contracts/src/agents-chat.ts",
+      "line": 115,
+      "declaration": "export const AgentChatEvents = z"
+    },
+    {
+      "file": "packages/contracts/src/agents-chat.ts",
+      "line": 118,
+      "declaration": "export type AgentConversationView = z.infer<typeof AgentConversation>;"
+    },
+    {
+      "file": "packages/contracts/src/agents-chat.ts",
+      "line": 119,
+      "declaration": "export type AgentConversationDetailView = z.infer<typeof AgentConversationDetail>;"
+    },
+    {
+      "file": "packages/contracts/src/agents-chat.ts",
+      "line": 120,
+      "declaration": "export type AgentChatArtifactView = z.infer<typeof AgentChatArtifact>;"
+    },
+    {
+      "file": "packages/contracts/src/agents-chat.ts",
+      "line": 121,
+      "declaration": "export type AgentChatProposalView = z.infer<typeof AgentChatProposal>;"
+    },
+    {
+      "file": "packages/contracts/src/agents-chat.ts",
+      "line": 122,
+      "declaration": "export type AgentChatEventView = z.infer<typeof AgentChatEvent>;"
+    },
+    {
+      "file": "packages/contracts/src/agents-chat.ts",
+      "line": 123,
+      "declaration": "export type AgentChatEventsView = z.infer<typeof AgentChatEvents>;"
+    },
+    {
+      "file": "packages/contracts/src/agents-chat.ts",
+      "line": 124,
+      "declaration": "export type CreateAgentConversationInput = z.infer<typeof CreateAgentConversation>;"
+    },
+    {
+      "file": "packages/contracts/src/agents-chat.ts",
+      "line": 125,
+      "declaration": "export type SendAgentChatTurnInput = z.infer<typeof SendAgentChatTurn>;"
+    },
+    {
+      "file": "packages/contracts/src/agents-chat.ts",
+      "line": 126,
+      "declaration": "export type ResolveAgentProposalInput = z.infer<typeof ResolveAgentProposal>;"
+    },
+    {
+      "file": "packages/core/src/agents-chat-outputs.ts",
+      "line": 48,
+      "declaration": "export async function chatOutputs(state: AgentState, tx: DatabaseAccess, task: TaskRow) {"
+    },
+    {
+      "file": "packages/core/src/agents-chat-outputs.ts",
+      "line": 153,
+      "declaration": "export function artifactView(row: typeof schema.agentChatArtifacts.$inferSelect) {"
+    },
+    {
+      "file": "packages/core/src/agents-chat-outputs.ts",
+      "line": 165,
+      "declaration": "export async function proposalView("
+    },
+    {
+      "file": "packages/core/src/agents-chat-outputs.ts",
+      "line": 211,
+      "declaration": "export async function chatArtifact(state: AgentState, actor: Actor, id: string) {"
+    },
+    {
+      "file": "packages/core/src/agents-chat-outputs.ts",
+      "line": 222,
+      "declaration": "export async function chatResolve("
+    },
+    {
+      "file": "packages/core/src/agents-chat-progress.ts",
+      "line": 28,
+      "declaration": "export async function chatProgress("
+    },
+    {
+      "file": "packages/core/src/agents-chat-progress.ts",
+      "line": 90,
+      "declaration": "export async function chatRequest(state: AgentState, taskId: string) {"
+    },
+    {
+      "file": "packages/core/src/agents-chat-progress.ts",
+      "line": 98,
+      "declaration": "export async function chatProviderRequest(state: AgentState, task: TaskRow) {"
+    },
+    {
+      "file": "packages/core/src/agents-chat-state.ts",
+      "line": 14,
+      "declaration": "export type ConversationRow = typeof schema.agentConversations.$inferSelect;"
+    },
+    {
+      "file": "packages/core/src/agents-chat-state.ts",
+      "line": 15,
+      "declaration": "export function conversationView(row: ConversationRow) {"
+    },
+    {
+      "file": "packages/core/src/agents-chat-state.ts",
+      "line": 22,
+      "declaration": "export async function conversationFor("
+    },
+    {
+      "file": "packages/core/src/agents-chat-state.ts",
+      "line": 42,
+      "declaration": "export async function chatEvent("
+    },
+    {
+      "file": "packages/core/src/agents-chat-state.ts",
+      "line": 80,
+      "declaration": "export async function chatTaskEvent("
+    },
+    {
+      "file": "packages/core/src/agents-chat-state.ts",
+      "line": 92,
+      "declaration": "export async function chatHistory(tx: DatabaseAccess, conversationId: string) {"
+    },
+    {
+      "file": "packages/core/src/agents-chat-state.ts",
+      "line": 126,
+      "declaration": "export async function readChatEvents(state: AgentState, actor: Actor, id: string, after: number) {"
+    },
+    {
+      "file": "packages/core/src/agents-chat.ts",
+      "line": 19,
+      "declaration": "export async function chatList(state: AgentState, actor: Actor) {"
+    },
+    {
+      "file": "packages/core/src/agents-chat.ts",
+      "line": 28,
+      "declaration": "export async function chatCreate(state: AgentState, actor: Actor, raw: unknown, key: string) {"
+    },
+    {
+      "file": "packages/core/src/agents-chat.ts",
+      "line": 70,
+      "declaration": "export async function chatDetail(state: AgentState, actor: Actor, id: string) {"
+    },
+    {
+      "file": "packages/core/src/agents-chat.ts",
+      "line": 105,
+      "declaration": "export async function chatSend("
+    },
+    {
+      "file": "packages/core/src/agents-execution.ts",
+      "line": 32,
+      "declaration": "export async function executionTask("
+    },
+    {
+      "file": "packages/core/src/agents-execution.ts",
+      "line": 142,
+      "declaration": "export async function stopAgentExecution(state: AgentState, context: ExecutionContext) {"
+    },
+    {
+      "file": "packages/core/src/agents-execution.ts",
+      "line": 151,
+      "declaration": "export async function stopAgentTask(state: AgentState, task: TaskRow): Promise<void> {"
+    },
+    {
+      "file": "packages/core/src/agents-execution.ts",
+      "line": 181,
+      "declaration": "export async function executeAgent("
+    },
+    {
+      "file": "packages/core/src/agents-execution.ts",
+      "line": 294,
+      "declaration": "export async function reconcileAgent("
+    },
+    {
+      "file": "packages/core/src/agents-provider.ts",
+      "line": 4,
+      "declaration": "export type AgentProviderProfile = Omit<"
+    },
+    {
+      "file": "packages/core/src/agents-provider.ts",
+      "line": 8,
+      "declaration": "export interface AgentProviderRequest {"
+    },
+    {
+      "file": "packages/core/src/agents-provider.ts",
+      "line": 18,
+      "declaration": "export interface AgentObservation {"
+    },
+    {
+      "file": "packages/core/src/agents-provider.ts",
+      "line": 27,
+      "declaration": "export interface AgentProviderEvent {"
+    },
+    {
+      "file": "packages/core/src/agents-provider.ts",
+      "line": 33,
+      "declaration": "export interface AgentProviderContext {"
+    },
+    {
+      "file": "packages/core/src/agents-provider.ts",
+      "line": 39,
+      "declaration": "export interface AgentProvider {"
+    },
+    {
+      "file": "packages/core/src/agents-runs.ts",
+      "line": 25,
+      "declaration": "export async function launchAgentTask("
+    },
+    {
+      "file": "packages/core/src/agents-state.ts",
+      "line": 15,
+      "declaration": "export const AGENTS_ADAPTER_ID = \"local.hermes\";"
+    },
+    {
+      "file": "packages/core/src/agents-state.ts",
+      "line": 16,
+      "declaration": "export const AGENT_TOOL = \"agent.model\";"
+    },
+    {
+      "file": "packages/core/src/agents-state.ts",
+      "line": 17,
+      "declaration": "export const AGENT_DESTINATION = \"api.openai.com\";"
+    },
+    {
+      "file": "packages/core/src/agents-state.ts",
+      "line": 18,
+      "declaration": "export const AGENT_TERMINAL = [\"succeeded\", \"failed\", \"cancelled\"];"
+    },
+    {
+      "file": "packages/core/src/agents-state.ts",
+      "line": 19,
+      "declaration": "export interface AgentOptions {"
+    },
+    {
+      "file": "packages/core/src/agents-state.ts",
+      "line": 25,
+      "declaration": "export interface AgentState {"
+    },
+    {
+      "file": "packages/core/src/agents-state.ts",
+      "line": 37,
+      "declaration": "export type ProfileRow = typeof schema.agentProfiles.$inferSelect;"
+    },
+    {
+      "file": "packages/core/src/agents-state.ts",
+      "line": 38,
+      "declaration": "export type TaskRow = typeof schema.agentTasks.$inferSelect;"
+    },
+    {
+      "file": "packages/core/src/agents-state.ts",
+      "line": 39,
+      "declaration": "export const skill = {"
+    },
+    {
+      "file": "packages/core/src/agents-state.ts",
+      "line": 44,
+      "declaration": "export const agentActor = (projectId: string): Actor => ({"
+    },
+    {
+      "file": "packages/core/src/agents-state.ts",
+      "line": 49,
+      "declaration": "export function profileHash("
+    },
+    {
+      "file": "packages/core/src/agents-state.ts",
+      "line": 89,
+      "declaration": "export function profileView("
+    },
+    {
+      "file": "packages/core/src/agents-state.ts",
+      "line": 117,
+      "declaration": "export function taskView(row: TaskRow) {"
+    },
+    {
+      "file": "packages/core/src/agents-state.ts",
+      "line": 140,
+      "declaration": "export async function profileFor(tx: DatabaseAccess, id: string) {"
+    },
+    {
+      "file": "packages/core/src/agents-state.ts",
+      "line": 145,
+      "declaration": "export async function taskFor(tx: DatabaseAccess, id: string) {"
+    },
+    {
+      "file": "packages/core/src/agents-state.ts",
+      "line": 150,
+      "declaration": "export async function activeScope("
+    },
+    {
+      "file": "packages/core/src/agents-state.ts",
+      "line": 189,
+      "declaration": "export async function currentProfile(state: AgentState, tx: DatabaseAccess, row: ProfileRow) {"
+    },
+    {
+      "file": "packages/core/src/agents-state.ts",
+      "line": 206,
+      "declaration": "export async function assertNotBusy(tx: DatabaseAccess, profileId: string) {"
+    },
+    {
+      "file": "packages/core/src/agents-state.ts",
+      "line": 220,
+      "declaration": "export async function event("
+    },
+    {
+      "file": "packages/core/src/agents-state.ts",
+      "line": 247,
+      "declaration": "export async function taskDetail(state: AgentState, actor: Actor, id: string) {"
+    },
+    {
+      "file": "packages/core/src/agents-state.ts",
+      "line": 261,
+      "declaration": "export function providerRequest(task: TaskRow): AgentProviderRequest {"
+    },
+    {
+      "file": "packages/core/src/agents.ts",
+      "line": 40,
+      "declaration": "export type * from \"./agents-provider.js\";"
+    },
+    {
+      "file": "packages/core/src/agents.ts",
+      "line": 41,
+      "declaration": "export type { AgentOptions } from \"./agents-state.js\";"
+    },
+    {
+      "file": "packages/core/src/agents.ts",
+      "line": 45,
+      "declaration": "export class AgentEngine {"
+    },
+    {
+      "file": "packages/store/src/agent-chat-schema.ts",
+      "line": 12,
+      "declaration": "export const agentConversations = pgTable(\"agent_conversations\", {"
+    },
+    {
+      "file": "packages/store/src/agent-chat-schema.ts",
+      "line": 25,
+      "declaration": "export const agentChatTurns = pgTable("
+    },
+    {
+      "file": "packages/store/src/agent-chat-schema.ts",
+      "line": 42,
+      "declaration": "export const agentChatEvents = pgTable("
+    },
+    {
+      "file": "packages/store/src/agent-chat-schema.ts",
+      "line": 56,
+      "declaration": "export const agentChatArtifacts = pgTable(\"agent_chat_artifacts\", {"
+    },
+    {
+      "file": "packages/store/src/agent-chat-schema.ts",
+      "line": 62,
+      "declaration": "export const agentChatProposals = pgTable(\"agent_chat_proposals\", {"
+    },
+    {
+      "file": "scripts/hermes_gateway.py",
+      "line": 27,
+      "declaration": "def free_port() -> int:"
+    },
+    {
+      "file": "scripts/hermes_gateway.py",
+      "line": 33,
+      "declaration": "def child_environment(tool: Path, directory: Path, state: dict) -> dict[str, str]:"
+    },
+    {
+      "file": "scripts/hermes_gateway.py",
+      "line": 49,
+      "declaration": "def terminate(child: subprocess.Popen | None) -> bool:"
+    },
+    {
+      "file": "scripts/hermes_gateway.py",
+      "line": 66,
+      "declaration": "def run(workspace: Path, request: dict, provider_key: str, fixture_base: str | None) -> None:"
+    },
+    {
+      "file": "scripts/hermes_gateway.py",
+      "line": 235,
+      "declaration": "def main() -> None:"
+    },
+    {
+      "file": "scripts/hermes_gateway_broker.py",
+      "line": 19,
+      "declaration": "class Authority:"
+    },
+    {
+      "file": "scripts/hermes_gateway_broker.py",
+      "line": 55,
+      "declaration": "def outgoing_body(raw: bytes, request: dict) -> bytes:"
+    },
+    {
+      "file": "scripts/hermes_gateway_broker.py",
+      "line": 90,
+      "declaration": "class Broker:"
+    },
+    {
+      "file": "scripts/hermes_gateway_events.py",
+      "line": 10,
+      "declaration": "class RunEvents:"
+    },
+    {
+      "file": "scripts/hermes_gateway_reply.py",
+      "line": 10,
+      "declaration": "def validated_frames(response, stop, deadline: float, model: str):"
+    },
+    {
+      "file": "scripts/hermes_gateway_reply.py",
+      "line": 76,
+      "declaration": "def text_only(value: object, depth: int = 0) -> None:"
+    },
+    {
+      "file": "scripts/hermes_gateway_reply.py",
+      "line": 92,
+      "declaration": "def read_text_reply(response, stop, deadline: float) -> bytes:"
+    },
+    {
+      "file": "scripts/hermes_gateway_state.py",
+      "line": 21,
+      "declaration": "def validate_request(request: dict) -> None:"
+    },
+    {
+      "file": "scripts/hermes_gateway_state.py",
+      "line": 58,
+      "declaration": "def task_root(workspace: Path, task_id: str) -> Path:"
+    },
+    {
+      "file": "scripts/hermes_gateway_state.py",
+      "line": 62,
+      "declaration": "def identity(request: dict) -> dict:"
+    },
+    {
+      "file": "scripts/hermes_gateway_state.py",
+      "line": 73,
+      "declaration": "def read_state(directory: Path, request: dict) -> dict:"
+    },
+    {
+      "file": "scripts/hermes_gateway_state.py",
+      "line": 99,
+      "declaration": "def write_state(directory: Path, state: dict) -> None:"
+    },
+    {
+      "file": "scripts/hermes_gateway_state.py",
+      "line": 106,
+      "declaration": "def materialize(workspace: Path, directory: Path, request: dict, broker_port: int, api_port: int) -> dict:"
+    },
+    {
+      "file": "scripts/hermes_gateway_state.py",
+      "line": 154,
+      "declaration": "def public_observation(state: dict) -> dict:"
+    },
+    {
+      "file": "apps/console/src/lib/api.ts",
+      "line": 82,
+      "declaration": "export async function api<T>(path: string, init?: RequestInit): Promise<T> {"
+    },
+    {
+      "file": "apps/console/src/lib/api.ts",
+      "line": 102,
+      "declaration": "export function resource<T>(key: string, path: string) {"
+    },
+    {
+      "file": "apps/console/src/lib/api.ts",
+      "line": 111,
+      "declaration": "export function timestamp(value: string) {"
+    },
+    {
+      "file": "apps/control-api/src/api-types.ts",
+      "line": 10,
+      "declaration": "export type ControlEnvironment = { Variables: { requestId: string; actor: Actor } };"
+    },
+    {
+      "file": "apps/control-api/src/api-types.ts",
+      "line": 13,
+      "declaration": "export function registerControlResponseValidation(app: Hono<ControlEnvironment>) {"
+    },
+    {
+      "file": "apps/control-api/src/app.ts",
+      "line": 48,
+      "declaration": "export function createApp("
+    },
+    {
+      "file": "packages/contracts/src/http-endpoints.ts",
+      "line": 42,
+      "declaration": "export const CONTROL_API_VERSION = \"1.11.0\" as const;"
+    },
+    {
+      "file": "packages/contracts/src/http-endpoints.ts",
+      "line": 43,
+      "declaration": "export const CONTROL_API_HEADER = \"x-godseye-api-version\" as const;"
+    },
+    {
+      "file": "packages/contracts/src/http-endpoints.ts",
+      "line": 44,
+      "declaration": "export interface ControlEndpoint {"
+    },
+    {
+      "file": "packages/contracts/src/http-endpoints.ts",
+      "line": 58,
+      "declaration": "export const CONTROL_HTTP_ENDPOINTS = ["
+    },
+    {
+      "file": "packages/contracts/src/http-endpoints.ts",
+      "line": 339,
+      "declaration": "export const CONTROL_ENDPOINTS = CONTROL_HTTP_ENDPOINTS;"
+    },
+    {
+      "file": "packages/contracts/src/http-endpoints.ts",
+      "line": 340,
+      "declaration": "export function controlPath(path: string) {"
+    },
+    {
+      "file": "packages/contracts/src/http-endpoints.ts",
+      "line": 346,
+      "declaration": "export function findControlEndpoint(method: string, path: string): ControlEndpoint | undefined {"
+    },
+    {
+      "file": "packages/contracts/src/http-endpoints.ts",
+      "line": 354,
+      "declaration": "export function endpointParameters(endpoint: ControlEndpoint) {"
+    },
+    {
+      "file": "packages/contracts/src/http-openapi.ts",
+      "line": 180,
+      "declaration": "export function createControlOpenApi() {"
+    },
+    {
+      "file": "packages/contracts/src/http-openapi.ts",
+      "line": 258,
+      "declaration": "export type ControlOpenApiDocument = ReturnType<typeof createControlOpenApi>;"
+    },
+    {
+      "file": "packages/contracts/src/http-openapi.ts",
+      "line": 270,
+      "declaration": "export function isControlOpenApiDocument(value: unknown): value is ControlOpenApiDocument {"
+    },
+    {
+      "file": "packages/core/src/foundation-plans.ts",
+      "line": 32,
+      "declaration": "export async function registerResource("
+    },
+    {
+      "file": "packages/core/src/foundation-plans.ts",
+      "line": 65,
+      "declaration": "export async function getBudget(state: FoundationState, actor: Actor, projectId: string) {"
+    },
+    {
+      "file": "packages/core/src/foundation-plans.ts",
+      "line": 73,
+      "declaration": "export async function configureBudget("
+    },
+    {
+      "file": "packages/core/src/foundation-plans.ts",
+      "line": 163,
+      "declaration": "export async function createPlan("
+    },
+    {
+      "file": "packages/core/src/foundation-plans.ts",
+      "line": 223,
+      "declaration": "export async function approve("
+    },
+    {
+      "file": "packages/core/src/foundation-plans.ts",
+      "line": 234,
+      "declaration": "export async function approveInTransaction("
+    },
+    {
+      "file": "packages/core/src/foundations.ts",
+      "line": 45,
+      "declaration": "export type {"
+    },
+    {
+      "file": "packages/core/src/foundations.ts",
+      "line": 52,
+      "declaration": "export type EffectOutcome = EffectOutcomeInput;"
+    },
+    {
+      "file": "packages/core/src/foundations.ts",
+      "line": 53,
+      "declaration": "export type { EffectOutcomeInput } from \"@godseye/contracts\";"
+    },
+    {
+      "file": "packages/core/src/foundations.ts",
+      "line": 55,
+      "declaration": "export type { FoundationOptions } from \"./foundation-data.js\";"
+    },
+    {
+      "file": "packages/core/src/foundations.ts",
+      "line": 58,
+      "declaration": "export class FoundationEngine {"
+    },
+    {
+      "file": "packages/core/src/foundations.ts",
+      "line": 223,
+      "declaration": "export async function runFoundationWorker("
+    },
+    {
+      "file": "packages/store/src/schema.ts",
+      "line": 21,
+      "declaration": "export const controlLock = pgTable(\"control_lock\", { id: integer(\"id\").primaryKey() }, (table) => ["
+    },
+    {
+      "file": "packages/store/src/schema.ts",
+      "line": 25,
+      "declaration": "export const projects = pgTable("
+    },
+    {
+      "file": "packages/store/src/schema.ts",
+      "line": 46,
+      "declaration": "export const environments = pgTable("
+    },
+    {
+      "file": "packages/store/src/schema.ts",
+      "line": 74,
+      "declaration": "export const operations = pgTable("
+    },
+    {
+      "file": "packages/store/src/schema.ts",
+      "line": 96,
+      "declaration": "export const requests = pgTable("
+    },
+    {
+      "file": "packages/store/src/schema.ts",
+      "line": 110,
+      "declaration": "export const audit = pgTable(\"audit\", {"
+    },
+    {
+      "file": "packages/store/src/schema.ts",
+      "line": 122,
+      "declaration": "export const deliveries = pgTable(\"github_deliveries\", {"
+    },
+    {
+      "file": "packages/store/src/schema.ts",
+      "line": 129,
+      "declaration": "export const ciRuns = pgTable("
+    }
+  ]
+}

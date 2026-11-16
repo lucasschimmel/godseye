@@ -1,0 +1,154 @@
+{
+  "status": "passed-local-request",
+  "scope": "Local E06 completion",
+  "checkedAt": "2026-11-12T21:46:19.443Z",
+  "static": {
+    "lint": {
+      "exitCode": 0,
+      "files": 527
+    },
+    "dependencies": {
+      "exitCode": 0,
+      "findings": 0,
+      "packages": 495
+    },
+    "contracts": {
+      "applicationVersion": "1.0.0",
+      "exitCode": 0,
+      "controlVersion": "1.9.0"
+    },
+    "typecheck": {
+      "exitCode": 0
+    }
+  },
+  "native": {
+    "compiledSupervisorHardKill": {
+      "passed": 1,
+      "testSeconds": 96.016,
+      "ownedListenersReleased": 11,
+      "unrelatedListenerPreserved": true,
+      "sourceProducerAndJournalReopened": true,
+      "artifact": "artifacts/test-results/e06-supervisor-crash.xml"
+    },
+    "compiledWorkerHardKillUnknown": "passed",
+    "durablePGRedisSleep": "passed",
+    "compiledOwnerHttpOffline": "passed",
+    "latestReadonlyCronSingleton": {
+      "passed": 3,
+      "filteredOrdinaryOrOther": 4,
+      "readonlySeconds": 52.524,
+      "realCronSeconds": 77.002,
+      "singletonLossSeconds": 15.153,
+      "wallSeconds": 155.9,
+      "artifact": "artifacts/test-results/e06-native-authority-catalog-final.xml",
+      "note": "Three native and two ordinary cases passed; agent report supplies exact per-case scope."
+    },
+    "compiledPlatform": "passed",
+    "legacyFinal": {
+      "status": "passed",
+      "cases": 2,
+      "filteredOut": 4,
+      "wallSeconds": 30.74,
+      "artifact": "artifacts/test-results/e06-legacy-native-final.xml"
+    },
+    "newVerified": {
+      "distinct": 9,
+      "report": "reviews/e06-completion-tests.json",
+      "note": "Case-level final passing evidence, not a fictitious single green all-nine run"
+    },
+    "platformEnhancedFinal": {
+      "passed": 1,
+      "filteredOut": 4,
+      "testSeconds": 20.063,
+      "wallSeconds": 22.84,
+      "artifact": "artifacts/test-results/e06-platform-final.xml"
+    },
+    "rootCaseLevelXmlRecheck": {
+      "newCases": 9,
+      "failures": 0,
+      "missing": 0,
+      "legacyCases": 2
+    }
+  },
+  "mutations": {
+    "selected": 7,
+    "killed": 7,
+    "baselinePassed": 7,
+    "restoredPassed": 7,
+    "sourceUnchanged": true,
+    "seconds": 43.039,
+    "report": "reviews/mutations-autonomous.json"
+  },
+  "full": {
+    "status": "passed",
+    "exitCode": 0,
+    "ordinaryPassed": 1225,
+    "nativeSkippedButSeparatelyVerified": 11,
+    "total": 1236,
+    "passedFiles": 104,
+    "nativeOnlySkippedFiles": 4,
+    "totalFiles": 108,
+    "vitestWallSeconds": 950.24,
+    "artifact": "artifacts/test-results/e06-unit-final.xml",
+    "junitFailures": 0,
+    "junitErrors": 0
+  },
+  "build": {
+    "status": "passed",
+    "exitCode": 0,
+    "session": 31559,
+    "components": [
+      "console",
+      "control-api",
+      "standalone-sdk+declarations",
+      "backend-template",
+      "jobs-supervisor+workers+platform+guardian"
+    ]
+  },
+  "source": {
+    "verdict": "pass",
+    "runtimePaths": 42,
+    "allReviewedProductionPaths": 47,
+    "rootHashDrift": 0,
+    "review": "reviews/e06-completion-code-review.json",
+    "gitleaksRawFindings": 0,
+    "postFullSourceHashDrift": 0
+  },
+  "services": "nativehelper persistence smoke+8regressions+11independentprobesPASS",
+  "limits": [
+    "No dedicatedserver actions",
+    "Native process qualification, no Docker/gVisor/VM/networkquota qualification",
+    "Existing owner data not migrated; explicit PostgreSQL target required",
+    "No fullSBOM/SASTscanners available"
+  ],
+  "builtSmoke": {
+    "status": "passed",
+    "exitCode": 0,
+    "session": 24065
+  },
+  "trace": {
+    "canonical": 11,
+    "missing": 0,
+    "report": "reviews/e06-completion-trace.json"
+  },
+  "git": {
+    "status": "passed",
+    "report": "reviews/e06-completion-git.json",
+    "finalAfterDocFreeze": "passed;develop/HEAD unchanged,index0,69newsource/doc checks,priorpathsretained"
+  },
+  "documents": {
+    "status": "passed",
+    "count": 7,
+    "relativeLinks": 109,
+    "anchors": 25,
+    "rootHashDrift": 0,
+    "report": "reviews/e06-completion-docs.json"
+  },
+  "browser": {
+    "currentRun": false,
+    "reason": "No UI source change; actual process/native/HTTP regressions are the relevant new gate",
+    "historical": "Prior41browserjourneys not relabeled as current proof"
+  },
+  "completedAt": "2026-11-12T21:47:40.516Z",
+  "memoryOutcome": "outcome-1794520013-c51e64b6"
+}

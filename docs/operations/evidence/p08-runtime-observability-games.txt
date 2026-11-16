@@ -1,0 +1,31 @@
+P08 Runtime, Observability, Hermes & Game Server Verification (2026-11-15)
+===========================================================================
+
+1. Representative runsc (systrap) cells on godseye-pro (10.20.1.10):
+   - godseye-cell-prod-app: Up, network=godseye_prod_net (internal), runtime=runsc, uname=4.19.0-gvisor
+   - godseye-cell-dev-app:  Up, network=godseye_dev_net (internal), runtime=runsc, uname=4.19.0-gvisor
+   - Security: --read-only --cap-drop=ALL --security-opt=no-new-privileges --pids-limit=64 --memory=128m --cpus=0.25
+
+2. Control Plane & Services on godseye-pro:
+   - postgresql=active, openbao=active (Sealed: false), redis-server=active, caddy=active
+   - jenkins=active, godseye-control-api=active (127.0.0.1:4301), godseye-console=active (127.0.0.1:4300, HTTP 200)
+   - pgbackrest --stanza=main check: completed successfully (4492ms) -> B2 godseye-backups-dab6e7328bfc
+
+3. Hermes 0.23.1 Runtime (under isolated service user godseye):
+   - bun run hermes:install -> status: "installed", pythonVersion: "3.14.9", openaiSdkVersion: "2.54.0", network: "denied", modelCalls: 0
+   - bun run hermes:runtime:install -> status: "installed", version: "0.23.1", extras: ["sms"]
+   - Coding-runner adapter: apps/control-api/src/coding-startup.ts safely degrades to unavailableConfiguration (qualified: false, isolation: "disposable-kvm") on Linux/Proxmox until Linux KVM coding-runner adapter is qualified; owner administration & Hermes remain unaffected.
+
+4. Host ZFS + NVMe SMART Policy (godseye-wg / 10.20.0.1):
+   - /usr/local/sbin/godseye-host-health.sh + godseye-host-health.timer (15min)
+   - zpool: "all pools are healthy" (zpool_ok: true)
+   - /dev/nvme0n1 (S675NU0W263145): critical_warning=0x0, available_spare=100, media_errors=0, percentage_used=57, temp=29C, ok=true
+   - /dev/nvme1n1 (S675NX0T801950): critical_warning=0x4 (warranty_only_0x04=true per Hetzner Ticket #2026111403017785), available_spare=100, media_errors=0, percentage_used=101, temp=34C, ok=true
+   - overall_ok: true
+
+5. Game Server & App-Consistent Save Backup on godseye-games (10.20.2.10):
+   - Docker 26.1.5 + godseye-luanti (lscr.io/linuxserver/luanti:latest) bound to 10.20.2.10:30000/udp
+   - /usr/local/sbin/godseye-games-backup.sh + godseye-games-backup.timer (daily 04:00 UTC)
+   - Quiesced backup & destructive restore drill:
+     BACKUP_OK:/var/backups/godseye-games/luanti-world-20261115T102120Z.tar.gz (sha256sum OK)
+     RESTORE_DRILL_OK:godseye-luanti:Up 3 seconds

@@ -1,0 +1,48 @@
+/** E06 durable-job behavioral probes; run by the shared isolated mutation harness (suite "jobs"). */
+export const jobsMutations = [
+  {
+    id: "J01",
+    file: "packages/core/src/jobs-execution.ts",
+    test: "tests/jobs-faults.test.ts",
+    name: "treats a timed-out protected job as unknown and a timed-out idempotent job as retryable",
+    behavior: "Report a timed-out protected effect as a retryable failure instead of unknown",
+    from: 'return loaded.definition.effectPolicy === "protected"',
+    to: "return false",
+  },
+  {
+    id: "J05",
+    file: "packages/core/src/jobs-outbox.ts",
+    test: "tests/jobs-outbox.test.ts",
+    name: "leaves an abandoned claim unknown when the receiver cannot deduplicate",
+    behavior: "Redeliver an abandoned claim to a receiver that cannot deduplicate",
+    from: "const safe = state.senders?.get(row.destination)?.dedupesByEffectKey === true;",
+    to: "const safe = true;",
+  },
+  {
+    id: "J06",
+    file: "packages/core/src/jobs-outbox.ts",
+    test: "tests/jobs-outbox.test.ts",
+    name: "deduplicates repeated intents by effect key and rejects a conflicting payload",
+    behavior: "Accept a conflicting payload for an existing effect key",
+    from: "if (!existing || existing.payloadHash !== payloadHash)",
+    to: "if (!existing)",
+  },
+  {
+    id: "J07",
+    file: "packages/core/src/jobs-outbox.ts",
+    test: "tests/jobs-isolation.test.ts",
+    name: "parks outbox intent as held in a recovery cell and requires an owner decision to release it",
+    behavior: "Leave outbox intent pending instead of parking it in a recovery-held cell",
+    from: "if (held.length === 0) return 0;",
+    to: "return 0;",
+  },
+  {
+    id: "J08",
+    file: "packages/core/src/jobs-execution.ts",
+    test: "tests/jobs-outbox.test.ts",
+    name: "refuses new outbox intent from a worker whose lease has expired",
+    behavior: "Let a fenced worker create new external outbox intent",
+    from: "await validateLease(state.request, tx, context);",
+    to: "",
+  },
+];

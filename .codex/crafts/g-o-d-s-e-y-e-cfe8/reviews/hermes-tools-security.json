@@ -1,0 +1,54 @@
+{
+  "date": "2026-11-14",
+  "status": "local-scans-passed-with-explicit-degradations",
+  "gitleaks": {
+    "version": "8.30.1",
+    "publicPaths": 713,
+    "rawFindings": 1,
+    "newCredentialFindings": 0,
+    "artifact": "artifacts/security/hermes-tools-gitleaks.json",
+    "enumeration": "artifacts/security/hermes-tools-public-source-files.json",
+    "classification": {
+      "rule": "generic-api-key",
+      "path": "packages/app-backend/src/local.ts",
+      "line": 37,
+      "status": "unchanged-synthetic-placeholder-false-positive",
+      "priorEvidence": "artifacts/security/backend-source-final-effective.json",
+      "reason": "Temporary state receives the existing public validation placeholder; actual backend identity is independently generated and privately loaded. No scanner ignore or vulnerability waiver was added."
+    },
+    "scope": "Public source/docs/tests snapshot; .env files, protected basenames, runtime state, dependency trees and build outputs excluded."
+  },
+  "nodeAudit": {
+    "command": "Bun1.4.4 audit --json",
+    "exitCode": 0,
+    "advisories": 0,
+    "response": {}
+  },
+  "python": {
+    "installedDistributions": 74,
+    "thirdPartyExactVersionQueries": 73,
+    "findings": 0,
+    "completePagination": true,
+    "inventory": "artifacts/security/agent-center-python-inventory.json",
+    "artifact": "artifacts/security/hermes-tools-python-osv.json",
+    "environment": "Unchanged frozen execution environment verified again by hermes-runtime-install.mjs; first-party pinned Hermes excluded from PyPI query."
+  },
+  "nativeIntegrity": {
+    "coreStatus": "installed, immutable manifest verified and network-denied smoke passed",
+    "executionStatus": "installed, frozen execution manifest verified",
+    "hermesVersion": "0.23.1",
+    "commit": "3b421578588243f920886e6fe79a6faa87ea026e",
+    "pythonVersion": "3.14.9",
+    "openaiSdkVersion": "2.54.0",
+    "paidModelCalls": 0
+  },
+  "sourceReview": "reviews/hermes-tools-independent-review.json",
+  "scopedSecurityReview": "reviews/hermes-tools-security-review.json",
+  "degradations": [
+    "Semgrep unavailable; independent source security review is model judgment, not automated SAST.",
+    "Direct OSV exact PyPI queries do not qualify first-party code or OS/glibc vulnerabilities and reachability.",
+    "Installed inventory is not a complete SBOM; Syft/cdxgen unavailable.",
+    "No paid provider, general hostile-code/KVM pentest, dedicated-host containment or recovery qualification."
+  ],
+  "waiversAdded": 0
+}

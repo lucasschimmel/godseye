@@ -1,0 +1,41 @@
+# TEMPLATE - not installed or enabled by any repository command.
+# Renders provider bindings from OpenBao onto tmpfs (/run/godseye-bindings, mode 0700; files 0600).
+# Nothing is ever written to persistent disk. Sealed or unreachable OpenBao => no files => the Hermes and
+# coding providers report unavailable. Re-run (systemctl restart) after an unseal; the control API reads the
+# files at startup, so restart it after rendering.
+[Unit]
+Description=G.O.D.S.E.Y.E render provider bindings from OpenBao to tmpfs
+After=openbao.service
+Wants=openbao.service
+StartLimitIntervalSec=600
+StartLimitBurst=20
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+User=godseye
+Group=godseye
+# /run is tmpfs; the directory is created 0700 and removed when the unit stops.
+RuntimeDirectory=godseye-bindings
+RuntimeDirectoryMode=0700
+RuntimeDirectoryPreserve=no
+# AppRole secret-id is delivered as a credential file (never an environment variable or argument).
+LoadCredential=openbao-secret-id:/etc/godseye/openbao-secret-id
+Environment=BAO_ADDR=@@OPENBAO_ADDR@@
+Environment=BAO_CACERT=@@OPENBAO_CACERT@@
+Environment=GODSEYE_BAO_ROLE_ID_FILE=/etc/godseye/openbao-role-id
+Environment=GODSEYE_BAO_MOUNT=godseye
+ExecStart=/usr/local/libexec/godseye/render-bindings.sh
+# EX_TEMPFAIL (75) = sealed/unreachable: retry with backoff, never leave stale files.
+Restart=on-failure
+RestartSec=15s
+ExecStopPost=/usr/bin/rm -f /run/godseye-bindings/hermes-bindings.json /run/godseye-bindings/coding-bindings.json /run/godseye-bindings/work-vm-ssh-key
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/run/godseye-bindings
+
+[Install]
+WantedBy=multi-user.target

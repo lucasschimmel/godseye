@@ -1,0 +1,108 @@
+{
+  "date": "2026-11-14",
+  "kind": "narrow-independent-docs-source-coherence",
+  "verdict": "pass",
+  "scope": "Ten documentation files listed in reviews/hermes-tools-docs.json; relevant tool source and operator bootstrap; source/security evidence scope labels. Read-only review; report artifact only.",
+  "findings": [
+    {
+      "id": "HTD-001",
+      "status": "CONFIRMED",
+      "severity": "minor",
+      "priority": "P2",
+      "title": "Distinguish standalone snapshot downloads from chat artifact storage",
+      "evidence": [
+        "docs/development/hermes-tools.md:111 \u00e2\u20ac\u201d artifact paragraph implies both standalone and chat snapshots enter the existing immutable owner artifact store.",
+        "packages/core/src/agents-tools-artifacts.ts:17 \u00e2\u20ac\u201d exporter returns immediately when the task has no chat turn; only chat paths insert agentChatArtifacts at line 51.",
+        "apps/console/src/components/agents-tools-history.tsx:73 \u00e2\u20ac\u201d standalone tools history renders toolsDetail snapshots and generates a text/plain Blob download at line 83.",
+        "docs/adr/ADR-016-task-scoped-hermes-data-tools.md:45 \u00e2\u20ac\u201d unqualified reference to existing immutable downloads should receive the same distinction."
+      ],
+      "impact": "An operator or maintainer could expect standalone tool outputs to have the same immutable artifact IDs, storage rows and download endpoint as chat attachments. Standalone intentionally delivers bounded digest-verified snapshots from the retained tool journal instead.",
+      "refutation": "Both paths enforce successful nonrevoked/stopped settlement and deliver inert text, so this is documentation precision rather than an authority bypass. Their actual storage and download lifecycles differ, making the current combined storage claim inaccurate.",
+      "refutation_survived": true,
+      "suggestion": "State that chat snapshots enter the existing immutable chat artifact store; standalone snapshots are exposed through digest-verified toolsDetail after successful stopped settlement and downloaded as text/plain. Retain shared authority, digest and inertness guarantees.",
+      "remediation_status": "Resolved by SCRIBE; reviewer read exact five-file artifact-delivery wording delta and verified source coherence.",
+      "resolved": true
+    }
+  ],
+  "checks_passed": [
+    "Legacy one-request/no-tools claims are labeled defaults or historical checkpoints, with explicit later grant-based extension.",
+    "Native Hermes/model/broker remain outside the trusted helper sandbox; no hostile-code sandbox claim attributed to native process separation.",
+    "Physical proof distinguishes production cgroup values/sampled membership, smaller kernel refusal probes and lab tmpfs ENOSPC; no continuous descendant or production-exhaustion claim.",
+    "Catalog, immutable ceiling/subset, missing-grant default, finite 4-model/3-tool loop, aggregate cost/byte/time caps and copied-data boundary align with source.",
+    "Unknown/no-replay, exact invocation/OCI cleanup, retained capacity, successful nonrevoked/stopped artifact gating and approval exclusions remain explicit.",
+    "Operator install/enable/bootstrap flags and eight-hour foreground lifetime match source; privileged manager activation is explicitly operator-only.",
+    "ADR-016 partially supersedes prior no-tools restrictions while preserving I10 disposable KVM for arbitrary shell/build/project code. E07 and dedicated-host qualification remain partial.",
+    "New documentation does not invent final aggregate regression/mutation/review counts while parent gates remain pending.",
+    "Security report records 713 public paths, zero new credential findings versus one unchanged placeholder classification, zero Bun/OSV findings and explicit missing Semgrep/SBOM/OS coverage limitations. This review checked wording, not scanner findings."
+  ],
+  "not_reviewed": [
+    "No installer/bootstrap/model commands run for docs review.",
+    "Threat-model/source security review belongs to separate security-auditor satellite and was not duplicated.",
+    "Protected real private files were not inspected.",
+    "SCRIBE reports 179 final relative links checked with zero missing; reviewer did not duplicate the link crawler."
+  ],
+  "initial_verdict": "pass-with-findings",
+  "remediation_review": {
+    "finding": "HTD-001",
+    "verdict": "pass",
+    "evidence": [
+      "docs/development/hermes-tools.md:111 \u2014 shared successful/nonrevoked/stopped gates remain; chat agentChatArtifacts IDs/endpoint at lines 113-114 are distinguished from standalone toolsDetail/text/plain Blob downloads at lines 115-117.",
+      "docs/adr/ADR-016-task-scoped-hermes-data-tools.md:44 \u2014 decision now explicitly distinguishes chat immutable store/endpoint and standalone retained-journal toolsDetail/Blob lifecycle without chat IDs/storage rows.",
+      "docs/development/agent-center.md:176 \u2014 latest continuation now distinguishes standalone journal snapshots from chat store/endpoint.",
+      "docs/development/handoff.md:103 \u2014 shared gates and distinct delivery paths remain accurate.",
+      "docs/spec/v1.md:300 \u2014 actual bounded inert output distinguishes standalone local text downloads and chat immutable artifact store/endpoint."
+    ],
+    "scope": "Only requested documentation correction checked; no repeated full review, runtime invocation or final aggregate gate claims.",
+    "link_check": "SCRIBE reports 173 links rechecked with zero missing; reviewer did not duplicate that crawler."
+  },
+  "final_aggregate_coherence": {
+    "verdict": "pass",
+    "reviewed_docs": [
+      "docs/development/hermes-tools.md:137",
+      "docs/development/handoff.md:116",
+      "docs/spec/v1.md:308",
+      "docs/plan/v1-development.md:356",
+      "README.md:7",
+      "CHANGELOG.md",
+      "reviews/hermes-tools-docs.json"
+    ],
+    "independent_xml_counts": {
+      "builders": {
+        "artifact": "artifacts/test-results/hermes-tools-global-builders.xml",
+        "passed": 2,
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0,
+        "files": 1
+      },
+      "remainder": {
+        "artifact": "artifacts/test-results/hermes-tools-global-rest.xml",
+        "passed": 1424,
+        "skipped": 28,
+        "failures": 0,
+        "errors": 0,
+        "files": 131
+      },
+      "aggregate": {
+        "passed": 1426,
+        "skipped": 28,
+        "actualCases": 1454,
+        "files": 132,
+        "uniqueDisplayLabels": 1452,
+        "crossGroupFiles": [],
+        "crossGroupLabels": []
+      },
+      "duplicate_display_title_source": "tests/pg-policy.test.ts:35 and :40 distinguish positive Infinity and NaN memoryMiB; tests/recovery-policy.test.ts:84 and :89 distinguish positive Infinity and NaN repositoryGiB. Existing %j titles serialize both as null; actual cases remain distinct."
+    },
+    "frozen_production": {
+      "artifact": "reviews/hermes-tools-source-freeze.json",
+      "independently_rehashedPaths": 68,
+      "drift": []
+    },
+    "other_evidence_coherence": "Docs consistently report 66 new ordinary cases included in global total, 11 new unique native plus 2 separately selected legacy cases, 3 browser cases, 5 curated mutation kills. These figures are cross-checked against GAUNTLET report, not added to the default regression count. Source/model/browser/physical qualification distinctions are retained.",
+    "parent_reported_checks": "615-file lint, types, control API 1.12.0 consistency, canonical build and first-attempt built-API smoke match final-gates report. Reviewer did not rerun these checks.",
+    "cleanup_truth": "Docs explicitly state current WSL manager unavailable and former holder already absent after boot change; current-boot public runtime absence does not turn old unknown journals into stopped. Operator activation required before future use. No current active bootstrap or retrospective stopped journal claim.",
+    "qualification": "No paid model/provider entitlement, general code/KVM, dedicated-host qualification, exhaustive descendant enumeration, production tmpfs exhaustion, complete SAST/SBOM/OS audit, whole-suite mutation or coverage percentage claim.",
+    "links": "SCRIBE final report says 179 relative links and zero missing. Reviewer did not duplicate crawler."
+  }
+}

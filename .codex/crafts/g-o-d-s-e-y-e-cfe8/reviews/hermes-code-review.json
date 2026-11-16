@@ -1,0 +1,76 @@
+{
+  "verdict": "pass",
+  "findings": [],
+  "criteria_run": 13,
+  "criteria_passed": 13,
+  "not_reviewed": [
+    "Caller-owned static checks, tests, native upstream probe, scanner and mutation results were not independently rerun; source review is not executable qualification.",
+    "No private profile home, .env, credential, conversation or runtime material inspected.",
+    "Full dependency SCA/CVE coverage of the installed Python dependency closure is outside this review; reported Bun audit does not cover that closure.",
+    "Remote infrastructure, OS hostile-code confinement and paid model/provider calls excluded.",
+    "Mutable task-owned run-home materialization, validated owner/project binding, run admission/grants/budgets, credential injection, Runs API/chat/SSE, cancellation/reconciliation, approvals and coding runners remain unimplemented later E07 scope.",
+    "Same-account writers able to replace all integrity anchors are outside OS containment claims; this setup surface provides no sandbox."
+  ],
+  "upstream_evidence": [
+    "0.23.1@3b421578588243f920886e6fe79a6faa87ea026e hermes_cli/tools_config.py:572-584 treats explicit [] as configured and avoids platform-default fallback.",
+    "Same pinned hermes_cli/config_defaults.py:1438-1452 defines project_discovery, trusted_project_dirs, auto_load, template_vars and inline_shell; :1482-1489 defines curator.enabled."
+  ],
+  "review_scope": [
+    "scripts/install-hermes.mjs",
+    "scripts/install-hermes.py",
+    "scripts/hermes_install_files.py",
+    "scripts/hermes-local.mjs",
+    "scripts/hermes_local.py",
+    "scripts/hermes_profiles.py",
+    "scripts/hermes_catalog.py",
+    "scripts/hermes_files.py",
+    "infra/hermes/catalog.json",
+    "infra/hermes/skills/godseye-context/1.0.0/SKILL.md",
+    "docs/development/hermes.md",
+    "docs/adr/ADR-013-local-hermes-setup.md",
+    "docs/spec/v1.md targeted E07 boundary",
+    "docs/plan/v1-development.md targeted E07 checkpoint"
+  ],
+  "resolved_findings": [
+    {
+      "cwe": "CWE-59",
+      "id": "HCR-001",
+      "resolution": "Re-read installer helper after installer-agent correction: private_directory now rejects noncanonical/linked ancestors; tree_hashes rejects linked/noncanonical, foreign or unconfined top roots before os.walk. Both final immutable-files verification and retry extraction use this guard. Native proof remains caller-owned."
+    },
+    {
+      "id": "HCR-002",
+      "origin": "Root test RED discovery",
+      "resolution": "Final source independently checked: read_binding, verify_snapshot and directory traversal use existing_directory; missing profile/revision verification no longer mkdir-creates poisoned retained state."
+    },
+    {
+      "id": "HCR-003",
+      "origin": "Actual upstream mutable-import behavior",
+      "resolution": "Final views label homeKind immutable-setup-snapshot and runtimeHome null. Operator guide warns against direct upstream use, describes disposable mutable qualification copy, and defers run-home materialization. No live mutable-home support claimed."
+    }
+  ],
+  "final_freeze": {
+    "files_checked": 10,
+    "files": {
+      "infra/hermes/catalog.json": "517e9db49f988e63720629048944d67cbd7f296ebd82fd4104185f0bbcc7cfaf",
+      "infra/hermes/skills/godseye-context/1.0.0/SKILL.md": "dc0cbf46bc1eae40e83c1af692eb6c7ffe640b494dd6da6164fd2e98bdc76245",
+      "scripts/hermes-local.mjs": "fd8833dc83c3c403dc8620e75e7890f314c06ad7dc6174a78964493682e984ce",
+      "scripts/hermes_catalog.py": "f8abd302a913d4f106b4fcb3b95665156d97437a49feaba2d1d8625718148b54",
+      "scripts/hermes_files.py": "a3d88547df9c0bc62a2a8d2247416858579decbfb30e58f8e4534d66df6e04ef",
+      "scripts/hermes_install_files.py": "b7c66724fa80b55f8077fd768d4fd1c94b5b0f425eb2e068674b7f7c6f3273d9",
+      "scripts/hermes_local.py": "e70b08eaa749bbb9e9f8554873290e075e1848712c3d34eb09707db58fe5b8ca",
+      "scripts/hermes_profiles.py": "48e72b4bbddece0ef03535b05fcd12cd31203411c868cb23d66c88f1692f6479",
+      "scripts/install-hermes.mjs": "8d077dbbbd3e23f9aef9f34ff1dbcc7b279ce7fbf153631452732437c8093090",
+      "scripts/install-hermes.py": "0bd7f110ba53501a0a19916a1ac758cc6985c3b59955ac4cd51dbcbee7c70083"
+    },
+    "path": ".codex/crafts/g-o-d-s-e-y-e-cfe8/reviews/hermes-source-freeze.json",
+    "all_match": true,
+    "sha256": "36ae1a3320cc187881bd3e15aa931ff73eeb92b0a86e43a5b4568aadb5d8b990"
+  },
+  "final_source_assessment": [
+    "All ten frozen production SHA-256 values independently matched and final files were re-read.",
+    "detach_build_hardlinks copies owned multiply-linked regular files into new private inodes without modifying cache inode; later tree_hashes refuses remaining foreign, linked-root, escaped-link, special or hardlinked files.",
+    "Retry permits only specified generated egg-info/Python bytecode differences, preserves old trees and replaces from verified archives before execution; modified ordinary source/runtime entries remain refused.",
+    "Profile CAS remains under OS writer lock, snapshots are deterministic and retained, missing targets are read-only refusals.",
+    "ADR-013, operator guide and targeted spec/plan changes preserve partial E07.S01 status and distinguish local setup declarations from authority and execution."
+  ]
+}

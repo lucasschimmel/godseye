@@ -1,0 +1,61 @@
+{
+  "schema": "faber-ui-copy-review-v1",
+  "verdict": "pass",
+  "reviewed_at": "2026-11-11",
+  "scope": [
+    "apps/console/src/lib/infra-labels.ts",
+    "apps/console/src/routes/infrastructure.tsx"
+  ],
+  "findings": [],
+  "criteria_run": 3,
+  "criteria_passed": 3,
+  "checks": {
+    "presentation_only": "pass: helper returns display labels; route imports and JSX labels change, while mutation paths, payloads, freshness and executionAvailable gates match the prior reviewed route.",
+    "escaped_rendering": "pass: React JSX text and title interpolation are used; no innerHTML or URL/shell sink is introduced.",
+    "unknown_label_text": "pass: frozen null-prototype maps return string fallbacks for unknown/prototype-inherited names; known labels retain their French translation."
+  },
+  "not_reviewed": [
+    "Backend/provider production probes and full suites were not repeated for this presentation-only delta."
+  ],
+  "source_hashes_before": {
+    "apps/console/src/routes/infrastructure.tsx": "f2b26349b631fa047429bb91410c1c329557a713637e95f0616d9c62d85a52ea",
+    "apps/console/src/lib/infra-labels.ts": "caf4edf221f74f4825125f097ee1466b9250ab0138f212aafcc34f72040ea41c"
+  },
+  "resolved_findings": [
+    {
+      "id": "R-INF-UI-001",
+      "criterion": "COR-03 unknown labels must always return safe text",
+      "status": "CONFIRMED",
+      "severity": "minor",
+      "evidence": "apps/console/src/lib/infra-labels.ts:35-42 indexes inherited properties of ordinary objects. Independent helper probe: __proto__ and Unqualified capability: __proto__ return object; constructor returns function rather than the declared string fallback.",
+      "refutation_survived": true,
+      "suggestion": "Require Object.hasOwn on dictionary hits, or use a Map/null-prototype dictionary, before returning translated text.",
+      "resolution": "resolved; independently reverified after helper-only refreeze"
+    }
+  ],
+  "initial_verdict": "pass-with-findings",
+  "independent_after_probe": {
+    "stateMapFrozen": true,
+    "stateMapNullPrototype": true,
+    "allNineReturnStrings": true,
+    "command": "node --import tsx --input-type=module (stdin)",
+    "exitCode": 0,
+    "unknownFilesystemUsesFallback": true,
+    "labels": [
+      "known reason",
+      "Unqualified capability: runtime",
+      "unexpected diagnostic",
+      "__proto__",
+      "constructor",
+      "toString",
+      "Unqualified capability: __proto__",
+      "Unqualified capability: constructor",
+      "Unqualified capability: toString"
+    ]
+  },
+  "source_hashes_final": {
+    "apps/console/src/routes/infrastructure.tsx": "f2b26349b631fa047429bb91410c1c329557a713637e95f0616d9c62d85a52ea",
+    "apps/console/src/lib/infra-labels.ts": "72bcf9efecbb0866d5c4efbf2ea1bee26ba78e303295526fbf3ee60320c3ae3f"
+  },
+  "coverage_note": "This supplement supersedes only the infrastructure route hash in the prior production review and adds the pure label helper. It makes no new backend/provider enforcement claim."
+}

@@ -1,0 +1,187 @@
+
+=== [TIMESTAMP_AND_OS] ===
+2026-11-14T23:35:18Z
+Linux rescue 7.1.6 #1 SMP PREEMPT Wed Nov 11 10:29:54 UTC 2026 x86_64 GNU/Linux
+PRETTY_NAME="Debian GNU/Linux 13 (trixie)"
+NAME="Debian GNU/Linux"
+VERSION_ID="13"
+VERSION="13 (trixie)"
+ID=debian
+BOOT_MODE=UEFI
+BootCurrent: 0001
+Timeout: 1 seconds
+BootOrder: 0001,0003
+Boot0001* UEFI: PXE IPv4 Realtek PCIe 2.5GBE Family Controller	PciRoot(0x0)/Pci(0x1c,0x2)/Pci(0x0,0x0)/MAC(c87f54705bfe,0)/IPv4(0.0.0.00.0.0.0,0,0)0000424f
+Boot0003* ubuntu	HD(1,GPT,747a04e1-6bb6-4024-b557-dc7ab6a471e0,0x1000,0x80000)/File(\EFI\ubuntu\shimx64.efi) File(.)
+ 00:35:18 up  1:33,  2 users,  load average: 0.00, 0.02, 0.00
+
+=== [CPU_AND_VIRTUALIZATION] ===
+Architecture:                            x86_64
+CPU op-mode(s):                          32-bit, 64-bit
+Address sizes:                           46 bits physical, 48 bits virtual
+Byte Order:                              Little Endian
+CPU(s):                                  20
+On-line CPU(s) list:                     0-19
+Vendor ID:                               GenuineIntel
+Model name:                              13th Gen Intel(R) Core(TM) i5-13500
+CPU family:                              6
+Model:                                   191
+Thread(s) per core:                      2
+Core(s) per socket:                      14
+Socket(s):                               1
+Stepping:                                2
+CPU(s) scaling MHz:                      19%
+CPU max MHz:                             4800.0000
+CPU min MHz:                             800.0000
+BogoMIPS:                                4992.00
+Flags:                                   fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf tsc_known_freq pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch cpuid_fault epb ssbd ibrs ibpb stibp ibrs_enhanced tpr_shadow flexpriority ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid rdseed adx smap clflushopt clwb intel_pt sha_ni xsaveopt xsavec xgetbv1 xsaves split_lock_detect avx_vnni dtherm ida arat pln pts hwp hwp_notify hwp_act_window hwp_epp hwp_pkg_req hfi vnmi umip pku waitpkg gfni vaes vpclmulqdq rdpid movdiri movdir64b fsrm md_clear serialize pconfig arch_lbr ibt flush_l1d arch_capabilities
+Virtualization:                          VT-x
+L1d cache:                               544 KiB (14 instances)
+L1i cache:                               704 KiB (14 instances)
+L2 cache:                                11.5 MiB (8 instances)
+L3 cache:                                24 MiB (1 instance)
+NUMA node(s):                            1
+NUMA node0 CPU(s):                       0-19
+Vulnerability Gather data sampling:      Not affected
+Vulnerability Ghostwrite:                Not affected
+Vulnerability Indirect target selection: Not affected
+Vulnerability Itlb multihit:             Not affected
+Vulnerability L1tf:                      Not affected
+Vulnerability Mds:                       Not affected
+Vulnerability Meltdown:                  Not affected
+Vulnerability Mmio stale data:           Not affected
+Vulnerability Old microcode:             Not affected
+Vulnerability Reg file data sampling:    Mitigation; Clear Register File
+Vulnerability Retbleed:                  Not affected
+Vulnerability Spec rstack overflow:      Not affected
+Vulnerability Spec store bypass:         Mitigation; Speculative Store Bypass disabled via prctl
+Vulnerability Spectre v1:                Mitigation; usercopy/swapgs barriers and __user pointer sanitization
+Vulnerability Spectre v2:                Mitigation; Enhanced / Automatic IBRS; IBPB conditional; PBRSB-eIBRS SW sequence; BHI BHI_DIS_S
+Vulnerability Srbds:                     Not affected
+Vulnerability Tsa:                       Not affected
+Vulnerability Tsx async abort:           Not affected
+Vulnerability Vmscape:                   Mitigation; IBPB before exit to userspace
+--- lscpu -e ---
+CPU NODE SOCKET CORE L1d:L1i:L2:L3 ONLINE    MAXMHZ   MINMHZ      MHZ
+  0    0      0    0 0:0:0:0          yes 4800.0000 800.0000 800.0000
+  1    0      0    0 0:0:0:0          yes 4800.0000 800.0000 800.0000
+  2    0      0    1 4:4:1:0          yes 4800.0000 800.0000 796.4280
+  3    0      0    1 4:4:1:0          yes 4800.0000 800.0000 800.0000
+  4    0      0    2 8:8:2:0          yes 4800.0000 800.0000 800.1780
+  5    0      0    2 8:8:2:0          yes 4800.0000 800.0000 800.0000
+  6    0      0    3 12:12:3:0        yes 4800.0000 800.0000 800.0000
+  7    0      0    3 12:12:3:0        yes 4800.0000 800.0000 800.0000
+  8    0      0    4 16:16:4:0        yes 4800.0000 800.0000 806.3400
+  9    0      0    4 16:16:4:0        yes 4800.0000 800.0000 800.0000
+ 10    0      0    5 20:20:5:0        yes 4800.0000 800.0000 800.0040
+ 11    0      0    5 20:20:5:0        yes 4800.0000 800.0000 800.0000
+ 12    0      0    6 24:24:6:0        yes 3500.0000 800.0000 800.0000
+ 13    0      0    7 25:25:6:0        yes 3500.0000 800.0000 800.0000
+ 14    0      0    8 26:26:6:0        yes 3500.0000 800.0000 800.0450
+ 15    0      0    9 27:27:6:0        yes 3500.0000 800.0000 799.7270
+ 16    0      0   10 28:28:7:0        yes 3500.0000 800.0000 796.4470
+ 17    0      0   11 29:29:7:0        yes 3500.0000 800.0000 799.6150
+ 18    0      0   12 30:30:7:0        yes 3500.0000 800.0000 802.6590
+ 19    0      0   13 31:31:7:0        yes 3500.0000 800.0000 801.7850
+VIRT_FLAGS_COUNT=40
+crw-rw---- 1 root kvm 10, 232 Nov 14 23:02 /dev/kvm
+
+=== [MEMORY_AND_SWAP] ===
+               total        used        free      shared  buff/cache   available
+Mem:     67215044608   985886720 66496122880    21864448   385007616 66229157888
+Swap:              0           0           0
+MemTotal:       65639692 kB
+MemFree:        64937620 kB
+MemAvailable:   64676872 kB
+SwapTotal:             0 kB
+SwapFree:              0 kB
+HugePages_Total:       0
+
+=== [BLOCK_DEVICES_AND_LAYOUT] ===
+NAME        KNAME     PATH           TYPE          SIZE MODEL                      SERIAL         WWN                  ROTA DISC-GRAN FSTYPE            MOUNTPOINTS
+loop0       loop0     /dev/loop0     loop    4460097024                                                                   0         0 ext2              
+nvme0n1     nvme0n1   /dev/nvme0n1   disk  512110190592 SAMSUNG MZVL2512HCJQ-00B00 S675NU0W263145 eui.002538b231a3afc2    0       512                   
+|-nvme0n1p1 nvme0n1p1 /dev/nvme0n1p1 part     268435456                                           eui.002538b231a3afc2    0       512 vfat              
+|-nvme0n1p2 nvme0n1p2 /dev/nvme0n1p2 part   34359738368                                           eui.002538b231a3afc2    0       512 linux_raid_member 
+| `-md0     md0       /dev/md0       raid1  34325135360                                                                   0       512 swap              
+|-nvme0n1p3 nvme0n1p3 /dev/nvme0n1p3 part    1073741824                                           eui.002538b231a3afc2    0       512 linux_raid_member 
+| `-md1     md1       /dev/md1       raid1   1071644672                                                                   0       512 ext3              
+`-nvme0n1p4 nvme0n1p4 /dev/nvme0n1p4 part  476406160896                                           eui.002538b231a3afc2    0       512 linux_raid_member 
+  `-md2     md2       /dev/md2       raid1 476270886912                                                                   0       512 ext4              
+nvme1n1     nvme1n1   /dev/nvme1n1   disk  512110190592 SAMSUNG MZVL2512HCJQ-00B00 S675NX0T801950 eui.002538b821c10823    0       512                   
+--- /dev/disk/by-id ---
+total 0
+drwxr-xr-x 2 root root 520 Nov 14 23:02 .
+drwxr-xr-x 9 root root 180 Nov 14 23:02 ..
+lrwxrwxrwx 1 root root   9 Nov 14 23:02 md-name-rescue:0 -> ../../md0
+lrwxrwxrwx 1 root root   9 Nov 14 23:02 md-name-rescue:1 -> ../../md1
+lrwxrwxrwx 1 root root   9 Nov 14 23:02 md-name-rescue:2 -> ../../md2
+lrwxrwxrwx 1 root root   9 Nov 14 23:02 md-uuid-12199bbd:2450f459:3307a138:8b03f5af -> ../../md2
+lrwxrwxrwx 1 root root   9 Nov 14 23:02 md-uuid-2e986ca4:9deb9ea8:73c012c3:8022ed9f -> ../../md1
+lrwxrwxrwx 1 root root   9 Nov 14 23:02 md-uuid-7d523dc3:fb84b221:bfd3892b:6b7fdf8d -> ../../md0
+lrwxrwxrwx 1 root root  13 Nov 14 23:02 nvme-SAMSUNG_MZVL2512HCJQ-00B00_S675NU0W263145 -> ../../nvme0n1
+lrwxrwxrwx 1 root root  15 Nov 14 23:02 nvme-SAMSUNG_MZVL2512HCJQ-00B00_S675NU0W263145-part1 -> ../../nvme0n1p1
+lrwxrwxrwx 1 root root  15 Nov 14 23:02 nvme-SAMSUNG_MZVL2512HCJQ-00B00_S675NU0W263145-part2 -> ../../nvme0n1p2
+lrwxrwxrwx 1 root root  15 Nov 14 23:02 nvme-SAMSUNG_MZVL2512HCJQ-00B00_S675NU0W263145-part3 -> ../../nvme0n1p3
+lrwxrwxrwx 1 root root  15 Nov 14 23:02 nvme-SAMSUNG_MZVL2512HCJQ-00B00_S675NU0W263145-part4 -> ../../nvme0n1p4
+lrwxrwxrwx 1 root root  13 Nov 14 23:02 nvme-SAMSUNG_MZVL2512HCJQ-00B00_S675NU0W263145_1 -> ../../nvme0n1
+lrwxrwxrwx 1 root root  15 Nov 14 23:02 nvme-SAMSUNG_MZVL2512HCJQ-00B00_S675NU0W263145_1-part1 -> ../../nvme0n1p1
+lrwxrwxrwx 1 root root  15 Nov 14 23:02 nvme-SAMSUNG_MZVL2512HCJQ-00B00_S675NU0W263145_1-part2 -> ../../nvme0n1p2
+lrwxrwxrwx 1 root root  15 Nov 14 23:02 nvme-SAMSUNG_MZVL2512HCJQ-00B00_S675NU0W263145_1-part3 -> ../../nvme0n1p3
+lrwxrwxrwx 1 root root  15 Nov 14 23:02 nvme-SAMSUNG_MZVL2512HCJQ-00B00_S675NU0W263145_1-part4 -> ../../nvme0n1p4
+lrwxrwxrwx 1 root root  13 Nov 14 23:02 nvme-SAMSUNG_MZVL2512HCJQ-00B00_S675NX0T801950 -> ../../nvme1n1
+lrwxrwxrwx 1 root root  13 Nov 14 23:02 nvme-SAMSUNG_MZVL2512HCJQ-00B00_S675NX0T801950_1 -> ../../nvme1n1
+lrwxrwxrwx 1 root root  13 Nov 14 23:02 nvme-eui.002538b231a3afc2 -> ../../nvme0n1
+lrwxrwxrwx 1 root root  15 Nov 14 23:02 nvme-eui.002538b231a3afc2-part1 -> ../../nvme0n1p1
+lrwxrwxrwx 1 root root  15 Nov 14 23:02 nvme-eui.002538b231a3afc2-part2 -> ../../nvme0n1p2
+lrwxrwxrwx 1 root root  15 Nov 14 23:02 nvme-eui.002538b231a3afc2-part3 -> ../../nvme0n1p3
+lrwxrwxrwx 1 root root  15 Nov 14 23:02 nvme-eui.002538b231a3afc2-part4 -> ../../nvme0n1p4
+lrwxrwxrwx 1 root root  13 Nov 14 23:02 nvme-eui.002538b821c10823 -> ../../nvme1n1
+--- df -B1 ---
+Filesystem                   Type         1B-blocks          Used    Available Use% Mounted on
+[2a01:4ff:ff00::b007:1]:/nfs nfs      1513961283584 1128591409152 312798126080  79% /root/.oldroot/nfs
+overlay                      overlay    33607520256       8871936  33598648320   1% /
+efivarfs                     efivarfs        196608        162655        28833  85% /sys/firmware/efi/efivars
+--- /proc/mdstat ---
+Personalities : [raid1] 
+md2 : active raid1 nvme0n1p4[0]
+      465108288 blocks super 1.2 [2/1] [U_]
+      bitmap: 0/4 pages [0KB], 65536KB chunk
+
+md1 : active raid1 nvme0n1p3[0]
+      1046528 blocks super 1.2 [2/1] [U_]
+      bitmap: 0/1 pages [0KB], 65536KB chunk
+
+md0 : active raid1 nvme0n1p2[0]
+      33520640 blocks super 1.2 [2/1] [U_]
+      bitmap: 0/1 pages [0KB], 65536KB chunk
+
+unused devices: <none>
+--- zpool status ---
+The Hetzner Rescue System does not come with preinstalled ZFS support,
+however, we will attempt to compile and install the latest release for you.
+Please read the information below thoroughly before entering any response.
+
+[31m[1mATTENTION[0m
+
+This script will attempt to install the current OpenZFS release
+which is available in the OpenZFS git repository to the Rescue
+System. [31m[1mIf this script fails, do not contact Hetzner Support, as
+it is provided AS-IS and Hetzner will not support the installation
+or usage of OpenZFS due to License incompatiblity (see below).[0m
+Due to github.com limitations, this script [31m[1monly works via IPv4.[0m
+
+[31m[1mLicenses of OpenZFS and Linux are incompatible[0m
+
+OpenZFS is licensed under the Common Development and Distribution
+License (CDDL), and the Linux kernel is licensed under the GNU General
+Public License Version 2 (GPL-2). While both are free open source
+licenses they are restrictive licenses. The combination of them causes
+problems because it prevents using pieces of code exclusively available
+under one license with pieces of code exclusively available under the
+other in the same binary.
+
+Please be aware that distributing of the binaries may lead to infringing.
+
+Press [31m[1my[0m to accept this.
+

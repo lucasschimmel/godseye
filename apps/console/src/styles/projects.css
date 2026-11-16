@@ -1,0 +1,239 @@
+.list-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 17px 23px;
+  border-bottom: 1px solid var(--border-default);
+  gap: 16px;
+}
+.search-field {
+  position: relative;
+  width: 290px;
+  max-width: 80%;
+}
+.search-field > svg {
+  position: absolute;
+  top: 11px;
+  left: 11px;
+  color: var(--text-secondary);
+}
+.search-field input {
+  padding-left: 35px;
+  font-size: 11px;
+  box-shadow: none;
+}
+th {
+  font-weight: 500;
+  font-size: 10px;
+  height: 40px;
+  color: var(--text-secondary);
+  background: var(--surface-subtle);
+}
+td {
+  font-size: 11px;
+  padding-block: 16px;
+}
+th:first-child,
+td:first-child {
+  padding-left: 23px;
+}
+th:last-child,
+td:last-child {
+  padding-right: 23px;
+}
+.project-cell {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+.project-avatar {
+  width: 35px;
+  height: 35px;
+  border: 1px solid var(--border-default);
+  border-radius: 6px;
+  display: grid;
+  place-items: center;
+  color: var(--accent-ink);
+  background: var(--surface-subtle);
+}
+.project-cell strong {
+  display: block;
+  font-size: 11px;
+  font-weight: 550;
+}
+.project-cell small {
+  display: block;
+  font-size: 9px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+.repository-label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--text-secondary);
+  font-size: 10px;
+}
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-secondary);
+  font-size: 11px;
+  margin-bottom: 22px;
+}
+.form-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.8fr) minmax(220px, 1fr);
+  gap: 35px;
+  align-items: start;
+}
+.project-form {
+  padding: 28px;
+}
+.form-section {
+  margin-bottom: 26px;
+}
+.form-section h2 {
+  font-size: 14px;
+  font-weight: 600;
+}
+.form-section p {
+  margin-top: 8px;
+  color: var(--text-secondary);
+  font-size: 11px;
+  line-height: 1.7;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin-bottom: 23px;
+}
+.field label,
+.field legend {
+  font-size: 11px;
+  font-weight: 550;
+}
+.field legend {
+  margin-bottom: 11px;
+}
+.field label span {
+  font-weight: 400;
+  color: var(--text-secondary);
+}
+.field input,
+.field textarea {
+  font-size: 12px;
+  box-shadow: none;
+}
+.field small {
+  font-size: 10px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+.type-selector {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+.type-option {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 17px 12px;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius);
+  position: relative;
+  cursor: pointer;
+  min-width: 0;
+}
+.type-option input {
+  appearance: none;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  cursor: pointer;
+}
+.type-option:focus-within {
+  outline: 2px solid var(--accent-ink);
+  outline-offset: 2px;
+}
+.type-option input:focus {
+  outline: 0;
+}
+.type-option > svg {
+  color: var(--text-secondary);
+}
+.type-option strong {
+  font-size: 11px;
+  font-weight: 550;
+}
+.type-option small {
+  font-size: 9px;
+}
+.type-option.selected {
+  border-color: var(--accent-ink);
+  background: var(--accent-surface);
+}
+.type-option.selected > svg {
+  color: var(--accent-ink);
+}
+.type-check {
+  position: absolute;
+  right: 10px;
+  top: 12px;
+}
+.form-actions {
+  border-top: 1px solid var(--border-default);
+  padding-top: 22px;
+  margin-top: 28px;
+  display: flex;
+  justify-content: space-between;
+}
+.form-actions a,
+.form-actions button {
+  font-size: 11px;
+}
+.form-aside {
+  padding-top: 18px;
+}
+.aside-icon {
+  display: grid;
+  place-items: center;
+  width: 51px;
+  height: 51px;
+  border: 1px solid var(--border-default);
+  border-radius: 50%;
+  color: var(--accent-ink);
+  margin-bottom: 22px;
+}
+.form-aside h2 {
+  font-family: var(--font-display);
+  font-size: 21px;
+  font-weight: 500;
+  letter-spacing: -0.5px;
+  line-height: 1.4;
+}
+.form-aside p {
+  color: var(--text-secondary);
+  font-size: 12px;
+  line-height: 1.8;
+  margin-top: 12px;
+}
+.form-aside ul {
+  padding-left: 16px;
+  color: var(--text-secondary);
+  font-size: 11px;
+  line-height: 2.5;
+  margin-block: 22px;
+}
+.soft-note {
+  border-top: 1px solid var(--border-default);
+  padding-top: 20px;
+  color: var(--text-secondary);
+  font-size: 10px;
+  line-height: 1.8;
+}

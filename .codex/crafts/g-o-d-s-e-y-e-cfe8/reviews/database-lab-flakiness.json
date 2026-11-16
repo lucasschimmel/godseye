@@ -1,0 +1,13 @@
+{
+  "scenario": "Native PostgreSQL restart persistence over WSL TCP forwarding",
+  "initialObservation": {
+    "runStartedAt": "2026-11-11T21:33:42+01:00",
+    "result": "9 passed; existing restart persistence test failed at private worker TLS connection after successful catalog reinspection",
+    "diagnostic": "Private PostgreSQL connection failed",
+    "productionMutationRetried": false
+  },
+  "repetition": { "result": "10 passed", "durationSeconds": 15.13 },
+  "classification": "Observed intermittent post-restart transport readiness; underlying connection detail is intentionally sanitized",
+  "mitigation": "After native restart only, establish the expected verify-full TLS/API-role connection and execute SELECT 1 with a five-second bounded readiness loop. Retry connection establishment only; no DDL, DML, bootstrap, provider mutation or weakened authentication is retried.",
+  "qualification": "Native fixture readiness only; no production recovery guarantee"
+}

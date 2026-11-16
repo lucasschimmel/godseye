@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:godseye:operation:v1",
+  "title": "Proposed V1 operation record",
+  "type": "object", "additionalProperties": false,
+  "required": ["schemaVersion", "operationId", "correlationId", "projectId", "environmentId", "action", "status", "revision", "createdAt", "updatedAt", "cleanupState"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "operationId": { "type": "string", "format": "uuid" },
+    "correlationId": { "type": "string", "format": "uuid" },
+    "projectId": { "type": ["string", "null"], "format": "uuid" },
+    "environmentId": { "type": ["string", "null"], "format": "uuid" },
+    "action": { "type": "string", "pattern": "^[a-z]+[.][a-z]+$" },
+    "status": { "enum": ["queued", "validating", "running", "waiting", "awaiting_approval", "cancel_requested", "reconciling", "succeeded", "failed", "cancelled", "unknown"] },
+    "revision": { "type": "integer", "minimum": 0 },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "updatedAt": { "type": "string", "format": "date-time" },
+    "leaseExpiresAt": { "type": ["string", "null"], "format": "date-time" },
+    "cleanupState": { "enum": ["not_required", "pending", "running", "complete", "failed"] },
+    "providerRunRef": { "type": ["string", "null"], "maxLength": 256 },
+    "resultRef": { "type": ["string", "null"], "format": "uuid" },
+    "error": {
+      "type": ["object", "null"], "additionalProperties": false,
+      "required": ["code", "retryDisposition"],
+      "properties": {
+        "code": { "type": "string", "pattern": "^[A-Z][A-Z0-9_]{1,63}$" },
+        "retryDisposition": { "enum": ["safe", "after_reconciliation", "after_owner_resolution", "never"] }
+      }
+    }
+  }
+}

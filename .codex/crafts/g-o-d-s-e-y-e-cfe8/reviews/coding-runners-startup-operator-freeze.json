@@ -1,0 +1,46 @@
+{
+  "status": "startup-operator-and-ui-frozen",
+  "previousFreezesPreserved": [
+    "coding-runners-core-fix-freeze.json",
+    "coding-runners-ui-remediation-freeze.json"
+  ],
+  "files": {
+    "apps/control-api/src/coding-startup.ts": "575692151baac5334454a805237d61060bc280e3137db16c81fe230145c55a0e",
+    "apps/control-api/src/server.ts": "ad6e0f438ef9ed99dfb4ada7beab947bb2a16523f68a9cc30e99d3c871128d54",
+    "scripts/coding-bindings.mjs": "275ed685caf5147099707684b6595083a0e9cdd96f4c085df675109022764504",
+    "scripts/coding-runtime.mjs": "35a826b14ed2b1fd894eb3ca206cdee4299f9b0d44762cfe5fea820ee82de398",
+    "package.json": "09f71b9c4ee7fa22bf3fcd5b687aeabb7d6f752e6d9ab1e38f8401c4e833d2a9",
+    "apps/console/src/components/agents-coding.tsx": "311417f543926919edd1a2ad74e6727aeaf3bc6b49a63bc01afbcd97cfb8abf8",
+    "apps/console/src/components/agents-panel.tsx": "c6dbe23e834ff3deeeb02cd9c1c98f10b2a2d67c2d6f7494bfc939a2f34cc6f3",
+    "apps/console/src/styles.css": "6f0cb4757919e155b0a386325493be411d5b9ead26d3d16c9d5f0a9852fdd423",
+    "apps/console/src/styles/agents-coding.css": "29a30f56be9e7dd273a1fdcac5349177fe017493257767a57e438f1211a63f13",
+    "tests/e2e/coding.spec.ts": "be340638726acff15f81d66f6a6195f7dbd77da6e6657f103dee1af0c36f3593"
+  },
+  "behavior": [
+    "server.ts explicitly awaits codingStartupOptions; defaultenv yields{} and no config lookup. Factory specific sanitized error produces unavailable coding provider only, preserving independent owner administration/recovery.",
+    "Private binder accepts nonsecret metadata only; broker.apiKey forbidden; selected fixed runner API keys are loaded internally from process env, never argv/fileinput/output. Exported CodingPrivateConfiguration validates final config.",
+    "Private .local directory with alias refusal, existing identity privateDirectory permissions (Windows DACL or native modes), instance lock, exclusive stage, fsync/atomicrename and readPrivateJson readback; no automatic enablement or paid calls. Status only present/valid booleans.",
+    "Fixed allowlisted setup wrapper uses WSL path conversion and explicit local installers or fakeAPI qualification; no global install or inferred auth.",
+    "UI padding/wrap fixes and owner budgetUSD/timeout controls preserveddefaults, French state labels and corrected USD display."
+  ],
+  "validation": {
+    "typecheck": "passed",
+    "targetedBiome": "10/10 files passed",
+    "operatorSyntax": "node --check passed both .mjs files",
+    "smoke": "default{} / invalidexplicitconfig unavailable+no pathleak; operatorargv rejects outside.local, keyargument and unknownrunner; no actualprivatebinding was written or read",
+    "browser": "2/2 desktop1440/mobile390 passed after startup wiring and final UI polish; exact downloadbytes + p/summary no clipping"
+  },
+  "commands": [
+    "bun run coding:kvm:install [Ubuntu]",
+    "bun run coding:cli:install [Ubuntu]",
+    "bun run coding:qualify codex|claude-code [Ubuntu]",
+    "bun run coding:bind write --metadata NONSECRET_JSON [--directory .local/coding-access]",
+    "bun run coding:bind status [--directory .local/coding-access]"
+  ],
+  "operatorNotes": "Metadata follows CodingPrivateConfiguration excluding broker.apiKey; GODSEYE_CODEX_API_KEY and/or GODSEYE_CLAUDE_CODE_API_KEY must be privately supplied only to the binder process. Writing never opts in. A later API startup must explicitly set GODSEYE_CODING_BINDINGS_FILE to an absolute protected bindings.json path. Runtime readiness/source/KVM/billing gates remain independent.",
+  "pending": "GAUNTLET synthetic private binder persistence/permission/alias/concurrency/secret-nondisclosure and invalid-config independent owner HTTP startup checks; root fresh security review. No paid/nativeproduction qualification claimed.",
+  "screenshots": [
+    "artifacts/coding-playwright-results/coding-T-AC-793-desktop-ow-824e8-oads-inert-fixture-evidence-agents/coding-desktop.png",
+    "artifacts/coding-playwright-results/coding-T-AC-793-mobile-own-64503-oads-inert-fixture-evidence-agents/coding-mobile.png"
+  ]
+}

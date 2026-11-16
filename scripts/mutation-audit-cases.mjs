@@ -1,0 +1,48 @@
+/** Selected audit R1–R4 regressions, not an exhaustive mutation score. */
+export const auditMutations = [
+  {
+    id: "A01",
+    file: "packages/core/src/jobs-definitions.ts",
+    test: "tests/jobs-definition-regression.test.ts",
+    name: "refuses to relax an unknown protected effect into an automatic retry",
+    behavior: "Permit a new definition to relax a protected unresolved effect",
+    from: "if (live)\n        throw new DomainError(",
+    to: "if (false)\n        throw new DomainError(",
+  },
+  {
+    id: "A02",
+    file: "packages/core/src/jobs-outbox-call.ts",
+    test: "tests/jobs-outbox-deadline.test.ts",
+    name: "bounds a hung send, preserves unknown and ignores its late acknowledgement",
+    behavior: "Wait indefinitely for the provider instead of fencing the send at its deadline",
+    from: "return await Promise.race([pending, stopped]);",
+    to: "return await pending;",
+  },
+  {
+    id: "A03",
+    file: "packages/core/src/jobs-outbox.ts",
+    test: "tests/jobs-outbox-deadline.test.ts",
+    name: "bounds a hung inspection and does not accept a late delivered probe",
+    behavior: "Treat a timed-out inspection as successful delivery",
+    from: 'const delivered = seen === "delivered";',
+    to: "const delivered = true;",
+  },
+  {
+    id: "A04",
+    file: "packages/core/src/infrastructure.ts",
+    test: "tests/infra-approval-capacity.test.ts",
+    name: "enforces the same renewed heavy admission through the production Infrastructure composition",
+    behavior: "Omit the production heavy-capacity requeue gate",
+    from: "requeueAdmission: (tx, plan, runId) => gateAdmission(this.heavy, tx, plan.command, runId),",
+    to: "requeueAdmission: undefined,",
+  },
+  {
+    id: "A05",
+    file: "Jenkinsfile",
+    test: "tests/jenkins-artifacts.test.ts",
+    name: "archives the configured browser traces and screenshots before workspace cleanup",
+    behavior: "Remove the actual Playwright diagnostics directory from the archive",
+    from: "artifacts/playwright-results/**,artifacts/playwright/**,artifacts/ci/**",
+    to: "artifacts/playwright/**,artifacts/ci/**",
+  },
+];

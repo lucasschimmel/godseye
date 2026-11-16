@@ -1,0 +1,129 @@
+{
+  "kind": "curated behavioral mutation experiment",
+  "suite": "autonomous",
+  "runnerTimeoutMs": 180000,
+  "startedAt": "2026-11-12T21:19:42.763Z",
+  "finishedAt": "2026-11-12T21:20:25.802Z",
+  "scope": "7 selected mutations; not an exhaustive mutation score or coverage claim",
+  "isolation": "Temporary source copies with explicit Vitest workspace aliases; original source never mutated",
+  "baseline": {
+    "status": "passed",
+    "passed": 7
+  },
+  "restored": {
+    "status": "passed",
+    "passed": 7
+  },
+  "sourceUnchanged": true,
+  "selected": 7,
+  "killed": 7,
+  "survived": 0,
+  "invalid": 0,
+  "results": [
+    {
+      "id": "A01",
+      "file": "packages/core/src/foundation-data.ts",
+      "behavior": "Let a detached controller reject or consume an excluded job adapter",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "detached Foundation consumer partitions T-E06-D01 leaves excluded queued work intact before unavailable-adapter or tampered-plan validation",
+            "message": "AssertionError: expected { …(19) } to match object { status: 'queued', fence: +0 }"
+          }
+        ]
+      }
+    },
+    {
+      "id": "A02",
+      "file": "packages/core/src/foundation-queue.ts",
+      "behavior": "Broaden a cell supervisor claim to another environment with the same adapter",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "autonomous job environment partition T-E06-D01 never claims an already-dispatched same-adapter run in another environment",
+            "message": "AssertionError: expected true to be false // Object.is equality"
+          }
+        ]
+      }
+    },
+    {
+      "id": "A03",
+      "file": "apps/jobs-runtime/src/ipc.ts",
+      "behavior": "Allow repeated inbound RPC sequence identities",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "private process-bound worker RPC T-E06-D02 refuses replayed inbound identities before invoking a handler twice",
+            "message": "AssertionError: expected [ {}, {} ] to have a length of 1 but got 2"
+          }
+        ]
+      }
+    },
+    {
+      "id": "A04",
+      "file": "apps/jobs-runtime/src/ipc.ts",
+      "behavior": "Release a physical RPC slot solely because its observation timed out",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "private process-bound worker RPC T-E06-D04 retains a timed-out actual-call slot until its late response and never rewrites the observed timeout",
+            "message": "AssertionError: expected +0 to be 1 // Object.is equality"
+          }
+        ]
+      }
+    },
+    {
+      "id": "A05",
+      "file": "apps/jobs-runtime/src/config.ts",
+      "behavior": "Forward all parent authority and preloads to an application worker",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "autonomous local authority configuration T-E06-D02 strips owner/provider authority, preloads and unrelated cell material from child environment",
+            "message": "AssertionError: expected [ 'AWS_SESSION_TOKEN', …(9) ] to deeply equal [ 'PATH', 'SystemRoot', 'TEMP', 'TZ' ]"
+          }
+        ]
+      }
+    },
+    {
+      "id": "A06",
+      "file": "apps/jobs-runtime/src/config.ts",
+      "behavior": "Permit two workflow cells to share one Redis instance",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "autonomous local authority configuration T-E06-P01 refuses reused databases, Redis instances and scopes regardless of supplied authority",
+            "message": "AssertionError: expected [Function] to throw an error"
+          }
+        ]
+      }
+    },
+    {
+      "id": "A07",
+      "file": "apps/jobs-runtime/src/broker.ts",
+      "behavior": "Skip final Foundation lease validation before remote physical dispatch",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "connection-bound autonomous cell admission T-E06-D04 a manual job fenced after context loading cannot invoke the physical child handler",
+            "message": "AssertionError: expected true to be false // Object.is equality"
+          }
+        ]
+      }
+    }
+  ]
+}

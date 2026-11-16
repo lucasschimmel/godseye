@@ -1,0 +1,191 @@
+{
+  "version": 1,
+  "status": "assets-and-private-provider-implemented; actual-KVM-CLI-chain-pending-runtime-owner",
+  "pins": {
+    "codex": "codex-cli 0.167.0-alpha.4.1",
+    "claude": "2.1.215 (Claude Code)",
+    "node": "v24.22.1",
+    "git": "git version 2.53.0",
+    "bash": "GNU bash, version 5.3.9(1)-release (x86_64-pc-linux-gnu)"
+  },
+  "provenance": {
+    "codex": {
+      "package": "@openai/codex",
+      "version": "0.167.0-alpha.4.1-linux-x64",
+      "source": "https://registry.npmjs.org/@openai/codex/-/codex-0.167.0-alpha.4.1-linux-x64.tgz",
+      "integrity": "sha512-EmCCWJdkZgQQemaw1a1xbqGJMfR9ZrI8V+zdnwv+tkw5SCoj55WRhP2+u5LNY6KrFn0FGjY9C+Ckw/OO2K9RRg==",
+      "sha256": "6c4c3c55fbfc7cd2f1a28306445dccff0e9a27d4efe61c8ebb37e2c81ffe3d75"
+    },
+    "claude": {
+      "package": "@anthropic-ai/claude-code-linux-x64",
+      "version": "2.1.215",
+      "source": "https://registry.npmjs.org/@anthropic-ai/claude-code-linux-x64/-/claude-code-linux-x64-2.1.215.tgz",
+      "integrity": "sha512-zwDeTitQD3v0/GxX3hl1PTY54j7iF3/hA9QGFM95yind9hBkvLyv6aU9WdH7089s3AICfI6hZ74AFXtBRp6bzQ==",
+      "sha256": "d160d3ae2c90cb54a7ebc9a1d5c280e6da37ee6cd2624e5701dc5e4dabfbd289"
+    },
+    "node": {
+      "version": "24.22.1",
+      "source": "https://nodejs.org/dist/v24.22.1/node-v24.22.1-linux-x64.tar.xz",
+      "sha256": "6c172a9ab6718f7b801fb5a7bd486af2ee5e32758086a04b84fcce2aa77095e6",
+      "verification": "official HTTPS checksum; frozen recursive manifest"
+    },
+    "git": {
+      "version": "1:2.53.0-1ubuntu1.1",
+      "source": "https://archive.ubuntu.com/ubuntu/pool/main/g/git/git_2.53.0-1ubuntu1.1_amd64.deb",
+      "sha256": "5d3bbbb8e5bee7ddeb1d023b9a9d2063633e30c3ec404fd1d75136d9c6e48603",
+      "verification": "Ubuntu InRelease gpgv and signed package index"
+    },
+    "bash": {
+      "version": "5.3-2ubuntu1",
+      "source": "https://archive.ubuntu.com/ubuntu/pool/main/b/bash/bash_5.3-2ubuntu1_amd64.deb",
+      "sha256": "82d4aba3490578089d399921bf6444ad848468a23f2cb37262625b28e3615a76",
+      "verification": "Ubuntu InRelease gpgv and signed package index"
+    },
+    "elfLibraries": {
+      "/usr/lib/x86_64-linux-gnu/libtinfo.so.6": {
+        "sha256": "085dbbe5dc38619276bdd0af37ae588969b1308baded09a2990ce8824a602912",
+        "source": "/usr/lib/x86_64-linux-gnu/libtinfo.so.6.6"
+      },
+      "/usr/lib/x86_64-linux-gnu/libc.so.6": {
+        "sha256": "a3947513a02831ec692ebf13053c07614882ab54a2101fb91a1b15724062ed0c",
+        "source": "/usr/lib/x86_64-linux-gnu/libc.so.6"
+      },
+      "/lib64/ld-linux-x86-64.so.2": {
+        "sha256": "c5e80a563850d6ab5c2f2482e4202d9c1b71fbf44854b8c399e63527202c64e1",
+        "source": "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2"
+      },
+      "/usr/lib/x86_64-linux-gnu/librt.so.1": {
+        "sha256": "5df2508a1ef33bd8024d77271e2a4a2607cb63e59dd753dd46f8e7a2ed44962d",
+        "source": "/usr/lib/x86_64-linux-gnu/librt.so.1"
+      },
+      "/usr/lib/x86_64-linux-gnu/libpthread.so.0": {
+        "sha256": "f93acb6e78dcf0213c8a85f922d21916249148e24de426079c40b6304c42085d",
+        "source": "/usr/lib/x86_64-linux-gnu/libpthread.so.0"
+      },
+      "/usr/lib/x86_64-linux-gnu/libdl.so.2": {
+        "sha256": "7d293f8361fcead4f9691561adc0413f724f3607b959abe0d4fb243072956079",
+        "source": "/usr/lib/x86_64-linux-gnu/libdl.so.2"
+      },
+      "/usr/lib/x86_64-linux-gnu/libm.so.6": {
+        "sha256": "beea4eeacfcfa2cd96011b959a826c97cf4a774017e214f6a34d7eea3d49cd88",
+        "source": "/usr/lib/x86_64-linux-gnu/libm.so.6"
+      },
+      "/usr/lib/x86_64-linux-gnu/libpcre2-8.so.0": {
+        "sha256": "4a6b6b2078685b074869d75cb068664d7da6b3036df7bca0442b1bbbd4ac7e65",
+        "source": "/usr/lib/x86_64-linux-gnu/libpcre2-8.so.0.14.0"
+      },
+      "/usr/lib/x86_64-linux-gnu/libz.so.1": {
+        "sha256": "fbf56b0e59287033b6579bbbeae2f9de2fe86ad5bf2bd44d44aad67a15109318",
+        "source": "/usr/lib/x86_64-linux-gnu/libz.so.1.3.1"
+      },
+      "/usr/lib/x86_64-linux-gnu/libstdc++.so.6": {
+        "sha256": "5bb0d21308f123b6ad46c6f35b42cedfcb8d6d439a53aa3dae04d880aaffdde3",
+        "source": "/usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.35"
+      },
+      "/usr/lib/x86_64-linux-gnu/libgcc_s.so.1": {
+        "sha256": "9d339ecb409578d6a5d587e6c537a8f9589b8a13fefba30d167433a4b5758bee",
+        "source": "/usr/lib/x86_64-linux-gnu/libgcc_s.so.1"
+      }
+    }
+  },
+  "manifestSha256": "79d07f4243b3406bf48ef6779d5343ca79e1c17968b2dd6c366939bfd59324c8",
+  "assetFiles": 19,
+  "assetBytes": 815630008,
+  "ownedFiles": {
+    "scripts/coding_cli_install.py": "45bb96bc32fe5639cae09c11ea9a4bef3fe69acb3112f367aefe16d0d0117af8",
+    "scripts/coding_cli_fixture.py": "c482e1dd5f5c1cdbb6974ba544e26b074dd8849e5b80ac2be600fcb428b3238c",
+    "scripts/coding_guest_broker.py": "353857c225cadb1c1dbd2d634e5ce08b765d4f90c092f349a52a36043d82e5f9",
+    "apps/control-api/src/coding-provider.ts": "b56da7f654b8be63ad632274f1fa415506656952b423984446fb14dd46497371",
+    "scripts/coding_runner_config.mjs": "f451cdc1ca764fc9237b7308397df8771ac12ee236d67af4d56ed04c2f03b7f6"
+  },
+  "verification": [
+    "Exact Linux Codex0.167.0-alpha.4.1 --version and help/exec-help, isolated homes and explicit environment, no model commands",
+    "Exact Linux Claude2.1.215 --version and help, isolated home and explicit environment, no model commands",
+    "Official Node24.22.1 and signed-Ubuntu Git2.53.0 version probes",
+    "All owned Python modules compiled",
+    "Full repository TypeScript check passed; Biome provider passed",
+    "Actual bun run coding:cli:install with isolated Python -I passed reviewed v1-to-v2 addition of Bash+libtinfo; all pre-existing guest entries identical",
+    "Bash package pin 5.3-2ubuntu1; actual non-model --version GNU bash 5.3.9(1)-release x86_64-pc-linux-gnu",
+    "All 18 emitted guest assets explicitly mode0755 regardless of Windows filesystem mode reporting",
+    "Provider strict GuestResult accepts required runtime treeHash field; no other provider behavior changed",
+    "Current pinned runtime only supports literal Ubuntu distro; provider rejects all other distro configuration before launch",
+    "Durable normalized request fingerprints and pending effects: 18 independent fake-HTTPS broker regressions passed; no paid calls",
+    "Actual isolated Bun coding:cli:install passed 19-asset v3 migration; explicit 0755 entries",
+    "Vendored bwrap --version non-model probe passed with explicit empty environment",
+    "Fixture retains every bounded tool result for real guest diagnostics",
+    "20 independent fake-HTTPS broker tests passed including completion fsync failure and process-death/reopen uncertainty fencing",
+    "Windows absolute WSL executable fix passed full typecheck and 7 provider regressions; details coding-runners-windows-launch-report.json",
+    "Exact real pinned-Claude synthetic context_management=clear_thinking keep-all request accepted only after strict validate/drop; pure real-validator fake-HTTPS replay passed; details coding-runners-claude-context-report.json",
+    "Final Codex real-request compatibility passed independent30/30 broker pure regressions incl both full captured CLI requests; see coding-runners-codex-broker-compat-report.json",
+    "Final current-helper Codex metadata reasoning_effort accepted only as literal none then dropped; all31 pure broker cases passed using current22097-byte capture; older22033-byte exact replay also passed"
+  ],
+  "licenseProvenance": {
+    "codex": "npm platform metadata Apache-2.0; original package README preserved in licenses/codex.txt",
+    "claude": "Official package LICENSE.md: Anthropic PBC all rights reserved; use subject to https://code.claude.com/docs/en/legal-and-compliance; preserved licenses/claude.txt",
+    "node": "Official Node distribution LICENSE preserved licenses/node.txt (Node and bundled third-party notices)",
+    "git": "Signed Ubuntu package usr/share/doc/git/copyright preserved licenses/git.txt (GPL-2.0 and component terms)",
+    "elf": "Exact host-resolved Ubuntu runtime dependencies pinned by manifest hashes and canonical source paths; distro package license obligations remain applicable",
+    "distribution": "Private project-local artifacts only. No binary publication, public redistribution or license compatibility approval claimed.",
+    "bash": "Signed Ubuntu bash_5.3-2ubuntu1_amd64.deb; copyright preserved licenses/bash.txt (GNU GPL and component notices). Private-cache only."
+  },
+  "broker": {
+    "models": {
+      "codex": "gpt-5.4-mini",
+      "claude-code": "claude-haiku-5-5"
+    },
+    "priceReviewedAt": "2026-11-14",
+    "priceExpiresAt": "2026-11-21T00:00:00Z",
+    "sources": [
+      "https://developers.openai.com/api/docs/models/gpt-5.4-mini",
+      "https://platform.claude.com/docs/en/models/haiku-5-5/overview",
+      "https://platform.claude.com/docs/en/about-claude/pricing"
+    ],
+    "bounds": "Fixed official HTTPS endpoints; no redirects/retries/premium tier/remote tools; request<=262144,response<=786432,max16,maxoutput4096,time<=60s; durable conservative debit and trusted Foundation callback before POST; unknown usage never refunded",
+    "authorization": "Runtime sends exact monotonic one-use JSONline authorize correlation/sequence; provider awaits context.assertActive then acknowledges, <=64 frames, 5s timeout in native runtime",
+    "deduplicationReport": "coding-runners-broker-dedup-report.json"
+  },
+  "limits": [
+    "No paid upstream calls or subscription entitlement tested",
+    "Fixture API completion is protocol-only evidence and must run actual CLI tool chain inside qualified KVM",
+    "No global installation, server creation, host model command, desktop auth access or current checkout Git mutation",
+    "Node official HTTPS checksum verified; this is not an OpenPGP signer verification claim",
+    "Host ELF closure is a fixed observed distro snapshot, not a claim that installed packages have been CVE-audited",
+    "Provider availability remains fail-closed until runtime readiness proves full current native chain; no fixture switch exists in production configuration",
+    "Source backend initial loose-object commit support; packed-only commits unavailable explicitly",
+    "Broker price catalog expires; owner must perform a new reviewed source update before later paid dispatch"
+  ],
+  "bashContinuation": {
+    "guestPath": "/bin/bash",
+    "sha256": "3efccc187bafa75ff1e37d246270ab3e7aa559f242c7a52bf3ec2a1b5450bdbd",
+    "closure": {
+      "absoluteGuestPath": "/usr/lib/x86_64-linux-gnu/libtinfo.so.6",
+      "absoluteSourcePath": "/mnt/d/Developer/Projects/G.O.D.S.E.Y.E/artifacts/tools/coding-cli/root/usr/lib/x86_64-linux-gnu/libtinfo.so.6",
+      "sha256": "085dbbe5dc38619276bdd0af37ae588969b1308baded09a2990ce8824a602912",
+      "mode": 493
+    },
+    "migration": "Exactly two explicit new asset paths, all old bytes/modes preserved",
+    "noModelExecution": true
+  },
+  "bwrapContinuation": {
+    "asset": {
+      "absoluteGuestPath": "/usr/bin/codex-resources/bwrap",
+      "absoluteSourcePath": "/mnt/d/Developer/Projects/G.O.D.S.E.Y.E/artifacts/tools/coding-cli/root/usr/bin/codex-resources/bwrap",
+      "sha256": "77360cb751ccedc5971391444ac86a8a33c15b04d6b4a6fe45f5d25496e62c4c",
+      "mode": 493
+    },
+    "sourceArchive": "https://registry.npmjs.org/@openai/codex/-/codex-0.167.0-alpha.4.1-linux-x64.tgz",
+    "archiveIntegrity": "sha512-EmCCWJdkZgQQemaw1a1xbqGJMfR9ZrI8V+zdnwv+tkw5SCoj55WRhP2+u5LNY6KrFn0FGjY9C+Ckw/OO2K9RRg==",
+    "archiveMember": "package/vendor/x86_64-unknown-linux-musl/codex-resources/bwrap",
+    "pathEvidence": "https://raw.githubusercontent.com/openai/codex/rust-v0.167.0-alpha.4.1/codex-rs/linux-sandbox/src/bundled_bwrap.rs",
+    "versionObserved": "bubblewrap built for Codex",
+    "migration": "v2-to-v3 adds exactly one regular mode0755 file; all old 18 entries identical",
+    "distribution": "Private project-local cache; vendor-bundled component license/source obligations need separate review before redistribution"
+  },
+  "currentCodexMetadataDelta": {
+    "allowedDiagnostic": "reasoning_effort=none only",
+    "currentFixture": "artifacts/coding-composition-fixtures/synthetic-bx5057oo/request-1.json",
+    "brokerSha256": "353857c225cadb1c1dbd2d634e5ce08b765d4f90c092f349a52a36043d82e5f9",
+    "upstream": "entire client_metadata still removed; model reasoning none forced independently",
+    "unchanged": "all other metadata fields/shapes, opaque input denial, budget/debit/dedup/authority fences"
+  }
+}

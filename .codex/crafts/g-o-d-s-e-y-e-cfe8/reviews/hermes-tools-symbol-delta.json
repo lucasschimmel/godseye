@@ -1,0 +1,1627 @@
+{
+  "mode": "Grep-based scoped context-graph delta; tree-sitter unavailable",
+  "scope": "Local Hermes typed tools and task permissions",
+  "sourcePaths": [
+    "apps/console/src/components/agents-chat-transcript.tsx",
+    "apps/console/src/components/agents-chat.tsx",
+    "apps/console/src/components/agents-panel.tsx",
+    "apps/console/src/components/agents-profile-form.tsx",
+    "apps/console/src/components/agents-profiles.tsx",
+    "apps/console/src/components/agents-task-form.tsx",
+    "apps/console/src/components/agents-task-history.tsx",
+    "apps/console/src/components/agents-tools-fields.tsx",
+    "apps/console/src/components/agents-tools-history.tsx",
+    "apps/control-api/src/agent-routes.ts",
+    "apps/control-api/src/hermes-provider.ts",
+    "apps/control-api/src/hermes-tool-executor.ts",
+    "apps/control-api/src/server.ts",
+    "packages/contracts/src/agents-chat.ts",
+    "packages/contracts/src/agents-tools-endpoints.ts",
+    "packages/contracts/src/agents-tools.ts",
+    "packages/contracts/src/agents.ts",
+    "packages/contracts/src/foundations.ts",
+    "packages/contracts/src/http-endpoints.ts",
+    "packages/contracts/src/index.ts",
+    "packages/control-client/src/index.ts",
+    "packages/core/src/agents-chat.ts",
+    "packages/core/src/agents-execution.ts",
+    "packages/core/src/agents-profiles.ts",
+    "packages/core/src/agents-provider.ts",
+    "packages/core/src/agents-runs.ts",
+    "packages/core/src/agents-state.ts",
+    "packages/core/src/agents-tools-artifacts.ts",
+    "packages/core/src/agents-tools-fence.ts",
+    "packages/core/src/agents-tools-lifecycle.ts",
+    "packages/core/src/agents-tools-policy.ts",
+    "packages/core/src/agents-tools.ts",
+    "packages/core/src/agents.ts",
+    "packages/core/src/index.ts",
+    "packages/store/src/agent-schema.ts",
+    "packages/store/src/agent-tools-schema.ts",
+    "packages/store/src/schema.ts",
+    "scripts/hermes_agent_boot.py",
+    "scripts/hermes_catalog.py",
+    "scripts/hermes_files.py",
+    "scripts/hermes_gateway_broker.py",
+    "scripts/hermes_gateway_events.py",
+    "scripts/hermes_gateway_reply.py",
+    "scripts/hermes_gateway_state.py",
+    "scripts/hermes_gateway_tools_reply.py",
+    "scripts/hermes_gateway_transport.py",
+    "scripts/hermes_gateway.py",
+    "scripts/hermes_install_files.py",
+    "scripts/hermes_local.py",
+    "scripts/hermes_profiles.py",
+    "scripts/hermes_runtime_install.py",
+    "scripts/hermes_tools_bridge.py",
+    "scripts/hermes_tools_install.py",
+    "scripts/hermes_tools_policy.py",
+    "scripts/hermes_tools_runtime.py",
+    "scripts/hermes_tools_service.py",
+    "scripts/hermes_tools_worker.py",
+    "scripts/hermes-bindings.mjs",
+    "scripts/hermes-local.mjs",
+    "scripts/hermes-runtime-install.mjs",
+    "scripts/hermes-tools-bootstrap.mjs",
+    "scripts/hermes-tools-install.mjs",
+    "scripts/install-hermes.mjs",
+    "scripts/install-hermes.py"
+  ],
+  "symbols": [
+    {
+      "path": "apps/console/src/components/agents-chat-transcript.tsx",
+      "declarations": [
+        {
+          "line": 6,
+          "declaration": "export function AgentsChatTranscript({"
+        }
+      ]
+    },
+    {
+      "path": "apps/console/src/components/agents-chat.tsx",
+      "declarations": [
+        {
+          "line": 21,
+          "declaration": "export function AgentsChat({"
+        }
+      ]
+    },
+    {
+      "path": "apps/console/src/components/agents-panel.tsx",
+      "declarations": [
+        {
+          "line": 16,
+          "declaration": "export function AgentsPanel() {"
+        }
+      ]
+    },
+    {
+      "path": "apps/console/src/components/agents-profile-form.tsx",
+      "declarations": [
+        {
+          "line": 17,
+          "declaration": "export function AgentsProfileForm({"
+        }
+      ]
+    },
+    {
+      "path": "apps/console/src/components/agents-profiles.tsx",
+      "declarations": [
+        {
+          "line": 9,
+          "declaration": "export function AgentsProfiles({"
+        }
+      ]
+    },
+    {
+      "path": "apps/console/src/components/agents-task-form.tsx",
+      "declarations": [
+        {
+          "line": 19,
+          "declaration": "export function AgentsTaskForm({"
+        }
+      ]
+    },
+    {
+      "path": "apps/console/src/components/agents-task-history.tsx",
+      "declarations": [
+        {
+          "line": 15,
+          "declaration": "export function AgentsTaskHistory({"
+        }
+      ]
+    },
+    {
+      "path": "apps/console/src/components/agents-tools-fields.tsx",
+      "declarations": [
+        {
+          "line": 12,
+          "declaration": "export const toolLabels: Record<AgentToolName, string> = {"
+        },
+        {
+          "line": 19,
+          "declaration": "export const defaultToolPolicy: AgentToolPolicy = {"
+        },
+        {
+          "line": 30,
+          "declaration": "export function toolPolicyFromForm(data: FormData): AgentToolPolicy | null {"
+        },
+        {
+          "line": 48,
+          "declaration": "export function toolGrantFromForm(data: FormData) {"
+        },
+        {
+          "line": 63,
+          "declaration": "export function AgentsToolsFields({"
+        }
+      ]
+    },
+    {
+      "path": "apps/console/src/components/agents-tools-history.tsx",
+      "declarations": [
+        {
+          "line": 8,
+          "declaration": "export function AgentsToolsHistory({ taskId }: { taskId: string }) {"
+        }
+      ]
+    },
+    {
+      "path": "apps/control-api/src/agent-routes.ts",
+      "declarations": [
+        {
+          "line": 15,
+          "declaration": "export function registerAgentRoutes("
+        }
+      ]
+    },
+    {
+      "path": "apps/control-api/src/hermes-provider.ts",
+      "declarations": [
+        {
+          "line": 26,
+          "declaration": "export type HermesBinding = z.infer<typeof Binding>;"
+        },
+        {
+          "line": 81,
+          "declaration": "export interface HermesProviderOptions {"
+        },
+        {
+          "line": 88,
+          "declaration": "export interface ManagedHermesProvider extends AgentProvider {"
+        },
+        {
+          "line": 140,
+          "declaration": "export function createHermesProvider(options: HermesProviderOptions): ManagedHermesProvider {"
+        },
+        {
+          "line": 416,
+          "declaration": "export function configuredHermesProvider("
+        }
+      ]
+    },
+    {
+      "path": "apps/control-api/src/hermes-tool-executor.ts",
+      "declarations": [
+        {
+          "line": 31,
+          "declaration": "export interface HermesToolExecutorOptions {"
+        },
+        {
+          "line": 35,
+          "declaration": "export interface ManagedHermesToolExecutor extends AgentToolExecutor {"
+        },
+        {
+          "line": 82,
+          "declaration": "export function createHermesToolExecutor("
+        },
+        {
+          "line": 277,
+          "declaration": "export function configuredHermesToolExecutor("
+        }
+      ]
+    },
+    {
+      "path": "apps/control-api/src/server.ts",
+      "declarations": []
+    },
+    {
+      "path": "packages/contracts/src/agents-chat.ts",
+      "declarations": [
+        {
+          "line": 5,
+          "declaration": "export const AGENT_CHAT_LIMITS = {"
+        },
+        {
+          "line": 20,
+          "declaration": "export const CreateAgentConversation = z"
+        },
+        {
+          "line": 23,
+          "declaration": "export const SendAgentChatTurn = z"
+        },
+        {
+          "line": 30,
+          "declaration": "export const ResolveAgentProposal = z"
+        },
+        {
+          "line": 33,
+          "declaration": "export const AgentConversation = z"
+        },
+        {
+          "line": 48,
+          "declaration": "export const AgentChatTurn = z"
+        },
+        {
+          "line": 58,
+          "declaration": "export const AgentChatArtifact = z"
+        },
+        {
+          "line": 72,
+          "declaration": "export const AgentChatProposal = z"
+        },
+        {
+          "line": 92,
+          "declaration": "export const AgentChatEvent = z"
+        },
+        {
+          "line": 109,
+          "declaration": "export const AgentConversationList = z"
+        },
+        {
+          "line": 112,
+          "declaration": "export const AgentConversationDetail = z"
+        },
+        {
+          "line": 120,
+          "declaration": "export const AgentChatEvents = z"
+        },
+        {
+          "line": 123,
+          "declaration": "export type AgentConversationView = z.infer<typeof AgentConversation>;"
+        },
+        {
+          "line": 124,
+          "declaration": "export type AgentConversationDetailView = z.infer<typeof AgentConversationDetail>;"
+        },
+        {
+          "line": 125,
+          "declaration": "export type AgentChatArtifactView = z.infer<typeof AgentChatArtifact>;"
+        },
+        {
+          "line": 126,
+          "declaration": "export type AgentChatProposalView = z.infer<typeof AgentChatProposal>;"
+        },
+        {
+          "line": 127,
+          "declaration": "export type AgentChatEventView = z.infer<typeof AgentChatEvent>;"
+        },
+        {
+          "line": 128,
+          "declaration": "export type AgentChatEventsView = z.infer<typeof AgentChatEvents>;"
+        },
+        {
+          "line": 129,
+          "declaration": "export type CreateAgentConversationInput = z.infer<typeof CreateAgentConversation>;"
+        },
+        {
+          "line": 130,
+          "declaration": "export type SendAgentChatTurnInput = z.infer<typeof SendAgentChatTurn>;"
+        },
+        {
+          "line": 131,
+          "declaration": "export type ResolveAgentProposalInput = z.infer<typeof ResolveAgentProposal>;"
+        }
+      ]
+    },
+    {
+      "path": "packages/contracts/src/agents-tools-endpoints.ts",
+      "declarations": [
+        {
+          "line": 3,
+          "declaration": "export const AGENT_TOOLS_HTTP_ENDPOINTS = ["
+        }
+      ]
+    },
+    {
+      "path": "packages/contracts/src/agents-tools.ts",
+      "declarations": [
+        {
+          "line": 3,
+          "declaration": "export const AGENT_TOOL_NAMES = ["
+        },
+        {
+          "line": 10,
+          "declaration": "export const AGENT_TOOL_LIMITS = {"
+        },
+        {
+          "line": 24,
+          "declaration": "export const AGENT_TOOL_RESOURCES = {"
+        },
+        {
+          "line": 30,
+          "declaration": "export const AGENT_TOOL_DESTINATION = \"local.hermes-tools\";"
+        },
+        {
+          "line": 31,
+          "declaration": "export const AgentToolName = z.enum(AGENT_TOOL_NAMES);"
+        },
+        {
+          "line": 32,
+          "declaration": "export type AgentToolName = z.infer<typeof AgentToolName>;"
+        },
+        {
+          "line": 41,
+          "declaration": "export const AgentWorkspacePath = z"
+        },
+        {
+          "line": 52,
+          "declaration": "export const AgentWorkspaceDirectory = z.union(["
+        },
+        {
+          "line": 58,
+          "declaration": "export const AgentToolPolicy = z"
+        },
+        {
+          "line": 82,
+          "declaration": "export type AgentToolPolicy = z.infer<typeof AgentToolPolicy>;"
+        },
+        {
+          "line": 83,
+          "declaration": "export const AgentTaskToolSelection = z"
+        },
+        {
+          "line": 115,
+          "declaration": "export type AgentTaskToolSelection = z.infer<typeof AgentTaskToolSelection>;"
+        },
+        {
+          "line": 116,
+          "declaration": "export const AgentToolArguments = {"
+        },
+        {
+          "line": 130,
+          "declaration": "export const AgentToolCall = z"
+        },
+        {
+          "line": 137,
+          "declaration": "export type AgentToolCall = z.infer<typeof AgentToolCall>;"
+        },
+        {
+          "line": 139,
+          "declaration": "export const AgentToolReceipt = z"
+        },
+        {
+          "line": 146,
+          "declaration": "export type AgentToolReceipt = z.infer<typeof AgentToolReceipt>;"
+        },
+        {
+          "line": 147,
+          "declaration": "export const AgentToolArtifact = z"
+        },
+        {
+          "line": 155,
+          "declaration": "export const AgentToolObservation = z"
+        },
+        {
+          "line": 170,
+          "declaration": "export type AgentToolObservation = z.infer<typeof AgentToolObservation>;"
+        },
+        {
+          "line": 171,
+          "declaration": "export const AgentToolAllocationObservation = z"
+        },
+        {
+          "line": 178,
+          "declaration": "export type AgentToolAllocationObservation = z.infer<typeof AgentToolAllocationObservation>;"
+        },
+        {
+          "line": 179,
+          "declaration": "export const AgentToolAllocationRequest = z"
+        },
+        {
+          "line": 195,
+          "declaration": "export type AgentToolAllocationRequest = z.infer<typeof AgentToolAllocationRequest>;"
+        },
+        {
+          "line": 196,
+          "declaration": "export const AgentToolExecutionRequest = z"
+        },
+        {
+          "line": 213,
+          "declaration": "export type AgentToolExecutionRequest = z.infer<typeof AgentToolExecutionRequest>;"
+        },
+        {
+          "line": 214,
+          "declaration": "export interface AgentToolExecutorContext {"
+        },
+        {
+          "line": 218,
+          "declaration": "export interface AgentToolExecutor {"
+        },
+        {
+          "line": 238,
+          "declaration": "export const AgentToolCallView = z"
+        },
+        {
+          "line": 252,
+          "declaration": "export type AgentToolCallView = z.infer<typeof AgentToolCallView>;"
+        },
+        {
+          "line": 253,
+          "declaration": "export const AgentTaskToolsDetail = z"
+        },
+        {
+          "line": 271,
+          "declaration": "export type AgentTaskToolsDetail = z.infer<typeof AgentTaskToolsDetail>;"
+        }
+      ]
+    },
+    {
+      "path": "packages/contracts/src/agents.ts",
+      "declarations": [
+        {
+          "line": 4,
+          "declaration": "export const AGENT_ROLES = [\"operations\", \"security\", \"research-marketing\"] as const;"
+        },
+        {
+          "line": 5,
+          "declaration": "export const AGENT_MODELS = [\"gpt-6-luna\"] as const;"
+        },
+        {
+          "line": 6,
+          "declaration": "export const AGENT_STATES = ["
+        },
+        {
+          "line": 16,
+          "declaration": "export const AGENT_DEFAULTS = {"
+        },
+        {
+          "line": 30,
+          "declaration": "export const AgentLimits = z"
+        },
+        {
+          "line": 39,
+          "declaration": "export type AgentLimitsInput = z.infer<typeof AgentLimits>;"
+        },
+        {
+          "line": 40,
+          "declaration": "export const AgentProfileConfiguration = z"
+        },
+        {
+          "line": 67,
+          "declaration": "export const CreateAgentProfile = AgentProfileConfiguration.extend({"
+        },
+        {
+          "line": 76,
+          "declaration": "export type CreateAgentProfileInput = z.infer<typeof CreateAgentProfile>;"
+        },
+        {
+          "line": 77,
+          "declaration": "export const ConfigureAgentProfile = AgentProfileConfiguration.extend({"
+        },
+        {
+          "line": 82,
+          "declaration": "export type ConfigureAgentProfileInput = z.infer<typeof ConfigureAgentProfile>;"
+        },
+        {
+          "line": 83,
+          "declaration": "export const ChangeAgentProfile = z.object({ expectedRevision: Revision }).strict();"
+        },
+        {
+          "line": 84,
+          "declaration": "export const AgentProfile = z"
+        },
+        {
+          "line": 113,
+          "declaration": "export type AgentProfileView = z.infer<typeof AgentProfile>;"
+        },
+        {
+          "line": 114,
+          "declaration": "export const LaunchAgentTask = z"
+        },
+        {
+          "line": 122,
+          "declaration": "export type LaunchAgentTaskInput = z.infer<typeof LaunchAgentTask>;"
+        },
+        {
+          "line": 123,
+          "declaration": "export const AgentTask = z"
+        },
+        {
+          "line": 149,
+          "declaration": "export type AgentTaskView = z.infer<typeof AgentTask>;"
+        },
+        {
+          "line": 150,
+          "declaration": "export const AgentEvent = z"
+        },
+        {
+          "line": 159,
+          "declaration": "export const AgentTaskDetail = z"
+        },
+        {
+          "line": 162,
+          "declaration": "export type AgentTaskDetailView = z.infer<typeof AgentTaskDetail>;"
+        },
+        {
+          "line": 163,
+          "declaration": "export const AgentTaskAction = z.object({ expectedRevision: Revision.optional() }).strict();"
+        },
+        {
+          "line": 164,
+          "declaration": "export const AgentOverview = z"
+        },
+        {
+          "line": 176,
+          "declaration": "export type AgentOverviewView = z.infer<typeof AgentOverview>;"
+        }
+      ]
+    },
+    {
+      "path": "packages/contracts/src/foundations.ts",
+      "declarations": [
+        {
+          "line": 7,
+          "declaration": "export const ActionCommand = z.union(["
+        },
+        {
+          "line": 105,
+          "declaration": "export type ActionCommandInput = z.infer<typeof ActionCommand>;"
+        },
+        {
+          "line": 106,
+          "declaration": "export const RESOURCE_KINDS = ["
+        },
+        {
+          "line": 120,
+          "declaration": "export const RegisterResource = z"
+        },
+        {
+          "line": 128,
+          "declaration": "export type RegisterResourceInput = z.infer<typeof RegisterResource>;"
+        },
+        {
+          "line": 129,
+          "declaration": "export const CreateExecutionPlan = z"
+        },
+        {
+          "line": 142,
+          "declaration": "export type CreateExecutionPlanInput = z.infer<typeof CreateExecutionPlan>;"
+        },
+        {
+          "line": 143,
+          "declaration": "export const EffectOutcome = z"
+        },
+        {
+          "line": 150,
+          "declaration": "export type EffectOutcomeInput = z.infer<typeof EffectOutcome>;"
+        },
+        {
+          "line": 151,
+          "declaration": "export const FOUNDATION_DEFAULTS = {"
+        },
+        {
+          "line": 160,
+          "declaration": "export interface ExecutionContext {"
+        },
+        {
+          "line": 172,
+          "declaration": "export interface ExecutionAdapter {"
+        },
+        {
+          "line": 179,
+          "declaration": "export interface AuditAnchor {"
+        },
+        {
+          "line": 183,
+          "declaration": "export interface AuditExportEntry {"
+        },
+        {
+          "line": 194,
+          "declaration": "export interface AuditExportPage {"
+        }
+      ]
+    },
+    {
+      "path": "packages/contracts/src/http-endpoints.ts",
+      "declarations": [
+        {
+          "line": 43,
+          "declaration": "export const CONTROL_API_VERSION = \"1.12.0\" as const;"
+        },
+        {
+          "line": 44,
+          "declaration": "export const CONTROL_API_HEADER = \"x-godseye-api-version\" as const;"
+        },
+        {
+          "line": 45,
+          "declaration": "export interface ControlEndpoint {"
+        },
+        {
+          "line": 59,
+          "declaration": "export const CONTROL_HTTP_ENDPOINTS = ["
+        },
+        {
+          "line": 341,
+          "declaration": "export const CONTROL_ENDPOINTS = CONTROL_HTTP_ENDPOINTS;"
+        },
+        {
+          "line": 342,
+          "declaration": "export function controlPath(path: string) {"
+        },
+        {
+          "line": 348,
+          "declaration": "export function findControlEndpoint(method: string, path: string): ControlEndpoint | undefined {"
+        },
+        {
+          "line": 356,
+          "declaration": "export function endpointParameters(endpoint: ControlEndpoint) {"
+        }
+      ]
+    },
+    {
+      "path": "packages/contracts/src/index.ts",
+      "declarations": []
+    },
+    {
+      "path": "packages/control-client/src/index.ts",
+      "declarations": [
+        {
+          "line": 110,
+          "declaration": "export function createControlClient(options: ControlClientOptions = {}) {"
+        },
+        {
+          "line": 417,
+          "declaration": "export type ControlClient = ReturnType<typeof createControlClient>;"
+        }
+      ]
+    },
+    {
+      "path": "packages/core/src/agents-chat.ts",
+      "declarations": [
+        {
+          "line": 19,
+          "declaration": "export async function chatList(state: AgentState, actor: Actor) {"
+        },
+        {
+          "line": 28,
+          "declaration": "export async function chatCreate(state: AgentState, actor: Actor, raw: unknown, key: string) {"
+        },
+        {
+          "line": 70,
+          "declaration": "export async function chatDetail(state: AgentState, actor: Actor, id: string) {"
+        },
+        {
+          "line": 105,
+          "declaration": "export async function chatSend("
+        }
+      ]
+    },
+    {
+      "path": "packages/core/src/agents-execution.ts",
+      "declarations": [
+        {
+          "line": 34,
+          "declaration": "export async function executionTask("
+        },
+        {
+          "line": 153,
+          "declaration": "export async function stopAgentExecution(state: AgentState, context: ExecutionContext) {"
+        },
+        {
+          "line": 163,
+          "declaration": "export async function stopAgentTask(state: AgentState, task: TaskRow): Promise<void> {"
+        },
+        {
+          "line": 193,
+          "declaration": "export async function executeAgent("
+        },
+        {
+          "line": 318,
+          "declaration": "export async function reconcileAgent("
+        }
+      ]
+    },
+    {
+      "path": "packages/core/src/agents-profiles.ts",
+      "declarations": [
+        {
+          "line": 44,
+          "declaration": "export async function createAgentProfile("
+        },
+        {
+          "line": 135,
+          "declaration": "export async function configureAgentProfile("
+        },
+        {
+          "line": 189,
+          "declaration": "export async function pauseAgentProfile("
+        }
+      ]
+    },
+    {
+      "path": "packages/core/src/agents-provider.ts",
+      "declarations": [
+        {
+          "line": 4,
+          "declaration": "export type AgentProviderProfile = Omit<"
+        },
+        {
+          "line": 8,
+          "declaration": "export interface AgentProviderRequest {"
+        },
+        {
+          "line": 20,
+          "declaration": "export interface AgentObservation {"
+        },
+        {
+          "line": 29,
+          "declaration": "export interface AgentProviderEvent {"
+        },
+        {
+          "line": 35,
+          "declaration": "export interface AgentProviderContext {"
+        },
+        {
+          "line": 44,
+          "declaration": "export interface AgentProvider {"
+        }
+      ]
+    },
+    {
+      "path": "packages/core/src/agents-runs.ts",
+      "declarations": [
+        {
+          "line": 26,
+          "declaration": "export async function launchAgentTask("
+        }
+      ]
+    },
+    {
+      "path": "packages/core/src/agents-state.ts",
+      "declarations": [
+        {
+          "line": 21,
+          "declaration": "export const AGENTS_ADAPTER_ID = \"local.hermes\";"
+        },
+        {
+          "line": 22,
+          "declaration": "export const AGENT_TOOL = \"agent.model\";"
+        },
+        {
+          "line": 23,
+          "declaration": "export const AGENT_DESTINATION = \"api.openai.com\";"
+        },
+        {
+          "line": 24,
+          "declaration": "export const AGENT_TERMINAL = [\"succeeded\", \"failed\", \"cancelled\"];"
+        },
+        {
+          "line": 25,
+          "declaration": "export interface AgentOptions {"
+        },
+        {
+          "line": 32,
+          "declaration": "export interface AgentState {"
+        },
+        {
+          "line": 45,
+          "declaration": "export type ProfileRow = typeof schema.agentProfiles.$inferSelect;"
+        },
+        {
+          "line": 46,
+          "declaration": "export type TaskRow = typeof schema.agentTasks.$inferSelect;"
+        },
+        {
+          "line": 47,
+          "declaration": "export const skill = {"
+        },
+        {
+          "line": 52,
+          "declaration": "export const agentActor = (projectId: string): Actor => ({"
+        },
+        {
+          "line": 57,
+          "declaration": "export function profileHash("
+        },
+        {
+          "line": 100,
+          "declaration": "export function profileView("
+        },
+        {
+          "line": 129,
+          "declaration": "export function taskView(row: TaskRow) {"
+        },
+        {
+          "line": 153,
+          "declaration": "export async function profileFor(tx: DatabaseAccess, id: string) {"
+        },
+        {
+          "line": 158,
+          "declaration": "export async function taskFor(tx: DatabaseAccess, id: string) {"
+        },
+        {
+          "line": 163,
+          "declaration": "export async function activeScope("
+        },
+        {
+          "line": 202,
+          "declaration": "export async function currentProfile(state: AgentState, tx: DatabaseAccess, row: ProfileRow) {"
+        },
+        {
+          "line": 219,
+          "declaration": "export async function assertNotBusy(tx: DatabaseAccess, profileId: string) {"
+        },
+        {
+          "line": 233,
+          "declaration": "export async function event("
+        },
+        {
+          "line": 260,
+          "declaration": "export async function taskDetail(state: AgentState, actor: Actor, id: string) {"
+        },
+        {
+          "line": 274,
+          "declaration": "export function providerRequest(task: TaskRow): AgentProviderRequest {"
+        }
+      ]
+    },
+    {
+      "path": "packages/core/src/agents-tools-artifacts.ts",
+      "declarations": [
+        {
+          "line": 11,
+          "declaration": "export async function taskToolArtifacts(state: AgentState, tx: DatabaseAccess, task: TaskRow) {"
+        }
+      ]
+    },
+    {
+      "path": "packages/core/src/agents-tools-fence.ts",
+      "declarations": [
+        {
+          "line": 12,
+          "declaration": "export async function assertToolCommitFence("
+        }
+      ]
+    },
+    {
+      "path": "packages/core/src/agents-tools-lifecycle.ts",
+      "declarations": [
+        {
+          "line": 19,
+          "declaration": "export async function allocationFor(state: AgentState, taskId: string) {"
+        },
+        {
+          "line": 29,
+          "declaration": "export async function prepareTaskTools("
+        },
+        {
+          "line": 116,
+          "declaration": "export async function stopTaskTools(state: AgentState, task: TaskRow): Promise<boolean> {"
+        },
+        {
+          "line": 153,
+          "declaration": "export async function taskToolsDetail(state: AgentState, actor: Actor, taskId: string) {"
+        }
+      ]
+    },
+    {
+      "path": "packages/core/src/agents-tools-policy.ts",
+      "declarations": [
+        {
+          "line": 9,
+          "declaration": "export function validateProfileToolPolicy("
+        },
+        {
+          "line": 31,
+          "declaration": "export function validateTaskToolGrant("
+        }
+      ]
+    },
+    {
+      "path": "packages/core/src/agents-tools.ts",
+      "declarations": [
+        {
+          "line": 59,
+          "declaration": "export async function executeTaskTool("
+        }
+      ]
+    },
+    {
+      "path": "packages/core/src/agents.ts",
+      "declarations": [
+        {
+          "line": 48,
+          "declaration": "export type * from \"./agents-provider.js\";"
+        },
+        {
+          "line": 49,
+          "declaration": "export type { AgentOptions } from \"./agents-state.js\";"
+        },
+        {
+          "line": 53,
+          "declaration": "export class AgentEngine {"
+        }
+      ]
+    },
+    {
+      "path": "packages/core/src/index.ts",
+      "declarations": [
+        {
+          "line": 41,
+          "declaration": "export class ControlPlane {"
+        },
+        {
+          "line": 209,
+          "declaration": "export type {"
+        }
+      ]
+    },
+    {
+      "path": "packages/store/src/agent-schema.ts",
+      "declarations": [
+        {
+          "line": 19,
+          "declaration": "export const agentProfiles = pgTable("
+        },
+        {
+          "line": 42,
+          "declaration": "export const agentTasks = pgTable("
+        },
+        {
+          "line": 72,
+          "declaration": "export const agentEvents = pgTable("
+        }
+      ]
+    },
+    {
+      "path": "packages/store/src/agent-tools-schema.ts",
+      "declarations": [
+        {
+          "line": 17,
+          "declaration": "export const agentToolAllocations = pgTable(\"agent_tool_allocations\", {"
+        },
+        {
+          "line": 30,
+          "declaration": "export const agentToolCalls = pgTable("
+        }
+      ]
+    },
+    {
+      "path": "packages/store/src/schema.ts",
+      "declarations": [
+        {
+          "line": 22,
+          "declaration": "export const controlLock = pgTable(\"control_lock\", { id: integer(\"id\").primaryKey() }, (table) => ["
+        },
+        {
+          "line": 26,
+          "declaration": "export const projects = pgTable("
+        },
+        {
+          "line": 47,
+          "declaration": "export const environments = pgTable("
+        },
+        {
+          "line": 75,
+          "declaration": "export const operations = pgTable("
+        },
+        {
+          "line": 97,
+          "declaration": "export const requests = pgTable("
+        },
+        {
+          "line": 111,
+          "declaration": "export const audit = pgTable(\"audit\", {"
+        },
+        {
+          "line": 123,
+          "declaration": "export const deliveries = pgTable(\"github_deliveries\", {"
+        },
+        {
+          "line": 130,
+          "declaration": "export const ciRuns = pgTable("
+        }
+      ]
+    },
+    {
+      "path": "scripts/hermes_agent_boot.py",
+      "declarations": [
+        {
+          "line": 20,
+          "declaration": "def progress_diagnostic() -> None:"
+        },
+        {
+          "line": 38,
+          "declaration": "def main() -> None:"
+        }
+      ]
+    },
+    {
+      "path": "scripts/hermes_catalog.py",
+      "declarations": [
+        {
+          "line": 18,
+          "declaration": "def exact(value: object, fields: set[str]) -> dict:"
+        },
+        {
+          "line": 24,
+          "declaration": "def catalog(workspace: Path) -> tuple[dict, dict[str, bytes]]:"
+        },
+        {
+          "line": 82,
+          "declaration": "def configuration(model: str | None) -> dict:"
+        }
+      ]
+    },
+    {
+      "path": "scripts/hermes_files.py",
+      "declarations": [
+        {
+          "line": 17,
+          "declaration": "class DurabilityUncertain(RuntimeError):"
+        },
+        {
+          "line": 21,
+          "declaration": "def document(value: object) -> bytes:"
+        },
+        {
+          "line": 26,
+          "declaration": "def digest(value: bytes) -> str:"
+        },
+        {
+          "line": 30,
+          "declaration": "def runtime_root(workspace: Path) -> Path:"
+        },
+        {
+          "line": 36,
+          "declaration": "def no_aliases(path: Path) -> None:"
+        },
+        {
+          "line": 44,
+          "declaration": "def private_directory(path: Path) -> None:"
+        },
+        {
+          "line": 51,
+          "declaration": "def existing_directory(path: Path) -> None:"
+        },
+        {
+          "line": 59,
+          "declaration": "def regular(path: Path, private: bool = True) -> os.stat_result:"
+        },
+        {
+          "line": 69,
+          "declaration": "def read_bytes(path: Path, private: bool = True) -> bytes:"
+        },
+        {
+          "line": 83,
+          "declaration": "def read_json(path: Path, private: bool = True) -> object:"
+        },
+        {
+          "line": 87,
+          "declaration": "def sync_directory(path: Path) -> None:"
+        },
+        {
+          "line": 95,
+          "declaration": "def write_new(path: Path, content: bytes) -> None:"
+        },
+        {
+          "line": 104,
+          "declaration": "def replace_json(path: Path, value: object) -> None:"
+        },
+        {
+          "line": 130,
+          "declaration": "def exclusive(root: Path) -> Iterator[None]:"
+        }
+      ]
+    },
+    {
+      "path": "scripts/hermes_gateway_broker.py",
+      "declarations": [
+        {
+          "line": 22,
+          "declaration": "class Authority:"
+        },
+        {
+          "line": 58,
+          "declaration": "def outgoing_body(raw: bytes, request: dict, state: dict | None = None) -> bytes:"
+        },
+        {
+          "line": 116,
+          "declaration": "class Broker:"
+        }
+      ]
+    },
+    {
+      "path": "scripts/hermes_gateway_events.py",
+      "declarations": [
+        {
+          "line": 10,
+          "declaration": "class RunEvents:"
+        }
+      ]
+    },
+    {
+      "path": "scripts/hermes_gateway_reply.py",
+      "declarations": [
+        {
+          "line": 10,
+          "declaration": "def validated_frames(response, stop, deadline: float, model: str):"
+        },
+        {
+          "line": 76,
+          "declaration": "def text_only(value: object, depth: int = 0) -> None:"
+        },
+        {
+          "line": 92,
+          "declaration": "def read_text_reply(response, stop, deadline: float) -> bytes:"
+        }
+      ]
+    },
+    {
+      "path": "scripts/hermes_gateway_state.py",
+      "declarations": [
+        {
+          "line": 22,
+          "declaration": "def validate_request(request: dict) -> None:"
+        },
+        {
+          "line": 66,
+          "declaration": "def task_root(workspace: Path, task_id: str) -> Path:"
+        },
+        {
+          "line": 70,
+          "declaration": "def identity(request: dict) -> dict:"
+        },
+        {
+          "line": 84,
+          "declaration": "def read_state(directory: Path, request: dict) -> dict:"
+        },
+        {
+          "line": 110,
+          "declaration": "def write_state(directory: Path, state: dict) -> None:"
+        },
+        {
+          "line": 117,
+          "declaration": "def materialize(workspace: Path, directory: Path, request: dict, broker_port: int, api_port: int) -> dict:"
+        },
+        {
+          "line": 165,
+          "declaration": "def public_observation(state: dict) -> dict:"
+        }
+      ]
+    },
+    {
+      "path": "scripts/hermes_gateway_tools_reply.py",
+      "declarations": [
+        {
+          "line": 7,
+          "declaration": "def frames(response, stop, deadline: float, model: str, grant: dict, accept_calls):"
+        }
+      ]
+    },
+    {
+      "path": "scripts/hermes_gateway_transport.py",
+      "declarations": [
+        {
+          "line": 8,
+          "declaration": "class NoRedirect(HTTPRedirectHandler):"
+        },
+        {
+          "line": 13,
+          "declaration": "def api(state: dict, method: str, path: str, body: dict | None = None, timeout: float = 5) -> dict:"
+        },
+        {
+          "line": 32,
+          "declaration": "def observed(state: dict, value: dict) -> dict:"
+        },
+        {
+          "line": 62,
+          "declaration": "def readonly_observation(state: dict) -> dict:"
+        }
+      ]
+    },
+    {
+      "path": "scripts/hermes_gateway.py",
+      "declarations": [
+        {
+          "line": 28,
+          "declaration": "def free_port() -> int:"
+        },
+        {
+          "line": 34,
+          "declaration": "def child_environment(tool: Path, directory: Path, state: dict) -> dict[str, str]:"
+        },
+        {
+          "line": 50,
+          "declaration": "def terminate(child: subprocess.Popen | None) -> bool:"
+        },
+        {
+          "line": 67,
+          "declaration": "def run(workspace: Path, request: dict, provider_key: str, fixture_base: str | None) -> None:"
+        },
+        {
+          "line": 242,
+          "declaration": "def main() -> None:"
+        }
+      ]
+    },
+    {
+      "path": "scripts/hermes_install_files.py",
+      "declarations": [
+        {
+          "line": 18,
+          "declaration": "def private_directory(path: Path) -> None:"
+        },
+        {
+          "line": 32,
+          "declaration": "def regular_file(path: Path) -> None:"
+        },
+        {
+          "line": 40,
+          "declaration": "def read_json(path: Path) -> dict:"
+        },
+        {
+          "line": 48,
+          "declaration": "def write_json(path: Path, value: dict) -> None:"
+        },
+        {
+          "line": 70,
+          "declaration": "def digest(path: Path) -> str:"
+        },
+        {
+          "line": 77,
+          "declaration": "def download(url: str, target: Path, expected: str) -> None:"
+        },
+        {
+          "line": 105,
+          "declaration": "def tree_hashes(root: Path, containment: Path) -> dict[str, str]:"
+        },
+        {
+          "line": 129,
+          "declaration": "def detach_build_hardlinks(root: Path) -> None:"
+        },
+        {
+          "line": 154,
+          "declaration": "def extract(archive: Path, target: Path, prefix: str, allow_links: bool) -> None:"
+        }
+      ]
+    },
+    {
+      "path": "scripts/hermes_local.py",
+      "declarations": [
+        {
+          "line": 25,
+          "declaration": "def owned_root(workspace: Path) -> Path:"
+        },
+        {
+          "line": 43,
+          "declaration": "def execute(payload: dict) -> dict:"
+        },
+        {
+          "line": 83,
+          "declaration": "def main() -> None:"
+        }
+      ]
+    },
+    {
+      "path": "scripts/hermes_profiles.py",
+      "declarations": [
+        {
+          "line": 27,
+          "declaration": "def identifier(value: object) -> str:"
+        },
+        {
+          "line": 33,
+          "declaration": "def revision_id(value: object) -> str:"
+        },
+        {
+          "line": 39,
+          "declaration": "def binding(workspace: Path, payload: dict) -> dict:"
+        },
+        {
+          "line": 52,
+          "declaration": "def recipe(workspace: Path, payload: dict) -> tuple[dict, dict[str, bytes]]:"
+        },
+        {
+          "line": 78,
+          "declaration": "def list_entries(root: Path) -> list[Path]:"
+        },
+        {
+          "line": 98,
+          "declaration": "def read_binding(profile: Path, workspace: Path) -> dict:"
+        },
+        {
+          "line": 107,
+          "declaration": "def active(profile: Path) -> str:"
+        },
+        {
+          "line": 112,
+          "declaration": "def verify_snapshot(profile: Path, revision: str, identity: dict) -> dict:"
+        },
+        {
+          "line": 150,
+          "declaration": "def view(profile: Path, workspace: Path, revision: str | None = None) -> dict:"
+        },
+        {
+          "line": 163,
+          "declaration": "def publish_revision(profile: Path, files: dict[str, bytes], revision: str) -> None:"
+        },
+        {
+          "line": 183,
+          "declaration": "def prepare(root: Path, workspace: Path, payload: dict) -> dict:"
+        },
+        {
+          "line": 211,
+          "declaration": "def inspect(root: Path, workspace: Path, payload: dict) -> dict:"
+        },
+        {
+          "line": 231,
+          "declaration": "def promote(root: Path, workspace: Path, payload: dict) -> dict:"
+        }
+      ]
+    },
+    {
+      "path": "scripts/hermes_runtime_install.py",
+      "declarations": [
+        {
+          "line": 18,
+          "declaration": "def execution_root(tool: Path) -> Path:"
+        },
+        {
+          "line": 22,
+          "declaration": "def execution_hashes(root: Path, tool: Path) -> dict:"
+        },
+        {
+          "line": 35,
+          "declaration": "def verify_execution(root: Path, tool: Path) -> dict:"
+        },
+        {
+          "line": 47,
+          "declaration": "def install(workspace: Path) -> dict:"
+        },
+        {
+          "line": 101,
+          "declaration": "def main() -> None:"
+        }
+      ]
+    },
+    {
+      "path": "scripts/hermes_tools_bridge.py",
+      "declarations": [
+        {
+          "line": 7,
+          "declaration": "class ToolBridge:"
+        }
+      ]
+    },
+    {
+      "path": "scripts/hermes_tools_install.py",
+      "declarations": [
+        {
+          "line": 19,
+          "declaration": "def digest(path: Path) -> str:"
+        },
+        {
+          "line": 24,
+          "declaration": "def location(workspace: Path) -> tuple[Path, Path]:"
+        },
+        {
+          "line": 31,
+          "declaration": "def hashes(root: Path) -> dict[str, str]:"
+        },
+        {
+          "line": 35,
+          "declaration": "def verify(workspace: Path) -> Path:"
+        },
+        {
+          "line": 46,
+          "declaration": "def install(workspace: Path) -> dict:"
+        }
+      ]
+    },
+    {
+      "path": "scripts/hermes_tools_policy.py",
+      "declarations": [
+        {
+          "line": 9,
+          "declaration": "def validate(grant: dict) -> None:"
+        },
+        {
+          "line": 42,
+          "declaration": "def schemas(grant: dict | None) -> list[dict]:"
+        },
+        {
+          "line": 59,
+          "declaration": "def exact_call(value: dict, grant: dict) -> dict:"
+        }
+      ]
+    },
+    {
+      "path": "scripts/hermes_tools_runtime.py",
+      "declarations": [
+        {
+          "line": 23,
+          "declaration": "def send(value: dict) -> None:"
+        },
+        {
+          "line": 27,
+          "declaration": "def systemctl(*arguments: str) -> subprocess.CompletedProcess:"
+        },
+        {
+          "line": 32,
+          "declaration": "def target(workspace: Path, request: dict) -> tuple[Path, str]:"
+        },
+        {
+          "line": 44,
+          "declaration": "def retained(workspace: Path, request: dict) -> tuple[Path, dict]:"
+        },
+        {
+          "line": 62,
+          "declaration": "def properties(unit: str) -> dict:"
+        },
+        {
+          "line": 69,
+          "declaration": "def observation(value: dict) -> dict:"
+        },
+        {
+          "line": 73,
+          "declaration": "def stop_owned(workspace: Path, request: dict) -> dict:"
+        },
+        {
+          "line": 112,
+          "declaration": "def configuration(rootfs: Path) -> dict:"
+        },
+        {
+          "line": 126,
+          "declaration": "def launch(workspace: Path, request: dict) -> None:"
+        },
+        {
+          "line": 263,
+          "declaration": "def main() -> None:"
+        }
+      ]
+    },
+    {
+      "path": "scripts/hermes_tools_service.py",
+      "declarations": [
+        {
+          "line": 7,
+          "declaration": "def main() -> None:"
+        }
+      ]
+    },
+    {
+      "path": "scripts/hermes_tools_worker.py",
+      "declarations": [
+        {
+          "line": 18,
+          "declaration": "def logical(value: str, directory: bool = False) -> Path:"
+        },
+        {
+          "line": 38,
+          "declaration": "def files() -> list[Path]:"
+        },
+        {
+          "line": 52,
+          "declaration": "def text(path: Path) -> str:"
+        },
+        {
+          "line": 66,
+          "declaration": "def write(path: Path, content: str) -> None:"
+        },
+        {
+          "line": 92,
+          "declaration": "def bounded_json(value: object, depth: int = 0) -> None:"
+        },
+        {
+          "line": 103,
+          "declaration": "def execute(name: str, arguments: dict) -> object:"
+        },
+        {
+          "line": 137,
+          "declaration": "def artifacts() -> list[dict]:"
+        },
+        {
+          "line": 149,
+          "declaration": "def main() -> None:"
+        }
+      ]
+    },
+    {
+      "path": "scripts/hermes-bindings.mjs",
+      "declarations": [
+        {
+          "line": 20,
+          "declaration": "export function argumentsFor(args) {"
+        },
+        {
+          "line": 83,
+          "declaration": "export async function writeBinding(args, input = process.stdin) {"
+        }
+      ]
+    },
+    {
+      "path": "scripts/hermes-local.mjs",
+      "declarations": [
+        {
+          "line": 20,
+          "declaration": "export function parseArguments(args) {"
+        },
+        {
+          "line": 34,
+          "declaration": "export function hostEnvironment(environment = process.env) {"
+        }
+      ]
+    },
+    {
+      "path": "scripts/hermes-runtime-install.mjs",
+      "declarations": []
+    },
+    {
+      "path": "scripts/hermes-tools-bootstrap.mjs",
+      "declarations": []
+    },
+    {
+      "path": "scripts/hermes-tools-install.mjs",
+      "declarations": []
+    },
+    {
+      "path": "scripts/install-hermes.mjs",
+      "declarations": []
+    },
+    {
+      "path": "scripts/install-hermes.py",
+      "declarations": [
+        {
+          "line": 29,
+          "declaration": "def resolve_root(workspace: str, create: bool) -> Path:"
+        },
+        {
+          "line": 64,
+          "declaration": "def child_environment(root: Path) -> dict[str, str]:"
+        },
+        {
+          "line": 82,
+          "declaration": "def execute(command: list[str], root: Path, timeout: int = 900) -> str:"
+        },
+        {
+          "line": 95,
+          "declaration": "def offline_smoke(root: Path) -> dict:"
+        },
+        {
+          "line": 99,
+          "declaration": "def refuse(*args, **kwargs):"
+        },
+        {
+          "line": 119,
+          "declaration": "def immutable_files(root: Path) -> dict:"
+        },
+        {
+          "line": 124,
+          "declaration": "def verify_install(root: Path) -> dict:"
+        },
+        {
+          "line": 136,
+          "declaration": "def verify_extraction(target: Path, reference: Path, root: Path, name: str) -> None:"
+        },
+        {
+          "line": 158,
+          "declaration": "def install(root: Path) -> dict:"
+        },
+        {
+          "line": 224,
+          "declaration": "def main() -> None:"
+        }
+      ]
+    }
+  ],
+  "sourceFreeze": "reviews/hermes-tools-source-freeze.json",
+  "reusableBoundaries": [
+    "Exact catalog/schemas/interfaces: packages/contracts/src/agents-tools.ts",
+    "Closing transaction authority fence: packages/core/src/agents-tools-fence.ts",
+    "Intent/receipt lifecycle and publication: existing Foundation/journal plus agents-tools*.ts",
+    "Exact native allocation owner: apps/control-api/src/hermes-tool-executor.ts and scripts/hermes_tools_runtime.py",
+    "Existing immutable owner artifact storage reused for chat; bounded standalone DTO snapshots",
+    "Explicit per-task grants reuse existing task/chat admission and immutable send intents"
+  ]
+}

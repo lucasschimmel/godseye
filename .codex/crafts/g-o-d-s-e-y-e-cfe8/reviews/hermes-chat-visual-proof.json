@@ -1,0 +1,34 @@
+{
+  "existingCaseRerunPassed": 1,
+  "seconds": 29,
+  "uniqueCaseCountUnchanged": true,
+  "screenshots": [
+    "artifacts/hermes-chat-mobile.png",
+    "artifacts/hermes-chat-desktop.png"
+  ],
+  "viewportSizes": [
+    {
+      "width": 390,
+      "height": 844
+    },
+    {
+      "width": 1440,
+      "height": 1000
+    }
+  ],
+  "unmodifiedViewportCapture": true,
+  "maskingUsedInFinalImages": false,
+  "focus": "BODY; skip link not focused",
+  "skipLinkComputed": {
+    "position": "fixed",
+    "top": "-100px",
+    "rect": {
+      "top": -100,
+      "bottom": -55,
+      "left": 16,
+      "right": 141.234375
+    }
+  },
+  "visualInspection": "Both final viewport screenshots inspected: no skip-link overlay; desktop shows chat before profile section; mobile controls and transcript remain within viewport.",
+  "limitation": "Tall-region element screenshot stitching had included an offscreen fixed skip link despite BODY focus. Final images use ordinary viewport screenshots without styles or masks; computed metadata is attached to the successful browser run."
+}

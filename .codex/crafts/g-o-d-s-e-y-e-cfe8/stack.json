@@ -1,0 +1,71 @@
+{
+  "project_id": "g-o-d-s-e-y-e-cfe8",
+  "mode": "feat: local E08 usage budgets observability incidents",
+  "criticity": "production",
+  "runtime": "Node 24",
+  "package_manager": "Bun1.4.4 (project-local verified tool; Node24 application/test runtime)",
+  "language": "TypeScript strict",
+  "frontend": "TanStack Start/React/Tailwind/shadcn",
+  "backend": "Hono/Zod",
+  "database": "Drizzle/PostgreSQL; PGlite local",
+  "test": "Vitest/Playwright",
+  "ci": "Jenkins",
+  "swarm": "One dependent E07 continuation; focused core/runtime/tests satellites, parent orchestration/review/validation",
+  "notes": [
+    "Context7 unavailable: official docs and installed types used",
+    "Docker CLI present; daemon unavailable",
+    "Ubuntu 26.04 reported by owner, not verified; Proxmox target Debian-based Rescue install later",
+    "Remote E00 deferred by explicit local-first request; no physical qualification implied"
+  ],
+  "auth": "Better Auth 1.7.20 / UV-required resident WebAuthn passkeys / fixed local owner",
+  "jobsRuntime": "Trusted independent PostgreSQL-journal supervisor; scoped first-party child workers; native Inngest1.52.0+workflow PostgreSQL18.6+Redis8.0.5; controller HTTP optional",
+  "hermesRuntime": {
+    "historicalSetup": "Pinned Hermes0.23.1/Python3.14.9 in workspace-bound WSL native storage;OpenAIAPI preference;immutable setup snapshots only,no mutable runtime home/no run admission",
+    "current": "PinnedHermes0.23.1/CPython3.14.9; separate frozen API execution environment; direct actual APIServerAdapter; private scoped OpenAI broker",
+    "agentCenter": "Verified local owner profiles/task lifecycle; no system tools",
+    "advancedChat": "Verified local: real incremental API-only Runs SSE+acknowledged IPC, separately admitted successful-history turns, immutable text drafts, existing-plan exact owner inbox. No native broad/session approval, new model plans, tools or host qualification."
+  },
+  "hermesTools": {
+    "catalog": "Five fixed trusted file/JSON tools",
+    "runtime": "Pinned gVisor systrap + verified outer systemd user-service cgroup",
+    "scope": "Task-private copied UTF-8 scratch/artifacts only",
+    "generalCode": "Separate coding runner qualified local disposable KVM; Hermes typed-tool gVisor scope unchanged",
+    "modelTransport": "Native Hermes/model outside tool sandbox; loopback-model native qualification, no paid calls",
+    "review": "reviews/hermes-tools-independent-review.json",
+    "sourceFreeze": "reviews/hermes-tools-source-freeze.json"
+  },
+  "codingRunners": {
+    "paidCalls": 0,
+    "scope": "E07.S05 local",
+    "serverChanged": false,
+    "finalComposition": "3pass actual Foundation/provider/native broker/KVM; external HTTPS fixture only",
+    "guestMiB": 4096,
+    "outerMiB": 5120,
+    "models": [
+      "gpt-5.4-mini",
+      "claude-haiku-5-5"
+    ],
+    "platform": "Windows / Ubuntu WSL2 KVM"
+  },
+  "orchestration": {
+    "scope": "E07 local approved DAG software",
+    "status": "complete-local-scope",
+    "apiVersion": "1.14.0",
+    "maxSteps": 12,
+    "execution": "serialized existing Foundation/Hermes/Coding",
+    "authority": "exact owner-approved service delegation",
+    "nativeBroadApprovals": false,
+    "paidCalls": 0,
+    "remoteChanges": false,
+    "report": "orchestration-report.md"
+  },
+  "e08": {
+    "status": "complete-local-scope",
+    "apiVersion": "1.15.0",
+    "report": "e08-report.md",
+    "nativeHermes": "2 actual local fixture compositions passed",
+    "nativeCoding": "4 production broker probes; full changed-source VM closure not requalified",
+    "paidCalls": 0,
+    "remoteChanges": false
+  }
+}

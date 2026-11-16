@@ -1,0 +1,50 @@
+[
+  {
+    "path": "tests/agents-chat.test.ts",
+    "sha256": "d334a5a9969b03d082ed994c2b373520394629f9b16d092460bb31b67439f842"
+  },
+  {
+    "path": "tests/agents-chat-proposals.test.ts",
+    "sha256": "ec64489c8be6ba0d06c7a93da389a1e287055844a82facfe166c7156d31927bf"
+  },
+  {
+    "path": "tests/agents-chat-native.test.ts",
+    "sha256": "24de5db82e2e0898e72f568dd06f832f42f8655d67ac8a65facdb278b01fb7ef"
+  },
+  {
+    "path": "tests/agents-chat-http.test.ts",
+    "sha256": "3eca3d496efe687f57edc5600b9c7bdbd755af216e030441636367add2791d1a"
+  },
+  {
+    "path": "tests/agents-chat-transport.test.ts",
+    "sha256": "c79295bc7cd8f2606315a1763a6dc366c670721a86cbe9146a8f25b805ffd4b2"
+  },
+  {
+    "path": "tests/agents-chat-persistence.test.ts",
+    "sha256": "78b0fed4f77ec55b29ad34b5ddb8a6dfd28ccb915fb938fc22f63c1a43167cdb"
+  },
+  {
+    "path": "tests/helpers/agents-chat-stream.ts",
+    "sha256": "caafbfae361001493795eb4346270791a4bfbd438f63b7f112f20d1ba49e9f56"
+  },
+  {
+    "path": "tests/helpers/agents-chat-browser-fixture.ts",
+    "sha256": "8892e8fbe4e55514db7c0ad925616d045e40ac3cff32f3779ff38f895f37aa56"
+  },
+  {
+    "path": "tests/helpers/agents-native-fixture.ts",
+    "sha256": "ffdabdd392198fa4a7605e1298a1056045e5bd1158a6925c7e25b33b27760a9d"
+  },
+  {
+    "path": "tests/helpers/agents-fixture.ts",
+    "sha256": "3319283bfbae0c1ef9d162cb10499fbe9680270fa3ff6dc5765c7e4a117c198b"
+  },
+  {
+    "path": "tests/helpers/agents-model.py",
+    "sha256": "fc93f99dbf26b6eed94901d84c73d8d7a614e450b6e80d0468b4d322b377784b"
+  },
+  {
+    "path": "tests/e2e/agents.spec.ts",
+    "sha256": "db9bd6447dde8e78cf37c08cfed044ad4b3dee6919cb50d0f130165a4e81c8a0"
+  }
+]

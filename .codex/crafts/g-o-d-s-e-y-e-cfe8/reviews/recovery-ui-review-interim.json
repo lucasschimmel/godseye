@@ -1,0 +1,119 @@
+{
+  "verdict": "pass-with-findings",
+  "kind": "code",
+  "review_state": "narrow-ui-review-complete-awaiting-REC-UI-001-fix",
+  "scope": "RecoveryPanel/databases route and affected project environment maps, ordinary selectors, shell/client/status/date handling",
+  "panel_sha256": "e5232c3e05d4c8f0547350b980739270f65af46014b36807ead35ef49a89e741",
+  "reviewed_snapshot": [
+    {
+      "path": "apps/console/src/components/recovery-panel.tsx",
+      "sha256": "e5232c3e05d4c8f0547350b980739270f65af46014b36807ead35ef49a89e741"
+    },
+    {
+      "path": "apps/console/src/routes/databases.tsx",
+      "sha256": "d84a06efe4c049ae1ddc9b3c8c3da1107776e06adaa928d18df76cdf0213366c"
+    },
+    {
+      "path": "apps/console/src/routes/projects.$projectId.tsx",
+      "sha256": "d55dac7142634a1d1fa77d56e91f0443ae341d6c167b93bb0c48f66ec0b00fc6"
+    },
+    {
+      "path": "apps/console/src/components/database-profile-form.tsx",
+      "sha256": "9c75342c7d2222c5d6e6849624f0822ef30aa1e4df7462bf68fd9ba726370f7b"
+    },
+    {
+      "path": "apps/console/src/components/infra-workload-form.tsx",
+      "sha256": "c0a94182ae425f5eb96fc55de37add4de47dc4175363e71ac64c86de2e735b0a"
+    },
+    {
+      "path": "apps/console/src/components/project-management.tsx",
+      "sha256": "9d15d105fd1458d476cf0e987e0b51104844732744673465f4d215a23e8f2336"
+    },
+    {
+      "path": "apps/console/src/routes/access.tsx",
+      "sha256": "b127809f1c756abcc5782325c4dc72fbddab9aa9b8d85fe00ecfab40843217ec"
+    },
+    {
+      "path": "apps/console/src/components/shell.tsx",
+      "sha256": "8757bff12a9aee440dfd059ab42b64f240a075bfea5916d4a103411ed95c7676"
+    },
+    {
+      "path": "apps/console/src/components/shared.tsx",
+      "sha256": "825d911cfdeda9a35a402e997985af3ce0bbfcfee08ffc6b8032d26a75a41178"
+    },
+    {
+      "path": "apps/console/src/lib/api.ts",
+      "sha256": "d6510ba56dbcb36cbbfb823291b86fa0f5b31537fb3479ad4b86bae06227f5f7"
+    },
+    {
+      "path": "packages/control-client/src/index.ts",
+      "sha256": "9373fa86b7fb88eeb74dc840bac51efeca158e694658a473fdd8f188cef57bed"
+    },
+    {
+      "path": "packages/control-client/src/transport.ts",
+      "sha256": "39252335069b4ab6ac6ccdfc4a53fd05a038de9f565534b7c2267407d09d5ae5"
+    }
+  ],
+  "findings": [
+    {
+      "id": "REC-UI-001",
+      "criterion": "COR-01",
+      "status": "CONFIRMED",
+      "severity": "major",
+      "category": "CWE-451: User Interface Misrepresentation of Critical Information",
+      "evidence": "apps/console/src/routes/projects.$projectId.tsx:91-97 renders every non-production/non-development kind as Aperçu and shows only generic environment.status, with no recoveryHold explanation at :113-120. database-profile-form.tsx:83-88 includes held recovery environments and labels them Aperçu; routes/access.tsx:147-149 includes them and labels every nonproduction kind Développement. infra-workload-form.tsx:77-89 translates recovery correctly but still offers held cells for ordinary application preparation. Independent render of the actual DatabaseProfileForm with a valid synthetic recovery environment produced mislabel=true and offered=true (artifacts/recovery-ui-selector-probe.cjs).",
+      "refutation": "The recovery panel itself correctly explains permanent HOLD and activation unavailable, and server-side normal provisioning/material guards deny held targets. Therefore this is not a backend isolation bypass. The project card/ordinary selectors are still real owner entry points for the new server-owned environment kind, and their labels imply preview/development behavior instead of the special held state.",
+      "refutation_survived": true,
+      "suggestion": "Render a distinct French Restauration isolée card with recovery hold and activation unavailable, explicitly distinguishing a held preparation from physically verified paused restoration; point to real RecoveryPanel run state. Exclude or disable recoveryHold environments in ordinary database/access/application creation selectors. Keep allowed owner metadata edits."
+    }
+  ],
+  "criteria_run": 10,
+  "criteria_passed": 9,
+  "verified": [
+    {
+      "criterion": "UI-form-snapshot-and-selector-scope",
+      "evidence": "RecoveryPanel:102 and :182 key independent forms by selected source/backup and project/environment revisions. Controlled selections derive their corresponding projects/environments; submission takes FormData from that same keyed form and sends only bounded policy/registered IDs/current revisions. A removed/stale selection falls back to another ID and remounts the form."
+    },
+    {
+      "criterion": "UI-timezone-target",
+      "evidence": "RecoveryPanel:197 converts datetime-local input to ISO in the browser; input step=1 preserves seconds. Independent Europe/Paris evaluation of the production expression maps 2026-11-11T13:24:56 to 2026-11-11T12:24:56.000Z and back to local13:24:56. Display uses fr-FR local Intl.DateTimeFormat."
+    },
+    {
+      "criterion": "UI-default-unavailable-honesty",
+      "evidence": "RecoveryPanel:48 restricts backup sources to ready allocations, :54-56 limits restores to healthy/restore-verified bounded intervals, :177/:251 disable absent source/backup actions, :309 disables admission without qualified execution. :81-91 preserves source/HOLD/all-service activation missing and no automatic scheduling claims. No activation/promote UI action exists."
+    },
+    {
+      "criterion": "UI-private-data-and-contract",
+      "evidence": "Panel sends registered IDs/expected revisions/policy/hash/target/name only. Owner API/client parses versioned response contracts; generic backend errors translate through safe French messages. No SQL, repository path, source credentials, pgBackRest config/argv or private material is rendered."
+    },
+    {
+      "criterion": "UI-status-uncertainty-and-coverage",
+      "evidence": "Panel:296-300 labels unknown outcomes and retained reservations without automatic repeat. :329-365 displays actual archive/database and restore-verification timestamps and missing ancillary/effect/producer coverage separately. shared.tsx maps backup/archive/held-restore/stale states to French labels."
+    },
+    {
+      "criterion": "UI-responsive-visual-QA",
+      "evidence": "Viewed actual artifacts/recovery-desktop.png (1440px) and recovery-mobile.png (390px) returned by owner browser tests. Forms, French uncertainty/unavailable text and disabled recovery actions remain within panels without observed clipping or horizontal document overflow. The default configuration has no fabricated qualified source or successful restore."
+    }
+  ],
+  "executables": [
+    {
+      "command": "node artifacts/recovery-ui-compile-probe.mjs; node artifacts/recovery-ui-selector-probe.cjs",
+      "result": "Actual DatabaseProfileForm SSR: held environment offered=true and mislabeled Aperçu=true"
+    },
+    {
+      "command": "Node Date/Intl with process.env.TZ=Europe/Paris using production local-input expression",
+      "result": "2026-11-11T13:24:56 local →12:24:56.000Z→13:24:56 local; seconds preserved"
+    }
+  ],
+  "screenshots": [
+    "artifacts/recovery-desktop.png",
+    "artifacts/recovery-mobile.png"
+  ],
+  "not_reviewed": [
+    "REC-UI-001 producer fix and final changed UI hashes: pending follow-up refutation; no production source edited by reviewer.",
+    "The three owner browser journeys passed as reported by browser owner; this reviewer inspected their source and returned screenshots but did not independently rerun the full browser suite.",
+    "A qualified positive physical provider/restoration UI journey is not manufactured in the ordinary default product. Backend/native positive evidence is recorded separately.",
+    "Date conversion probe covers the requested normal November Europe/Paris case; DST-fold disambiguation and subsecond PITR input are not asserted as covered.",
+    "No change to frozen backend PASS verdict; no off-host/real-server/all-service activation certification."
+  ]
+}

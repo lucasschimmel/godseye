@@ -1,0 +1,15 @@
+{
+  "at": "2026-11-11T23:46:08.8482198Z",
+  "snapshots": [
+    {
+      "review": "delivery-code-review",
+      "files": 44,
+      "changed": []
+    },
+    {
+      "review": "delivery-ui-review",
+      "files": 13,
+      "changed": []
+    }
+  ]
+}

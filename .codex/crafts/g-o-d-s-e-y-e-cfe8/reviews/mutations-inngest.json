@@ -1,0 +1,114 @@
+{
+  "kind": "curated behavioral mutation experiment",
+  "suite": "inngest",
+  "runnerTimeoutMs": 180000,
+  "startedAt": "2026-11-12T18:47:56.274Z",
+  "finishedAt": "2026-11-12T18:51:48.930Z",
+  "scope": "6 selected mutations; not an exhaustive mutation score or coverage claim",
+  "isolation": "Temporary source copies with explicit Vitest workspace aliases; original source never mutated",
+  "baseline": {
+    "status": "passed",
+    "passed": 6
+  },
+  "restored": {
+    "status": "passed",
+    "passed": 6
+  },
+  "sourceUnchanged": true,
+  "selected": 6,
+  "killed": 6,
+  "survived": 0,
+  "invalid": 0,
+  "results": [
+    {
+      "id": "I01",
+      "file": "packages/core/src/jobs-application.ts",
+      "behavior": "Accept an envelope from an unbound application producer",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "application producer admission into durable jobs T-E06-A01 refuses a forged project, environment or producer before admitting a run",
+            "message": "Error: promise resolved \"[]\" instead of rejecting"
+          }
+        ]
+      }
+    },
+    {
+      "id": "I02",
+      "file": "packages/core/src/jobs-application.ts",
+      "behavior": "Accept an event from a revoked producer epoch",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "application producer admission into durable jobs T-E06-A01 rejects a superseded epoch but accepts the same event identity with current authority",
+            "message": "Error: promise resolved \"[ { …(14) } ]\" instead of rejecting"
+          }
+        ]
+      }
+    },
+    {
+      "id": "I03",
+      "file": "packages/core/src/jobs-application.ts",
+      "behavior": "Accept different business data under an already-accepted event identity",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "application producer admission into durable jobs T-E06-A02 treats exact replay as a receipt and rejects changed content under an event identity",
+            "message": "Error: promise resolved \"[ { …(14) } ]\" instead of rejecting"
+          }
+        ]
+      }
+    },
+    {
+      "id": "I04",
+      "file": "packages/app-backend/src/events.ts",
+      "behavior": "Commit an application publication without its durable job intent",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "durable application event delivery to jobs T-E06-B01 commits an intent with the exact private cell and publication",
+            "message": "AssertionError: expected { delivered: +0, pending: +0 } to match object { delivered: 1, pending: +0 }"
+          }
+        ]
+      }
+    },
+    {
+      "id": "I05",
+      "file": "packages/app-backend/src/jobs-bridge.ts",
+      "behavior": "Acknowledge a timed-out event despite the missing durable receiver acknowledgement",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "durable application event delivery to jobs T-E06-B04 bounds a stalled delivery and retains its identity without stacking calls",
+            "message": "AssertionError: expected { delivered: 1, pending: +0 } to match object { delivered: +0, pending: 1 }"
+          }
+        ]
+      }
+    },
+    {
+      "id": "I06",
+      "file": "packages/core/src/jobs-application.ts",
+      "behavior": "Report missing retained job history as an empty successful observation",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "application producer admission into durable jobs T-E06-A02 keeps producer receipts after terminal job history is removed",
+            "message": "Error: promise resolved \"[]\" instead of rejecting"
+          }
+        ]
+      }
+    }
+  ]
+}

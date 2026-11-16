@@ -1,0 +1,143 @@
+{
+  "scope": "Local corrections for the E01–E06 audit, R1–R4, and truthful spec/plan tracking",
+  "date": "2026-11-12",
+  "mode": "debug",
+  "status": "complete",
+  "serverChanges": false,
+  "baseline": {
+    "unit": 1130,
+    "unitFiles": 89,
+    "browser": 41,
+    "source": "docs/reviews/2026-11-12-e01-e06-audit.md"
+  },
+  "implementation": "One production owner; separate GAUNTLET test and SCRIBE documentation satellites; no parallel production epics",
+  "assumptions": [
+    "Reject changed job definitions while nonterminal runs exist; identical registration remains replayable; no database migration is required",
+    "Timeout means an unknown external result, not proof of physical cancellation",
+    "Approval renewal must admit queue capacity atomically without repeating provider reservations",
+    "Jenkins diagnostic retention is verified locally as a configuration contract, not a running Jenkins qualification",
+    "Existing V1 requirements remain mandatory; software gaps and host qualification are tracked separately"
+  ],
+  "criteria": [
+    {
+      "id": "AR1",
+      "finding": "R1",
+      "acceptance": "Redefinition cannot relax the policy or handler of queued/live/unknown runs; resolved terminal runs allow later definition updates",
+      "tests": "tests/jobs-definition-regression.test.ts",
+      "status": "verified"
+    },
+    {
+      "id": "AR2",
+      "finding": "R2",
+      "acceptance": "Outbox send and probe deadlines preserve uncertainty, fence late results and let scheduling continue without unbounded duplicate calls",
+      "tests": "tests/jobs-outbox-deadline.test.ts",
+      "status": "verified"
+    },
+    {
+      "id": "AR3",
+      "finding": "R3",
+      "acceptance": "Approval renewal cannot overfill the heavy queue and rejection rolls back approval/receipt/audit state; later retry and duplicate replay remain safe",
+      "tests": "tests/infra-approval-capacity.test.ts",
+      "status": "verified"
+    },
+    {
+      "id": "AR4",
+      "finding": "R4",
+      "acceptance": "Prepared Jenkins archives the configured Playwright diagnostics path before workspace cleanup",
+      "tests": "tests/jenkins-artifacts.test.ts",
+      "status": "verified"
+    },
+    {
+      "id": "AR5",
+      "acceptance": "Spec and plan state actual local implementation and remaining software/host gates without downgrading V1 requirements",
+      "tests": "documentation review and local-link check",
+      "status": "verified"
+    }
+  ],
+  "validation": {
+    "focused": "16/16 regression cases across four files, 17.73 seconds; all four findings reproduced RED before correction",
+    "static": "Biome471 (including final mutation scripts), TypeScript and OpenAPI1.8 consistency passed",
+    "build": "Console, control API, SDK and backend builds plus compiled API smoke passed",
+    "regression": "1146/1146 across93files, 1033.11 seconds Vitest; artifacts/test-results/audit-remediation-unit.xml",
+    "freshReview": "PASS; fourteen source/test hashes verified by coordinator; no active findings; full-batch starvation found and resolved",
+    "mutation": "5/5 selected mutations killed; baseline/restored5, zero survivors/invalids, original source unchanged, 60.542 seconds; reviews/mutations-audit.json",
+    "browser": "41/41 passed, 315.46236 seconds JUnit; artifacts/test-results/audit-remediation-e2e.xml",
+    "documentation": "PASS;9documents89localLinks7anchors, no missing targets, drift or stale pending claims; reviews/audit-remediation-docs.json"
+  },
+  "prediction": "prediction-1794505896-28767bda",
+  "reviewedHashes": [
+    {
+      "path": "packages/core/src/jobs-definitions.ts",
+      "sha256": "41599a344c5719d215d7d9d788164cee3e04b23aa49304d78aacfcf6b5564bc8"
+    },
+    {
+      "path": "packages/core/src/jobs-state.ts",
+      "sha256": "071e7a0389160a5b79f7925ffa006146c4fcd4ed6b6c0da7115874d12a343cd7"
+    },
+    {
+      "path": "packages/core/src/jobs.ts",
+      "sha256": "dfbe8655ec4a84b1364b0b2206a87d972735f93754fe19c531aa4cb127fc5132"
+    },
+    {
+      "path": "packages/core/src/jobs-scheduler.ts",
+      "sha256": "364b4723a816bc7325b1f3f23edde1f16e699217965eb47e2aa13d0ba4666a08"
+    },
+    {
+      "path": "packages/core/src/jobs-outbox.ts",
+      "sha256": "4cdcb828c167a1e6e1b9c94dea630d173cffaf147830bad9e74e63044abb3938"
+    },
+    {
+      "path": "packages/core/src/jobs-outbox-call.ts",
+      "sha256": "923fbd8a73d5804bc4ff6053aa3fdd2d19d0b06faf6db509291c53df62c9337a"
+    },
+    {
+      "path": "packages/core/src/foundation-data.ts",
+      "sha256": "72e0245728f2ea2054a71ff2a3788cfa1b9c616e84d84dcb15f76ab6f23880ad"
+    },
+    {
+      "path": "packages/core/src/foundation-plans.ts",
+      "sha256": "66cd1cfab4a76f8bcdd3d36c771b437f15571c5ed0b14a93c72059e48f08596b"
+    },
+    {
+      "path": "packages/core/src/infrastructure.ts",
+      "sha256": "125adf9f4c62654a44cf36fcf5e18a8c5f930b422f6eedcb6541ec63cd9b0954"
+    },
+    {
+      "path": "Jenkinsfile",
+      "sha256": "78bddff7ee05bef70faf8a311413872cce8165d0133f294a1c671c2bc9eabf84"
+    },
+    {
+      "path": "tests/jobs-definition-regression.test.ts",
+      "sha256": "ce72a8570a95ee8fb00776088514af2e2522dbc14fe28ed763bccca943840b9b"
+    },
+    {
+      "path": "tests/jobs-outbox-deadline.test.ts",
+      "sha256": "c74cc322988e8f4f159c18e7a77d43cf4de27ecf97eb3584d09703735a7e3035"
+    },
+    {
+      "path": "tests/infra-approval-capacity.test.ts",
+      "sha256": "e855241d85363f791a3d276fb836288c247f9ebcd4f4620cfaf1f1bff8a9ac57"
+    },
+    {
+      "path": "tests/jenkins-artifacts.test.ts",
+      "sha256": "51684c6e01735473dd9f181425c32a692f5276d541bb1a33a5e710d539133767"
+    }
+  ],
+  "scan": {
+    "status": "passed",
+    "missing": [
+      "Semgrep comprehensive SAST",
+      "complete SBOM",
+      "native OS/package audit"
+    ],
+    "scope": "Final Gitleaks8.30.1 seventeen-file allowlisted source/test/script snapshot, redact100, zero findings; Bun audit325packages zero vulnerabilities",
+    "waivers": 0
+  },
+  "git": {
+    "changes": "local working copy preserved; no commit/push/branch changes",
+    "report": "reviews/audit-remediation-git.json",
+    "status": "diff-check-passed",
+    "graph": "legacy grep graph unchanged; scoped delta recorded, not a fresh graph certification"
+  },
+  "outcome": "outcome-1794507302-b7e84c45"
+}

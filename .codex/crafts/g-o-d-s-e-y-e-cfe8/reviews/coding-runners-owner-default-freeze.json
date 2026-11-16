@@ -1,0 +1,29 @@
+{
+  "status": "owner-visible-coding-default-verified",
+  "files": {
+    "packages/contracts/src/coding.ts": "20ddcc6f4108a21962430d5ddbd97ae705a0045f7b1d98b33175c3ad3b9e3b83",
+    "tests/e2e/coding.spec.ts": "dba6705e9a1661c2695f821a8e12bd10170e1aac4d6d1c569fb16388debd472a"
+  },
+  "productionChange": "Only CODING_DEFAULTS.maxCostMicros changed from10000 to100000 micros (USD0.01 toUSD0.10).",
+  "reason": "Measured real Claude CLI request framing plus bounded output reservation can exceed the former single-turn Hermes-sized initial ceiling before the first API request. A coding-loop initial ceiling is displayed for owner review and remains editable.",
+  "unchanged": [
+    "Hermes defaults",
+    "CodingLimits minimum1000/maximum1000000",
+    "Explicit owner budget field and timeout controls",
+    "Project budget admission/reservations",
+    "Actual vendor keys/models",
+    "Default unavailable provider",
+    "Native 13-script source proof set",
+    "Usage conservative debit and explicit non-invoice semantics"
+  ],
+  "automaticSpend": false,
+  "runtimeCoordination": "Runtime owner confirmed TS contracts/default values are excluded from the 13-script native proof hash set before this edit; active native qualification unaffected.",
+  "browserCoverage": "Both desktop and mobile assert initial owner USD field0.1 and actual HTTP-persisted immutable preparation ceiling100000 micros, in addition to exact patch/log downloads and descendant no-clipping checks.",
+  "validation": {
+    "typecheck": "passed",
+    "targetedBiome": "2files passed",
+    "unit": "54/54 across coding-contracts22,coding-tasks24,coding-http8",
+    "browser": "2/2 desktop/mobile owner authenticated journeys passed"
+  },
+  "handoff": "Root owns canonical API/console rebuild and SCRIBE documentation default update. No other production refactor or paid model call."
+}

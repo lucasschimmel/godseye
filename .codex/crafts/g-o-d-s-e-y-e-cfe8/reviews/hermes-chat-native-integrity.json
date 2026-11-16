@@ -1,0 +1,29 @@
+{
+  "date": "2026-11-13",
+  "status": "pass-post-new-native-qualification",
+  "core": {
+    "command": "node scripts/install-hermes.mjs status",
+    "version": "0.23.1",
+    "commit": "3b421578588243f920886e6fe79a6faa87ea026e",
+    "python": "3.14.9",
+    "openaiSdk": "2.54.0",
+    "modelCalls": 0,
+    "network": "denied",
+    "immutableManifestVerified": true
+  },
+  "execution": {
+    "command": "node scripts/hermes-runtime-install.mjs",
+    "status": "installed",
+    "version": "0.23.1",
+    "extras": [
+      "sms"
+    ],
+    "smsActivated": false,
+    "frozenProvenanceVerified": true
+  },
+  "privateMaterialRead": false,
+  "notes": [
+    "Only public installer metadata is retained. No private task journal or credential contents were inspected.",
+    "Later legacy cancellation/reply tests are measured separately; original installation is verified at each native admission."
+  ]
+}

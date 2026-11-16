@@ -1,0 +1,7 @@
+{
+  "method": "grep",
+  "commit": "cfad4f7971ff2df35bf995eb2defadf972411245",
+  "built": "2026-11-12",
+  "files_scanned": 119,
+  "publication_note": "Reachable source-complete ancestor in the responsibility-grouped initial develop publication; grep-based extraction remains a declared fallback."
+}

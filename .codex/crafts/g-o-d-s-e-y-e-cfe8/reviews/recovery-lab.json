@@ -1,0 +1,98 @@
+{
+  "schemaVersion": 1,
+  "generatedBy": "gauntlet",
+  "runId": "godseye-recovery-native-20261111",
+  "observedAt": "2026-11-11T21:30:38Z",
+  "verdict": "pass-local-native-evidence-only",
+  "acceptance": [
+    "T-AC-43",
+    "AC-36-physical-tool-compatibility",
+    "AC-37-physical-lineage"
+  ],
+  "command": "node node_modules/vitest/vitest.mjs run --config vitest.recovery-lab.config.ts",
+  "tests": {
+    "passed": 11,
+    "failed": 0,
+    "skipped": 0,
+    "durationSeconds": 40.45
+  },
+  "tools": {
+    "postgresql": "18.6-0ubuntu0.26.04.1",
+    "pgbackrest": "2.60.0-1.pgdg26.04+1",
+    "pgdgPrimaryFingerprint": "B97B0AFCAA1A47F044F244A07FCC7D46ACCC4CF8",
+    "pgbackrestPackageSha256": "16ae634cfe8326d2a2d0cec88d20076c7861c0332dac1b8098c4a41a77b221c3",
+    "verification": "Pinned official PGDG archive key, gpgv InRelease, signed gzip index SHA256/size, package SHA256/size; dependencies reuse signed Ubuntu main metadata",
+    "installation": "Project-local extraction under artifacts/tools only; non-root WSL Ubuntu amd64; no apt install, sudo, system service or global configuration changes",
+    "securityVersionGap": null
+  },
+  "actualEvidence": [
+    "ManagedPgBackRestProvider directly dispatches two completed full generations and one dependent differential into an AES-256-CBC encrypted repository",
+    "Production compiler generates actual configuration, fixed backup/restore arguments and source archive_command; no duplicate policy compiler",
+    "Known before-target and after-target transactions occur after the selected differential backup; continuous archive check completes after forced WAL switch",
+    "Explicit older differential set and exact UTC target/timeline recover into new disjoint PGDATA and remapped WAL while a later full generation is retained",
+    "Actual PostgreSQL reports recovery=true, replay_paused=true, pause_state=paused and transaction_read_only=on",
+    "Configured recovery_target_time matches exact requested target, recovery_target_timeline matches source, and recovery_target_action=pause",
+    "Automatic server stopping-before-commit and end-of-recovery-pause markers plus replay LSN bracket and before-row-present/after-row-absent prove the finite fixture target was reached",
+    "Physical target retains original system_identifier and original production-bootstrapped database catalogue namespace, without target initdb/bootstrap",
+    "Target runtime credentials are rejected by replacement HBA; only private Unix-socket SCRAM bootstrap administration is admitted; restored writes fail read-only",
+    "Target archive_mode=off and archive_command disabled; inherited source archive shell hook is replaced before first target startup",
+    "Source remains running with original system_identifier and both original transaction markers; a subsequent source write succeeds and does not appear in target",
+    "Actual wrong repository, wrong stanza, corrupt encrypted manifests, unrelated physical PGDATA/source identity, nonempty target, missing archived WAL and unreachable future target fail closed",
+    "Wrong generated cipher material cannot inspect the actual encrypted repository",
+    "Owned marked temporary roots are checked before cleanup; cleanup completed and no private material is written to observations or diagnostics"
+  ],
+  "coverage": {
+    "line": null,
+    "branch": null
+  },
+  "staticValidation": {
+    "targetedBiome": "pass",
+    "pythonBytecode": "pass",
+    "typecheck": "Earlier complete tsc pass; latest tsc has no recovery-lab errors but remains blocked by concurrent non-lab fixtures awaiting newly added check/pgWal/target-attestation fields"
+  },
+  "mutation": {
+    "score": null,
+    "survivors": [],
+    "reason": "This satellite owns native fixtures/tool installer only; production policy mutation gate belongs to the main test satellite"
+  },
+  "flaky": [],
+  "flakinessNotes": [
+    "A PostgreSQL startup-ready signal can precede a failed unreachable-target recovery; negative cases now await bounded actual shutdown and fatal target-not-reached evidence",
+    "Fixture checkpoint interval/completion settings bound catalogue-initialized backups; two complete runs before final marker/config assertions passed in 44.24s and 45.30s; final full assertions passed in 39.22s"
+  ],
+  "layers_run": [
+    "signed-artifact-provenance",
+    "actual-native-process-integration",
+    "actual-PostgreSQL-physical-PITR",
+    "production-ManagedPgBackRestProvider-dispatch",
+    "negative-real-tool-integration",
+    "TypeScript-typecheck",
+    "targeted-biome",
+    "Python-bytecode-validation"
+  ],
+  "gaps": [
+    "Managed provider production qualification remains null; native transport inspect deliberately returns null instead of inventing independent off-host/quota qualification",
+    "Local process/storage evidence does not qualify off-host repository durability, kernel/container/VM containment, hard quotas, private network firewall enforcement or production RPO/RTO under load",
+    "The fixture's finite verified transaction/WAL interval is not a claim of arbitrary historical recovery coverage",
+    "No destructive repository expire/prune, automatic schedule execution, ancillary file/auth/config restore or all-service activation is qualified"
+  ],
+  "reviewArtifacts": [
+    "artifacts/test-results/recovery-lab.xml",
+    "artifacts/test-results/recovery-lab-observation.json"
+  ],
+  "productionCompatibilityBugsExposedAndFixedByEngineOwner": [
+    "pgBackRest2.60 rejects --repo for stanza-create/check/archive-push; exact single-repository configuration remains bound and repo selection stays explicit for backup/info/restore",
+    "pgBackRest writes ISO T/Z target verbatim but PostgreSQL18 recovery target parsing requires normalized timestamp syntax; compiler now emits explicit PostgreSQL UTC target format"
+  ],
+  "finalCoordinatorRecheck": {
+    "at": "2026-11-11T21:47:44.5670408Z",
+    "command": "bun run test:recovery:lab",
+    "passed": 11,
+    "failed": 0,
+    "files": 1,
+    "durationSeconds": 49.52,
+    "testDurationSeconds": 48.245,
+    "productionFreeze": "recovery-backend-freeze.json schemaVersion2",
+    "qualification": "local native only, production provider qualification null"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "run": "godseye-local-hermes-chat-legacy-compatibility",
+  "date": "2026-11-13",
+  "status": "passed",
+  "artifact": "artifacts/test-results/hermes-chat-legacy-native-final.xml",
+  "passed": 2,
+  "wallSeconds": 47.76,
+  "separateFromNewNativeUniqueCount": true,
+  "sourceEdits": false,
+  "deadlineChanges": false,
+  "hangCancel": {
+    "test": "T-AC-727 stops an actual hanging model request without replaying its pinned Hermes run",
+    "seconds": 44.952,
+    "state": "cancelled",
+    "physicalStopProven": true,
+    "correlated": true,
+    "authorizations": 7,
+    "loopbackModelPosts": 1,
+    "paidExternalCalls": 0,
+    "policy": {"model": "gpt-6-luna", "tools": false, "maxOutputTokens": 1024, "skillLoaded": true},
+    "note": "Original existing controlled-upstream-release and post-stop read-only inspect assertions retained. No deadline widening."
+  },
+  "realReplyBoundary": {
+    "test": "T-AC-725 real text-only reply boundary refuses unsolicited tool calls in JSON and SSE",
+    "seconds": 0.359,
+    "acceptedTextCases": 2,
+    "refusedCases": 6,
+    "attemptFencePreserved": true,
+    "modelPosts": 0
+  },
+  "installationAssurance": "Root independently reported postqualification core installation status and execution manifest validation both passed, with no model calls. This satellite does not substitute that report for an unmeasured before/after manifest pair."
+}

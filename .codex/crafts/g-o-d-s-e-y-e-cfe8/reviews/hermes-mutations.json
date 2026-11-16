@@ -1,0 +1,52 @@
+{
+  "kind": "curated-disposable-source-copy",
+  "baseline": 7,
+  "restored": 7,
+  "mutants": 7,
+  "killed": 7,
+  "sourceUnchanged": true,
+  "sourceHashes": {
+    "hermes_files.py": "a3d88547df9c0bc62a2a8d2247416858579decbfb30e58f8e4534d66df6e04ef",
+    "hermes_catalog.py": "f8abd302a913d4f106b4fcb3b95665156d97437a49feaba2d1d8625718148b54",
+    "hermes_profiles.py": "48e72b4bbddece0ef03535b05fcd12cd31203411c868cb23d66c88f1692f6479",
+    "hermes_local.py": "e70b08eaa749bbb9e9f8554873290e075e1848712c3d34eb09707db58fe5b8ca"
+  },
+  "durationSeconds": 2.57,
+  "results": [
+    {
+      "id": "promotion-stale-cas",
+      "case": "ProfileLifecycle.test_stale_compare_and_swap_preserves_the_current_revision",
+      "killed": true
+    },
+    {
+      "id": "catalog-byte-integrity",
+      "case": "ProfileLifecycle.test_modified_catalog_skill_is_refused_before_profile_publication",
+      "killed": true
+    },
+    {
+      "id": "false-run-readiness",
+      "case": "ProfileLifecycle.test_roles_and_scopes_have_distinct_homes_and_no_admitted_authority",
+      "killed": true
+    },
+    {
+      "id": "readonly-missing-revision-write",
+      "case": "ProfileLifecycle.test_missing_promotion_revision_does_not_change_active_state",
+      "killed": true
+    },
+    {
+      "id": "snapshot-skill-integrity",
+      "case": "ProfileLifecycle.test_modified_snapshot_skill_is_detected_without_adoption",
+      "killed": true
+    },
+    {
+      "id": "unreviewed-catalog-additions",
+      "case": "ProfileLifecycle.test_unreviewed_catalog_file_is_refused",
+      "killed": true
+    },
+    {
+      "id": "actual-os-writer-exclusion",
+      "case": "PrivateFiles.test_real_os_lock_refuses_a_second_process_and_releases_after_exit",
+      "killed": true
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "review": "hermes-chat-plan",
+  "date": "2026-11-13",
+  "reviewer": "gauntlet-independent-plan-critic",
+  "artifact": ".codex/crafts/g-o-d-s-e-y-e-cfe8/hermes-chat-design.md",
+  "verdict": "pass",
+  "findings": [],
+  "criteria": {
+    "scopeAndDeferredAuthorityExplicit": "pass",
+    "reuseFoundationInsteadOfParallelScheduler": "pass",
+    "genuineIncrementalNativeProofRequired": "pass",
+    "durableCursorReconnectNeverReplaysModelPost": "pass",
+    "boundedCapacityBackpressureAndReauthentication": "pass",
+    "unknownAndProtectiveCancellationRetainAuthorityFences": "pass",
+    "immutableInertScopedArtifactDownloads": "pass",
+    "existingPlanDerivedProposalAndFreshOwnerDecision": "pass",
+    "noSelfApprovalOrImplicitEnqueue": "pass",
+    "specMappedAcceptanceAndQualificationLimits": "pass"
+  },
+  "evidence": [
+    "Design requires actual partial progress before deliberately held native completion, distinct from parser/provider/browser doubles.",
+    "Each explicit response remains one bounded Foundation task/reservation; uncertainty blocks new work and reconnect is read-only.",
+    "Artifact/proposal extraction is restricted to proven successful non-revoked output; exact existing Foundation plan scope/hash/revision/expiry is server-derived.",
+    "Owner approval uses real Foundation authority and explicitly adds neither broad tools nor automatic enqueue; fresh-owner rejection/approval is immutable and idempotent.",
+    "SSE admission/lifetime/backpressure/session revocation and cursor reset/reopen are explicit acceptance gates."
+  ],
+  "contractFreezeChecks": [
+    "Publish concrete finite event/retention/context/artifact/proposal limits and exact DTO shapes before test authoring.",
+    "Define cursor gap/ahead/foreign behavior and decision expiry boundary precisely in the implementation contract.",
+    "Approval decision replay must not renew expiry or create a second Foundation decision; failure between Foundation approval and proposal journal update needs atomicity or safe idempotent recovery.",
+    "Final authoritative output versus already-persisted partial text must be represented distinctly after cancellation or provider-tool refusal."
+  ],
+  "reviewScope": "Independent design review only; no production implementation examined and no runtime qualification claimed. Contract freeze checks are implementation obligations already implied by acceptance criteria, not new scope."
+}

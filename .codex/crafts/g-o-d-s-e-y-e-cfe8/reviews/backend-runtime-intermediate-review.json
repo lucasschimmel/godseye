@@ -1,0 +1,127 @@
+{
+  "verdict": "pass-with-findings",
+  "findings": [
+    {
+      "id": "BRI-001",
+      "criterion": "COR-03",
+      "status": "CONFIRMED",
+      "severity": "major",
+      "category": "CWE-772",
+      "evidence": "packages/app-backend/src/file-read.ts:59 opens a FileHandle before constructing a highWaterMark:0 response body; cleanup is only in pull/cancel. downloadFile receives Headers rather than a Request/AbortSignal. packages/app-backend/src/runtime.ts close only aborts state.streams (SSE controllers), never these download handles.",
+      "refutation_survived": true,
+      "refutation": "A normally consumed or explicitly cancelled body closes the handle. highWaterMark:0 means a response that is never consumed never enters pull, and the code has no finite lifetime, request-abort callback or runtime-close registry for that case. Garbage collection is not a bounded resource policy.",
+      "suggestion": "Track downloads with bounded capacity/lifetime and connect request abort, response cancel and runtime shutdown to idempotent descriptor closure; test an unread response."
+    },
+    {
+      "id": "BRI-002",
+      "criterion": "COR-04",
+      "status": "CONFIRMED",
+      "severity": "major",
+      "category": "CWE-362",
+      "evidence": "packages/app-backend/src/file-write.ts:26-29 reads upload state and creates bytes after the reservation transaction is finished. deleteFile at lines104-109 tombstones, tolerates ENOENT and clears cleanupPending. packages/app-backend/src/store.ts:21-27 supplies only an instance-local promise lane, and PostgreSQL mode accepts multiple pools without an exclusive runtime lock.",
+      "refutation_survived": true,
+      "refutation": "The app_scope row lock correctly serializes quota reservation transactions, and one runtime's exclusive lane serializes local handlers. It does not cover two runtimes: A commits and reads uploading row, pauses before wx; B tombstones the row, unlinks absent bytes and clears cleanupPending; A resumes wx create. A leaves an orphan physical file while metadata no longer reserves its bytes. The scope marker allows the same cell to reopen the root and supplies no process lock.",
+      "suggestion": "Enforce one active runtime per application store AND filesystem identity, or serialize physical creation/deletion and durable intent settlement across runtimes. State the supported concurrency contract explicitly."
+    },
+    {
+      "id": "BRI-003",
+      "criterion": "COR-01/COR-04",
+      "status": "CONFIRMED",
+      "severity": "major",
+      "category": "CWE-863",
+      "evidence": "packages/app-backend/src/store.ts:41-50 caches app_scope.recoveryHold only at open. packages/app-backend/src/state.ts:48-51 tests this mutable in-memory flag without reading persisted hold. A targeted reference check shows recovery.ts:105-107 persists hold and updates only its own ApplicationStore object.",
+      "refutation_survived": true,
+      "refutation": "Shared external lifecycle unavailability blocks ordinary work during import if every process sees it. Persistent recovery hold exists precisely to keep a restored destination denied even if lifecycle later says available. Another already-open runtime retains recoveryHeld=false; enabling external lifecycle then bypasses the persisted hold. No duplicate-runtime prohibition currently prevents this interleaving.",
+      "suggestion": "Read persisted recovery hold live in authority checks, including within serialized mutations, or explicitly deny additional runtimes using a durable process/session lock. Keep held destinations denied independently of lifecycle availability."
+    },
+    {
+      "id": "BRI-004",
+      "criterion": "COR-01/COR-03",
+      "status": "CONFIRMED",
+      "severity": "major",
+      "category": "CWE-252",
+      "evidence": "packages/app-backend/src/file-write.ts:58 ignores FileHandle.write's bytesWritten result before syncing and advancing metadata. Lines59-63 only reconcile physical size equal to old offset or the complete chunk end; an interrupted write leaving a partial tail always fails the same exact retry with UPLOAD_UNCERTAIN.",
+      "refutation_survived": true,
+      "refutation": "Normal local writes commonly complete in one call, and completeFile later checks physical length. Neither proves a full acknowledged chunk: the API can acknowledge full offset after a short successful write, and a crash during write can leave an intermediate size for which no resume/reconcile path exists. Keeping the upload uncommitted protects readers but does not satisfy interrupt/resume behavior.",
+      "suggestion": "Loop until all bytes are written and synced, and reconcile a partial tail using the retained exact chunk intent before allowing metadata advancement. Add deterministic short-write and restart-with-partial-tail cases."
+    }
+  ],
+  "criteria_run": 13,
+  "criteria_passed": 10,
+  "not_reviewed": [
+    "This is an intermediate source pass while worker changes remain active, not a frozen approval. Hashes identify the materialized files at report capture; all fixes require later review.",
+    "Full recovery import/export implementation, SDK, template and owner UI are deferred to the requested frozen review. Only recovery hold references were inspected to trace the current guard dependency.",
+    "No active pentest, external request, external target/tooling, dependency scan or production/test edit was performed. Security-auditor is adapted to read-only local source traces and CWE findings.",
+    "Executable test success, PostgreSQL multiprocess behavior, deployment containment and production filesystem durability were not qualified by this static review.",
+    "OAuth correctness was checked against the installed generic-oauth implementation, which explicitly uses core sign-in/social and callback/:id routes; no live provider enrollment or external documentation validation was performed."
+  ],
+  "review_context": {
+    "kind": "code",
+    "criticity": "production",
+    "fresh_context": true,
+    "producing_conversation_read": false,
+    "passed_observations": [
+      "Exact canonical origins, loopback-only cleartext, rejected wildcard hosts, listener-fixed cell scope and version checking are present.",
+      "Application session material is cell-derived and lives in independent auth tables; JSON token fields are stripped and caller privilege fields are rejected.",
+      "File reservation and exact pending chunk identities now commit before filesystem mutation; uncertain bytes and cleanup pending rows retain quota.",
+      "File names never select physical paths; hardlink/symlink checks, owner-scoped database lookups and opened descriptor identity checks are present.",
+      "Download delivery validates session, grant expiry/revocation, lifecycle epoch and committed ownership before and after each read.",
+      "SSE is pull-driven with zero prefetch, one bounded event at a time, per-user signed cursor, current-session/lifecycle validation and explicit gap/refetch behavior.",
+      "Unread SSE responses now release stream capacity through a finite lifetime timer; disconnect/cancel/shutdown participate in controller cleanup."
+    ]
+  },
+  "file_hashes": [
+    {
+      "path": "packages/app-backend/src/auth.ts",
+      "sha256": "70f4719c901eb356ea626527a50431ad9468976ab620b30c6b86c00d6dcc34b6"
+    },
+    {
+      "path": "packages/app-backend/src/store.ts",
+      "sha256": "07be4ede1d43bb3041cbc6c97bf010350495de23f9f57e8801955ac1010ea33f"
+    },
+    {
+      "path": "packages/app-backend/src/state.ts",
+      "sha256": "88bcf0be8a88a1fa1fea70217029fb8278cd1d627c8f55bff7f52a83f183c980"
+    },
+    {
+      "path": "packages/app-backend/src/runtime.ts",
+      "sha256": "4cfd4b755a03761c77d5c890be702513909ec651dc6d535f266609f4dcdacd9a"
+    },
+    {
+      "path": "packages/app-backend/src/private-files.ts",
+      "sha256": "0014b9f1b281502e9a0f26ef00d448f13c329a00e54a34ab130cbc853fdc3e31"
+    },
+    {
+      "path": "packages/app-backend/src/file-state.ts",
+      "sha256": "c07f6170f97372f9484cf7d4708cf263e8c88f857e157875b61a1eaaf02f680d"
+    },
+    {
+      "path": "packages/app-backend/src/file-write.ts",
+      "sha256": "c24ae805ae56adfb0ade03da2836eb6b88c11d7b107f28dab4f2940f8f721a90"
+    },
+    {
+      "path": "packages/app-backend/src/file-read.ts",
+      "sha256": "46d1df878aa081ede5d3a2bbab9b10da50377a2e5f237e0a3e6366a9422742a5"
+    },
+    {
+      "path": "packages/app-backend/src/file-routes.ts",
+      "sha256": "4e40d1d7a54045f258d41b5bc7e7200662b73b526bd297964265f263eaaf1b12"
+    },
+    {
+      "path": "packages/app-backend/src/events.ts",
+      "sha256": "02f49644885becb4f4b43f245b0e6d1c79340eeea6b840b82794c6a430f01d54"
+    },
+    {
+      "path": "packages/app-backend/src/schema.ts",
+      "sha256": "415b7f4fc919c605c626ce7147cc2c96ffafb4dbf63b8e8a3e2bee708a12664a"
+    },
+    {
+      "path": "packages/app-backend/src/migration.ts",
+      "sha256": "341e8a1a8c5dd16e55d3c7cf359fdeb0c48d3ae7e57766858fe213bb581ada9f"
+    },
+    {
+      "path": "packages/app-backend/src/contracts.ts",
+      "sha256": "755ef67ff31aca573cbe04c1e32a0babc89158c05b5496e489144d10690cce48"
+    }
+  ]
+}

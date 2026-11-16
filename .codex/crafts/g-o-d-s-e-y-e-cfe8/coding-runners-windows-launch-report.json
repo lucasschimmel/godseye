@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "file": "apps/control-api/src/coding-provider.ts",
+  "sha256": "b56da7f654b8be63ad632274f1fa415506656952b423984446fb14dd46497371",
+  "problem": "Minimal host environment intentionally has Linux PATH, so Windows bare wsl.exe could not resolve during real Foundation/provider composition",
+  "fix": "Both localPath and native command Windows spawn use absolute win32.join(SystemRoot or C:\\Windows, System32, wsl.exe); SystemRoot must be an absolute local-drive path. Minimal environment and windowsHide remain unchanged.",
+  "lines": {
+    "trustedWindowsExecutableHelper": 125,
+    "pathTranslationSpawn": 135,
+    "nativeActionSpawn": 200
+  },
+  "verification": [
+    "Full repository TypeScript check passed",
+    "Scoped Biome formatting passed",
+    "All 7 coding-provider.test.ts regression cases passed, including new independent absolute-executable assertion"
+  ],
+  "notClaimed": [
+    "No paid calls or private binding material read",
+    "Native KVM scripts/assets are unchanged; fresh real provider composition/build smoke belong to orchestrator/tests owner"
+  ],
+  "buildConsequence": "Control API bundle must be rebuilt because provider source changed"
+}

@@ -1,0 +1,35 @@
+{
+  "status": "frozen-source-security-passed-with-scanner-limits",
+  "profile": "aegis full scoped source + all npm dependencies",
+  "checkedAt": "2026-11-12T21:18:40.540Z",
+  "dependencies": {
+    "tool": "bun audit1.4.4",
+    "packages": 495,
+    "findings": 0,
+    "exitCode": 0
+  },
+  "nativeTools": {
+    "postgres": "Signed Ubuntu18.6 cached",
+    "redis": "Signed patched Ubuntu8.0.5 installer; provenance under project-local cache",
+    "inngest": "Pinned1.52.0 archive"
+  },
+  "scannersMissing": [
+    "Semgrep",
+    "Syft/cdxgen"
+  ],
+  "policy": "Scan explicit safe source snapshot only; do not scan .env/private material or sensitive basenames",
+  "review": "Fresh FABER/security-auditor pending source freeze",
+  "sbom": {
+    "status": "degraded-manifest-only",
+    "manifests": 12,
+    "artifact": "artifacts/security/e06-completion-manifest-inventory.json"
+  },
+  "sourceReview": "PASS42runtime+helpers/installers;47uniqueproductionpaths;rootHashDrift0",
+  "gitleaks": {
+    "version": "8.30.1",
+    "paths": 47,
+    "rawFindings": 0,
+    "artifact": "artifacts/security/e06-gitleaks.json",
+    "scope": "Explicit frozen reviewed production source; no private material/.env read"
+  }
+}

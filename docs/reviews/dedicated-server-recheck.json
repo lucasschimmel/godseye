@@ -1,0 +1,50 @@
+{
+  "verdict": "pass",
+  "findings": [],
+  "criteria_run": 15,
+  "criteria_passed": 15,
+  "not_reviewed": [
+    "PLN-02 inactive: this is a documentation infrastructure plan, not a code task decomposition.",
+    "PLN-08 inactive: no concurrent swarm implementation units planned.",
+    "Vendor claims/source freshness independently re-browsed: not covered; parent handles official-source research.",
+    "Executed host, network, runtime, CI, load and restore qualification: no server access or active tests authorized.",
+    "Product implementation completeness, full code security review and active penetration testing: outside assigned documentation review."
+  ],
+  "reviewed_artifacts": [
+    "docs/spec/dedicated-server.md",
+    "docs/plan/dedicated-server-installation.md",
+    "docs/reviews/dedicated-server-coverage.md"
+  ],
+  "constitution": [
+    "docs/spec/v1.md F01–F46",
+    "docs/spec/isolation.md I01–I16/D01–D10",
+    "docs/spec/networking.md N01–N08",
+    "docs/development/ci.md",
+    "Jenkinsfile",
+    "infra/jenkins/jenkins.yaml",
+    "docs/adr/ADR-002-professional-vm-and-dual-stack.md"
+  ],
+  "scope": "Fresh-context infrastructure specification/plan completeness review; all infrastructure acceptance remains unexecuted.",
+  "reviewed_at": "2026-11-13",
+  "runtime": "Fresh delegated context, no artifact authorship.",
+  "resolved_findings": [
+    {
+      "id": "DS-R01",
+      "criterion": "PLN-03",
+      "original_severity": "major",
+      "resolution": "Confirmed dependency finding resolved: host/guest/container/receiver subgates are explicit; restricted platform services are installed before backup tests and delivery admission.",
+      "evidence": [
+        "docs/plan/dedicated-server-installation.md:35 — staged subgates defined.",
+        "docs/plan/dedicated-server-installation.md:89 — guest/cell probes deferred.",
+        "docs/plan/dedicated-server-installation.md:95 — interim host gate permits fixture creation only.",
+        "docs/plan/dedicated-server-installation.md:105 — guests exist before guest probes.",
+        "docs/plan/dedicated-server-installation.md:116 — restricted console/control/OpenBao/Coolify installed in P05.",
+        "docs/plan/dedicated-server-installation.md:121 — container probes complete after runtime installation.",
+        "docs/plan/dedicated-server-installation.md:146 — delivery admission checks P06 recovery.",
+        "docs/plan/dedicated-server-installation.md:150 — actual receiver tests close DS04."
+      ]
+    }
+  ],
+  "coverage_result": "All original requested capability families and canonical F01–F46/I01–I16/D01–D10/N01–N08 obligations have a plausible infrastructure owner/phase/acceptance mapping. Matrix preserves remaining product and physical qualification gates.",
+  "validation": "JSON parse and equivalent PowerShell FABER schema checks passed. Canonical Bash validator unavailable because WSL jq is absent."
+}

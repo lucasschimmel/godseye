@@ -1,0 +1,43 @@
+{
+  "verdict": "pass-with-findings",
+  "kind": "plan",
+  "reviewer": "Fresh-context FABER / security-auditor satellite",
+  "criticity": "production intent; local native PostgreSQL scope only",
+  "artifact": [".Codex/crafts/g-o-d-s-e-y-e-cfe8/database-design.md", ".Codex/crafts/g-o-d-s-e-y-e-cfe8/plan.json"],
+  "plan_verdict": "pass",
+  "findings": [
+    {
+      "id": "DB-P-001",
+      "criterion": "SAF-private-network-binding",
+      "status": "CONFIRMED",
+      "severity": "major",
+      "cwe": "CWE-20",
+      "evidence": "Early implementation snapshot packages/core/src/database-policy.ts:54-55 accepts 10.0.0.0/0, fd00::/0 and invalid 10.999.999.999/32. A read-only Node regex reproduction returned true for all three. database-design.md:13 requires restrictive CIDR HBA. Lines 59 and 61 interpolate these accepted bindings into allow records before reject fallbacks.",
+      "refutation": "Bindings are private server configuration, so this is not an HTTP injection path. That reduces attacker control but does not establish the declared invariant: malformed or overbroad trusted configuration must fail closed rather than become a generated access policy. No claim is made that a running PostgreSQL instance accepted these noncanonical addresses; live configuration validation belongs to the pending native lab.",
+      "refutation_survived": true,
+      "suggestion": "Parse actual IPv4/IPv6 networks and require canonical network masks fully contained in the authorized private range; reject malformed octets and masks escaping that range before generating HBA. Add negative compiler/native checks."
+    }
+  ],
+  "criteria_run": 13,
+  "criteria_passed": 12,
+  "criteria": ["PLN-01", "PLN-02", "PLN-03", "PLN-06", "PLN-07", "PLN-09", "SAF-one-queue", "SAF-private-material", "SAF-independent-cell", "SAF-role-default-privileges", "SAF-transport", "SAF-uncertainty", "SAF-private-network-binding"],
+  "evidence": [
+    {"reference": "database-design.md:7-9; plan.json:continuation", "result": "Independent cluster/PGDATA/WAL and weaker native laboratory boundary are explicit; no Docker fallback, remote qualification or provider-enabled-by-default path is authorized. E03 depends on completed local E02.S03."},
+    {"reference": "database-design.md:8,14", "result": "One FoundationEngine supplies admission, locks, grants, epochs, fencing, reservations and uncertainty handling. Identity mismatch must quarantine rather than adopt or delete a foreign cluster."},
+    {"reference": "database-design.md:11-16", "result": "Private bootstrap material, runtime role restrictions, per-owner default privileges, SCRAM/verify-full TLS and negative cross-cell/privilege/transport tests preserve the constitution at design level."},
+    {"reference": "database-design.md:22-29; reviews/database-test-strategy.md:criteria and fault matrix", "result": "AC-27 through AC-34 have named future test IDs and observable positive/negative behavior. Unsupported runtime, backup, export and restore capabilities remain unavailable rather than claimed complete."}
+  ],
+  "implementation_checks": [
+    {"reference": "packages/core/src/database-policy.ts:49,56,59-61", "result": "The current binding uses the same CIDRs for service roles and bootstrap TCP access to all databases. This is a concrete lack of admin-source separation, but not a confirmed credential escalation: HBA still requires the bootstrap credential, and the design does not categorically ban private administrative TCP. For non-loopback deployment, require separately authorized admin sources (or no admin TCP); Windows native lab may explicitly use loopback-only admin access. Do not claim this early snapshot implements a separate admin network boundary."},
+    {"reference": "database-design.md:12-16", "result": "Final audit must inspect every creating owner/default ACL, effective grants including PUBLIC template databases, TLS client hostname checks, independent effective configuration and resource limits. max_wal_size alone cannot certify a filesystem WAL quota."}
+  ],
+  "sources": ["https://www.postgresql.org/docs/18/auth-pg-hba-conf.html (consulted 2026-11-11; first matching rule, address mask and local-versus-TCP semantics)"],
+  "not_reviewed": [
+    "Full production implementation, HTTP routes and lifecycle integration: code is actively being written; final security audit is explicitly deferred until freeze.",
+    "PLN-04: the artifact supplies no internal execution ordering beyond the parent dependency and sequential implementation; native laboratory work is separately owned, so no late-risk ordering claim is certified.",
+    "PLN-05: no duration/effort estimate exists to compare with a track record.",
+    "PLN-08: no parallel epic implementation swarm is planned; satellite file boundaries are supplied by the orchestrator.",
+    "No native PostgreSQL process, actual HBA application, filesystem permissions, server, remote target, material file, environment file or private key was read or operated.",
+    "Bash rubric/validator scripts were read but not executed through the Windows WSL bash entrypoint; the JSON contract and verdict constraints were checked with local jq instead."
+  ]
+}

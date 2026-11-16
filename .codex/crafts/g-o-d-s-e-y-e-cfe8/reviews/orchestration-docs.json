@@ -1,0 +1,103 @@
+{
+  "written": [
+    "README.md",
+    "CHANGELOG.md",
+    "docs/spec/v1.md",
+    "docs/plan/v1-development.md",
+    "docs/development/agent-center.md",
+    "docs/development/agent-orchestration.md",
+    "docs/development/handoff.md",
+    "docs/adr/ADR-018-approved-agent-orchestration.md",
+    "tests/STRATEGY.md"
+  ],
+  "verified": {
+    "checked": "Actual orchestration contracts, endpoint table, typed-client signatures, core authority/scheduler/plans, startup and migration; relative links; scoped Biome root Markdown",
+    "clean": true,
+    "drifted": [],
+    "relativeLinksChecked": 200
+  },
+  "baseline": {
+    "date": "2026-11-14",
+    "scope": "Requested local E07 orchestration software complete and locally verified; final gate evidence supplied by root and test/security owners."
+  },
+  "skipped": [
+    {
+      "what": "Scribe bash verifier",
+      "why": "Windows adaptation uses Python link existence and direct source/signature checks; no shell command execution of owner/provider examples."
+    },
+    {
+      "what": "Generated OpenAPI",
+      "why": "Root ownership; untouched."
+    }
+  ],
+  "limitations": [
+    "Native vendor paused-tool parity and general Hermes shell are not exposed.",
+    "Paid entitlement/invoice accounting, deployed provider/host/recovery, E08/E09 and separately authorized E05 previews/connectors remain distinct.",
+    "No paid calls, Git mutation, private binding edits or server action."
+  ],
+  "finalEvidence": {
+    "focused": {
+      "passed": 60,
+      "unique": true,
+      "runs": [
+        {
+          "passed": 59,
+          "files": 7,
+          "seconds": 130.57,
+          "artifact": "artifacts/test-results/orchestration-frozen-final.json"
+        },
+        {
+          "passed": 1,
+          "seconds": 6.88,
+          "artifact": "artifacts/test-results/orchestration-coding-stop-final.json"
+        }
+      ]
+    },
+    "relevantRegression": {
+      "passed": 656,
+      "legacyOptInSkipped": 1,
+      "files": 55,
+      "seconds": 533.21,
+      "artifact": "artifacts/test-results/orchestration-regression.xml",
+      "fullRepositorySuite": false
+    },
+    "disjointRelatedOrdinaryPassed": 716,
+    "browser": {
+      "passed": 2,
+      "seconds": 60.418002,
+      "artifact": "artifacts/test-results/orchestration-e2e.xml"
+    },
+    "mutation": {
+      "selectedKilled": 3,
+      "baselineAndRestoredPass": true,
+      "preliminaryRedundantAdapterGuardSurvivorRetained": true,
+      "generalizedScore": null
+    },
+    "security": {
+      "verdict": "pass",
+      "openFindings": 0,
+      "artifact": ".codex/crafts/g-o-d-s-e-y-e-cfe8/reviews/orchestration-security.json"
+    },
+    "rootGates": {
+      "typecheck": "pass",
+      "lintFiles": 676,
+      "openApiVersion": "1.14.0",
+      "generatedCheck": "pass",
+      "canonicalBuild": "pass",
+      "builtApiSmoke": "pass",
+      "healthDeadlineSeconds": 15,
+      "remoteServerDisconnected": true,
+      "publicSourceInputHashesUnchanged": 508
+    },
+    "aegis": {
+      "publicFiles": 791,
+      "newActualCredentials": 0,
+      "unchangedSyntheticPlaceholders": 1,
+      "bunAuditAdvisories": 0,
+      "unavailable": [
+        "Semgrep",
+        "SBOM tools"
+      ]
+    }
+  }
+}

@@ -1,0 +1,11 @@
+# Hourly WAL archive check of cell %i. TEMPLATE ONLY.
+[Unit]
+Description=G.O.D.S.E.Y.E hourly pgBackRest archive check for cell %i
+
+[Timer]
+OnCalendar=*-*-* *:17:00 UTC
+RandomizedDelaySec=5min
+Persistent=true
+
+[Install]
+WantedBy=timers.target

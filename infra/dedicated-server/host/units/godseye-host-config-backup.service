@@ -1,0 +1,9 @@
+[Unit]
+Description=G.O.D.S.E.Y.E Proxmox host configuration backup
+After=pve-cluster.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/godseye-host-config-backup
+Nice=10
+IOSchedulingClass=idle

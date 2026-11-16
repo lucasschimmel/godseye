@@ -1,0 +1,160 @@
+.agents-plans {
+  display: grid;
+  min-width: 0;
+  gap: 20px;
+  padding: 24px;
+}
+.agents-plans > p {
+  font-size: 12px;
+}
+.agents-plans-compose,
+.agents-plans-import {
+  min-width: 0;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius);
+}
+.agents-plans summary {
+  padding: 12px;
+  font-size: 12px;
+  cursor: pointer;
+  overflow-wrap: anywhere;
+}
+.agents-plans summary:focus-visible {
+  outline: 2px solid var(--accent-ink);
+  outline-offset: 2px;
+}
+.agents-plans-fields {
+  display: grid;
+  gap: 18px;
+  min-width: 0;
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+.agents-plans-step {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin: 0;
+  font-size: 12px;
+}
+.agents-plans-step legend {
+  padding: 0 8px;
+  color: var(--accent-ink);
+  font-family: var(--font-data);
+}
+.agents-plans-dependencies {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 10px;
+  border: 1px solid var(--border-default);
+}
+.agents-plans .agents-plans-dependencies label,
+.agents-plans .agents-plans-handoff {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.agents-plans input[type="checkbox"] {
+  accent-color: var(--accent-ink);
+  width: 16px;
+  height: 16px;
+}
+.agents-plans-history {
+  display: grid;
+  grid-template-columns: minmax(190px, 0.7fr) minmax(0, 2fr);
+  min-width: 0;
+  border-top: 1px solid var(--border-default);
+}
+.agents-plans-list {
+  min-width: 0;
+  max-height: 620px;
+  overflow-y: auto;
+  border-right: 1px solid var(--border-default);
+}
+.agents-plans-detail {
+  display: grid;
+  align-content: start;
+  gap: 18px;
+  min-width: 0;
+  padding: 20px;
+  font-size: 12px;
+}
+.agents-plans-meta > div {
+  grid-template-columns: 120px minmax(0, 1fr);
+}
+.agents-plans-meta dd {
+  display: grid;
+  gap: 6px;
+  justify-items: start;
+}
+.agents-plans-steps {
+  display: grid;
+  gap: 16px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+.agents-plans code,
+.agents-plans pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-family: var(--font-data);
+  font-size: 10px;
+}
+.agents-plans .agents-plans-answer {
+  padding: 12px 0 0;
+  border-top: 1px solid var(--border-default);
+}
+.agents-plans-evidence {
+  min-width: 0;
+  border-top: 1px solid var(--border-default);
+}
+.agents-plans-proof {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+}
+.agents-plans-proof pre {
+  max-height: 360px;
+  overflow-y: auto;
+  padding: 12px;
+  border: 1px solid var(--border-default);
+}
+@media (max-width: 1080px) {
+  .agents-plans-history {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .agents-plans-list {
+    max-height: 280px;
+    border-right: 0;
+    border-bottom: 1px solid var(--border-default);
+  }
+}
+@media (max-width: 680px) {
+  .agents-plans,
+  .agents-plans-detail {
+    padding: 18px;
+  }
+  .agents-plans-meta > div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 4px;
+  }
+  .agents-plans-step {
+    padding: 12px;
+  }
+  .agents-plans .agents-form {
+    padding: 12px;
+  }
+  .agents-plans > .agents-runtime-heading > div {
+    flex: 1 0 100%;
+  }
+  .agents-plans > .agents-runtime-heading .eyebrow {
+    overflow-wrap: normal;
+  }
+}

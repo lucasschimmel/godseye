@@ -1,0 +1,40 @@
+{"file":"apps/console/src/components/access-labels.ts","line":1,"sig":"const providerLabels: Record<string, string> = {"}
+{"file":"apps/console/src/components/access-labels.ts","line":10,"sig":"const purposeLabels: Record<string, string> = {"}
+{"file":"apps/console/src/components/access-labels.ts","line":16,"sig":"const states: Record<string, string> = {"}
+{"file":"apps/console/src/components/database-profile-form.tsx","line":15,"sig":"function DatabaseProfileForm({"}
+{"file":"apps/console/src/components/infra-inventory-form.tsx","line":74,"sig":"function InfrastructureInventoryForm({"}
+{"file":"apps/console/src/components/infra-workload-form.tsx","line":14,"sig":"function InfrastructureWorkloadForm({"}
+{"file":"apps/console/src/components/owner-gate.tsx","line":21,"sig":"function useOwner() {"}
+{"file":"apps/console/src/components/owner-gate.tsx","line":27,"sig":"function OwnerGate({ children }: { children: ReactNode }) {"}
+{"file":"apps/console/src/components/project-management.tsx","line":39,"sig":"function ProjectMetadataForm({ project }: { project: ProjectView }) {"}
+{"file":"apps/console/src/components/project-management.tsx","line":88,"sig":"function PreviewEnvironmentForm({ project }: { project: ProjectView }) {"}
+{"file":"apps/console/src/components/project-management.tsx","line":171,"sig":"function EnvironmentMetadataForm({"}
+{"file":"apps/console/src/components/project-table.tsx","line":8,"sig":"function ProjectTable({"}
+{"file":"apps/console/src/components/recovery-panel.tsx","line":24,"sig":"function RecoveryPanel({"}
+{"file":"apps/console/src/components/shared.tsx","line":6,"sig":"function PageHeading({"}
+{"file":"apps/console/src/components/shared.tsx","line":57,"sig":"function Status({ value }: { value: string }) {"}
+{"file":"apps/console/src/components/shared.tsx","line":65,"sig":"function EmptyState({"}
+{"file":"apps/console/src/components/shared.tsx","line":85,"sig":"function Loading() {"}
+{"file":"apps/console/src/components/shared.tsx","line":92,"sig":"function Failure({ error, retry }: { error: Error; retry?: () => void }) {"}
+{"file":"apps/console/src/components/shared.tsx","line":105,"sig":"function SectionTitle({ children, count }: { children: ReactNode; count?: number }) {"}
+{"file":"apps/console/src/components/shared.tsx","line":113,"sig":"function Step({"}
+{"file":"apps/console/src/components/shell.tsx","line":33,"sig":"function Shell({ children }: { children: ReactNode }) {"}
+{"file":"apps/console/src/components/ui/badge.tsx","line":27,"sig":"interface BadgeProps"}
+{"file":"apps/console/src/components/ui/button.tsx","line":36,"sig":"interface ButtonProps"}
+{"file":"apps/console/src/lib/infra-labels.ts","line":4,"sig":"const infrastructureStates = labelMap({"}
+{"file":"apps/console/src/lib/infra-labels.ts","line":34,"sig":"function infrastructureReason(reason: string): string {"}
+{"file":"apps/console/src/lib/infra-labels.ts","line":44,"sig":"function infrastructureFilesystem(label: string): string {"}
+{"file":"apps/console/src/lib/owner.ts","line":10,"sig":"const ownerAuth = createAuthClient({ basePath: \"/api/auth\", plugins: [passkeyClient()] });"}
+{"file":"apps/console/src/lib/owner.ts","line":11,"sig":"function forgetOwnerData(cache: QueryClient, status: OwnerStatusView) {"}
+{"file":"apps/console/src/lib/owner.ts","line":19,"sig":"function ownerAuthenticationRequired() {"}
+{"file":"apps/console/src/lib/utils.ts","line":4,"sig":"function cn(...inputs: ClassValue[]) {"}
+{"file":"apps/console/src/components/backend-panel.tsx","line":19,"sig":"function BackendPanel({ project }: { project: ProjectView }) {"}
+{"file":"apps/console/src/components/delivery-history.tsx","line":30,"sig":"function DeliveryHistory({"}
+{"file":"apps/console/src/components/delivery-panel.tsx","line":17,"sig":"function DeliveryPanel() {"}
+{"file":"apps/console/src/components/delivery-policy-form.tsx","line":32,"sig":"function DeliveryPolicyForm({"}
+{"file":"apps/console/src/components/repository-form.tsx","line":10,"sig":"function RepositoryForm({ project }: { project: ProjectView }) {"}
+{"file":"apps/console/src/lib/api.ts","line":49,"sig":"function api<T>(path: string, init?: RequestInit): Promise<T> {"}
+{"file":"apps/console/src/lib/api.ts","line":69,"sig":"function resource<T>(key: string, path: string) {"}
+{"file":"apps/console/src/lib/api.ts","line":78,"sig":"function timestamp(value: string) {"}
+{"file":"apps/console/src/lib/environment-labels.ts","line":3,"sig":"function environmentLabel(environment: Pick<EnvironmentView, \"kind\" | \"name\">) {"}
+{"file":"apps/console/src/lib/environment-labels.ts","line":11,"sig":"function ordinaryEnvironment("}

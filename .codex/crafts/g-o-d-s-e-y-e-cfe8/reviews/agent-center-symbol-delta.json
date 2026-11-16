@@ -1,0 +1,909 @@
+{
+  "mode": "grep-based scoped graph delta; tree-sitter unavailable",
+  "reuse": [
+    "Existing Foundation plan/queue/grant/lease/epoch/budget/admission/audit",
+    "Existing owner passkey/session/private directory/CLI guards",
+    "Existing projects/environments/store migration runner",
+    "Existing console React Query/forms/tokens/UI components"
+  ],
+  "paths": [
+    "apps/console/src/components/agents-action.tsx",
+    "apps/console/src/components/agents-budget.tsx",
+    "apps/console/src/components/agents-labels.ts",
+    "apps/console/src/components/agents-panel.tsx",
+    "apps/console/src/components/agents-profile-form.tsx",
+    "apps/console/src/components/agents-profiles.tsx",
+    "apps/console/src/components/agents-task-form.tsx",
+    "apps/console/src/components/agents-task-history.tsx",
+    "apps/console/src/styles/agents.css",
+    "apps/control-api/src/agent-routes.ts",
+    "apps/control-api/src/hermes-provider.ts",
+    "infra/hermes/catalog.json",
+    "infra/hermes/skills/godseye-context/1.0.0/SKILL.md",
+    "packages/contracts/src/agents-endpoints.ts",
+    "packages/contracts/src/agents.ts",
+    "packages/core/src/agents-execution.ts",
+    "packages/core/src/agents-profiles.ts",
+    "packages/core/src/agents-provider.ts",
+    "packages/core/src/agents-runs.ts",
+    "packages/core/src/agents-state.ts",
+    "packages/core/src/agents.ts",
+    "packages/store/migrations/0018_agent_center.sql",
+    "packages/store/src/agent-schema.ts",
+    "scripts/hermes-bindings.mjs",
+    "scripts/hermes-local.mjs",
+    "scripts/hermes-runtime-install.mjs",
+    "scripts/hermes_agent_boot.py",
+    "scripts/hermes_catalog.py",
+    "scripts/hermes_files.py",
+    "scripts/hermes_gateway.py",
+    "scripts/hermes_gateway_broker.py",
+    "scripts/hermes_gateway_reply.py",
+    "scripts/hermes_gateway_state.py",
+    "scripts/hermes_gateway_transport.py",
+    "scripts/hermes_install_files.py",
+    "scripts/hermes_local.py",
+    "scripts/hermes_profiles.py",
+    "scripts/hermes_runtime_install.py",
+    "scripts/install-hermes.mjs",
+    "scripts/install-hermes.py",
+    "apps/console/src/routes/agents.tsx"
+  ],
+  "symbols": [
+    {
+      "file": "apps/console/src/components/agents-action.tsx",
+      "line": 5,
+      "declaration": "export function AgentsAction({"
+    },
+    {
+      "file": "apps/console/src/components/agents-budget.tsx",
+      "line": 11,
+      "declaration": "export function AgentsBudget({"
+    },
+    {
+      "file": "apps/console/src/components/agents-labels.ts",
+      "line": 4,
+      "declaration": "export const AGENT_REFRESH_MS = 3000;"
+    },
+    {
+      "file": "apps/console/src/components/agents-labels.ts",
+      "line": 5,
+      "declaration": "export const agentRoleLabels = {"
+    },
+    {
+      "file": "apps/console/src/components/agents-labels.ts",
+      "line": 10,
+      "declaration": "export const agentStateLabels = {"
+    },
+    {
+      "file": "apps/console/src/components/agents-labels.ts",
+      "line": 20,
+      "declaration": "export type AgentPost = (path: string, body: unknown, method?: \"POST\" | \"PUT\") => Promise<unknown>;"
+    },
+    {
+      "file": "apps/console/src/components/agents-labels.ts",
+      "line": 21,
+      "declaration": "export const agentMoney = (micros: number) =>"
+    },
+    {
+      "file": "apps/console/src/components/agents-labels.ts",
+      "line": 28,
+      "declaration": "export function agentEnvironments(project: ProjectDTO) {"
+    },
+    {
+      "file": "apps/console/src/components/agents-labels.ts",
+      "line": 38,
+      "declaration": "export function agentProfileScope(profile: AgentProfileView, projects: ProjectDTO[]) {"
+    },
+    {
+      "file": "apps/console/src/components/agents-panel.tsx",
+      "line": 15,
+      "declaration": "export function AgentsPanel() {"
+    },
+    {
+      "file": "apps/console/src/components/agents-profile-form.tsx",
+      "line": 16,
+      "declaration": "export function AgentsProfileForm({"
+    },
+    {
+      "file": "apps/console/src/components/agents-profiles.tsx",
+      "line": 9,
+      "declaration": "export function AgentsProfiles({"
+    },
+    {
+      "file": "apps/console/src/components/agents-task-form.tsx",
+      "line": 18,
+      "declaration": "export function AgentsTaskForm({"
+    },
+    {
+      "file": "apps/console/src/components/agents-task-history.tsx",
+      "line": 14,
+      "declaration": "export function AgentsTaskHistory({"
+    },
+    {
+      "file": "apps/control-api/src/agent-routes.ts",
+      "line": 15,
+      "declaration": "export function registerAgentRoutes("
+    },
+    {
+      "file": "apps/control-api/src/hermes-provider.ts",
+      "line": 25,
+      "declaration": "export type HermesBinding = z.infer<typeof Binding>;"
+    },
+    {
+      "file": "apps/control-api/src/hermes-provider.ts",
+      "line": 56,
+      "declaration": "export interface HermesProviderOptions {"
+    },
+    {
+      "file": "apps/control-api/src/hermes-provider.ts",
+      "line": 63,
+      "declaration": "export interface ManagedHermesProvider extends AgentProvider {"
+    },
+    {
+      "file": "apps/control-api/src/hermes-provider.ts",
+      "line": 115,
+      "declaration": "export function createHermesProvider(options: HermesProviderOptions): ManagedHermesProvider {"
+    },
+    {
+      "file": "apps/control-api/src/hermes-provider.ts",
+      "line": 304,
+      "declaration": "export function configuredHermesProvider("
+    },
+    {
+      "file": "packages/contracts/src/agents-endpoints.ts",
+      "line": 14,
+      "declaration": "export const AGENT_HTTP_ENDPOINTS = ["
+    },
+    {
+      "file": "packages/contracts/src/agents.ts",
+      "line": 3,
+      "declaration": "export const AGENT_ROLES = [\"operations\", \"security\", \"research-marketing\"] as const;"
+    },
+    {
+      "file": "packages/contracts/src/agents.ts",
+      "line": 4,
+      "declaration": "export const AGENT_MODELS = [\"gpt-6-luna\"] as const;"
+    },
+    {
+      "file": "packages/contracts/src/agents.ts",
+      "line": 5,
+      "declaration": "export const AGENT_STATES = ["
+    },
+    {
+      "file": "packages/contracts/src/agents.ts",
+      "line": 15,
+      "declaration": "export const AGENT_DEFAULTS = {"
+    },
+    {
+      "file": "packages/contracts/src/agents.ts",
+      "line": 29,
+      "declaration": "export const AgentLimits = z"
+    },
+    {
+      "file": "packages/contracts/src/agents.ts",
+      "line": 38,
+      "declaration": "export type AgentLimitsInput = z.infer<typeof AgentLimits>;"
+    },
+    {
+      "file": "packages/contracts/src/agents.ts",
+      "line": 39,
+      "declaration": "export const AgentProfileConfiguration = z"
+    },
+    {
+      "file": "packages/contracts/src/agents.ts",
+      "line": 45,
+      "declaration": "export const CreateAgentProfile = AgentProfileConfiguration.extend({"
+    },
+    {
+      "file": "packages/contracts/src/agents.ts",
+      "line": 52,
+      "declaration": "export type CreateAgentProfileInput = z.infer<typeof CreateAgentProfile>;"
+    },
+    {
+      "file": "packages/contracts/src/agents.ts",
+      "line": 53,
+      "declaration": "export const ConfigureAgentProfile = AgentProfileConfiguration.extend({"
+    },
+    {
+      "file": "packages/contracts/src/agents.ts",
+      "line": 58,
+      "declaration": "export type ConfigureAgentProfileInput = z.infer<typeof ConfigureAgentProfile>;"
+    },
+    {
+      "file": "packages/contracts/src/agents.ts",
+      "line": 59,
+      "declaration": "export const ChangeAgentProfile = z.object({ expectedRevision: Revision }).strict();"
+    },
+    {
+      "file": "packages/contracts/src/agents.ts",
+      "line": 60,
+      "declaration": "export const AgentProfile = z"
+    },
+    {
+      "file": "packages/contracts/src/agents.ts",
+      "line": 88,
+      "declaration": "export type AgentProfileView = z.infer<typeof AgentProfile>;"
+    },
+    {
+      "file": "packages/contracts/src/agents.ts",
+      "line": 89,
+      "declaration": "export const LaunchAgentTask = z"
+    },
+    {
+      "file": "packages/contracts/src/agents.ts",
+      "line": 92,
+      "declaration": "export type LaunchAgentTaskInput = z.infer<typeof LaunchAgentTask>;"
+    },
+    {
+      "file": "packages/contracts/src/agents.ts",
+      "line": 93,
+      "declaration": "export const AgentTask = z"
+    },
+    {
+      "file": "packages/contracts/src/agents.ts",
+      "line": 118,
+      "declaration": "export type AgentTaskView = z.infer<typeof AgentTask>;"
+    },
+    {
+      "file": "packages/contracts/src/agents.ts",
+      "line": 119,
+      "declaration": "export const AgentEvent = z"
+    },
+    {
+      "file": "packages/contracts/src/agents.ts",
+      "line": 128,
+      "declaration": "export const AgentTaskDetail = z"
+    },
+    {
+      "file": "packages/contracts/src/agents.ts",
+      "line": 131,
+      "declaration": "export type AgentTaskDetailView = z.infer<typeof AgentTaskDetail>;"
+    },
+    {
+      "file": "packages/contracts/src/agents.ts",
+      "line": 132,
+      "declaration": "export const AgentTaskAction = z.object({ expectedRevision: Revision.optional() }).strict();"
+    },
+    {
+      "file": "packages/contracts/src/agents.ts",
+      "line": 133,
+      "declaration": "export const AgentOverview = z"
+    },
+    {
+      "file": "packages/contracts/src/agents.ts",
+      "line": 145,
+      "declaration": "export type AgentOverviewView = z.infer<typeof AgentOverview>;"
+    },
+    {
+      "file": "packages/core/src/agents-execution.ts",
+      "line": 32,
+      "declaration": "export async function executionTask("
+    },
+    {
+      "file": "packages/core/src/agents-execution.ts",
+      "line": 141,
+      "declaration": "export async function stopAgentExecution(state: AgentState, context: ExecutionContext) {"
+    },
+    {
+      "file": "packages/core/src/agents-execution.ts",
+      "line": 150,
+      "declaration": "export async function stopAgentTask(state: AgentState, task: TaskRow): Promise<void> {"
+    },
+    {
+      "file": "packages/core/src/agents-execution.ts",
+      "line": 179,
+      "declaration": "export async function executeAgent("
+    },
+    {
+      "file": "packages/core/src/agents-execution.ts",
+      "line": 289,
+      "declaration": "export async function reconcileAgent("
+    },
+    {
+      "file": "packages/core/src/agents-profiles.ts",
+      "line": 43,
+      "declaration": "export async function createAgentProfile("
+    },
+    {
+      "file": "packages/core/src/agents-profiles.ts",
+      "line": 131,
+      "declaration": "export async function configureAgentProfile("
+    },
+    {
+      "file": "packages/core/src/agents-profiles.ts",
+      "line": 175,
+      "declaration": "export async function pauseAgentProfile("
+    },
+    {
+      "file": "packages/core/src/agents-provider.ts",
+      "line": 4,
+      "declaration": "export type AgentProviderProfile = Omit<"
+    },
+    {
+      "file": "packages/core/src/agents-provider.ts",
+      "line": 8,
+      "declaration": "export interface AgentProviderRequest {"
+    },
+    {
+      "file": "packages/core/src/agents-provider.ts",
+      "line": 17,
+      "declaration": "export interface AgentObservation {"
+    },
+    {
+      "file": "packages/core/src/agents-provider.ts",
+      "line": 26,
+      "declaration": "export interface AgentProviderContext {"
+    },
+    {
+      "file": "packages/core/src/agents-provider.ts",
+      "line": 31,
+      "declaration": "export interface AgentProvider {"
+    },
+    {
+      "file": "packages/core/src/agents-runs.ts",
+      "line": 24,
+      "declaration": "export async function launchAgentTask(state: AgentState, actor: Actor, raw: unknown, key: string) {"
+    },
+    {
+      "file": "packages/core/src/agents-state.ts",
+      "line": 14,
+      "declaration": "export const AGENTS_ADAPTER_ID = \"local.hermes\";"
+    },
+    {
+      "file": "packages/core/src/agents-state.ts",
+      "line": 15,
+      "declaration": "export const AGENT_TOOL = \"agent.model\";"
+    },
+    {
+      "file": "packages/core/src/agents-state.ts",
+      "line": 16,
+      "declaration": "export const AGENT_DESTINATION = \"api.openai.com\";"
+    },
+    {
+      "file": "packages/core/src/agents-state.ts",
+      "line": 17,
+      "declaration": "export const AGENT_TERMINAL = [\"succeeded\", \"failed\", \"cancelled\"];"
+    },
+    {
+      "file": "packages/core/src/agents-state.ts",
+      "line": 18,
+      "declaration": "export interface AgentOptions {"
+    },
+    {
+      "file": "packages/core/src/agents-state.ts",
+      "line": 24,
+      "declaration": "export interface AgentState {"
+    },
+    {
+      "file": "packages/core/src/agents-state.ts",
+      "line": 36,
+      "declaration": "export type ProfileRow = typeof schema.agentProfiles.$inferSelect;"
+    },
+    {
+      "file": "packages/core/src/agents-state.ts",
+      "line": 37,
+      "declaration": "export type TaskRow = typeof schema.agentTasks.$inferSelect;"
+    },
+    {
+      "file": "packages/core/src/agents-state.ts",
+      "line": 38,
+      "declaration": "export const skill = {"
+    },
+    {
+      "file": "packages/core/src/agents-state.ts",
+      "line": 43,
+      "declaration": "export const agentActor = (projectId: string): Actor => ({"
+    },
+    {
+      "file": "packages/core/src/agents-state.ts",
+      "line": 48,
+      "declaration": "export function profileHash("
+    },
+    {
+      "file": "packages/core/src/agents-state.ts",
+      "line": 88,
+      "declaration": "export function profileView("
+    },
+    {
+      "file": "packages/core/src/agents-state.ts",
+      "line": 116,
+      "declaration": "export function taskView(row: TaskRow) {"
+    },
+    {
+      "file": "packages/core/src/agents-state.ts",
+      "line": 139,
+      "declaration": "export async function profileFor(tx: DatabaseAccess, id: string) {"
+    },
+    {
+      "file": "packages/core/src/agents-state.ts",
+      "line": 144,
+      "declaration": "export async function taskFor(tx: DatabaseAccess, id: string) {"
+    },
+    {
+      "file": "packages/core/src/agents-state.ts",
+      "line": 149,
+      "declaration": "export async function activeScope("
+    },
+    {
+      "file": "packages/core/src/agents-state.ts",
+      "line": 188,
+      "declaration": "export async function currentProfile(state: AgentState, tx: DatabaseAccess, row: ProfileRow) {"
+    },
+    {
+      "file": "packages/core/src/agents-state.ts",
+      "line": 205,
+      "declaration": "export async function assertNotBusy(tx: DatabaseAccess, profileId: string) {"
+    },
+    {
+      "file": "packages/core/src/agents-state.ts",
+      "line": 219,
+      "declaration": "export async function event("
+    },
+    {
+      "file": "packages/core/src/agents-state.ts",
+      "line": 245,
+      "declaration": "export async function taskDetail(state: AgentState, actor: Actor, id: string) {"
+    },
+    {
+      "file": "packages/core/src/agents-state.ts",
+      "line": 259,
+      "declaration": "export function providerRequest(task: TaskRow): AgentProviderRequest {"
+    },
+    {
+      "file": "packages/core/src/agents.ts",
+      "line": 31,
+      "declaration": "export type * from \"./agents-provider.js\";"
+    },
+    {
+      "file": "packages/core/src/agents.ts",
+      "line": 32,
+      "declaration": "export type { AgentOptions } from \"./agents-state.js\";"
+    },
+    {
+      "file": "packages/core/src/agents.ts",
+      "line": 36,
+      "declaration": "export class AgentEngine {"
+    },
+    {
+      "file": "packages/store/src/agent-schema.ts",
+      "line": 14,
+      "declaration": "export const agentProfiles = pgTable("
+    },
+    {
+      "file": "packages/store/src/agent-schema.ts",
+      "line": 36,
+      "declaration": "export const agentTasks = pgTable("
+    },
+    {
+      "file": "packages/store/src/agent-schema.ts",
+      "line": 65,
+      "declaration": "export const agentEvents = pgTable("
+    },
+    {
+      "file": "scripts/hermes-bindings.mjs",
+      "line": 20,
+      "declaration": "export function argumentsFor(args) {"
+    },
+    {
+      "file": "scripts/hermes-bindings.mjs",
+      "line": 83,
+      "declaration": "export async function writeBinding(args, input = process.stdin) {"
+    },
+    {
+      "file": "scripts/hermes-local.mjs",
+      "line": 20,
+      "declaration": "export function parseArguments(args) {"
+    },
+    {
+      "file": "scripts/hermes-local.mjs",
+      "line": 34,
+      "declaration": "export function hostEnvironment(environment = process.env) {"
+    },
+    {
+      "file": "scripts/hermes_agent_boot.py",
+      "line": 19,
+      "declaration": "def progress_diagnostic() -> None:"
+    },
+    {
+      "file": "scripts/hermes_agent_boot.py",
+      "line": 37,
+      "declaration": "def main() -> None:"
+    },
+    {
+      "file": "scripts/hermes_catalog.py",
+      "line": 18,
+      "declaration": "def exact(value: object, fields: set[str]) -> dict:"
+    },
+    {
+      "file": "scripts/hermes_catalog.py",
+      "line": 24,
+      "declaration": "def catalog(workspace: Path) -> tuple[dict, dict[str, bytes]]:"
+    },
+    {
+      "file": "scripts/hermes_catalog.py",
+      "line": 82,
+      "declaration": "def configuration(model: str | None) -> dict:"
+    },
+    {
+      "file": "scripts/hermes_files.py",
+      "line": 17,
+      "declaration": "class DurabilityUncertain(RuntimeError):"
+    },
+    {
+      "file": "scripts/hermes_files.py",
+      "line": 21,
+      "declaration": "def document(value: object) -> bytes:"
+    },
+    {
+      "file": "scripts/hermes_files.py",
+      "line": 26,
+      "declaration": "def digest(value: bytes) -> str:"
+    },
+    {
+      "file": "scripts/hermes_files.py",
+      "line": 30,
+      "declaration": "def runtime_root(workspace: Path) -> Path:"
+    },
+    {
+      "file": "scripts/hermes_files.py",
+      "line": 36,
+      "declaration": "def no_aliases(path: Path) -> None:"
+    },
+    {
+      "file": "scripts/hermes_files.py",
+      "line": 44,
+      "declaration": "def private_directory(path: Path) -> None:"
+    },
+    {
+      "file": "scripts/hermes_files.py",
+      "line": 51,
+      "declaration": "def existing_directory(path: Path) -> None:"
+    },
+    {
+      "file": "scripts/hermes_files.py",
+      "line": 59,
+      "declaration": "def regular(path: Path, private: bool = True) -> os.stat_result:"
+    },
+    {
+      "file": "scripts/hermes_files.py",
+      "line": 69,
+      "declaration": "def read_bytes(path: Path, private: bool = True) -> bytes:"
+    },
+    {
+      "file": "scripts/hermes_files.py",
+      "line": 83,
+      "declaration": "def read_json(path: Path, private: bool = True) -> object:"
+    },
+    {
+      "file": "scripts/hermes_files.py",
+      "line": 87,
+      "declaration": "def sync_directory(path: Path) -> None:"
+    },
+    {
+      "file": "scripts/hermes_files.py",
+      "line": 95,
+      "declaration": "def write_new(path: Path, content: bytes) -> None:"
+    },
+    {
+      "file": "scripts/hermes_files.py",
+      "line": 104,
+      "declaration": "def replace_json(path: Path, value: object) -> None:"
+    },
+    {
+      "file": "scripts/hermes_files.py",
+      "line": 130,
+      "declaration": "def exclusive(root: Path) -> Iterator[None]:"
+    },
+    {
+      "file": "scripts/hermes_gateway.py",
+      "line": 26,
+      "declaration": "def free_port() -> int:"
+    },
+    {
+      "file": "scripts/hermes_gateway.py",
+      "line": 32,
+      "declaration": "def child_environment(tool: Path, directory: Path, state: dict) -> dict[str, str]:"
+    },
+    {
+      "file": "scripts/hermes_gateway.py",
+      "line": 48,
+      "declaration": "def terminate(child: subprocess.Popen | None) -> bool:"
+    },
+    {
+      "file": "scripts/hermes_gateway.py",
+      "line": 65,
+      "declaration": "def run(workspace: Path, request: dict, provider_key: str, fixture_base: str | None) -> None:"
+    },
+    {
+      "file": "scripts/hermes_gateway.py",
+      "line": 203,
+      "declaration": "def main() -> None:"
+    },
+    {
+      "file": "scripts/hermes_gateway_broker.py",
+      "line": 19,
+      "declaration": "class Authority:"
+    },
+    {
+      "file": "scripts/hermes_gateway_broker.py",
+      "line": 55,
+      "declaration": "def outgoing_body(raw: bytes, request: dict) -> bytes:"
+    },
+    {
+      "file": "scripts/hermes_gateway_broker.py",
+      "line": 90,
+      "declaration": "class Broker:"
+    },
+    {
+      "file": "scripts/hermes_gateway_reply.py",
+      "line": 9,
+      "declaration": "def text_only(value: object, depth: int = 0) -> None:"
+    },
+    {
+      "file": "scripts/hermes_gateway_reply.py",
+      "line": 25,
+      "declaration": "def read_text_reply(response, stop, deadline: float) -> bytes:"
+    },
+    {
+      "file": "scripts/hermes_gateway_state.py",
+      "line": 21,
+      "declaration": "def validate_request(request: dict) -> None:"
+    },
+    {
+      "file": "scripts/hermes_gateway_state.py",
+      "line": 46,
+      "declaration": "def task_root(workspace: Path, task_id: str) -> Path:"
+    },
+    {
+      "file": "scripts/hermes_gateway_state.py",
+      "line": 50,
+      "declaration": "def identity(request: dict) -> dict:"
+    },
+    {
+      "file": "scripts/hermes_gateway_state.py",
+      "line": 58,
+      "declaration": "def read_state(directory: Path, request: dict) -> dict:"
+    },
+    {
+      "file": "scripts/hermes_gateway_state.py",
+      "line": 84,
+      "declaration": "def write_state(directory: Path, state: dict) -> None:"
+    },
+    {
+      "file": "scripts/hermes_gateway_state.py",
+      "line": 91,
+      "declaration": "def materialize(workspace: Path, directory: Path, request: dict, broker_port: int, api_port: int) -> dict:"
+    },
+    {
+      "file": "scripts/hermes_gateway_state.py",
+      "line": 139,
+      "declaration": "def public_observation(state: dict) -> dict:"
+    },
+    {
+      "file": "scripts/hermes_gateway_transport.py",
+      "line": 8,
+      "declaration": "class NoRedirect(HTTPRedirectHandler):"
+    },
+    {
+      "file": "scripts/hermes_gateway_transport.py",
+      "line": 13,
+      "declaration": "def api(state: dict, method: str, path: str, body: dict | None = None, timeout: float = 5) -> dict:"
+    },
+    {
+      "file": "scripts/hermes_gateway_transport.py",
+      "line": 32,
+      "declaration": "def observed(state: dict, value: dict) -> dict:"
+    },
+    {
+      "file": "scripts/hermes_gateway_transport.py",
+      "line": 62,
+      "declaration": "def readonly_observation(state: dict) -> dict:"
+    },
+    {
+      "file": "scripts/hermes_install_files.py",
+      "line": 18,
+      "declaration": "def private_directory(path: Path) -> None:"
+    },
+    {
+      "file": "scripts/hermes_install_files.py",
+      "line": 32,
+      "declaration": "def regular_file(path: Path) -> None:"
+    },
+    {
+      "file": "scripts/hermes_install_files.py",
+      "line": 40,
+      "declaration": "def read_json(path: Path) -> dict:"
+    },
+    {
+      "file": "scripts/hermes_install_files.py",
+      "line": 48,
+      "declaration": "def write_json(path: Path, value: dict) -> None:"
+    },
+    {
+      "file": "scripts/hermes_install_files.py",
+      "line": 70,
+      "declaration": "def digest(path: Path) -> str:"
+    },
+    {
+      "file": "scripts/hermes_install_files.py",
+      "line": 77,
+      "declaration": "def download(url: str, target: Path, expected: str) -> None:"
+    },
+    {
+      "file": "scripts/hermes_install_files.py",
+      "line": 105,
+      "declaration": "def tree_hashes(root: Path, containment: Path) -> dict[str, str]:"
+    },
+    {
+      "file": "scripts/hermes_install_files.py",
+      "line": 129,
+      "declaration": "def detach_build_hardlinks(root: Path) -> None:"
+    },
+    {
+      "file": "scripts/hermes_install_files.py",
+      "line": 154,
+      "declaration": "def extract(archive: Path, target: Path, prefix: str, allow_links: bool) -> None:"
+    },
+    {
+      "file": "scripts/hermes_local.py",
+      "line": 25,
+      "declaration": "def owned_root(workspace: Path) -> Path:"
+    },
+    {
+      "file": "scripts/hermes_local.py",
+      "line": 43,
+      "declaration": "def execute(payload: dict) -> dict:"
+    },
+    {
+      "file": "scripts/hermes_local.py",
+      "line": 83,
+      "declaration": "def main() -> None:"
+    },
+    {
+      "file": "scripts/hermes_profiles.py",
+      "line": 27,
+      "declaration": "def identifier(value: object) -> str:"
+    },
+    {
+      "file": "scripts/hermes_profiles.py",
+      "line": 33,
+      "declaration": "def revision_id(value: object) -> str:"
+    },
+    {
+      "file": "scripts/hermes_profiles.py",
+      "line": 39,
+      "declaration": "def binding(workspace: Path, payload: dict) -> dict:"
+    },
+    {
+      "file": "scripts/hermes_profiles.py",
+      "line": 52,
+      "declaration": "def recipe(workspace: Path, payload: dict) -> tuple[dict, dict[str, bytes]]:"
+    },
+    {
+      "file": "scripts/hermes_profiles.py",
+      "line": 78,
+      "declaration": "def list_entries(root: Path) -> list[Path]:"
+    },
+    {
+      "file": "scripts/hermes_profiles.py",
+      "line": 98,
+      "declaration": "def read_binding(profile: Path, workspace: Path) -> dict:"
+    },
+    {
+      "file": "scripts/hermes_profiles.py",
+      "line": 107,
+      "declaration": "def active(profile: Path) -> str:"
+    },
+    {
+      "file": "scripts/hermes_profiles.py",
+      "line": 112,
+      "declaration": "def verify_snapshot(profile: Path, revision: str, identity: dict) -> dict:"
+    },
+    {
+      "file": "scripts/hermes_profiles.py",
+      "line": 150,
+      "declaration": "def view(profile: Path, workspace: Path, revision: str | None = None) -> dict:"
+    },
+    {
+      "file": "scripts/hermes_profiles.py",
+      "line": 163,
+      "declaration": "def publish_revision(profile: Path, files: dict[str, bytes], revision: str) -> None:"
+    },
+    {
+      "file": "scripts/hermes_profiles.py",
+      "line": 183,
+      "declaration": "def prepare(root: Path, workspace: Path, payload: dict) -> dict:"
+    },
+    {
+      "file": "scripts/hermes_profiles.py",
+      "line": 211,
+      "declaration": "def inspect(root: Path, workspace: Path, payload: dict) -> dict:"
+    },
+    {
+      "file": "scripts/hermes_profiles.py",
+      "line": 231,
+      "declaration": "def promote(root: Path, workspace: Path, payload: dict) -> dict:"
+    },
+    {
+      "file": "scripts/hermes_runtime_install.py",
+      "line": 18,
+      "declaration": "def execution_root(tool: Path) -> Path:"
+    },
+    {
+      "file": "scripts/hermes_runtime_install.py",
+      "line": 22,
+      "declaration": "def execution_hashes(root: Path, tool: Path) -> dict:"
+    },
+    {
+      "file": "scripts/hermes_runtime_install.py",
+      "line": 35,
+      "declaration": "def verify_execution(root: Path, tool: Path) -> dict:"
+    },
+    {
+      "file": "scripts/hermes_runtime_install.py",
+      "line": 47,
+      "declaration": "def install(workspace: Path) -> dict:"
+    },
+    {
+      "file": "scripts/hermes_runtime_install.py",
+      "line": 101,
+      "declaration": "def main() -> None:"
+    },
+    {
+      "file": "scripts/install-hermes.py",
+      "line": 29,
+      "declaration": "def resolve_root(workspace: str, create: bool) -> Path:"
+    },
+    {
+      "file": "scripts/install-hermes.py",
+      "line": 64,
+      "declaration": "def child_environment(root: Path) -> dict[str, str]:"
+    },
+    {
+      "file": "scripts/install-hermes.py",
+      "line": 82,
+      "declaration": "def execute(command: list[str], root: Path, timeout: int = 900) -> str:"
+    },
+    {
+      "file": "scripts/install-hermes.py",
+      "line": 95,
+      "declaration": "def offline_smoke(root: Path) -> dict:"
+    },
+    {
+      "file": "scripts/install-hermes.py",
+      "line": 99,
+      "declaration": "def refuse(*args, **kwargs):"
+    },
+    {
+      "file": "scripts/install-hermes.py",
+      "line": 119,
+      "declaration": "def immutable_files(root: Path) -> dict:"
+    },
+    {
+      "file": "scripts/install-hermes.py",
+      "line": 124,
+      "declaration": "def verify_install(root: Path) -> dict:"
+    },
+    {
+      "file": "scripts/install-hermes.py",
+      "line": 136,
+      "declaration": "def verify_extraction(target: Path, reference: Path, root: Path, name: str) -> None:"
+    },
+    {
+      "file": "scripts/install-hermes.py",
+      "line": 158,
+      "declaration": "def install(root: Path) -> dict:"
+    },
+    {
+      "file": "scripts/install-hermes.py",
+      "line": 224,
+      "declaration": "def main() -> None:"
+    },
+    {
+      "file": "apps/console/src/routes/agents.tsx",
+      "line": 4,
+      "declaration": "export const Route = createFileRoute(\"/agents\")({ component: Agents });"
+    }
+  ]
+}

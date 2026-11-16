@@ -1,0 +1,109 @@
+{
+  "verdict": "pass",
+  "kind": "code",
+  "criticity": "production",
+  "findings": [],
+  "criteria_run": 13,
+  "criteria_passed": 13,
+  "closure_history": [
+    {
+      "id": "CR-CODE-01",
+      "status": "closed",
+      "evidence": "foundation-effects.ts now calls exact readOnlyAgentRecovery(plan) when cancelling an unknown operation; coding-execution.ts:124-141 independently reads durable execution.cancel receipts and cancellation error markers before publication. Inspected focused XML includes passing generic Foundation cancellation of unknown work prevents late result publication. Original finding remains preserved in coding-runners-code-review.json.",
+      "refutation": "An ordinary unknown run has revoked grants without necessarily being cancelled; implementation correctly distinguishes explicit cancellation receipts rather than suppressing all reconciled output."
+    },
+    {
+      "id": "CR-CODE-02",
+      "status": "closed",
+      "evidence": "foundation-data.ts:248-256 defines exact Hermes/agent.run or coding/coding.run read-only recovery. Foundation reconcile gates all use it while dispatch remains fenced. Inspected XML has passing HOLD and expiry physical-stop reconciliation without old output.",
+      "refutation": "Exemption does not grant new execution; coding adapter reconciliation calls inspect and observation independently suppresses changed/expired scope output."
+    },
+    {
+      "id": "CR-CODE-03",
+      "status": "closed",
+      "evidence": "agents-coding.tsx:35-43 creates inert UTF-8 text/plain Blob downloads with fixed coding-patch.txt/coding-test-log.txt names; both controls are wired to retained content. tests/e2e/coding.spec.ts:161-174 verifies suggested filenames and exact streamed download bytes; browser freeze reports 2/2 desktop/mobile passes.",
+      "refutation": "No new artifact endpoint is required because the existing owner-only task detail already returns bounded validated bytes; download creates no runner URL navigation or application operation."
+    },
+    {
+      "id": "CR-CODE-04",
+      "status": "closed",
+      "evidence": "packages/contracts/src/http-endpoints.ts:44 declares 1.13.0 and generated OpenAPI/documentation match the additive API version."
+    }
+  ],
+  "evidence": {
+    "focused_xml": "artifacts/test-results/coding-runners-focused-final.xml",
+    "observed_tests": 84,
+    "observed_failures": 0,
+    "observed_errors": 0,
+    "qualification": "XML observed directly; no new executable suite run by reviewer. Current provider test source adds a missing-treeHash case beyond the observed XML, so the pending delta rerun must pass separately.",
+    "startup": "Reviewed explicit codingStartupOptions integration, default empty options, sanitized invalid-config unavailable fallback, strict opt-in private configuration, child authorization correlation/sequence and active-fence ACK, independent read-only inspect/stop, operator private staging and fixed allowlisted setup wrapper.",
+    "scope": "No confirmed new defect found within reviewed TS/startup/operator/UI scope. This pass is not full S05 acceptance or native qualification."
+  },
+  "reviewed_source_sha256": {
+    "packages/core/src/coding-execution.ts": "c2986573e58dcfc737129443778817778f6b3ef7e92bc8759d03d2425a88c084",
+    "packages/core/src/foundation-data.ts": "0783cd9ef9f31f25c61f3338699e5ff9862ca500160db0925da9e6f34728bc2f",
+    "packages/core/src/foundation-effects.ts": "c3e9617d9888dd75db862b9ea12a0ba6388ea886e3401bc840237b470eca14e9",
+    "packages/contracts/src/http-endpoints.ts": "ffdf2708899234196c04c699eea540b4b00a484d60e92e051ce35cb441d92f52",
+    "apps/control-api/src/coding-provider.ts": "70e9e57648a59fa7d8620551124429c7cbc4f63252cf737e103e68c77aaf4919",
+    "apps/control-api/src/coding-startup.ts": "575692151baac5334454a805237d61060bc280e3137db16c81fe230145c55a0e",
+    "apps/control-api/src/server.ts": "ad6e0f438ef9ed99dfb4ada7beab947bb2a16523f68a9cc30e99d3c871128d54",
+    "apps/control-api/src/private-json.ts": "fbddc66900c366bff9e97e4c49473aa4246c5e3ca55c0a62b17b5b09117016c5",
+    "scripts/coding-bindings.mjs": "275ed685caf5147099707684b6595083a0e9cdd96f4c085df675109022764504",
+    "scripts/coding-runtime.mjs": "35a826b14ed2b1fd894eb3ca206cdee4299f9b0d44762cfe5fea820ee82de398",
+    "apps/console/src/components/agents-coding.tsx": "311417f543926919edd1a2ad74e6727aeaf3bc6b49a63bc01afbcd97cfb8abf8",
+    "apps/console/src/components/agents-panel.tsx": "c6dbe23e834ff3deeeb02cd9c1c98f10b2a2d67c2d6f7494bfc939a2f34cc6f3",
+    "apps/console/src/styles/agents-coding.css": "29a30f56be9e7dd273a1fdcac5349177fe017493257767a57e438f1211a63f13",
+    "docs/development/coding-runners.md": "c715c14c12850c38ef5f9dea70d6283b8362371285d21ed91832416a307050ae",
+    "tests/coding-provider.test.ts": "44ec71fcee020ecacdda815c76fb9ddf246437892504f1fa06da852033589d57",
+    "artifacts/test-results/coding-runners-focused-final.xml": "ed676f4c0135203631907b9de2943f560bd2a2dde8e025bfc069b2621ea7f49c"
+  },
+  "not_reviewed": [
+    "Deep native Python/QEMU/guest security and the three native security findings: separate security agent owns independent fix closure; no duplicate claim made here.",
+    "Complete actual Codex/Claude execution, exact guest source/tree/test/patch chain and native hard resource/stop enforcement: runtime proof remains in progress, not certified by schemas or fake child IPC.",
+    "Latest treeHash/distro delta suite: source is reviewed but refreshed GAUNTLET XML is pending and must be checked before final acceptance.",
+    "Paid calls, vendor entitlement, real billing and actual private bindings or credentials: excluded; no protected reads performed.",
+    "Independent browser rerun or pixel inspection: source and declared browser evidence reviewed; reviewer did not rerun browser.",
+    "Whole-repository baseline/build/scans and final acceptance: root owns aggregate gates; overlapping subsets must not be added twice.",
+    "Isolated-import installer fix inspected via freeze report and wrapper; Python implementation is runtime/security-owned."
+  ],
+  "followup_reviews": [
+    {
+      "id": "final-ts-ui-protocol-delta",
+      "verdict": "pass",
+      "findings": [],
+      "criteria_run": 13,
+      "criteria_passed": 13,
+      "evidence": [
+        "coding-provider.ts:125-130 resolves an absolute SystemRoot/System32/wsl.exe and rejects non-drive-rooted SystemRoot; both path conversion and native command spawning use that helper. No PATH-based wsl.exe lookup remains in this provider.",
+        "coding-protocol.ts uses the shared codingCodexArguments helper. Reviewed fixed model/provider/catalog/guest path, reasoning none, web search disabled, ephemeral auth, zero request/stream retries and guest-only loopback broker endpoint; no caller-controlled extra argv.",
+        "agents-coding.tsx initializes Codex USD0.50 and proposes Claude USD0.10 before manual edit; budgetEdited becomes true on explicit budget changes and preserves the chosen value across subsequent runner switches. Preparation still sends explicit finite ceiling through existing owner/Foundation admission.",
+        "Fixed-name inert UTF-8 downloads and scoped overflow CSS remain intact. Browser test verifies both proposal switching and explicit USD0.07 preservation, exact downloaded bytes and descendant clipping constraints.",
+        "Inspected current focused XML directly: 87 tests, zero failures/errors. Inspected current browser XML directly: 2 tests, zero failures/errors, 33.481655 seconds. Earlier 84-test evidence is preserved as historical.",
+        "Latest composition-native XML is empty/in-progress at review time; final three Foundation/native cases are not certified by this review."
+      ],
+      "refutation": [
+        "A visible higher proposal changes no admission or spend automatically: only owner preparation/admission freezes and reserves it, within unchanged maxUSD1 and project budget boundaries.",
+        "SystemRoot originates in the trusted controller process environment; this fix eliminates executable search-path ambiguity without claiming protection against an already compromised controller.",
+        "A protocol helper or passing synthetic suite cannot independently certify actual guest/CLI execution; native receipts and security closure remain independently owned."
+      ],
+      "reviewed_source_sha256": {
+        "apps/control-api/src/coding-provider.ts": "b56da7f654b8be63ad632274f1fa415506656952b423984446fb14dd46497371",
+        "apps/control-api/src/coding-protocol.ts": "d62353936d97058a95936cc1e5457f3dcb36cd66654b861bdd7d8621b12d1574",
+        "scripts/coding_runner_config.mjs": "f451cdc1ca764fc9237b7308397df8771ac12ee236d67af4d56ed04c2f03b7f6",
+        "packages/contracts/src/coding.ts": "aef9b9a0f967b8976927896c233dee7b52965e3de62e123bfac2577f5039dc0f",
+        "apps/console/src/components/agents-coding.tsx": "19158f04f319e20cbf7a4617775f1f956760d1b2e55fb41d2bd27073286d78f5",
+        "apps/console/src/styles/agents-coding.css": "29a30f56be9e7dd273a1fdcac5349177fe017493257767a57e438f1211a63f13",
+        "tests/e2e/coding.spec.ts": "a1fd30b77626481d9e1d075dde9f0d90d5d52dfc18638f50bdb9a5c4fd777862",
+        "artifacts/test-results/coding-runners-focused-final.xml": "1c378ad3718ed8a2f82072643ab7d0cdd9a1a674f6ab75e5493a0997ccd28613",
+        "artifacts/test-results/coding-e2e.xml": "49a26d2caa0822c8092743d3a13e2a671fea45c8b243a32b3376887dce71fa32"
+      },
+      "not_reviewed": [
+        "Final three actual Foundation/native cases: composition-native XML incomplete at review time; root must inspect completed evidence before final acceptance.",
+        "Python/native/guest security, normal native receipts c522a63b/23752f08 and 13-script sourcefreeze-v7 are runtime/security-owned evidence, not independently certified in this TS delta review.",
+        "31 broker /13 readiness cases and global build/lint649/type/contracts gates were reported by root; no overlapping aggregate count or independent rerun claimed here.",
+        "No paid calls, private binding/credential reads, Git mutation or VM action performed."
+      ],
+      "history": "All original closure_history findings and prior source hashes retained unchanged; this entry supersedes pending treeHash/distro focused-test status with observed87-pass XML only."
+    }
+  ]
+}

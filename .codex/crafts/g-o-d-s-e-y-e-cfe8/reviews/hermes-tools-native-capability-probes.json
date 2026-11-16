@@ -1,0 +1,43 @@
+{
+  "date": "2026-11-14",
+  "scope": "Disposable capability probes, not production tool-executor qualification",
+  "paidCalls": 0,
+  "persistentConfigurationChanged": false,
+  "host": {"wslKernel": "6.6.87.2-microsoft-standard-WSL2", "uid": 1000, "systemd": "259"},
+  "cappedPinnedRunsc": {
+    "runtime": "release-20261102.0",
+    "invocationId": "0c7fd26c23354e2e91ceda09d59f2791",
+    "effectiveBeforeExecution": {"memory.max": "536870912", "memory.swap.max": "0", "cpu.max": "50000 100000", "pids.max": "128"},
+    "allSampledChildrenSameCgroup": true,
+    "observedNames": ["python3", "unshare", "runsc", "exe", "gvisor_sentry", "runsc-fd-parkin"],
+    "memoryPeakBytes": 202575872,
+    "pidsPeak": 39,
+    "cpuThrottledPeriods": 268,
+    "runtimeSeconds": 27.444,
+    "nonRoot": true,
+    "gvisorMarker": true,
+    "readOnlyRootRefusedWrite": true,
+    "crossRootDenied": true,
+    "hostIpv4PositiveControl": true,
+    "hostIpv6PositiveControl": true,
+    "hostIpv4Denied": true,
+    "hostIpv6Denied": true,
+    "boundedTmpfsEnospc": true
+  },
+  "negativeControls": {
+    "memory": {"memoryMaxBytes": 67108864, "swapMaxBytes": 0, "attemptBytes": 134217728, "serviceResult": "oom-kill"},
+    "pids": {"limit": 8, "childCountAdmitted": 7, "nextSpawnRefused": true, "pidsMaxEvents": 1}
+  },
+  "lifecycle": {
+    "stdinEof": {"exactInvocationMatched": true, "processCountBefore": 2, "wholeCgroupEmptyAfter": true, "controllerExited": true},
+    "explicitUnitStop": {"exactInvocationMatched": true, "processCountBefore": 2, "wholeCgroupEmptyAfter": true, "controllerExited": true}
+  },
+  "remaining": [
+    "Production trusted helper in its actual Python/glibc rootfs has not yet executed",
+    "No complete production prepare/execute/inspect/stop protocol qualification",
+    "Anonymous exe process not independently labeled gofer; all sampled processes were in the capped group",
+    "Cold WSL user manager availability requires explicit operator bootstrap and persistent foreground holder",
+    "General shell/build/KVM execution remains unavailable"
+  ],
+  "probeFiles": ["artifacts/hermes-tools-probe.py", "artifacts/hermes-tools-lifecycle-probe.py", "artifacts/hermes-tools-limits-probe.py"]
+}

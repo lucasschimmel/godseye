@@ -1,0 +1,167 @@
+{
+  "run": "godseye-e06-completion",
+  "status": "11-canonical-criteria-bound-to-passing-scenarios",
+  "generatedAt": "2026-11-12T21:24:13.256Z",
+  "canonicalCount": 11,
+  "missing": [],
+  "aliases": {
+    "T-E06-D01": [
+      "T-E06-W04"
+    ],
+    "T-E06-D02": [
+      "T-E06-W01",
+      "T-E06-W03"
+    ],
+    "T-E06-D03": [
+      "T-E06-W02"
+    ],
+    "T-E06-D04": [
+      "T-E06-W05",
+      "T-E06-W06"
+    ],
+    "T-E06-D05": [
+      "T-E06-C01"
+    ],
+    "T_E06_P04": [
+      "T-E06-P04"
+    ]
+  },
+  "criteria": [
+    {
+      "id": "T-E06-W01",
+      "tag": "T-E06-D02",
+      "files": [
+        "tests/jobs-runtime-config.test.ts",
+        "tests/jobs-autonomous-native.test.ts"
+      ],
+      "native": [
+        "owner-http-offline"
+      ]
+    },
+    {
+      "id": "T-E06-W02",
+      "tag": "T-E06-D03",
+      "files": [
+        "tests/jobs-autonomous-native.test.ts",
+        "tests/jobs-autonomous-crash-native.test.ts"
+      ],
+      "native": [
+        "owner-http-offline",
+        "supervisor-kill"
+      ]
+    },
+    {
+      "id": "T-E06-W03",
+      "tag": "T-E06-D02",
+      "files": [
+        "tests/jobs-runtime-ipc.test.ts",
+        "tests/jobs-runtime-broker.test.ts"
+      ],
+      "native": [
+        "platform-isolation"
+      ]
+    },
+    {
+      "id": "T-E06-W04",
+      "tag": "T-E06-D01",
+      "files": [
+        "tests/jobs-consumer-partition.test.ts",
+        "tests/jobs-autonomous-crash-native.test.ts"
+      ],
+      "native": [
+        "postgres-runtime-ownership"
+      ]
+    },
+    {
+      "id": "T-E06-W05",
+      "tag": "T-E06-D04",
+      "files": [
+        "tests/jobs-runtime-ipc.test.ts",
+        "tests/jobs-runtime-broker.test.ts",
+        "tests/jobs-autonomous-native.test.ts"
+      ],
+      "native": [
+        "physical-worker-kill",
+        "readonly-probe",
+        "supervisor-kill"
+      ]
+    },
+    {
+      "id": "T-E06-W06",
+      "tag": "T-E06-D04",
+      "files": [
+        "tests/jobs-runtime-broker.test.ts",
+        "tests/jobs-autonomous-native.test.ts"
+      ],
+      "native": [
+        "readonly-probe"
+      ],
+      "note": "Focused new HOLD/epoch/admission/read-only checks; existing lifecycle baseline remains binding for suspension/preview expiry/backend-disable permutations."
+    },
+    {
+      "id": "T-E06-C01",
+      "tag": "T-E06-D05",
+      "files": [
+        "tests/jobs-cron-event-identity.test.ts",
+        "tests/jobs-autonomous-native.test.ts"
+      ],
+      "native": [
+        "live-cron"
+      ]
+    },
+    {
+      "id": "T-E06-P01",
+      "tag": "T-E06-P01",
+      "files": [
+        "tests/jobs-runtime-config.test.ts",
+        "tests/inngest-compose.test.ts",
+        "tests/inngest-persistence-native.test.ts"
+      ],
+      "native": [
+        "external-auth-and-outage"
+      ]
+    },
+    {
+      "id": "T-E06-P02",
+      "tag": "T-E06-P02",
+      "files": [
+        "tests/inngest-persistence-native.test.ts"
+      ],
+      "native": [
+        "external-persistence-restart"
+      ]
+    },
+    {
+      "id": "T-E06-P03",
+      "tag": "T-E06-P03",
+      "files": [
+        "tests/inngest-persistence-native.test.ts",
+        "tests/jobs-autonomous-native.test.ts"
+      ],
+      "native": [
+        "external-auth-and-outage",
+        "platform-isolation"
+      ]
+    },
+    {
+      "id": "T-E06-P04",
+      "tag": "T_E06_P04",
+      "files": [
+        "tests/test_jobs_services.py",
+        "tests/jobs-autonomous-crash-native.test.ts"
+      ],
+      "native": [
+        "supervisor-kill"
+      ],
+      "pythonPassed": 8
+    }
+  ],
+  "evidence": "reviews/e06-completion-tests.json",
+  "note": "Canonical public W/C/P IDs map explicitly to executable D-series/Python underscore aliases; mapping is not a claim that literal W tags were executed.",
+  "rootRecheck": {
+    "at": "2026-11-12T21:25:12.399Z",
+    "bound": 11,
+    "missing": [],
+    "method": "Each canonical criterion resolves through its declared alias to an actual existing test source reference; execution evidence remains linked reports"
+  }
+}

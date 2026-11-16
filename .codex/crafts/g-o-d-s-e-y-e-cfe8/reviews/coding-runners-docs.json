@@ -1,0 +1,56 @@
+{
+  "version": 1,
+  "skill": "scribe",
+  "status": "public-docs-reconciled-native-composition-and-final-smoke-pass",
+  "written": [
+    "docs/development/coding-runners.md",
+    "docs/adr/ADR-017-local-coding-runners.md",
+    "docs/spec/v1.md",
+    "docs/plan/v1-development.md",
+    "docs/development/agent-center.md",
+    "docs/development/handoff.md",
+    "README.md",
+    "CHANGELOG.md",
+    "THIRD_PARTY_NOTICES.md"
+  ],
+  "verified": {
+    "localLinksChecked": 171,
+    "missing": [],
+    "commands": "Compared package scripts, coding-runtime argument parser and coding-bindings argument parser; setup/bind commands not executed by documentation worker.",
+    "schemas": "Compared CodingPrivateConfiguration, coding contracts and endpoint registry; no private configuration file read.",
+    "format": "Biome format --write on all nine owned Markdown files; three supported root Markdown files formatted, other documentation follows existing plain Markdown style.",
+    "finalSmoke": "Final unchanged original15s built smoke10545 passed exit0 at true idle: health reachable, remote server disconnected; zero owned transient units/broker socket directories/controllers."
+  },
+  "pending": [],
+  "skipped": [
+    {
+      "what": "Production/tests/Git mutations, paid calls, server setup, actual private files",
+      "why": "Outside assigned local documentation ownership"
+    }
+  ],
+  "accuracyNotes": [
+    "Windows/Ubuntu WSL2 only physically qualified; private distro literal Ubuntu",
+    "19 CLI assets including signed Bash/libtinfo and vendor bubblewrap",
+    "Host fixed bounded object parsing; all Git commands inside guest",
+    "Stable software capability vs strict allocation boot/InvocationID",
+    "Cheap readiness polling; full executable/image hash checks before dispatch",
+    "Ephemeral RAM-backed worktree/home; retained source/image/patch/log evidence; no persistent CLI resume",
+    "31 broker/10 source/13 readiness mechanism checks separate from five bounded native adversary case IDs",
+    "No paid/vendor entitlement/deployed preview/server/Git-publication claim",
+    "1513 disjoint ordinary passes=1426existing+87new,28legacy native skips; three passed opt-in native compositions excluded from ordinary total",
+    "Owner-editable proposed ceilings Codex$0.50/Claude$0.10, manual edit preserved, contractfallback$0.10; no projectbudget orHermesdefault increase"
+  ],
+  "composition": {
+    "passed": 3,
+    "failed": 0,
+    "errors": 0,
+    "seconds": 123.946,
+    "cases": {
+      "claude": 38.397,
+      "codex": 46.656,
+      "epoch": 38.892
+    },
+    "scope": "Actual Foundation/private provider/native controller/production broker/KVM; only upstream HTTPS replaced with trusted fixture; zero paid calls",
+    "normalSourceFreeze": "v7; all13 runtime sources match both normal receipts; broker353857c2 and runner helperf451cdc1"
+  }
+}

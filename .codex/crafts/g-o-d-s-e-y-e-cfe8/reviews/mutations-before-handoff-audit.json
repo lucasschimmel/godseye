@@ -1,0 +1,277 @@
+{
+  "kind": "curated behavioral mutation experiment",
+  "startedAt": "2026-11-11T17:21:25.177Z",
+  "finishedAt": "2026-11-11T17:23:32.478Z",
+  "scope": "17 selected mutations; not an exhaustive mutation score or coverage claim",
+  "isolation": "Temporary source copies with explicit Vitest workspace aliases; original source never mutated",
+  "baseline": {
+    "status": "passed",
+    "passed": 17
+  },
+  "restored": {
+    "status": "passed",
+    "passed": 17
+  },
+  "sourceUnchanged": true,
+  "selected": 17,
+  "killed": 17,
+  "survived": 0,
+  "invalid": 0,
+  "results": [
+    {
+      "id": "M01",
+      "file": "packages/core/src/policy.ts",
+      "behavior": "Bypass the owner-only guard",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "local control plane T01 denies platform listing and creation to an application identity",
+            "message": "Error: promise resolved \"[]\" instead of rejecting"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M02",
+      "file": "packages/core/src/policy.ts",
+      "behavior": "Bypass project membership authorization",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "local control plane T01 allows a project-scoped identity to read only its assigned project",
+            "message": "Error: promise resolved \"{ …(11) }\" instead of rejecting"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M03",
+      "file": "packages/core/src/policy.ts",
+      "behavior": "Allow unknown effects to execute without reconciliation",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "effect uncertainty and terminal operation guards T37 requires reconciliation before an unknown operation may finish or execute again",
+            "message": "AssertionError: expected [Function] to throw an error"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M04",
+      "file": "packages/core/src/journal.ts",
+      "behavior": "Ignore conflicting idempotency fingerprints",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "local control plane T09 rejects reuse of an idempotency key for different creation parameters",
+            "message": "Error: promise resolved \"{ …(11) }\" instead of rejecting"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M05",
+      "file": "packages/core/src/projects.ts",
+      "behavior": "Accept a stale project revision",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "local control plane T37 refuses a stale repository update without overwriting the accepted binding",
+            "message": "Error: promise resolved \"{ …(11) }\" instead of rejecting"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M06",
+      "file": "packages/core/src/github.ts",
+      "behavior": "Skip webhook HMAC comparison",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "signed GitHub intake T41 rejects a correct-shaped signature made with another key",
+            "message": "Error: promise resolved \"{ outcome: 'queued', …(2) }\" instead of rejecting"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M07",
+      "file": "packages/core/src/github.ts",
+      "behavior": "Remove the bound GitHub installation check",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "signed GitHub intake T41 ignores another installation even when its payload is correctly signed",
+            "message": "AssertionError: expected 'queued' to be 'ignored' // Object.is equality"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M08",
+      "file": "packages/core/src/journal.ts",
+      "behavior": "Skip verification of an audit record digest",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "local audit integrity T37 detects a modified audit summary against its stored digest",
+            "message": "AssertionError: expected true to be false // Object.is equality"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M09",
+      "file": "packages/core/src/journal.ts",
+      "behavior": "Skip verification of an audit predecessor link",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "local audit integrity T37 detects a chain link replaced with an unrelated predecessor",
+            "message": "AssertionError: expected true to be false // Object.is equality"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M10",
+      "file": "packages/core/src/access-redemption.ts",
+      "behavior": "Allow task-purpose material without a live task grant",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "service material handoff under actual FoundationEngine task authority T-AC-16 T22 forbids using task-purpose material as ordinary static runtime access",
+            "message": "Error: promise resolved \"undefined\" instead of rejecting"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M11",
+      "file": "packages/core/src/access-state.ts",
+      "behavior": "Accept prior-epoch service authentication after cell fencing",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "exact-cell service identity authority T-AC-15 T22 rejects a prior-cell activation epoch even for a previously active runtime proof",
+            "message": "Error: promise resolved \"undefined\" instead of rejecting"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M12",
+      "file": "packages/core/src/access-state.ts",
+      "behavior": "Trust copied provider metadata without recomputing material integrity",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "exact-cell service identity authority T-AC-15 T08 rejects altered provider material even when its version and copied metadata are unchanged",
+            "message": "Error: promise resolved \"undefined\" instead of rejecting"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M13",
+      "file": "packages/core/src/bao-provider.ts",
+      "behavior": "Accept controller policy text with widened upstream privileges",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "pinned real OpenBao provider boundary T-AC-18 T08 rejects extra/default policy and actual controller-policy privilege drift",
+            "message": "AssertionError: expected 'ready' to be 'unauthorized' // Object.is equality"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M14",
+      "file": "packages/core/src/access-operations.ts",
+      "behavior": "Declare upstream transition complete on blank evidence",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "controlled static rotation and uncertainty T-AC-17 T22 rejects foreign and blank transition receipts instead of declaring upstream revocation",
+            "message": "AssertionError: expected 'succeeded' to be 'unknown' // Object.is equality"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M15",
+      "file": "packages/core/src/access-redemption.ts",
+      "behavior": "Hand off task material without charging the authorized use",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "service material handoff under actual FoundationEngine task authority T-AC-16 T22 charges the authorized use once while rechecking authority before private delivery",
+            "message": "AssertionError: expected +0 to be 10 // Object.is equality"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M16",
+      "file": "packages/core/src/access-operations.ts",
+      "behavior": "Dispatch a transition after its cell epoch changed during provider lookup",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "controlled static rotation and uncertainty T-AC-17 T22 prevents qualified adapter dispatch after activation epoch advance during material lookup",
+            "message": "AssertionError: expected [ { …(4) } ] to have a length of +0 but got 1"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M17",
+      "file": "packages/core/src/access-redemption.ts",
+      "behavior": "Retain mutable caller task authority across asynchronous provider lookup",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "service material handoff under actual FoundationEngine task authority T-AC-16 T22 cannot replace cancelled task authority by mutating caller context and use during provider lookup",
+            "message": "AssertionError: expected true to be false // Object.is equality"
+          }
+        ]
+      }
+    }
+  ]
+}

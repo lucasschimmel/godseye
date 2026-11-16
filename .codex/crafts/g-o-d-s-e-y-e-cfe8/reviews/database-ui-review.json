@@ -1,0 +1,268 @@
+{
+  "verdict": "pass",
+  "kind": "coherence",
+  "reviewer": "Fresh-context FABER / security-auditor satellite; no UI authorship",
+  "scope": "Supplementary local E03 console source review only",
+  "findings": [],
+  "criteria_run": 12,
+  "criteria_passed": 12,
+  "criteria": [
+    "COH-01",
+    "COH-02",
+    "COH-03",
+    "COH-04",
+    "COH-05",
+    "COH-06",
+    "COH-07",
+    "COH-08",
+    "UI-private-material",
+    "UI-scoped-mutation",
+    "COR-01",
+    "COR-04"
+  ],
+  "evidence": [
+    {
+      "reference": "DESIGN.md; shell.tsx; shared.tsx; project-management.tsx; database-profile-form.tsx",
+      "result": "New components reuse established panel/form/Input/Button/Failure/Status patterns and semantic CSS roles, introduce no new hardcoded component palette, and preserve provisional identity flexibility. French status words and local-first qualification language accompany colors."
+    },
+    {
+      "reference": "database-profile-form.tsx:23-27,60-63; routes/databases.tsx:mutation/admit; project-management.tsx:useManagement",
+      "result": "Project change clears environment selection; submit resolves environment within the current project and binds exact project/environment revisions. Database lifecycle passes only preparationId/hash/intent. Each mutation carries an idempotency key; recent passkey confirmation gates database buttons and backend authority remains decisive."
+    },
+    {
+      "reference": "project-management.tsx:15-19,99,218-219; projects.$projectId.tsx:expiration display",
+      "result": "datetime-local defaults convert server ISO to local wall time by timezone offset; submitted wall times convert back to ISO. Expiration is shown in French local time. Preview controls remain finite and labels explain that expiry/metadata updates do not prove physical suspension."
+    },
+    {
+      "reference": "lib/api.ts; routes/databases.tsx; shared.tsx",
+      "result": "UI renders bounded metadata/hash prefixes and localized errors, with no raw SQL, connection URI, material value or physical host mapping flow. Error fallback does not echo unexpected upstream messages. Loading/error/unconfigured/unknown states remain explicit."
+    },
+    {
+      "reference": "artifacts/test-results/e2e.xml; tests/e2e/databases.spec.ts",
+      "result": "Caller-provided browser result contains three tests, zero failures/errors, covering persisted metadata/preview edits, project/environment selection and blocked execution, and mobile overflow/material checks. These browser tests were inspected, not rerun or authored by this reviewer."
+    },
+    {
+      "reference": "artifacts/databases-mobile.png; artifacts/databases-desktop.png; responsive-mobile.css; responsive-desktop.css",
+      "result": "Reviewer visually inspected the existing 390x1681 mobile and 1440x1116 desktop full-page captures. Database controls and cards stay in the page width; the mobile navigation scrolls horizontally within its own rail. Amber local/unqualified messaging, readable stacked mobile fields and reference-only prepared card are visible. Screenshots show preparation-only state, not qualified runtime actions."
+    }
+  ],
+  "source_hashes": [
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\DESIGN.md",
+      "sha256": "560d0bd9fe1829e599c9c2ece9fc2d627f0ef760c6d195b2a68d9f6838dc50ea"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\apps\\console\\src\\components\\project-management.tsx",
+      "sha256": "9d15d105fd1458d476cf0e987e0b51104844732744673465f4d215a23e8f2336"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\apps\\console\\src\\components\\database-profile-form.tsx",
+      "sha256": "9c75342c7d2222c5d6e6849624f0822ef30aa1e4df7462bf68fd9ba726370f7b"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\apps\\console\\src\\routes\\databases.tsx",
+      "sha256": "9961fee826ff99b5db83e053664069bb3dcfaea7cc107c95f283a67a34d8fbde"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\apps\\console\\src\\routes\\projects.$projectId.tsx",
+      "sha256": "d55dac7142634a1d1fa77d56e91f0443ae341d6c167b93bb0c48f66ec0b00fc6"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\apps\\console\\src\\components\\shell.tsx",
+      "sha256": "8757bff12a9aee440dfd059ab42b64f240a075bfea5916d4a103411ed95c7676"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\apps\\console\\src\\components\\shared.tsx",
+      "sha256": "d24c6422b55e87b93c8017357fac762697a65a03a6c5120758051f933cfc2b7e"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\apps\\console\\src\\lib\\api.ts",
+      "sha256": "d6510ba56dbcb36cbbfb823291b86fa0f5b31537fb3479ad4b86bae06227f5f7"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\apps\\console\\src\\styles\\theme.css",
+      "sha256": "2aa3494579c2bc3ff0dbfc4469d8e1d802bfba83d54d6a286112169e89b7e096"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\apps\\console\\src\\styles\\shell.css",
+      "sha256": "873c118dec8762e109a9d298dd98e2e5ac2918310dda40098d0d21f45b45b7ca"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\apps\\console\\src\\styles\\projects.css",
+      "sha256": "54392414b18418bf8a9a9a2680f3e71645c4492983a74c2ed11839d9cbd21824"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\apps\\console\\src\\styles\\infrastructure.css",
+      "sha256": "c373439d59a41fab91d672beff6116f54e66449f6f7f1733171d313c8b75e44c"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\apps\\console\\src\\styles\\environments.css",
+      "sha256": "c447e119db9eb701a90f5be5162d39caca0aa8227297f56a801ca17d207a0dcb"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\apps\\console\\src\\styles\\responsive-mobile.css",
+      "sha256": "8e1fd8936e5b11ffe495b8b0f9e3c2844d42d1ed0b7ad1ac70f4a7de090c0fa0"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\apps\\console\\src\\styles\\responsive-desktop.css",
+      "sha256": "453af78dc5c836a47c09841ec08d87df5e32650c12ccef299e9b4bcd5f3d0bd7"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\tests\\e2e\\databases.spec.ts",
+      "sha256": "b47fa03c35f4a7c1bc65a8cd68f005ca50b11cb108cb23a37e33dc460314ab20"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\artifacts\\test-results\\e2e.xml",
+      "sha256": "487ac530d1cd7927bdb0428b5dab6ad5a6b2e153e8c52dd5339b3766fc63b69d"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\artifacts\\databases-mobile.png",
+      "sha256": "d1395f4ca461c7aa053c6da0ee63ecba3ed247b05fd1a40dd0381adfc59a6a74"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\artifacts\\databases-desktop.png",
+      "sha256": "95b1b862f43321bcc9f703eef9a1567e8a6941496ab604792fc93cbd4d7157f1"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\apps\\console\\src\\components\\repository-form.tsx",
+      "sha256": "b0d2d3f8b47f30cbcbebf6c8e7de49a1dc0e403cbfd350fadac38601d09402f8"
+    }
+  ],
+  "not_reviewed": [
+    "No browser automation rerun, UI source edits or new test authoring was performed for this supplement.",
+    "Qualified provider suspend/resume browser journey, background concurrent metadata refetch, keyboard/screen-reader execution and pathological maximum-length content were not exercised by the supplied screenshots/tests.",
+    "The final pending repository-wide suite and native ten-case regression belong to the caller; no claim about their current outcome is made here.",
+    "Backend findings remain covered by database-security.json and were not reprobed again for this UI supplement.",
+    "The two final UI corrections were independently re-read in frozen source only; earlier screenshot/browser evidence predates those narrow fixes. Final browser regression remains caller-owned."
+  ],
+  "generated_at": "2026-11-11T20:50:43.7091525Z",
+  "resolved_findings": [
+    {
+      "id": "DB-UI-001",
+      "criterion": "COR-01",
+      "status": "CONFIRMED",
+      "severity": "major",
+      "evidence": "apps/console/src/routes/databases.tsx:124-125 looks up allocation solely by item.preparationId===preparation.id. Backend renewal now creates a new immutable preparation for the retained preparation.allocationId. Before that new preparation is admitted, the existing allocation still points at its old preparation, so the renewed card falsely offers Provisionner and has no Suspendre/Reprendre action. The backend correctly rejects provisioning a retained environment, while the old card's lifecycle uses stale revisions.",
+      "refutation": "Default local execution is unavailable, so the existing three browser journeys cover preparation and disabled provisioning rather than a qualified allocation. This does not resolve the source mismatch: once a qualified retained allocation is available, the console cannot reach the newly corrected fresh-preparation suspend/resume path.",
+      "refutation_survived": true,
+      "suggestion": "Resolve retained allocation by its server-owned allocationId with released-state handling; ensure fresh preparation cards expose applicable suspend/resume and never offer a replacement provision for the retained instance.",
+      "resolution": "fixed-and-independently-source-reviewed",
+      "after_evidence": "routes/databases.tsx:124 now resolves allocation.id === preparation.allocationId. Latest-preparation and exact current project/environment revision guards disable stale cards. Existing ready/suspended allocation exposes matching lifecycle action on its renewed preparation; retained/released allocations do not expose Provisionner. Old cards display an explicit renewal notice."
+    },
+    {
+      "id": "DB-UI-002",
+      "criterion": "COR-04",
+      "status": "CONFIRMED",
+      "severity": "major",
+      "evidence": "project-management.tsx:48,63,72 and :188,207,219 combine uncontrolled defaultValue form fields with latest prop revisions on submit. projects.$projectId.tsx:76 keys metadata only by project.id; :127 leaves environment forms mounted under unchanged environment.id. A same-ID background refetch after another metadata write refreshes expectedRevision but leaves stale live input values, allowing those stale values to overwrite the newer server version without REVISION_CONFLICT.",
+      "refutation": "Normal edits followed by reload work, and the backend enforces exact revisions correctly. The failing interleaving is narrower: a query refresh updates the submit closure's revision while uncontrolled inputs retain the earlier draft. Existing persisted-edit journeys do not exercise a concurrent background update.",
+      "refutation_survived": true,
+      "suggestion": "Capture draft and base revision together, or explicitly remount/reset forms on relevant revision changes; keep success and pending state aligned with that same form version.",
+      "resolution": "fixed-and-independently-source-reviewed",
+      "after_evidence": "Final correction: ProjectMetadataForm inner form key is project.revision; EnvironmentMetadataForm inner form key is environment.revision+project.revision; RepositoryForm inner form key is project.revision. Component keys remain stable by project/environment identity, so useMutation confirmation persists through query refresh while keyed DOM fields reset to the matching saved revision. Repository fields are named uncontrolled defaultValue/defaultChecked inputs; onSubmit constructs FormData, validates RepositoryConfiguration and pairs that form body with project.revision. Exact scope remains /projects/{project.id}/repository."
+    }
+  ],
+  "prior_source_hashes": [
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\DESIGN.md",
+      "sha256": "560d0bd9fe1829e599c9c2ece9fc2d627f0ef760c6d195b2a68d9f6838dc50ea"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\apps\\console\\src\\components\\project-management.tsx",
+      "sha256": "d4a80ec4c8ea8ea6f8a6ace75f76d6f40ef969484bdbf74e1888fe80163f6bb0"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\apps\\console\\src\\components\\database-profile-form.tsx",
+      "sha256": "9c75342c7d2222c5d6e6849624f0822ef30aa1e4df7462bf68fd9ba726370f7b"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\apps\\console\\src\\routes\\databases.tsx",
+      "sha256": "9961fee826ff99b5db83e053664069bb3dcfaea7cc107c95f283a67a34d8fbde"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\apps\\console\\src\\routes\\projects.$projectId.tsx",
+      "sha256": "bfb75e7f2d7553b48e0f4df15e4f22a4b00366cc38907b688d85ec5bc70bb8f5"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\apps\\console\\src\\components\\shell.tsx",
+      "sha256": "8757bff12a9aee440dfd059ab42b64f240a075bfea5916d4a103411ed95c7676"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\apps\\console\\src\\components\\shared.tsx",
+      "sha256": "d24c6422b55e87b93c8017357fac762697a65a03a6c5120758051f933cfc2b7e"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\apps\\console\\src\\lib\\api.ts",
+      "sha256": "d6510ba56dbcb36cbbfb823291b86fa0f5b31537fb3479ad4b86bae06227f5f7"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\apps\\console\\src\\styles\\theme.css",
+      "sha256": "2aa3494579c2bc3ff0dbfc4469d8e1d802bfba83d54d6a286112169e89b7e096"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\apps\\console\\src\\styles\\shell.css",
+      "sha256": "873c118dec8762e109a9d298dd98e2e5ac2918310dda40098d0d21f45b45b7ca"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\apps\\console\\src\\styles\\projects.css",
+      "sha256": "54392414b18418bf8a9a9a2680f3e71645c4492983a74c2ed11839d9cbd21824"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\apps\\console\\src\\styles\\infrastructure.css",
+      "sha256": "c373439d59a41fab91d672beff6116f54e66449f6f7f1733171d313c8b75e44c"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\apps\\console\\src\\styles\\environments.css",
+      "sha256": "c447e119db9eb701a90f5be5162d39caca0aa8227297f56a801ca17d207a0dcb"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\apps\\console\\src\\styles\\responsive-mobile.css",
+      "sha256": "8e1fd8936e5b11ffe495b8b0f9e3c2844d42d1ed0b7ad1ac70f4a7de090c0fa0"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\apps\\console\\src\\styles\\responsive-desktop.css",
+      "sha256": "453af78dc5c836a47c09841ec08d87df5e32650c12ccef299e9b4bcd5f3d0bd7"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\tests\\e2e\\databases.spec.ts",
+      "sha256": "b47fa03c35f4a7c1bc65a8cd68f005ca50b11cb108cb23a37e33dc460314ab20"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\artifacts\\test-results\\e2e.xml",
+      "sha256": "487ac530d1cd7927bdb0428b5dab6ad5a6b2e153e8c52dd5339b3766fc63b69d"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\artifacts\\databases-mobile.png",
+      "sha256": "d1395f4ca461c7aa053c6da0ee63ecba3ed247b05fd1a40dd0381adfc59a6a74"
+    },
+    {
+      "path": "D:\\Developer\\Projects\\G.O.D.S.E.Y.E\\artifacts\\databases-desktop.png",
+      "sha256": "95b1b862f43321bcc9f703eef9a1567e8a6941496ab604792fc93cbd4d7157f1"
+    }
+  ],
+  "final_route_manifest_match": true,
+  "revision_feedback_supplement": {
+    "reviewed_at": "2026-11-11T20:50:43.6984844Z",
+    "finding": "DB-UI-002",
+    "reason": "Initial component revision keys reset mutation-local association confirmation; final adjustment moves revision keys to inner form DOM while preserving stable identity component hooks.",
+    "review_result": "pass",
+    "source_checks": "Independent narrow source read verified field/reset revision association, repository schema validation, project scope, idempotency header and persistent success status.",
+    "source_hashes": [
+      {
+        "path": "apps/console/src/components/project-management.tsx",
+        "sha256": "9d15d105fd1458d476cf0e987e0b51104844732744673465f4d215a23e8f2336"
+      },
+      {
+        "path": "apps/console/src/components/repository-form.tsx",
+        "sha256": "b0d2d3f8b47f30cbcbebf6c8e7de49a1dc0e403cbfd350fadac38601d09402f8"
+      },
+      {
+        "path": "apps/console/src/routes/projects.$projectId.tsx",
+        "sha256": "d55dac7142634a1d1fa77d56e91f0443ae341d6c167b93bb0c48f66ec0b00fc6"
+      }
+    ],
+    "manifest_sha256": "dca43d2d2ffc29dbe0f6f60e3098f639600d21be38398eff61eec8a138bbbccb",
+    "browser_regression": "Final 21-case rerun is caller-owned and pending at review time; no browser or backend probe rerun by reviewer."
+  },
+  "evidence_snapshot_note": "Browser XML and screenshot hashes retain the earlier inspected evidence snapshots; caller final reruns may replace those artifact paths. This supplement refreshes only changed production UI source hashes."
+}

@@ -1,0 +1,938 @@
+{
+  "kind": "curated behavioral mutation experiment",
+  "runnerTimeoutMs": 180000,
+  "startedAt": "2026-11-11T21:44:20.655Z",
+  "finishedAt": "2026-11-11T21:53:14.810Z",
+  "scope": "61 selected mutations; not an exhaustive mutation score or coverage claim",
+  "isolation": "Temporary source copies with explicit Vitest workspace aliases; original source never mutated",
+  "baseline": {
+    "status": "passed",
+    "passed": 61
+  },
+  "restored": {
+    "status": "passed",
+    "passed": 61
+  },
+  "sourceUnchanged": true,
+  "selected": 61,
+  "killed": 61,
+  "survived": 0,
+  "invalid": 0,
+  "results": [
+    {
+      "id": "M01",
+      "file": "packages/core/src/policy.ts",
+      "behavior": "Bypass the owner-only guard",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "local control plane T01 denies platform listing and creation to an application identity",
+            "message": "Error: promise resolved \"[]\" instead of rejecting"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M02",
+      "file": "packages/core/src/policy.ts",
+      "behavior": "Bypass project membership authorization",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "local control plane T01 allows a project-scoped identity to read only its assigned project",
+            "message": "Error: promise resolved \"{ …(11) }\" instead of rejecting"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M03",
+      "file": "packages/core/src/policy.ts",
+      "behavior": "Allow unknown effects to execute without reconciliation",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "effect uncertainty and terminal operation guards T37 requires reconciliation before an unknown operation may finish or execute again",
+            "message": "AssertionError: expected [Function] to throw an error"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M04",
+      "file": "packages/core/src/journal.ts",
+      "behavior": "Ignore conflicting idempotency fingerprints",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "local control plane T09 rejects reuse of an idempotency key for different creation parameters",
+            "message": "Error: promise resolved \"{ …(11) }\" instead of rejecting"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M05",
+      "file": "packages/core/src/projects.ts",
+      "behavior": "Accept a stale project revision",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "local control plane T37 refuses a stale repository update without overwriting the accepted binding",
+            "message": "Error: promise resolved \"{ …(11) }\" instead of rejecting"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M06",
+      "file": "packages/core/src/github.ts",
+      "behavior": "Skip webhook HMAC comparison",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "signed GitHub intake T41 rejects a correct-shaped signature made with another key",
+            "message": "Error: promise resolved \"{ outcome: 'queued', …(2) }\" instead of rejecting"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M07",
+      "file": "packages/core/src/github.ts",
+      "behavior": "Remove the bound GitHub installation check",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "signed GitHub intake T41 ignores another installation even when its payload is correctly signed",
+            "message": "AssertionError: expected 'queued' to be 'ignored' // Object.is equality"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M08",
+      "file": "packages/core/src/journal.ts",
+      "behavior": "Skip verification of an audit record digest",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "local audit integrity T37 detects a modified audit summary against its stored digest",
+            "message": "AssertionError: expected true to be false // Object.is equality"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M09",
+      "file": "packages/core/src/journal.ts",
+      "behavior": "Skip verification of an audit predecessor link",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "local audit integrity T37 detects a chain link replaced with an unrelated predecessor",
+            "message": "AssertionError: expected true to be false // Object.is equality"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M10",
+      "file": "packages/core/src/access-redemption.ts",
+      "behavior": "Allow task-purpose material without a live task grant",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "service material handoff under actual FoundationEngine task authority T-AC-16 T22 forbids using task-purpose material as ordinary static runtime access",
+            "message": "Error: promise resolved \"undefined\" instead of rejecting"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M11",
+      "file": "packages/core/src/access-state.ts",
+      "behavior": "Accept prior-epoch service authentication after cell fencing",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "exact-cell service identity authority T-AC-15 T22 rejects a prior-cell activation epoch even for a previously active runtime proof",
+            "message": "Error: promise resolved \"undefined\" instead of rejecting"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M12",
+      "file": "packages/core/src/access-state.ts",
+      "behavior": "Trust copied provider metadata without recomputing material integrity",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "exact-cell service identity authority T-AC-15 T08 rejects altered provider material even when its version and copied metadata are unchanged",
+            "message": "Error: promise resolved \"undefined\" instead of rejecting"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M13",
+      "file": "packages/core/src/bao-provider.ts",
+      "behavior": "Accept controller policy text with widened upstream privileges",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "pinned real OpenBao provider boundary T-AC-18 T08 rejects extra/default policy and actual controller-policy privilege drift",
+            "message": "AssertionError: expected 'ready' to be 'unauthorized' // Object.is equality"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M14",
+      "file": "packages/core/src/access-operations.ts",
+      "behavior": "Declare upstream transition complete on blank evidence",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "controlled static rotation and uncertainty T-AC-17 T22 rejects foreign and blank transition receipts instead of declaring upstream revocation",
+            "message": "AssertionError: expected 'succeeded' to be 'unknown' // Object.is equality"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M15",
+      "file": "packages/core/src/access-redemption.ts",
+      "behavior": "Hand off task material without charging the authorized use",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "service material handoff under actual FoundationEngine task authority T-AC-16 T22 charges the authorized use once while rechecking authority before private delivery",
+            "message": "AssertionError: expected +0 to be 10 // Object.is equality"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M16",
+      "file": "packages/core/src/access-operations.ts",
+      "behavior": "Dispatch a transition after its cell epoch changed during provider lookup",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "controlled static rotation and uncertainty T-AC-17 T22 prevents qualified adapter dispatch after activation epoch advance during material lookup",
+            "message": "AssertionError: expected [ { …(4) } ] to have a length of +0 but got 1"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M17",
+      "file": "packages/core/src/access-redemption.ts",
+      "behavior": "Retain mutable caller task authority across asynchronous provider lookup",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "service material handoff under actual FoundationEngine task authority T-AC-16 T22 cannot replace cancelled task authority by mutating caller context and use during provider lookup",
+            "message": "AssertionError: expected true to be false // Object.is equality"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M18",
+      "file": "packages/core/src/access-redemption.ts",
+      "behavior": "Record material delivery success before the consumer handoff completes",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "exact-cell service identity authority T-AC-14 T08 preserves a durable metadata-only attempt after a synchronous consumer copies material then fails",
+            "message": "AssertionError: expected false to be true // Object.is equality"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M19",
+      "file": "packages/core/src/infra-preparation.ts",
+      "behavior": "Bypass fresh-owner authority at the shared Foundation infrastructure admission boundary",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "infrastructure authority across shared foundation entry points T-AC-21 T14 rejects a stale owner at shared admission even when a fresh owner approved the plan",
+            "message": "Error: promise resolved \"{ …(19) }\" instead of rejecting"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M20",
+      "file": "packages/core/src/infra-state.ts",
+      "behavior": "Omit CPU requirements from atomic competing environment reservations",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "transactional isolated cell admission T-AC-21 T05 admits at most one competing CPU reservation across different environments",
+            "message": "AssertionError: expected [ { status: 'fulfilled', …(1) }, …(1) ] to have a length of 1 but got 2"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M21",
+      "file": "packages/core/src/infra-state.ts",
+      "behavior": "Spend the reserved professional-pool headroom on application workloads",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "transactional isolated cell admission T-AC-21 T05 counts temporary memory with application memory rather than admitting it for free",
+            "message": "Error: promise resolved \"{ …(11) }\" instead of rejecting"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M22",
+      "file": "packages/core/src/infra-network.ts",
+      "behavior": "Ignore IPv6 address conflicts while retaining IPv4 overlap checks",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "bounded private dual-stack address policy T-AC-21 T02 normalizes equivalent ULA spellings and recognizes their shared address range",
+            "message": "AssertionError: expected false to be true // Object.is equality"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M23",
+      "file": "packages/core/src/infra-docker-inspection.ts",
+      "behavior": "Accept effective Docker PublishAllPorts despite the compiled no-publication policy",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "Docker effective profile protocol (not live containment qualification) T-AC-20 T04 refuses publish all ports in sanitized effective Engine evidence",
+            "message": "AssertionError: expected [Function] to throw an error"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M24",
+      "file": "packages/core/src/infra-docker-inspection.ts",
+      "behavior": "Trust empty requested port bindings while ignoring actual Engine host-port publications",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "Docker effective profile protocol (not live containment qualification) T-AC-20 T04 refuses actual published port in sanitized effective Engine evidence",
+            "message": "AssertionError: expected [Function] to throw an error"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M25",
+      "file": "packages/core/src/infra-steps.ts",
+      "behavior": "Adopt another environment's data receipt when its copied manifest hash still matches",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "effective profile inspection before application execution T-AC-20 T04 refuses foreign cell data in actual provider inspection before start",
+            "message": "AssertionError: expected true to be false // Object.is equality"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M26",
+      "file": "packages/core/src/infra-docker-provider.ts",
+      "behavior": "Create a Docker sandbox after quota inspection without rechecking revoked dispatch authority",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "Docker effective profile protocol (not live containment qualification) T-AC-26 T22 requires a live post-read dispatch gate before Engine create",
+            "message": "Error: promise resolved \"{ …(3) }\" instead of rejecting"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M27",
+      "file": "packages/core/src/infra-docker-inspection.ts",
+      "behavior": "Accept a runtime probe from another target after initial provider qualification",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "Docker effective profile protocol (not live containment qualification) T-AC-19 T34 rejects runtime evidence moving to another target after initial qualification",
+            "message": "Error: promise resolved \"{ network: { …(3) }, …(10) }\" instead of rejecting"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M28",
+      "file": "packages/core/src/infra-quarantine.ts",
+      "behavior": "Treat a historical protective stop as permanently closing a delayed start mutation",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "durable infrastructure uncertainty and protective stops T-AC-26 T24 stops a late start acknowledgment even after cancellation reconciliation already confirmed a stop",
+            "message": "AssertionError: expected true to be false // Object.is equality"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M29",
+      "file": "packages/core/src/infra-execution.ts",
+      "behavior": "Release reservations on transient absence despite an unresolved provider mutation",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "durable infrastructure uncertainty and protective stops T-AC-26 T24 retains reservations when cancellation sees absence while a network create is still in flight",
+            "message": "AssertionError: expected 'released' not to be 'released' // Object.is equality"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M30",
+      "file": "packages/core/src/infra-docker-inspection.ts",
+      "behavior": "Skip required effective dual-stack address checks on a running sandbox",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "Docker effective profile protocol (not live containment qualification) T-AC-20 T04 refuses a running sandbox without an assigned IPv6 address",
+            "message": "AssertionError: expected [Function] to throw an error"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M31",
+      "file": "packages/core/src/infra-execution.ts",
+      "behavior": "Release from an old absence snapshot after a delayed mutation receives its acknowledgment",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "durable infrastructure uncertainty and protective stops T-AC-26 T22 rejects an absence snapshot captured before a delayed network acknowledgment arrives",
+            "message": "AssertionError: expected 'released' not to be 'released' // Object.is equality"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M32",
+      "file": "packages/core/src/project-management.ts",
+      "behavior": "Overwrite project metadata despite a stale revision",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "revision-safe project and persistent preview lifecycle T-AC-27 refuses stale rename and changed idempotency payload without overwriting the winner",
+            "message": "Error: promise resolved \"{ …(11) }\" instead of rejecting"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M33",
+      "file": "packages/core/src/infra-state.ts",
+      "behavior": "Exclude PostgreSQL WAL from finite storage reservations",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "exact database admission through one Foundation queue T-AC-28 reserves finite WAL and temporary storage together with data",
+            "message": "Error: promise resolved \"{ …(10) }\" instead of rejecting"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M34",
+      "file": "packages/core/src/database-preparation.ts",
+      "behavior": "Skip database admission hooks for generic Foundation plans",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "exact database admission through one Foundation queue T-AC-29 denies approved generic Foundation plans that bypass exact database admission",
+            "message": "Error: promise resolved \"{ …(19) }\" instead of rejecting"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M35",
+      "file": "packages/core/src/database-execution.ts",
+      "behavior": "Adopt a physical PostgreSQL instance reporting another environment scope",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "database effects, reconciliation and lifecycle uncertainty T-AC-32 quarantines scope mismatch without adopting, replacing or erasing another cluster",
+            "message": "AssertionError: expected { …(10) } to match object { state: 'quarantined' }"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M36",
+      "file": "packages/core/src/database-execution.ts",
+      "behavior": "Settle readiness despite a mismatched effective PostgreSQL profile",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "database effects, reconciliation and lifecycle uncertainty T-AC-32 quarantines profile mismatch without adopting, replacing or erasing another cluster",
+            "message": "AssertionError: expected { …(10) } to match object { state: 'quarantined' }"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M37",
+      "file": "packages/core/src/database-execution.ts",
+      "behavior": "Settle readiness without independently inspected persistent quotas",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "database effects, reconciliation and lifecycle uncertainty T-AC-32 quarantines quota mismatch without adopting, replacing or erasing another cluster",
+            "message": "AssertionError: expected { …(10) } to match object { state: 'quarantined' }"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M38",
+      "file": "packages/core/src/database-execution.ts",
+      "behavior": "Settle readiness despite failed live role/settings policy inspection",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "database effects, reconciliation and lifecycle uncertainty T-AC-32 quarantines policy mismatch without adopting, replacing or erasing another cluster",
+            "message": "AssertionError: expected { …(10) } to match object { state: 'quarantined' }"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M39",
+      "file": "packages/core/src/database-execution.ts",
+      "behavior": "Stop a replacement PostgreSQL cluster with another verified system identifier",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "database effects, reconciliation and lifecycle uncertainty T-AC-32 refuses a substituted system identity before suspension without stopping the replacement",
+            "message": "AssertionError: expected { …(10) } to match object { state: 'quarantined' }"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M40",
+      "file": "packages/core/src/database-preparation.ts",
+      "behavior": "Admit a second independent PostgreSQL allocation for an already reserved environment",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "exact database admission through one Foundation queue T-AC-29 atomically admits only one database cell for an environment under contention",
+            "message": "AssertionError: expected { status: 'rejected', …(1) } to match object { status: 'rejected', …(1) }"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M41",
+      "file": "packages/core/src/database-policy.ts",
+      "behavior": "Permit non-TLS runtime PostgreSQL connections in generated HBA policy",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "independent PostgreSQL profile authority T-AC-31 restricts each runtime role to its own database over TLS and rejects all fallback traffic",
+            "message": "AssertionError: expected [ …(2) ] to deeply equal [ …(2) ]"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M42",
+      "file": "packages/core/src/database-state.ts",
+      "behavior": "Accept a provider qualification with an invalid nonfinite expiry",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "exact database admission through one Foundation queue T-AC-29 refuses invalid-expiry independent provider evidence",
+            "message": "Error: promise resolved \"{ …(10) }\" instead of rejecting"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M43",
+      "file": "packages/core/src/database-postgres.ts",
+      "behavior": "Send bootstrap SQL after authority was revoked during new database connection establishment",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "private database bootstrap dispatch authority T-AC-31 T-AC-32 rechecks revoked dispatch authority after opening a new database connection",
+            "message": "AssertionError: expected true to be false // Object.is equality"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M44",
+      "file": "packages/core/src/database-preparation.ts",
+      "behavior": "Lose existing allocation identity when renewing lifecycle authority after metadata changes",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "renewed database authority preserves exact existing physical identity T-AC-27 T-AC-32 renews renamed scope and observation authority while retaining the exact cluster for suspension",
+            "message": "AssertionError: expected { …(10) } to match object { …(2) }"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M45",
+      "file": "packages/core/src/database-preparation.ts",
+      "behavior": "Forget the last verified physical scope when admitting a lifecycle retry",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "renewed database authority preserves exact existing physical identity T-AC-32 retries a queued cancelled suspension using the last verified physical generation",
+            "message": "AssertionError: expected { …(10) } to match object { state: 'suspended' }"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M46",
+      "file": "packages/core/src/database-state.ts",
+      "behavior": "Block read-only reconciliation solely because an exact provider observation was renewed",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "renewed database authority preserves exact existing physical identity T-AC-32 reconciles an unknown provision after observation expiry and renewal without repeating a physical mutation",
+            "message": "AssertionError: expected { …(10) } to match object { state: 'ready' }"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M47",
+      "file": "packages/core/src/database-acl-inspection.ts",
+      "behavior": "Ignore effective column ACL escalation granting a sanitized reader INSERT authority",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "T-AC-34 explicit independent native PostgreSQL laboratory T-AC-30 T-AC-34 rejects effective column reader write ACL drift in production inspection",
+            "message": "Error: promise resolved \"{ …(5) }\" instead of rejecting"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M48",
+      "file": "packages/core/src/recovery-provider.ts",
+      "behavior": "Accept independent recovery metadata from another repository namespace",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "independent recovery metadata and physical clone evidence T-AC-35 T-AC-36 refuses repository evidence rather than claiming recoverability",
+            "message": "AssertionError: expected [Function] to throw an error"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M49",
+      "file": "packages/core/src/recovery-provider.ts",
+      "behavior": "Accept a restored data mapping that aliases the source WAL volume",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "independent recovery metadata and physical clone evidence T-AC-37 T-AC-40 refuses a restored destination with cross-data-wal drift",
+            "message": "AssertionError: expected [Function] to throw an error"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M50",
+      "file": "packages/core/src/recovery-provider.ts",
+      "behavior": "Treat manual early replay pause as proof the requested PITR target was reached",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "independent recovery metadata and physical clone evidence T-AC-37 T-AC-40 refuses a restored destination with early-pause drift",
+            "message": "AssertionError: expected [Function] to throw an error"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M51",
+      "file": "packages/core/src/recovery-provider.ts",
+      "behavior": "Advertise a database recovery interval older than retained Foundation effect history",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "independent recovery metadata and physical clone evidence T-AC-35 T-AC-36 refuses beyond-journal-window evidence rather than claiming recoverability",
+            "message": "AssertionError: expected [Function] to throw an error"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M52",
+      "file": "packages/core/src/foundation-data.ts",
+      "behavior": "Bypass the shared durable recovery HOLD before ordinary generic adapter execution",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "durable recovery hold across existing service proofs and Foundation grants T-AC-40 blocks generic queued execution when recovery hold appears after enqueue",
+            "message": "AssertionError: expected true to be false // Object.is equality"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M53",
+      "file": "packages/core/src/access-recovery-inspection.ts",
+      "behavior": "Deliver repository material under a forged read-only reconciliation fencing generation",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "real broker repository material through ManagedPgBackRestProvider and reconciliation T-AC-41 refuses a substituted readonly reconciliation fence without dispatching info or reviving mutation authority",
+            "message": "AssertionError: expected [ 'stanza-create', 'check', …(2) ] to deeply equal [ 'stanza-create', 'check', 'backup' ]"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M54",
+      "file": "packages/core/src/recovery-material.ts",
+      "behavior": "Use source-scoped broker material for a substituted repository namespace",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "real broker repository material through ManagedPgBackRestProvider and reconciliation T-AC-38 rejects repository reference changes before any private process dispatch",
+            "message": "AssertionError: expected [ 'stanza-create', 'check', …(2) ] to deeply equal []"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M55",
+      "file": "packages/core/src/recovery-capacity.ts",
+      "behavior": "Charge the same permanent repository obligation again for every archive check",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "authenticated continuous archive interval refresh T-AC-38 replays and concurrently consumes one check without multiplying repository reservations",
+            "message": "AssertionError: expected 11 to be 6 // Object.is equality"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M56",
+      "file": "packages/core/src/foundation-data.ts",
+      "behavior": "Replay a different backup request under the original idempotency key",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "exact recovery source, fresh authority and atomic physical reservations T-AC-38 replays one exact backup preparation and rejects changed request identity",
+            "message": "Error: promise resolved \"{ …(16) }\" instead of rejecting"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M57",
+      "file": "packages/core/src/recovery-capacity.ts",
+      "behavior": "Release transient archive-check staging capacity while its physical outcome is unknown",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "authenticated continuous archive interval refresh T-AC-41 retains unknown check staging until independent evidence proves its exact outcome",
+            "message": "AssertionError: expected 5 to be 6 // Object.is equality"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M58",
+      "file": "packages/core/src/foundation-retention.ts",
+      "behavior": "Expire unresolved physical recovery evidence based solely on a stale terminal timestamp",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "durable physical recovery uncertainty and controller reconstruction T-AC-41 never expires unresolved recovery effects even when a terminal timestamp was written before a late outcome",
+            "message": "AssertionError: expected [] to have a length of 1 but got +0"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M59",
+      "file": "packages/core/src/recovery-provider.ts",
+      "behavior": "Replace authenticated backup archive coverage with a shorter interval",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "authenticated continuous archive interval refresh T-AC-36 rejects archive refresh with interval-rewind drift without replacing authenticated backup coverage",
+            "message": "AssertionError: expected 'archive-checked' to be 'unknown' // Object.is equality"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M60",
+      "file": "packages/core/src/recovery-pgbackrest-provider.ts",
+      "behavior": "Restore into a nonempty private allocation despite the no-adoption contract",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "concrete pgBackRest private transport contract T-AC-37 refuses nonempty target adoption before invoking restore or starting PostgreSQL",
+            "message": "Error: promise resolved \"undefined\" instead of rejecting"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M61",
+      "file": "packages/core/src/recovery-state.ts",
+      "behavior": "Accept a truthy string in place of independently proven enforced recovery capacity",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "exact recovery source, fresh authority and atomic physical reservations T-AC-38 denies truthy-capacity provider qualification without physical reservation",
+            "message": "Error: promise resolved \"{ …(11) }\" instead of rejecting"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,219 @@
+{
+  "kind": "curated behavioral mutation experiment",
+  "suite": "backend",
+  "runnerTimeoutMs": 180000,
+  "startedAt": "2026-11-12T07:27:57.279Z",
+  "finishedAt": "2026-11-12T07:32:14.370Z",
+  "scope": "13 selected mutations; not an exhaustive mutation score or coverage claim",
+  "isolation": "Temporary source copies with explicit Vitest workspace aliases; original source never mutated",
+  "baseline": {
+    "status": "passed",
+    "passed": 13
+  },
+  "restored": {
+    "status": "passed",
+    "passed": 13
+  },
+  "sourceUnchanged": true,
+  "selected": 13,
+  "killed": 13,
+  "survived": 0,
+  "invalid": 0,
+  "results": [
+    {
+      "id": "M74",
+      "file": "packages/app-backend/src/runtime.ts",
+      "behavior": "Accept another project header on the application listener",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "independent application identity HTTP boundary T-AC-53 T-AC-54 rejects a foreign X-Godseye-Project before creating identity",
+            "message": "AssertionError: expected 200 to be greater than or equal to 400"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M75",
+      "file": "packages/app-backend/src/store.ts",
+      "behavior": "Reuse an application database belonging to another cell",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "independent application identity HTTP boundary T-AC-53 refuses to reuse another cell's persisted application store",
+            "message": "Error: promise resolved \"{ db: PgliteDatabase{ …(8) }, …(8) }\" instead of rejecting"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M76",
+      "file": "packages/app-backend/src/runtime.ts",
+      "behavior": "Accept hidden caller authority fields at signup",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "independent application identity HTTP boundary T-AC-54 rejects caller authority field role on signup",
+            "message": "AssertionError: expected 200 to be 422 // Object.is equality"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M77",
+      "file": "packages/app-backend/src/file-write.ts",
+      "behavior": "Overcommit declared upload reservations",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "finite application upload reservations and grants T-AC-56 atomically reserves whole declared sizes under concurrent requests",
+            "message": "AssertionError: expected [ …(2) ] to have a length of 1 but got 2"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M78",
+      "file": "packages/app-backend/src/file-state.ts",
+      "behavior": "Read another application user's private file",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "private resumable application files T-AC-57 hides private object metadata and bytes from another app user",
+            "message": "AssertionError: expected 200 to be 404 // Object.is equality"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M79",
+      "file": "packages/app-backend/src/file-write.ts",
+      "behavior": "Commit bytes with a mismatched declared digest",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "private resumable application files T-AC-56 refuses completion until actual length and expected digest match",
+            "message": "AssertionError: expected 200 to be 409 // Object.is equality"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M80",
+      "file": "packages/app-backend/src/file-read.ts",
+      "behavior": "Honor an expired private download grant",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "private resumable application files T-AC-57 expires exact session-bound download access and revokes it on file deletion",
+            "message": "AssertionError: expected 200 to be 404 // Object.is equality"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M81",
+      "file": "packages/app-backend/src/events.ts",
+      "behavior": "Accept another user's signed event cursor",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "durable scoped application domain events T-AC-58 denies foreign-user cursors and never sends another user's payload",
+            "message": "AssertionError: expected 200 to be 409 // Object.is equality"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M82",
+      "file": "packages/app-backend/src/state.ts",
+      "behavior": "Authenticate new users while application access is held",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "independent application identity HTTP boundary T-AC-55 fences new authentication when the application's lifecycle is held",
+            "message": "AssertionError: expected 200 to be 423 // Object.is equality"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M83",
+      "file": "packages/app-backend/src/events.ts",
+      "behavior": "Leak stream capacity after consumer cancellation",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "bounded realtime retention and connection capacity T-AC-59 cancellation immediately frees the single stream slot",
+            "message": "AssertionError: expected 429 to be 200 // Object.is equality"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M84",
+      "file": "packages/sdk/src/transport.ts",
+      "behavior": "Trust an unsupported application API response version",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "application SDK response and incremental-event contract T-AC-60 rejects unsupported API versions before trusting JSON",
+            "message": "Error: promise resolved \"null\" instead of rejecting"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M85",
+      "file": "packages/sdk/src/transport.ts",
+      "behavior": "Trust malformed JSON as a typed SDK response",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "application SDK response and incremental-event contract T-AC-60 rejects malformed successful API DTOs instead of silently widening types",
+            "message": "Error: promise resolved \"{ user: { id: 'fake' }, session: {} }\" instead of rejecting"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M86",
+      "file": "packages/app-backend/src/file-write.ts",
+      "behavior": "Release file quota while cleanup settlement is uncertain",
+      "status": "killed",
+      "evidence": {
+        "status": "assertion_failed",
+        "failures": [
+          {
+            "name": "durable file intents across physical-effect acknowledgement failure T-AC-57 persists a tombstone before unlink and retains cleanup quota until exact replay settles",
+            "message": "AssertionError: expected 201 to be 409 // Object.is equality"
+          }
+        ]
+      }
+    }
+  ]
+}

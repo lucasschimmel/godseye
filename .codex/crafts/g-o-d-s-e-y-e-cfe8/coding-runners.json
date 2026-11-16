@@ -1,0 +1,187 @@
+{
+  "scope": "E07.S05 local Codex/Claude Code repository and worktree runners",
+  "phase": "complete-local-scope",
+  "authorization": "Continue accepted spec/plan locally; focused agents authorized by owner preference",
+  "constraints": [
+    "Preserve all previous uncommitted work",
+    "No server changes",
+    "No paid model calls",
+    "No publication or changes to real repository refs",
+    "I10 disposable KVM mandatory; no native/gVisor fallback for arbitrary code"
+  ],
+  "previousCheckpoint": "hermes-tools.json",
+  "satellites": {
+    "core": {
+      "task": "coding_runner_core",
+      "status": "implemented-independent-core-review-pass",
+      "ownership": "contracts/store/core/API/UI"
+    },
+    "runtime": {
+      "task": "coding_runner_runtime",
+      "status": "complete-two-latest-normal-receipts13hashmatch",
+      "ownership": "runtime adapter/repository materialization/CLI protocols"
+    },
+    "tests": {
+      "task": "coding_runner_tests",
+      "status": "complete87ordinary-31broker-10source-13readiness-2browser-3nativecomposition-3curatedkills",
+      "ownership": "independent tests and evidence"
+    },
+    "cli": {
+      "task": "coding_runner_cli",
+      "ownership": "scripts/coding_cli_install.py, coding_cli_fixture.py and project CLI assets",
+      "status": "final-strict-broker-frozen-353857"
+    }
+  },
+  "architecture": "One dependent continuation with interface freeze before implementation; no independent-epic swarm",
+  "assumptions": [
+    "Both vendor integrations use explicit opt-in private runtime bindings",
+    "New runs require owner-selected project/environment/repository revision",
+    "Unavailable local KVM cannot be relabeled as qualified execution"
+  ],
+  "gates": {
+    "builders": {
+      "passed": 2,
+      "artifact": "artifacts/test-results/coding-runners-global-builders.xml",
+      "wallSeconds": 17.47
+    },
+    "preliminaryScans": {
+      "rawKnownSyntheticPlaceholder": 1,
+      "publicPaths": 762,
+      "nodeAuditAdvisories": 0,
+      "gitleaksNewFindings": 0
+    },
+    "focused": {
+      "sourceStagingScope": "actual WSL Linux inert object copy, no host Git interpretation",
+      "passed": 87,
+      "mutantsKilled": 3,
+      "browserStronger": "pass after remediation, root screenshot observed",
+      "files": 6,
+      "wallSeconds": 43.77,
+      "mutantsSelected": 3,
+      "evidence": "reviews/coding-runners-test-evidence.md",
+      "sourceStagingPassed": 10,
+      "browserEarlier": 2
+    },
+    "legacyRegression": {
+      "artifact": "artifacts/test-results/coding-runners-global-existing.xml",
+      "buildersWallSeconds": 17.47,
+      "remainderWallSeconds": 1242.8,
+      "files": 132,
+      "defaultNativeSkipped": 28,
+      "passed": 1426
+    },
+    "static": {
+      "contracts": "pass API1.13.0",
+      "lint": "649 files pass",
+      "types": "pass",
+      "finalNativeSourceDeltaRecheck": "pass final sourcefreeze13native/351compiled;lint649/types/contracts"
+    },
+    "independentReviews": {
+      "plan": "two handoff findings closed",
+      "core": "PASS no findings after closure; latest87ordinary/2browser inspected",
+      "security": "PASS final frozen source;31broker/13readiness independently run, current13hashes/rawnormals/3composition inspected"
+    },
+    "native": {
+      "claude": "PASS exact latest pinned CLI KVM normal and genuine Foundation/broker composition",
+      "remaining": [],
+      "hostMemAvailableThresholdGiB": 6,
+      "codex": "PASS exact latest pinned CLI KVM normal and genuine Foundation/broker composition",
+      "pidPolicyRefusal": "actual KVM pass37.073s zero model/tool calls, no result, stopped and revoked",
+      "guestMiB": 4096,
+      "outerMemoryMiB": 5120,
+      "adversaryScope": "Five unique actual KVM regressions passed on individually recorded recipes; no claim all rerun on final recipe"
+    },
+    "build": {
+      "canonical": "pass",
+      "publicInputs": 351,
+      "builtApiSmoke": "Final unchanged15s smoke pass in true idle window; localhealth/remotedisconnected",
+      "finalSourceDriftCheck": "351 public compiled inputs refreshed after final full canonical build",
+      "sourceSnapshot": "artifacts/coding-runners-built-source-final.json",
+      "rebuiltApi": "pass after sole compiled provider source delta",
+      "smokeQualification": "2 deadline failures during image work; unchanged original15s smoke passed in truly idle window; no production changes"
+    },
+    "aggregate": {
+      "actualJunitCases": 1541,
+      "files": 138,
+      "crossGroupLabels": [],
+      "artifact": "artifacts/test-results/coding-runners-global-aggregate.json",
+      "defaultNativeSkipped": 28,
+      "latestSharedHelperAffectedRerun": "pass87 finalsource43.77s",
+      "crossGroupFiles": [],
+      "passed": 1513
+    },
+    "compositionFindings": {
+      "windowsBareExecutable": "fixed absolute SystemRoot/System32/wsl.exe, provider7cases pass, API bundle rebuilt",
+      "remaining": "none in current local scope; final3 passed exact production composition",
+      "deepReadiness": "cheap readiness plus mandatory precode integrity;13readiness checks pass"
+    },
+    "currentOrdinary": {
+      "passed": 1513,
+      "newWindowsRegressionPendingFinalGroup": "Final87 passed; aggregate1513",
+      "legacyDefaultSkips": 28,
+      "newOptInCompositionCases": 3
+    },
+    "realComposition": {
+      "epoch": "PASS38.892s actual successful tool result before revoke; no output/replay; exact stopped reconciliation",
+      "paidCalls": 0,
+      "codexHappy": "PASS latest final source46.656s",
+      "privateKeysUsed": false,
+      "claudeHappy": "PASS latest final source38.397s",
+      "final": {
+        "artifact": "artifacts/test-results/coding-runners-composition-native.xml",
+        "failed": 0,
+        "syntheticBoundary": "External HTTPS transport only",
+        "paidCalls": 0,
+        "errors": 0,
+        "passed": 3,
+        "wallSeconds": 126.52,
+        "junitSeconds": 123.9464835
+      }
+    },
+    "ownerDefault": {
+      "unitPassed": 54,
+      "reservationMicros": 100000,
+      "browserPassed": 2,
+      "build": "final full canonical rebuild passed",
+      "smoke": "Final quiescent original15s smoke passed",
+      "nativeProofUnaffected": true,
+      "scope": "coding initial owner-visible/editable proposal only",
+      "proposals": {
+        "codexMicros": 500000,
+        "manualEditPreserved": true,
+        "claudeMicros": 100000
+      }
+    },
+    "finalSourceFreeze": {
+      "paths": 77,
+      "artifact": "reviews/coding-runners-source-freeze.json",
+      "nativeScripts": 13,
+      "compiledInputs": 351,
+      "drift": 0
+    },
+    "cleanup": {
+      "ownedUnits": 0,
+      "controllers": 0,
+      "socketDirectories": 0,
+      "manualDeletion": false,
+      "observation": "Exact final three task allocations stopped/revoked/retained; transient epoch socket dir naturally gone before closing observation"
+    }
+  },
+  "serverChanged": false,
+  "paidCalls": 0,
+  "qualificationProgress": {
+    "kvmCreateVm": "actual-pass API12 UID1000 transient numeric group",
+    "guestBoot": "actual-pass 3.18s, separate kernel7.0.0-30, no NIC/disks/shared mounts, clean exit",
+    "namespaces": "actual user/mount/network/PID feasibility pass",
+    "remaining": [],
+    "temporaryServiceBoundary": "Canonical system transient service + setpriv UID1000 before workspace code; fixed resources/expiry, no persistent configuration/global install"
+  },
+  "completedAt": "2026-11-14T13:47:31.9028403+01:00",
+  "memoryOutcome": "outcome-1794660396-3c379d1e",
+  "remainingScope": [
+    "Private real API provider bindings explicit opt-in; vendor entitlement/billing not tested",
+    "Native Linux/Proxmox/dedicated deployment deferred",
+    "Persistent CLI resume and generic packed/remote Git import not implemented",
+    "Broader E07 agent plans/approval bundles and full V1 remain partial"
+  ]
+}

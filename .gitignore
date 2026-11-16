@@ -1,0 +1,43 @@
+# Dependencies and package-manager caches
+node_modules/
+.pnpm-store/
+.yarn/cache/
+
+# Build and test outputs
+dist/
+build/
+.next/
+out/
+coverage/
+*.tsbuildinfo
+.cache/
+playwright-report/
+test-results/
+blob-report/
+**/__pycache__/
+*.py[cod]
+
+# Local configuration and runtime data
+.env
+.env.*
+!.env.example
+!.env.*.example
+/.local/
+/data/
+/artifacts/
+**/identity.key
+**/instance.lock
+**/instance.guard
+**/bao.auth
+**/bao.auth.*.new
+**/*.proof
+*.log
+
+# Local editor and operating-system files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# Agent worktrees and local assistant state
+.claude/

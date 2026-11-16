@@ -1,0 +1,47 @@
+// Native PostgreSQL 18.6 and pgBackRest recovery laboratories.
+//
+// These laboratories extract signed Ubuntu packages into the project cache, so they need an Ubuntu 26.04
+// amd64 agent carrying the label below. The dedicated server's CI agent is Debian 13 and has no such label,
+// therefore this pipeline is not part of the platform job: create a `godseye-ubuntu-labs` job that points at
+// this file once an agent with that label exists. Real PostgreSQL 18 behavior on the server is covered by the
+// per-cell deployment evidence (docs/operations/evidence/cells-deploy.md).
+pipeline {
+  agent none
+  options {
+    skipDefaultCheckout(true)
+    disableConcurrentBuilds(abortPrevious: true)
+    timeout(time: 45, unit: 'MINUTES')
+    buildDiscarder(logRotator(numToKeepStr: '30', artifactNumToKeepStr: '10'))
+    timestamps()
+  }
+  stages {
+    stage('Independent PostgreSQL laboratory') {
+      agent { label 'godseye-ubuntu2604-amd64-node24-bun144' }
+      steps {
+        checkout scm
+        sh 'test "$(uname -s)" = "Linux" && test "$(uname -m)" = "x86_64" && node --version && test "$(bun --version)" = "1.4.4"'
+        sh 'bun install --frozen-lockfile && bun run postgres:install && bun run test:database:lab'
+      }
+      post {
+        always {
+          junit allowEmptyResults: false, testResults: 'artifacts/test-results/pg-lab.xml'
+          archiveArtifacts allowEmptyArchive: false, artifacts: 'artifacts/test-results/pg-lab.xml,artifacts/test-results/pg-lab-report.json'
+        }
+      }
+    }
+    stage('Paused PostgreSQL recovery laboratory') {
+      agent { label 'godseye-ubuntu2604-amd64-node24-bun144' }
+      steps {
+        checkout scm
+        sh 'test "$(uname -s)" = "Linux" && test "$(uname -m)" = "x86_64" && node --version && test "$(bun --version)" = "1.4.4"'
+        sh 'bun install --frozen-lockfile && bun run postgres:install && bun run postgres:recovery:install && bun run test:recovery:lab'
+      }
+      post {
+        always {
+          junit allowEmptyResults: false, testResults: 'artifacts/test-results/recovery-lab.xml'
+          archiveArtifacts allowEmptyArchive: false, artifacts: 'artifacts/test-results/recovery-lab.xml,artifacts/test-results/recovery-lab-observation.json'
+        }
+      }
+    }
+  }
+}

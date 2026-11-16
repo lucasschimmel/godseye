@@ -1,0 +1,34 @@
+{
+  "verdict": "pass-with-findings",
+  "kind": "code",
+  "criticity": "production",
+  "scope": "Local foundation: packages/core/src/**, packages/store/src/**, packages/store/migrations/**, packages/contracts/src/**, tests/control.test.ts, tests/webhook.test.ts",
+  "findings": [
+    {
+      "id": "CORE-001",
+      "criterion": "COR-01",
+      "status": "CONFIRMED",
+      "severity": "major",
+      "evidence": "packages/core/src/projects.ts:109-116 accepts the same repository/installation/branch binding for multiple projects without an exclusivity check; packages/core/src/github.ts:89-100 uses rows.find, and :108-120 creates a run for only that first project. Configure projects A and B with the same binding, then receive a matching signed push: one explicitly bound project receives no pending-verification run and the globally recorded delivery prevents processing it again for the other project.",
+      "refutation": "Shared repositories might be intentionally forbidden, or intentionally allowed for monorepos. Neither interpretation makes the existing behavior correct: forbidden duplicates must be rejected during binding; allowed duplicates require explicit routing/fan-out rather than an unordered first match. No uniqueness constraint or duplicate-binding guard exists in the reviewed store schema or migration. The finding concerns local routing and does not assume an external build dispatch.",
+      "refutation_survived": true,
+      "suggestion": "Choose and enforce a binding ownership policy atomically: reject an already-owned repository/installation/branch binding, or support explicit multi-project routing with per-project delivery idempotency. Add a two-project integration case."
+    }
+  ],
+  "criteria_run": 13,
+  "criteria_passed": 12,
+  "remediation_status": "Producer acknowledged CORE-001 and is implementing transactional fan-out, a delivery/project uniqueness boundary and an independent regression case. Fix pending; this verdict records the reviewed pre-fix behavior and does not verify remediation.",
+  "criteria": ["COR-01", "COR-02", "COR-03", "COR-04", "SAF-01", "SAF-02", "SAF-03", "REU-01", "REU-02", "HYG-01", "HYG-02", "HYG-03", "HYG-04"],
+  "verified_boundaries": [
+    "Project-scoped reads check the caller's explicit project IDs; platform lists and mutations require the owner role. Actor authentication itself is outside this library boundary.",
+    "Control writes share a database row lock and transaction; intent, idempotency records and audit entries commit atomically on reviewed mutation paths.",
+    "GitHub intake checks HMAC over exact raw bytes before parsing; accepted matching pushes remain pending_verification. No branch-head verification or external dispatch is implemented or inferred.",
+    "Unconfigured infrastructure operations fail closed without claiming resources were provisioned."
+  ],
+  "not_reviewed": [
+    "Production HTTP authentication, identity provisioning and transport authorization: explicitly outside the requested local-foundation scope.",
+    "Remote adapters, external dispatch, branch-head verification, hardware isolation, production recovery and infrastructure qualification: not implemented in the reviewed artifact.",
+    "PostgreSQL multiprocess execution and failure injection: reasoning review only; caller supplied passing PGlite integration and type-check results, which were not rerun by this critic.",
+    "Repository-wide reuse and documentation outside the explicitly assigned paths; reuse and API typing were reviewed only within the scoped artifact."
+  ]
+}

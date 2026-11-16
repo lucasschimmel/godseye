@@ -1,0 +1,10 @@
+{
+  "reviewer": "root",
+  "method": "Actual local Playwright screenshot inspection through view_image",
+  "initialObservation": "Coding panel lacked padding; mobile capability prose and long artifact digest clipped under the panel despite passing document-width checks",
+  "regression": "Strengthened descendant assertion reproduced 463px summary content in a 352px client width",
+  "remediation": "Scoped inherited Agent Center spacing, wrapping for reasons/identities/digests, bounded inert patch pre and fitting download buttons",
+  "finalObservation": "Updated mobile screenshot inspected: full digest wraps, prose and task actions fit, keyboard focus and inert artifact content remain visible",
+  "artifact": "artifacts/coding-playwright-results/coding-T-AC-793-mobile-own-64503-oads-inert-fixture-evidence-agents/coding-mobile.png",
+  "qualification": "Actual owner setup and preparation; completed task evidence is an explicitly labeled UI contract fixture, not a vendor/KVM execution proof"
+}

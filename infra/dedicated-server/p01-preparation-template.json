@@ -1,0 +1,157 @@
+{
+  "schemaVersion": 1,
+  "phase": "P01",
+  "status": "approved_for_p02_bare_metal_reinstall",
+  "targetHost": {
+    "provider": "Hetzner Online GmbH",
+    "location": "Finland (HEL1-DC8)",
+    "model": "EX44-1-LTD (Intel Core i5-13500, 14C/20T, 62.57 GiB usable RAM, 2x 512 GB Samsung PM9A1 NVMe)",
+    "robotServerId": "EX44-1-LTD #3097071",
+    "bootMode": "UEFI (dual ESP synced via proxmox-boot-tool)",
+    "hypervisorBase": {
+      "distribution": "Debian 13 (trixie)",
+      "proxmoxRelease": "Proxmox VE 9.x",
+      "repositoryChannel": "pve-no-subscription (enterprise repo disabled unless subscription key provided)",
+      "installMethod": "Hetzner Rescue System -> ZFS root mirror (rpool) + Debian 13 + Proxmox VE 9 packages + proxmox-boot-tool dual-ESP setup"
+    }
+  },
+  "storagePlan": {
+    "preferredBackend": "zfs-mirror",
+    "fallbackBackend": "mdadm-raid1-lvm-thin-ext4",
+    "devicesById": [
+      "/dev/disk/by-id/nvme-SAMSUNG_MZVL2512HCJQ-00B00_S675NU0W263145",
+      "/dev/disk/by-id/nvme-SAMSUNG_MZVL2512HCJQ-00B00_S675NX0T801950"
+    ],
+    "diskHealthGateNote": "Disk 0 (S675NU0W263145, /dev/nvme0n1) is healthy (percentage_used=57%, critical_warning=0). Disk 1 was swapped by Hetzner Support from S675NU0W263148 (126%) to S675NX0T801950 (percentage_used=101%, critical_warning=0x04, available_spare=100%, media_errors=0). Hetzner Support confirmed critical_warning=0x04 on Samsung PM9A1 reflects manufacturer warranty threshold with full spare blocks; owner approved proceeding with ZFS mirror on S675NU0W263145 + S675NX0T801950.",
+    "partitionLayoutPerDisk": [
+      { "part": 1, "size": "1M", "type": "BIOS boot (EF02, compatibility)" },
+      {
+        "part": 2,
+        "size": "1024M",
+        "type": "EFI System Partition (EF00, vfat, managed by proxmox-boot-tool)"
+      },
+      {
+        "part": 3,
+        "size": "remaining (~475.9 GiB)",
+        "type": "Solaris / ZFS root mirror member (BF01, rpool, ashift=12, lz4, autotrim=on)"
+      }
+    ],
+    "zfsArcMaxBytes": 4294967296,
+    "minimumFreePoolRatio": 0.2,
+    "usablePoolEstimateGiB": 460,
+    "maxAdmittedPoolCommitmentsGiB": 360,
+    "allocationsGiB": {
+      "hostRootAndImages": 40,
+      "professionalVmMax": 200,
+      "gamesVmMax": 80,
+      "disposableWorkVmMax": 20,
+      "snapshotAndStagingReserve": 20
+    },
+    "atRestEncryptionDecision": "unencrypted_zpool_for_unattended_host_reboot_with_encrypted_openbao_and_encrypted_pgbackrest_offhost_archives"
+  },
+  "capacityPlan": {
+    "hostMeasuredMemTotalMiB": 64076,
+    "hostReservedAndArcMiB": 8192,
+    "remainingAfterHostProGamesMiB": 6732,
+    "guests": {
+      "professional": {
+        "vmid": 100,
+        "name": "godseye-pro",
+        "os": "Debian 13 (pinned image)",
+        "memoryMiB": 32768,
+        "vcpus": 6,
+        "cpuLimitCoreEquivalents": 3.0,
+        "ballooning": false
+      },
+      "games": {
+        "vmid": 200,
+        "name": "godseye-games",
+        "os": "Debian 13 (pinned image)",
+        "memoryMiB": 16384,
+        "vcpus": 4,
+        "cpuLimitCoreEquivalents": 2.0,
+        "ballooning": false
+      },
+      "workDisposable": {
+        "vmid": 300,
+        "name": "godseye-work",
+        "os": "Debian 13 / Ubuntu 26.04 qualified runner image",
+        "memoryMiB": 6144,
+        "memoryFormulaNote": "Capped at 6144 MiB (6 GiB) because measured usable host RAM is 62.57 GiB (64076 MiB); 64076 - (8192 host + 32768 pro + 16384 games) = 6732 MiB remaining, leaving 588 MiB extra safety margin while fitting the 5120 MiB outer coding VMM profile.",
+        "vcpus": 2,
+        "cpuLimitCoreEquivalents": 0.5,
+        "maxConcurrentHeavyTasks": 1,
+        "enabledOnlyIfHostRamPermits": true
+      }
+    }
+  },
+  "networkPlan": {
+    "uplinkInterface": "enp5s0",
+    "uplinkAltname": "enxc87f54705bfe",
+    "uplinkMac": "c8:7f:54:70:5b:fe",
+    "uplinkMtu": 1500,
+    "publicIpv4CountCeiling": 1,
+    "publicIpv4Primary": "65.108.38.218/32",
+    "publicIpv4Gateway": "65.108.38.193",
+    "publicIpv6Prefix": "2a01:4f9:3080:344e::/64",
+    "publicIpv6HostAddress": "2a01:4f9:3080:344e::2/128",
+    "publicIpv6Gateway": "fe80::1",
+    "hostGuestLinks": {
+      "proVmBridge": {
+        "interface": "vmbr1",
+        "ipv4Cidr": "10.20.1.0/24",
+        "hostIpv4": "10.20.1.1",
+        "guestIpv4": "10.20.1.10",
+        "hostLinkIpv6": "2a01:4f9:3080:344e::1:1/128",
+        "routedPublicIpv6": "2a01:4f9:3080:344e::100/128"
+      },
+      "gamesVmBridge": {
+        "interface": "vmbr2",
+        "ipv4Cidr": "10.20.2.0/24",
+        "hostIpv4": "10.20.2.1",
+        "guestIpv4": "10.20.2.10",
+        "hostLinkIpv6": "2a01:4f9:3080:344e::2:1/128",
+        "routedPublicIpv6": "2a01:4f9:3080:344e::200/128"
+      },
+      "workVmBridge": {
+        "interface": "vmbr3",
+        "ipv4Cidr": "10.20.3.0/24",
+        "hostIpv4": "10.20.3.1",
+        "guestIpv4": "10.20.3.10",
+        "routedPublicIpv6": null
+      }
+    },
+    "privateAdminVpn": {
+      "protocol": "WireGuard",
+      "hostInterface": "wg0",
+      "listenPortUdp": 51820,
+      "ipv4Cidr": "10.20.0.0/24",
+      "hostIpv4": "10.20.0.1",
+      "ipv6UlaCidr": "fd47:6f64:7365:0000::/64",
+      "hostIpv6Ula": "fd47:6f64:7365:0000::1"
+    },
+    "cellPoolsInProVm": {
+      "ipv4Aggregate": "10.21.0.0/16",
+      "ipv6UlaAggregate": "fd47:6f64:7365:1000::/52",
+      "ipv6EgressMode": "explicit_proxy_or_nat66_with_ipv4_fallback"
+    },
+    "publicForwards": {
+      "webIngressTcp": [80, 443],
+      "wireguardUdp": [51820],
+      "gamePortsTcp": [],
+      "gamePortsUdp": []
+    },
+    "networkRollbackSafety": {
+      "mechanism": "systemd-run --on-active=300s revert-network-and-nftables",
+      "requireSecondVerifiedSessionBeforeClosingBootstrap": true
+    }
+  },
+  "supervisionOrderInProVm": [
+    "1. network-online.target + private WireGuard management link + quota-backed storage mounts",
+    "2. openbao.service (explicit sealed-state readiness check; never auto-unseal from local plaintext)",
+    "3. godseye-control-postgres.service + per-cell PostgreSQL / Redis instances",
+    "4. godseye-inngest-platform.service + per-cell Inngest servers + godseye-jobs-supervisor.service",
+    "5. godseye-control-api.service + godseye-console.service (private listener only)",
+    "6. per-cell gVisor (runsc systrap) application services + public HTTPS edge ingress"
+  ]
+}

@@ -1,0 +1,34 @@
+ Network fixtures_cell_a_net Creating 
+ Network fixtures_cell_b_net Creating 
+ Network fixtures_cell_a_net Created 
+ Container fixtures-cell-a-app-1 Creating 
+ Network fixtures_cell_b_net Created 
+ Container fixtures-cell-b-app-1 Creating 
+ Container fixtures-cell-a-app-1 Created 
+ Container fixtures-cell-b-app-1 Created 
+ Container fixtures-cell-b-app-1 Starting 
+ Container fixtures-cell-a-app-1 Starting 
+ Container fixtures-cell-b-app-1 Started 
+ Container fixtures-cell-a-app-1 Started 
+[p05] cell-a kernel: 4.19.0-gvisor
+[p05] cell-a uid: uid=10001 gid=10001 groups=10001
+[p05] cell-a own token: CELL_A_ISOLATION_TOKEN_ONLY
+[p05] cell-b running: true ip=10.21.1.2
+PASS_NO_DOCKER_SOCKET
+PASS_CROSS_CELL_NET_BLOCKED (10.21.1.2:8080)
+[p05] Testing PID limit containment in disposable runsc container (pids-limit=64)...
+sh: sleep: Out of memory
+PASS_PID_LIMIT_CONTAINED_AND_CELL_B_ALIVE: true
+[p05] Cleaning up disposable A/B fixtures...
+ Container fixtures-cell-b-app-1 Stopping 
+ Container fixtures-cell-a-app-1 Stopping 
+ Container fixtures-cell-a-app-1 Stopped 
+ Container fixtures-cell-a-app-1 Removing 
+ Container fixtures-cell-a-app-1 Removed 
+ Container fixtures-cell-b-app-1 Stopped 
+ Container fixtures-cell-b-app-1 Removing 
+ Container fixtures-cell-b-app-1 Removed 
+ Network fixtures_cell_b_net Removing 
+ Network fixtures_cell_a_net Removing 
+ Network fixtures_cell_b_net Removed 
+ Network fixtures_cell_a_net Removed 

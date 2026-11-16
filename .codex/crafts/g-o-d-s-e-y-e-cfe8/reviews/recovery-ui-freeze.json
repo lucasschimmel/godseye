@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "frozenAt": "2026-11-11T21:50:52.4747344Z",
+  "scope": "Recovery UI and confirmed REC-UI-001 held-environment labels and ordinary-selector exclusions",
+  "typecheck": "passed",
+  "biome": "passed",
+  "backendFreezeMatches": true,
+  "files": [
+    {
+      "path": "apps/console/src/components/database-profile-form.tsx",
+      "sha256": "6a3f94ebd325d444ce134615ddec0c2e55c19800b1e57b768764dc2917bdd276",
+      "lines": 112
+    },
+    {
+      "path": "apps/console/src/components/infra-workload-form.tsx",
+      "sha256": "0be691216b4d111845723027307ade74a8604fa095073168fb3a1e5217a8c4bf",
+      "lines": 125
+    },
+    {
+      "path": "apps/console/src/components/recovery-panel.tsx",
+      "sha256": "a9e2560d4d33a6afce3118d7aed05220708097f48bdd8d259e7a7f3240308bf4",
+      "lines": 383
+    },
+    {
+      "path": "apps/console/src/components/shared.tsx",
+      "sha256": "825d911cfdeda9a35a402e997985af3ce0bbfcfee08ffc6b8032d26a75a41178",
+      "lines": 134
+    },
+    {
+      "path": "apps/console/src/lib/environment-labels.ts",
+      "sha256": "0b93fd2e7261244b8739e9b601d1f3e80e5c311224681a825a5711682f4e2eb4",
+      "lines": 13
+    },
+    {
+      "path": "apps/console/src/routes/access.tsx",
+      "sha256": "636da35b25535ded9ed872c52e6c7db055219e50528a7ed508f6482d50bec720",
+      "lines": 400
+    },
+    {
+      "path": "apps/console/src/routes/databases.tsx",
+      "sha256": "d84a06efe4c049ae1ddc9b3c8c3da1107776e06adaa928d18df76cdf0213366c",
+      "lines": 223
+    },
+    {
+      "path": "apps/console/src/routes/projects.$projectId.tsx",
+      "sha256": "aa2d9272fe8b203fb9b8787b6182467e627cf9bb36bd7aa4a5f2f3c144632542",
+      "lines": 163
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "verdict": "pass",
+  "kind": "code",
+  "reviewer": "security-auditor / FABER fresh-context satellite",
+  "criticity": "production",
+  "qualification": "Scoped local owner-identity source review; no production or remote-admission certification.",
+  "findings": [],
+  "resolved_findings": [
+    {
+      "id": "OWNER-SEC-01",
+      "criterion": "SAF-02",
+      "status": "CONFIRMED",
+      "severity": "major",
+      "cwe": "CWE-732",
+      "title": "Existing explicit Windows ACLs survive private-directory protection",
+      "evidence": "Prior reviewed snapshot: apps/control-api/src/identity/runtime.ts:29 removed inherited ACEs and replaced grants only for the current SID; lines 31-32 reset descendants to inherit from that parent. apps/control-api/src/server.ts:12 applies the helper to the PGlite data root. packages/store/src/owner-schema.ts:14 stores private session values in that database.",
+      "breaking_input": "An existing configured data directory with an explicit inheritable read grant for another local user/group, such as Everyone or Users.",
+      "impact": "The explicit grant remained on the data root and propagated to its database files, exposing private session values and other stored control data to another local principal. Raw session values alone are insufficient to forge a signed BetterAuth cookie; direct authentication bypass was not demonstrated.",
+      "refutation": "Removing inheritance does remove broad inherited grants, and a new directory usually has no extra explicit ACE. It does not remove an existing explicit grant for a different SID. A later protection of the nested owner key directory can protect identity.key, but it does not repair the separate database data root.",
+      "refutation_survived": true,
+      "suggestion": "Replace the root DACL with a protected allowlist for the current owner before resetting descendants; verify the resulting root ACL and existing-directory behavior.",
+      "source": "https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/icacls",
+      "validation": "Original issue confirmed by source and documented icacls semantics. Final frozen-source remediation re-reviewed: runtime.ts:72 creates a fresh DirectorySecurity descriptor, lines 73-75 disable inheritance without copying ACEs and add only owner FullControl, and line 76 applies the DACL through .NET Framework Directory.SetAccessControl without changing the existing OS owner. The target is passed exclusively through a child environment variable; PSModulePath is constrained to the OS module directory. runtime.ts:20 resolves canonical aliases and compares Windows paths case-insensitively against shared roots. privateTree rejects linked descendants and escaping paths; lines 91-102 recheck each descendant and reset it individually with /L, without /T. No permissive root reset is introduced. Parent reports seven actual Windows OS/offline-CLI runtime tests green; this reviewer did not independently execute them. The earlier temporary ACL reproduction was rejected by automatic command review before execution and was not rerun.",
+      "resolution": "RESOLVED_BY_PARENT_STATIC_REVIEW"
+    }
+  ],
+  "criteria_run": 7,
+  "criteria_passed": 7,
+  "criteria": ["COR-01", "COR-02", "COR-03", "COR-04 (+kind=concurrent)", "SAF-01", "SAF-02", "SAF-03"],
+  "positive_evidence": [
+    "apps/control-api/src/identity/index.ts strictly allowlists five BetterAuth HTTP endpoint/method pairs and strips token properties recursively from JSON replies.",
+    "apps/control-api/src/identity/auth-config.ts fixes the only principal, rejects user creation, requires UV and validates fresh owner sessions for registration. Installed @better-auth/passkey 1.7.20 verifies UV on both registration and authentication.",
+    "Installed @better-auth/passkey 1.7.20 wraps registration.afterVerification, passkey creation and requested session creation in runWithTransaction; the configured Drizzle adapter enables transactions. Enrollment-ticket consumption therefore joins registration persistence.",
+    "apps/control-api/src/identity/index.ts serializes ceremonies, recovery and guarded control requests. The process lock excludes normal API/offline-recovery overlap for the configured state directory.",
+    "apps/control-api/src/identity/local-admin.ts binds a domain-separated HMAC to method, path, body digest, timestamp and nonce, checks fixed formats/age and durably consumes the nonce.",
+    "apps/control-api/src/config.ts refuses production and implicit local modes; canonical owner identity is HTTP localhost with local-only admission still explicitly unqualified for remote use.",
+    "Audit triggers record object IDs/actions rather than bearer session values, and application error logging excludes request bodies, cookies and library exception messages."
+  ],
+  "not_reviewed": [
+    "Foundation routes, approval-broker behavior and OpenAPI changes still being integrated by the parent.",
+    "The caller reports seven Windows OS/offline-CLI runtime tests, 25 owner HTTP checks and 14 actual-browser checks passing; those checks were not independently rerun by this source reviewer. The final full suite remains caller-owned.",
+    "The temporary ACL probe did not execute: automatic command review returned only 'blocked by policy' with no more specific reason. No privileged ACL probe or actual runtime-state access occurred.",
+    "Actual identity keys, actual owner sessions, actual enrollment/recovery by this reviewer, remote actions, real PostgreSQL multiprocess isolation, provider qualification and full dependency/SAST scanning.",
+    "REU and HYG rubric families are outside this security-only review; lint, typecheck and general code quality remain caller-owned."
+  ],
+  "final_frozen_source_delta": {
+    "verdict": "pass",
+    "findings": [],
+    "criteria_run": 4,
+    "criteria_passed": 4,
+    "evidence": [
+      "apps/control-api/src/identity/runtime.ts:72-76 now replaces only the DACL, preserving the existing OS owner; canonical shared-root rejection and individually checked nonrecursive descendant resets are present.",
+      "apps/control-api/src/owner-cli.ts applies privateDirectory to the PGlite data root before offline openStore, retaining the instance lock and finally cleanup.",
+      "apps/control-api/src/server.ts now funnels startup failure, worker failure, listener failure and signals through one memoized stop promise; rejected worker/storage cleanup does not skip the lock-release attempt.",
+      "apps/control-api/src/identity/security.ts filters session metadata with expiresAt greater than now and continues returning only selected public session/passkey metadata."
+    ],
+    "not_reviewed": ["New first-party HTTP/contracts/client scope is recorded separately in final-boundary-review.json."]
+  }
+}

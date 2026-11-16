@@ -1,0 +1,258 @@
+{
+  "schema": "faber-security-review-v1",
+  "verdict": "pass",
+  "reviewed_at": "2026-11-11",
+  "review_mode": "fresh-context security-auditor/FABER satellite; independent read-only source review and private in-memory probes",
+  "phase": "final-refrozen-source; four confirmed findings resolved and independently reverified",
+  "findings": [],
+  "criteria_run": 13,
+  "criteria_passed": 13,
+  "not_reviewed": [
+    "Actual Docker daemon/enforcement helpers, persistent-data quotas, both-family host/forwarding filtering, Proxmox/Hetzner topology and remote hosts: not available/authorized for this review.",
+    "Private runtime state, actual environment files, private keys and sensitive-name files: deliberately excluded.",
+    "Full tests, browser suite, lab and mutation/scanner runs: supplied by parent/GAUNTLET, not independently rerun by this reviewer."
+  ],
+  "supplied_evidence": [
+    "Producer initial source freeze: typecheck and touched Biome checks passed.",
+    "Parent reports targeted infrastructure core and HTTP suites plus 18 browser journeys passed; selected mutation run and four real rootless WSL lab checks are separate evidence.",
+    "Rootless lab uses network none and ignore-cgroups; it does not qualify Docker firewall, cgroup limits, persistent quotas or remote topology."
+  ],
+  "scope_limit": "Default runtime has LocalSystemCollector development-controller metadata with pids=null and no qualified provider. Reproduced defects affect the explicitly injected qualified contract path, not an enabled real deployment on this workstation.",
+  "source_hashes_before": {
+    "packages/core/src/infra-docker-inspection.ts": "483c64e9bf938e76309c297e3630ba5c4ef5aff9a09741799b0e8f521ee058b5",
+    "packages/core/src/infra-quarantine.ts": "63333933b4f20455663e498832a6af72e72e16c908380a96e6fe9f24818c1a7b",
+    "packages/core/src/infra-execution.ts": "20162ad279615c60ec068cf3aadb1f1bce5c817fbf14411bac0184b321ca4386",
+    "packages/core/src/infra-docker-provider.ts": "8a04bbd433defda101df59ff622b139a93b6bb18547d5403af1a177cdd9dccea"
+  },
+  "resolved_findings": [
+    {
+      "id": "R-INF-001",
+      "criterion": "COR-04/CWE-362 revoked late start must not outlive a protective stop",
+      "status": "CONFIRMED",
+      "severity": "blocker",
+      "evidence": "packages/core/src/infra-quarantine.ts:28 skips every previously recorded quarantine step; infra-execution.ts:108 dispatches asynchronous start. Independent engine/store probe delayed start, cancelled and reconciled, then resumed the late start: provider running=true while allocation cleanupState=stopped.",
+      "refutation_survived": true,
+      "refutation": "A previous exact stop and post-I/O fences might appear sufficient. They fence readiness but do not undo a later completion of an already dispatched start; the durable quarantine skip suppresses the required subsequent safety stop.",
+      "suggestion": "Make protective-stop evidence account for unresolved start generation/completion, and recheck/re-stop exact owned mappings when a late completion supersedes an earlier stop.",
+      "resolution": "resolved; independently reverified after explicit producer refreeze",
+      "before_probe": {
+        "method": "node --import tsx --input-type=module; infrastructureFixture uses real InfrastructureEngine/FoundationEngine and ephemeral in-memory PGlite; no Docker/network/system action",
+        "schedule": [
+          "pause beforeAction(start)",
+          "cancel run",
+          "reconcile while sandbox is still stopped",
+          "observe protective quarantine",
+          "resume delayed start",
+          "await original tick"
+        ],
+        "before": {
+          "running": false,
+          "allocationState": "quarantined",
+          "cleanupState": "stopped"
+        },
+        "after": {
+          "running": true,
+          "allocationState": "unknown",
+          "cleanupState": "stopped",
+          "reason": "SETTLEMENT_FENCED"
+        },
+        "effects": [
+          "network",
+          "firewall",
+          "data",
+          "sandbox",
+          "quarantine",
+          "start"
+        ],
+        "exit_code": 0
+      }
+    },
+    {
+      "id": "R-INF-002",
+      "criterion": "COR-03/CWE-863 fresh runtime proof must bind the exact target",
+      "status": "CONFIRMED",
+      "severity": "major",
+      "evidence": "packages/core/src/infra-docker-provider.ts:313 checks only fresh proof expiry during inspect; packages/core/src/infra-docker-inspection.ts:130 checks runtime.version but not runtime.targetId. Qualify target A, change only the runtime helper proof targetId to B, inspect: accepted with docker-inspect evidence.",
+      "refutation_survived": true,
+      "refutation": "Initial qualification binds target A and helpers are trusted. A subsequent freshly returned proof nevertheless belongs to B; cached initial evidence cannot establish the target of this later inspection, so the explicit exact-target requirement is not met.",
+      "suggestion": "Revalidate target and generation for every fresh proof consumed by effective inspection, not only bootstrap qualification.",
+      "resolution": "resolved; independently reverified after explicit producer refreeze",
+      "before_probe": {
+        "method": "dockerEvidenceFixture and overridden DockerTransportFixture; no socket contacted",
+        "qualifiedTarget": "A",
+        "freshRuntimeProofTarget": "B",
+        "accepted": true,
+        "evidenceIssued": "docker-inspect:<digest>",
+        "exit_code": 0
+      }
+    },
+    {
+      "id": "R-INF-003",
+      "criterion": "COR-04/SAF-03/CWE-362 point-in-time absence cannot release a still-dispatched mutation",
+      "status": "CONFIRMED",
+      "severity": "major",
+      "evidence": "packages/core/src/infra-execution.ts:180-182 releases upon an empty inspection without accounting for pending dispatched create. Independent real engine/store probe paused first network create, cancelled, reconciled absence and successfully admitted another allocation for the same environment before the original create completed.",
+      "refutation_survived": true,
+      "refutation": "An exact 404 can prove absence at inspection time. It does not prove the admitted provider request cannot complete afterward. The reproduced old allocation changed released back to unknown after materializing its late network, so reservations were prematurely reusable.",
+      "suggestion": "Retain uncertain reservations until provider-terminal or equivalent durable no-late-effect evidence proves absence; live in-flight knowledge may tighten but must not weaken restart behavior.",
+      "resolution": "resolved; independently reverified after explicit producer refreeze",
+      "before_probe": {
+        "method": "real engine/store with controlled provider fixture",
+        "schedule": [
+          "pause beforeAction(network)",
+          "cancel run",
+          "reconcile absence",
+          "admit another allocation in same environment",
+          "resume original create"
+        ],
+        "before": {
+          "allocationState": "released",
+          "providerEffects": []
+        },
+        "newAllocationAdmitted": "reserved",
+        "after": {
+          "oldAllocationState": "unknown",
+          "lateNetworkPresent": true
+        },
+        "exit_code": 0
+      }
+    },
+    {
+      "id": "R-INF-004",
+      "criterion": "COR-01 stopped Docker inspection must distinguish configuration from operational addresses",
+      "status": "CONFIRMED",
+      "severity": "major",
+      "evidence": "packages/core/src/infra-docker-inspection.ts:99-106 requires populated operational IPv4/IPv6 even before infra-execution.ts:77 stopped inspection. renderDockerSandbox supplies empty endpoint configuration. Moby v28.5.2 initializes operational networking in daemon/start.go:122 during start; create.go does not initialize it. An otherwise exact Running:false fixture with both address strings empty rejects PROFILE_DRIFT.",
+      "refutation_survived": true,
+      "refutation": "The initial synthetic fixture supplies preallocated addresses. That fixture shape does not reflect the rendered Docker create request and ordinary Engine initialization order. Rejecting legitimate stopped state prevents the safe create-inspect-start contract from running.",
+      "suggestion": "Keep strict configured network/profile checks before start, and require assigned address/subnet verification once the sandbox is actually running.",
+      "resolution": "resolved; independently reverified after explicit producer refreeze",
+      "primary_sources": [
+        "https://raw.githubusercontent.com/moby/moby/v28.5.2/daemon/start.go",
+        "https://raw.githubusercontent.com/moby/moby/v28.5.2/daemon/create.go",
+        "https://raw.githubusercontent.com/moby/moby/v28.5.2/daemon/container_operations.go"
+      ],
+      "before_probe": {
+        "method": "verifyDockerConfiguration with exact fixture except empty operational endpoint IP strings",
+        "running": false,
+        "accepted": false,
+        "code": "PROFILE_DRIFT",
+        "exit_code": 0
+      }
+    }
+  ],
+  "independent_post_fix_probes": [
+    {
+      "id": "R-INF-001",
+      "during": {
+        "running": false,
+        "cleanupState": "pending"
+      },
+      "effects": [
+        "network",
+        "firewall",
+        "data",
+        "sandbox",
+        "quarantine",
+        "start",
+        "quarantine",
+        "quarantine"
+      ],
+      "pass": true,
+      "after": {
+        "running": false,
+        "cleanupState": "stopped"
+      }
+    },
+    {
+      "id": "R-INF-002",
+      "variants": [
+        {
+          "denied": true,
+          "code": "PROFILE_DRIFT",
+          "target": "runtime"
+        },
+        {
+          "denied": true,
+          "code": "PROFILE_DRIFT",
+          "target": "data"
+        },
+        {
+          "denied": true,
+          "code": "PROFILE_DRIFT",
+          "target": "firewall"
+        }
+      ],
+      "pass": true
+    },
+    {
+      "stateDuringPendingMutation": "unknown",
+      "nextAdmissionDenied": true,
+      "lateNetworkPresent": true,
+      "finalState": "unknown",
+      "pass": true,
+      "id": "R-INF-003"
+    },
+    {
+      "stoppedAccepted": true,
+      "foreignNetworkDenied": true,
+      "publishedPortDenied": true,
+      "runningEmptyAddressesDenied": true,
+      "pass": true,
+      "id": "R-INF-004"
+    }
+  ],
+  "initial_verdict": "fail",
+  "source_hashes_final": {
+    "packages/core/src/infra-inventory.ts": "bfc8a811e077cbb13e5562b67ef1cb6312b6d2211e6d9055ed60fd38ae4a7e64",
+    "packages/core/src/infra-docker-transport.ts": "d426ccb276c233842d0ca7c5237fc61a96e3b037e1ade1c9076ab8445259185f",
+    "packages/core/src/infra-collector.ts": "084d304acb4d1cc7c2e7bdeff8f1617bd33351ede401bd32dcb07f18dbb20ae8",
+    "scripts/install-runsc.mjs": "e04eefb1f6678cd4f9a21c4b7b35942b0aa0b7f537d6e7ccac22d356b2d02c62",
+    "tests/infrastructure-runsc.test.ts": "f6ac91067758836bf3f9670bba8a0ad77b8cbf3eabd9f044da7a8b00f7d059a0",
+    "packages/core/src/foundation-grants.ts": "0948894ac530992d6cfc5862506250ef7d203dd77cfc60757c168f933ea6d8fc",
+    "apps/console/src/components/infra-workload-form.tsx": "171ce48aa63cbd289ec70e3b675e0ed2933b8ed03cadc8bd40d86668ba1ea488",
+    "packages/core/src/infra-steps.ts": "a5157b5b248546005bd47691f0d08379c39cd8521b227dfe78523cd32c3a7f27",
+    "packages/core/src/infra-quarantine.ts": "7257181d5d9ad27a0abdb6f969b35f18207ca923a08a9abebbee61bb7c1ce733",
+    "tests/runsc-fixture.ts": "c6296d82f220e1222ee5903eb51c4c8e954b59dac60e1cef606e42759bf88c77",
+    "apps/control-api/src/app.ts": "f1c24f6bf76ed7ebb11d5633a3d2af613eae8e449147d182b6c4e93e13615cd4",
+    "packages/control-client/src/index.ts": "fb667544a0e8ca891de71af9c0c8c15146a2803b5b32a3d87f7293f5ccc134af",
+    "packages/core/src/infra-policy.ts": "9ea9b7893a4c469849c903259300743faa5dc6b05a66f22266d24f6fc9c1468b",
+    "apps/console/src/components/infra-inventory-form.tsx": "c2708af105c937e1455a0b249c054e837c00fcab736f9e7998397e946b9c200e",
+    "packages/store/migrations/0004_infrastructure.sql": "c494483cd82a7675e2d2407dccb177a5c5d923301a93d2b54235b817bdbb67fb",
+    "packages/store/src/infra-schema.ts": "5b41b613564f7e4fc7a4175780b939bd8aa6072f1f2433a9d01026358c137212",
+    "packages/core/src/infra-docker-inspection.ts": "06f6817a4924894ce7a056a84940ac593586ef01041ed47a1157d33cc54bb31a",
+    "tests/runsc-lab.py": "a4235162b7727f8984fa411d5ce85d8e5c869162dc101fe6d451dd9986194c1c",
+    "package.json": "9bb4f4bf8dd36c7abbc0288535bbe092143ba837e8f8bff276496abe05c0d4de",
+    "vitest.config.ts": "429ac3fddc5247d140cf6db0fc3d074f96a0e50f07b6ff0284e81d839a9acc13",
+    "packages/core/src/foundations.ts": "02a44008d063569f5ee26d47539556c1b33486e0cd9e6fac1feb5eb15c04e3ab",
+    "packages/contracts/src/infrastructure.ts": "87ce9e97b49c08d756f171621c9a54e581c97bdff2bd5a63175f0952dec8fc07",
+    "packages/core/src/foundation-queue.ts": "6c4dbcc731750ed400faaad5cc3ea26b3158edfde1daf0887eda905b5fb6df10",
+    "packages/core/src/infra-preparation.ts": "dc30801d2c8aa8422d78868f8a34c4de39e04b40e58e892d711ea358b6d365bb",
+    "apps/console/src/styles/infrastructure.css": "c373439d59a41fab91d672beff6116f54e66449f6f7f1733171d313c8b75e44c",
+    "packages/core/src/infra-execution.ts": "5cf6cf25f830db631dd05cba1b556a72d9b753037e83ccf337232ed562114a3d",
+    "packages/core/src/infra-docker-provider.ts": "36ca0edf1a02ac41fc496159855dc5f44ab245660bea812737f8abb7868edc2a",
+    "packages/core/src/infra-provider.ts": "4a08af5a6c26a6b6b792e57fde8f5679ae11d63b55fddf394e17fee6a070a753",
+    "packages/core/src/infra-state.ts": "27ac17393cb7874f9b9920b2e41cee9d83af8ca17ec632316e82d5545ccdea1c",
+    "apps/control-api/src/infra-routes.ts": "55f50477e8bc6dce2b1c00738fa5cad42bbed2e0314425d10244a4206decf191",
+    "packages/core/src/infra-network.ts": "147423a98db4a0e196d02c1046c6b07a4e26e5cfaae1529e8dcc7fdd4f179351",
+    "packages/core/src/foundation-data.ts": "d7a31b1a1e15c1edb73e7a5eb44af546750afcd0b46ed7d1cf30cc4e676de28c",
+    "packages/core/src/infrastructure.ts": "ee4d08ef430bd7871ab661d1be64a47d3121227836164e7c0b9ba9edfc064ab8",
+    "packages/core/src/foundation-plans.ts": "3ab96daf75c02b64d4986efe22095a707b05d33d7524ef5a351b2658632ee190",
+    "packages/contracts/src/foundations.ts": "d2a9c449ae2435c652b15700092835d426b90327aef784a131dd0e4c561a9067",
+    "packages/contracts/src/infra-endpoints.ts": "e2801f4c88e2d0c83caf95351cb875bb59d0f1acff0258951410c888045bcb86",
+    "packages/core/src/infra-docker-policy.ts": "ec7d7a174fbc9418e12b4d6601da5adf4b8472da105a9f2bf370cc26f949b765",
+    "packages/core/src/foundation-effects.ts": "62118783bc71ec82860b35591186003102ab7953951f9f0911788c778041494e",
+    "apps/control-api/src/server.ts": "577d5af2b9a3bf5c4cfb4ba34d5f83a9ba759e4025669de924b57ab5f9a2cc16",
+    "Jenkinsfile": "46a659aae969869f246efa4182a845b51525930886d0e516909a8b621d6225d9",
+    "apps/console/src/routes/infrastructure.tsx": "9d81cadd9a91a0e3f485d434ee4f2668ced7cbc190b03f16c991bb1b0df760e2",
+    "packages/core/src/infra-settlement.ts": "72f57c3b4b767429bdaebb92af74a6192790d08dbd288454d24779850258e3ff",
+    "vitest.infra-lab.config.ts": "3a95ead91fdf82171b00406be706432cb6efb5517abb3aa44f8123c29196c2c5"
+  },
+  "validation": {
+    "allFourPostFixProbesPassed": true,
+    "productionSourceMutatedByReviewer": false,
+    "providerOrSystemMutation": false,
+    "independentCommand": "node --import tsx --input-type=module (stdin, no source edits)",
+    "probeExitCode": 0
+  }
+}

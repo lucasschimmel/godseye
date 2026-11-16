@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+# TEMPLATE script, install as /usr/local/libexec/godseye/render-bindings.sh (executed only by godseye-bindings-render.service after owner review; never by CI).
+#
+# Renders private bindings from OpenBao KV v2 onto tmpfs under $RUNTIME_DIRECTORY (/run/godseye-bindings).
+# OpenBao documents (written by the owner, schema owned by the application):
+#   <mount>/bindings/hermes  field `document`      -> hermes-bindings.json (array of scoped entries)
+#   <mount>/bindings/coding  field `document`      -> coding-bindings.json (CodingPrivateConfiguration)
+#   <mount>/bindings/coding  field `work_vm_ssh_key` -> work-vm-ssh-key (0600; the coding document's
+#                            transport.identityFile must point at this tmpfs path)
+# Secrets are never echoed, logged, passed as arguments or placed in the environment.
+set -euo pipefail
+umask 077
+
+EX_TEMPFAIL=75
+out="${RUNTIME_DIRECTORY:?RUNTIME_DIRECTORY is set by systemd}"
+mount="${GODSEYE_BAO_MOUNT:-godseye}"
+role_id_file="${GODSEYE_BAO_ROLE_ID_FILE:?}"
+secret_id_file="${CREDENTIALS_DIRECTORY:?}/openbao-secret-id"
+
+refuse() { echo "render-bindings: $*" >&2; rm -f "${out}"/hermes-bindings.json "${out}"/coding-bindings.json "${out}"/work-vm-ssh-key; exit "${2:-1}"; }
+
+# Must be tmpfs: refuse to write secrets to a persistent filesystem.
+[ "$(stat -f -c %T "${out}")" = "tmpfs" ] || refuse "output directory is not tmpfs"
+
+# Sealed or unreachable OpenBao => provider unavailable, never stale material.
+status="$(bao status -format=json 2>/dev/null || true)"
+[ -n "${status}" ] && [ "$(jq -r '.sealed' <<<"${status}")" = "false" ] || refuse "OpenBao is sealed or unreachable" "${EX_TEMPFAIL}"
+
+role_id="$(cat "${role_id_file}")"
+token="$(bao write -field=token auth/approle/login role_id="${role_id}" secret_id=@"${secret_id_file}")" \
+  || refuse "AppRole login failed" "${EX_TEMPFAIL}"
+export BAO_TOKEN="${token}"
+
+write_document() { # <kv path> <field> <target> <validate-as-json 1|0>
+  local value
+  value="$(bao kv get -mount="${mount}" -field="$2" "$1")" || refuse "missing OpenBao field $1/$2" "${EX_TEMPFAIL}"
+  if [ "$4" = "1" ]; then jq -e . >/dev/null <<<"${value}" || refuse "document $1/$2 is not valid JSON"; fi
+  local stage="${out}/.$(basename "$3").new"
+  ( umask 077; printf '%s\n' "${value}" >"${stage}" )
+  chmod 0600 "${stage}"
+  mv -f "${stage}" "${out}/$3"
+}
+
+# Each provider document is optional: an absent one removes any stale file so only that provider stays
+# unavailable. A missing document is a deliberate "not configured", never a reason to block the others.
+present() { bao kv get -mount="${mount}" -field="$2" "$1" >/dev/null 2>&1; }
+if present bindings/hermes document; then write_document bindings/hermes document hermes-bindings.json 1
+else rm -f "${out}/hermes-bindings.json"; fi
+if present bindings/coding document; then write_document bindings/coding document coding-bindings.json 1
+else rm -f "${out}/coding-bindings.json" "${out}/work-vm-ssh-key"; fi
+# The SSH key is optional: absent on hosts that use the WSL2 adapter.
+if bao kv get -mount="${mount}" -field=work_vm_ssh_key bindings/coding >/dev/null 2>&1; then
+  write_document bindings/coding work_vm_ssh_key work-vm-ssh-key 0
+fi
+
+unset BAO_TOKEN token
+echo "render-bindings: rendered to tmpfs (values not printed)"

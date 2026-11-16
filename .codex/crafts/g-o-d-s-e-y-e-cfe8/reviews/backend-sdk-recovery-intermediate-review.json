@@ -1,0 +1,188 @@
+{
+  "verdict": "pass-with-findings",
+  "findings": [
+    {
+      "id": "BSR-001",
+      "criterion": "COR-01/COR-03",
+      "status": "CONFIRMED",
+      "severity": "major",
+      "evidence": "packages/app-backend/src/recovery.ts:77-82 serializes and successfully exports archive metadata without a bound; import at line94 rejects the entire envelope above32MiB. contracts.ts permits100000 files and200-character names, so valid same-version source data can produce a successful archive that this importer cannot restore.",
+      "refutation_survived": true,
+      "refutation": "The metadata cap appropriately bounds offline parsing, and target file-count/byte quotas are checked separately. Those checks do not constrain metadata text to32MiB: even zero-byte files have hundreds of bytes of metadata apiece. No export-side compatible-bound validation exists to prevent reporting an unrestorable archive as successful.",
+      "suggestion": "Use one shared envelope limit on both paths and reject incompatible export before reporting success, or introduce a compatible bounded streaming format."
+    },
+    {
+      "id": "BSR-002",
+      "criterion": "COR-01/COR-03",
+      "status": "CONFIRMED",
+      "severity": "major",
+      "evidence": "packages/app-backend/src/state.ts:33 structuredClone copies the accepted GenericOAuthConfig[] directly. The installed node_modules/better-auth/dist/plugins/generic-oauth/types.d.mts explicitly supports function-valued getUserInfo/mapProfileToUser/getToken callbacks; structuredClone rejects functions with DataCloneError before runtime creation.",
+      "refutation_survived": true,
+      "refutation": "Data-only fixture providers work, and snapshotting mutable provider input is desirable. However the public options type promises GenericOAuthConfig, not a data-only subset, and these trusted callbacks are ordinary provider configuration supported by the selected library. No validation narrows the contract or explains the rejection.",
+      "suggestion": "Snapshot mutable configuration while preserving trusted callback references, or explicitly narrow and validate the supported public configuration contract."
+    },
+    {
+      "id": "BSR-003",
+      "criterion": "COR-03",
+      "status": "PLAUSIBLE",
+      "severity": "minor",
+      "evidence": "packages/sdk/src/files.ts:25-26 replays initiation using only name/contentType/size/optionalsha and immediately returns a committed result. If sha256 is omitted, reusing the key with different same-length input.data returns the previous bytes silently.",
+      "refutation_survived": false,
+      "refutation": "The lower-level initiation contract binds metadata, not bytes, so this may be an intentional initiation-only retry contract. The higher-level upload signature includes data, however, making the distinction worth documenting or enforcing. This item is informational and does not block.",
+      "suggestion": "Define the convenience-upload replay contract explicitly and bind/validate content identity when callers expect changed-data collisions to fail."
+    }
+  ],
+  "criteria_run": 13,
+  "criteria_passed": 11,
+  "resolved_findings": [
+    {
+      "id": "BRI-001",
+      "resolution": "Downloads now have capacity reservation, finite lifetime, request cancellation, revocation polling and shutdown closers. The newly observed setup-size/stat failure leak was also corrected in current source before this report."
+    },
+    {
+      "id": "BRI-002",
+      "resolution": "PostgreSQL retains a dedicated advisory-lock connection and health fence; local PGlite and filesystem roots have instance locks; runtimeActive denies duplicate runtimes over the same store; filesystem cell markers include immutable store UUID."
+    },
+    {
+      "id": "BRI-003",
+      "resolution": "Enforced single-runtime ownership removes the already-open second-runtime bypass. Recovery hold is durably written before import bytes/metadata and reloaded on reopen."
+    },
+    {
+      "id": "BRI-004",
+      "resolution": "writeAll/readAll loop short I/O; append compares a retained partial prefix and resumes the exact chunk before full sync/hash verification and metadata settlement."
+    },
+    {
+      "id": "SDK-REPLAY",
+      "resolution": "files.upload now returns an already committed initiation replay directly instead of completing it again; basic lost-completion-ack replay source issue is resolved."
+    },
+    {
+      "id": "BCR-001",
+      "resolution": "Owner metadata and applicationLifecycleGuard independently check raw environment deadlines, and the guard now obtains project/environment/configuration/epoch under the existing serialized control transaction."
+    }
+  ],
+  "not_reviewed": [
+    "This remains an intermediate source pass during active changes, not frozen release approval. File hashes identify report-time materialized source.",
+    "Template and final owner UI review are deferred until freeze. Executable test outcomes and actual rendered mobile/desktop layout are not certified here.",
+    "No active pentest, external targets, secret reads, dependency scanning or production/test edits were performed. Read-only security-auditor adaptation only.",
+    "Advisory/file locks are source-reviewed concurrency enforcement, not native multiprocess or deployed containment qualification.",
+    "Recovery archive schema is asserted by TypeScript after authenticated JSON parsing rather than runtime-validated. This pass found no independently reachable public forgery path and makes no hostile signed-archive claim.",
+    "The transient instance.guard can remain after a process dies during lock acquisition; this pass does not certify interrupted-startup lock recovery or its operator runbook.",
+    "Recovered source configuration is retained as evidence under a durable hold, with no activation route. Full platform/off-host recovery and external-effect reconciliation remain unqualified."
+  ],
+  "review_context": {
+    "kind": "code",
+    "criticity": "production",
+    "fresh_context": true,
+    "producing_conversation_read": false,
+    "passed_observations": [
+      "Recovery export preserves local identity/password-hash state while excluding sessions and OAuth access/refresh/ID values from account records.",
+      "Import requires a separate environment of the same project, explicit unavailable lifecycle, empty target and matching source HMAC; storage/count/object quotas are checked before copying.",
+      "The durable import hold is committed before physical copies; later transaction/copy failure cannot silently reactivate the destination. Failed copies remain in the isolated held target.",
+      "The application SDK uses scoped/versioned headers, bounded successful/error JSON parsing, runtime response schemas and explicit AbortSignals, without an owner client dependency.",
+      "SSE parsing handles fragmented UTF-8/CRLF and bounded frames; consumer iteration controls cursor advancement, reconnect requests use the last observed cursor and refetch/revoked messages terminate the stream.",
+      "Custom routes require application sessions, strict input/output validation and scoped mutation receipts; fixed route paths cannot select control-plane routes."
+    ]
+  },
+  "file_hashes": [
+    {
+      "path": "packages/sdk/src/transport.ts",
+      "sha256": "73dcc2b3b4a19318c4c31434457fe0f4ab285e871831802090493798b0867f28"
+    },
+    {
+      "path": "packages/sdk/src/index.ts",
+      "sha256": "10fbc412c9ae41b720cf37fea28a71e1954eb829667d6e1827f10647791e124d"
+    },
+    {
+      "path": "packages/sdk/src/files.ts",
+      "sha256": "4e790eb6bc24fc6ef835c7b6a99881c232893e1a5e1459421b409049ebe2e218"
+    },
+    {
+      "path": "packages/sdk/src/events.ts",
+      "sha256": "63e461eea96bebac21d2cbbe0153ed6d5c7018f1fe85e1f9bd6e9a9e90d9cc06"
+    },
+    {
+      "path": "packages/app-backend/src/events.ts",
+      "sha256": "02f49644885becb4f4b43f245b0e6d1c79340eeea6b840b82794c6a430f01d54"
+    },
+    {
+      "path": "packages/app-backend/src/file-state.ts",
+      "sha256": "c07f6170f97372f9484cf7d4708cf263e8c88f857e157875b61a1eaaf02f680d"
+    },
+    {
+      "path": "packages/app-backend/src/file-read.ts",
+      "sha256": "b75503a4344ac1fe36c4a22b397c27a8776064de5349580dfc26676e315ef708"
+    },
+    {
+      "path": "packages/app-backend/src/custom.ts",
+      "sha256": "ed1d83a462802e0311035ba5e65cf0caa79664174bf51e83d4a1f8e5a7977f74"
+    },
+    {
+      "path": "packages/app-backend/src/file-routes.ts",
+      "sha256": "cc971d7bfceccdda07e1a5716bcf9b104b384cfcfecd93a4f4124b133b737b2c"
+    },
+    {
+      "path": "packages/app-backend/src/contracts.ts",
+      "sha256": "755ef67ff31aca573cbe04c1e32a0babc89158c05b5496e489144d10690cce48"
+    },
+    {
+      "path": "packages/app-backend/src/index.ts",
+      "sha256": "6f12a0fcb177ba5efb087f0765a7cc4da60a58771fb09d6ad3fab300adc67c6c"
+    },
+    {
+      "path": "packages/app-backend/src/auth.ts",
+      "sha256": "a9647258cb7dad370720abde19032590d171382d971d9cc8bcd1f636e9226b83"
+    },
+    {
+      "path": "packages/app-backend/src/instance.ts",
+      "sha256": "d2d0fd0f8f1ce3eef5bd443289ea9a1aa49644969fb1965f3f15be69b1900f1e"
+    },
+    {
+      "path": "packages/app-backend/src/file-write.ts",
+      "sha256": "6804b680ba965a0910248315740714734b567367910ace216edf9eb1237acbe9"
+    },
+    {
+      "path": "packages/app-backend/src/store.ts",
+      "sha256": "e908335212a35840dc285268bb61556a143c1dc6e7aef64b31f486437f81c4da"
+    },
+    {
+      "path": "packages/app-backend/src/state.ts",
+      "sha256": "d4f978067a7086c580d3dd8de3d893e6f591219a150b6f8d722abaae8fb9dc89"
+    },
+    {
+      "path": "packages/app-backend/src/schema.ts",
+      "sha256": "5060930c37604ba73171d21b9d892118dc25c89ebc050a4db67ca2af3463f21b"
+    },
+    {
+      "path": "packages/app-backend/src/runtime.ts",
+      "sha256": "9022a4407c9246b61b7abbd0f7baaf97d19e1a12db513901f6ec6975664c0890"
+    },
+    {
+      "path": "packages/app-backend/src/recovery.ts",
+      "sha256": "345a9be4fcd90364c3b2071abce20ee91bcc856f11224c47810b2fc306efb1d4"
+    },
+    {
+      "path": "packages/app-backend/src/recovery-contract.ts",
+      "sha256": "c3d912af543e530dfaea66fa77f5bcea82968289b552d1b7412fe56b67f8e690"
+    },
+    {
+      "path": "packages/app-backend/src/private-files.ts",
+      "sha256": "aa185f3546edf97c3c1dc861cc1a29d786cc89893bc302ec6edf526f3e8f6ad9"
+    },
+    {
+      "path": "packages/app-backend/src/migration.ts",
+      "sha256": "5801351e5adc6d76c6623e1a5afe4607b94a72cf14123ff5d8c9cbf2eeb0b167"
+    },
+    {
+      "path": "packages/app-backend/src/local.ts",
+      "sha256": "5c91e3c8550b55f58d607a756fee04e63797182b3aae271a43109c6db269156b"
+    },
+    {
+      "path": "packages/app-backend/src/io.ts",
+      "sha256": "72a3b42055a02a7292a742b2d2884b7e7fa1fc1c57f696cf65b601c678d5040c"
+    },
+    {
+      "path": "packages/core/src/backend-configuration.ts",
+      "sha256": "9741118d4fbaf3c1f14dca1f85a1f8d47d835bdb2083848ec1cde23077c420e0"
+    }
+  ]
+}

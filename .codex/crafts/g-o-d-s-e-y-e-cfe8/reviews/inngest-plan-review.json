@@ -1,0 +1,38 @@
+{
+  "verdict": "pass-with-findings",
+  "kind": "plan",
+  "criticity": "production",
+  "artifacts": [
+    "inngest-continuation.json",
+    "inngest-research.md",
+    "reviews/inngest-test-strategy.md"
+  ],
+  "findings": [
+    {
+      "id": "ING-PLN-001",
+      "criterion": "PLN-02/PLN-07",
+      "status": "CONFIRMED",
+      "severity": "major",
+      "evidence": ".codex/crafts/g-o-d-s-e-y-e-cfe8/reviews/inngest-test-strategy.md:24 — T-E06-L01 requires real event receipt and SDK invocation only; rows 14–23 cover separate durable bridge/Foundation contracts. None requires the full application publication -> owning real Inngest -> signed SDK worker -> Foundation terminal job chain requested for this continuation. docs/spec/isolation.md:99 and docs/spec/isolation.md:101 require cell-owned job execution and transactional application event delivery.",
+      "refutation_survived": true,
+      "refutation": "The mapped bridge and worker tests together could establish individual boundaries, and L01 could later be implemented broadly. However, all written assertions can pass with a native SDK fixture disconnected from application publication or terminal Foundation settlement; this is a missing composition acceptance, not a missing implementation/test-file finding.",
+      "suggestion": "Extend the named native lab acceptance to publish via the real app path in two independent cells, then observe the matching Foundation terminal outcome/effect, with no foreign-cell execution."
+    }
+  ],
+  "criteria_run": 8,
+  "criteria_passed": 7,
+  "not_reviewed": [
+    "PLN-08 inactive: swarm explicitly disabled; mandatory satellites do not implement parallel production units.",
+    "Production source and security review deferred until implementation is frozen.",
+    "No runtime tests executed: this is plan review; absence of tests under active implementation is not a finding.",
+    "No implementation design file existed at review time.",
+    "Research links were assessed as supplied evidence, not independently reverified against remote sources.",
+    "Dedicated-host networking, external Redis/PostgreSQL persistence, coordinated recovery qualification and server deployment remain out of this local review."
+  ],
+  "notes": [
+    "Bridge transaction, durable replay, HOLD/epoch/auth and stale-attempt promises are explicitly mapped.",
+    "Root acknowledged ING-PLN-001 and directed implementation/test satellites to extend native composition evidence.",
+    "E06 failure modes inherit freeze-ingress/preserve-intents/pause-scheduling checkpoints from docs/plan/v1-development.md:119–121.",
+    "Calendar authority and console-offline cell execution must remain explicit implementation constraints under docs/spec/isolation.md."
+  ]
+}

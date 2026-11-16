@@ -1,0 +1,97 @@
+{
+  "verdict": "pass",
+  "findings": [],
+  "criteria_run": 13,
+  "criteria_passed": 13,
+  "fresh_context": true,
+  "review_kind": "FABER code, production criticity, concurrent tag; AEGIS defensive quick scope",
+  "at": "2026-11-12",
+  "scope": "R1-R4 production remediation: nine core files, Jenkinsfile, four regression files; current public specification/plan truthfulness",
+  "frozen_hash_manifest": "artifacts/security/audit-remediation-review-hashes.json",
+  "freeze": "Production owner declared freeze; test owner declared four-file/16-scenario freeze. Hashes bind reviewed final sources and tests, not uncommitted repository metadata.",
+  "checks": [
+    {
+      "criterion": "R1",
+      "evidence": "packages/core/src/jobs-definitions.ts:68-85; packages/core/src/journal.ts:28",
+      "result": "Changed hash is rejected for every nonterminal run under database-serialized write; unknown/reconciling included. Identical registration remains allowed; succeeded/failed/cancelled are terminal. Registration cannot race a serialized manual/event run insert."
+    },
+    {
+      "criterion": "R2",
+      "evidence": "packages/core/src/jobs-outbox-call.ts:10; packages/core/src/jobs-outbox.ts:120,170,253,283; packages/core/src/jobs.ts:67",
+      "result": "Send and inspect centrally bounded; abort propagates. Retain actual unresolved call slot, cap 50, suppress same-scope repeat, clear timer/listener, release slot on actual settlement. Late provider result has no path to mutate journal. Invalid/overflow timer duration rejected. SQL excludes occupied scopes before candidate pagination."
+    },
+    {
+      "criterion": "R3",
+      "evidence": "packages/core/src/foundation-plans.ts:263; packages/core/src/infrastructure.ts:106",
+      "result": "Requeue gate shares approval transaction and checks each queued admission before status change; failure rolls back approval/receipt/audit changes. Infrastructure callback uses admission gate alone and does not invoke physical reservations again."
+    },
+    {
+      "criterion": "R4",
+      "evidence": "Jenkinsfile:99-100; tests/jenkins-artifacts.test.ts:8",
+      "result": "Actual Playwright output path is archived before final deleteDir; test derives configured path and matches trace/screenshot fixtures."
+    },
+    {
+      "criterion": "truthful-status",
+      "evidence": "docs/spec/v1.md:11; docs/plan/v1-development.md:219",
+      "result": "Current public documents separate local implementation, actual remaining E03/E05/E06 software and external host qualification. Complete V1 requirement families remain mandatory. Coordinator owns internal phase/acceptance tracking reconciliation after final validation."
+    }
+  ],
+  "resolved_during_review": [
+    {
+      "id": "AR-REVIEW-01",
+      "criterion": "COR-03/COR-04",
+      "status": "CONFIRMED",
+      "severity": "major",
+      "evidence": "packages/core/src/jobs-outbox.ts:283-298, prior review candidate selection limited pending rows before occupied-scope exclusion",
+      "refutation": "Skipping occupied keys after LIMIT bounds calls but cannot reveal healthy work beyond 50 permanently blocked older rows.",
+      "refutation_survived": true,
+      "before_probe": {
+        "pending_same_scope": 51,
+        "later_healthy_scope": 1,
+        "ticks": 4,
+        "hungCalls": 1,
+        "healthyCalls": 0,
+        "healthyState": "pending"
+      },
+      "resolution": "Production owner added exact cell/destination SQL exclusion before LIMIT to claims and probes; QA added a full-batch fairness regression.",
+      "after_probe": {
+        "ticks": 4,
+        "hungCalls": 1,
+        "healthyCalls": 1,
+        "healthyState": "delivered"
+      }
+    }
+  ],
+  "independent_executables": [
+    "Local PGlite fixture starvation before/after probes through node --import tsx: regression reproduced then healthy work delivered after fix",
+    "Direct bounded-call probe: 100 distinct invocations plus 100 repeat invocations -> 50 provider starts, 50 actual retained slots; after actual promise settlement -> 0 retained slots",
+    "Gitleaks 8.30.1 dir scan of explicit 14-file source/test snapshot, redact=100, zero findings, final report artifacts/security/audit-remediation-gitleaks.json"
+  ],
+  "reported_by_other_owners": [
+    "Production static/type validation passed",
+    "QA final focused regression result: 16/16 green, 17.73s; not independently rerun here",
+    "Coordinator reports Bun audit zero vulnerabilities, 325 packages checked"
+  ],
+  "aegis": {
+    "status": "ok",
+    "findings": [],
+    "scanners_run": [
+      "gitleaks 8.30.1 explicit allowlisted snapshot"
+    ],
+    "scanners_missing": [
+      "Semgrep comprehensive SAST"
+    ],
+    "logic_assurance": "llm-judged defensive scope; executable probes separately identified",
+    "waivers_applied": 0,
+    "dependency_changes_reviewed": "No dependency edits in assigned remediation files; coordinator owns dependency audit",
+    "scan_diff": "No active scanner findings; resolved local logic finding recorded above; no vulnerability waiver created"
+  },
+  "not_reviewed": [
+    "Semgrep unavailable; manual defensive source review does not replace comprehensive SAST",
+    "SBOM generation, dependency license/staleness audit and complete native package audit not performed",
+    "Full unit/browser/build/mutation suites owned by coordinator and QA, not independently rerun by this satellite",
+    "Jenkins runtime, external provider integrations, deployed PostgreSQL multiprocess concurrency and dedicated-server qualification",
+    "Full offensive audit, network assessment, secret files, runtime private state and git/history operations excluded",
+    "Final internal plan/state outcomes and validation counts remain coordinator-owned; public specification/plan reviewed at current checkpoint"
+  ]
+}

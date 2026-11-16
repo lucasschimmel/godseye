@@ -1,0 +1,73 @@
+{
+  "status": "production-source-frozen-awaiting-root-final-gates",
+  "scope": "Local autonomous E06 application workers, independent platform engine and external PostgreSQL/Redis workflow persistence",
+  "authorization": "Local only; no dedicated server, global installation, actual owner data migration, Git mutation or remote activation",
+  "design": "e06-completion-design.md",
+  "entrypoints": {
+    "services": "bun run jobs:services start --directory .local/jobs-services --cells cells.json --platform platform.json",
+    "supervisor": "bun run jobs:start",
+    "build": "bun run build:jobs",
+    "compiledSupervisor": "node dist/jobs-runtime/server.mjs",
+    "compiledFactory": "dist/jobs-runtime/runtime.mjs",
+    "compiledChildren": ["dist/jobs-runtime/worker.mjs", "dist/jobs-runtime/platform.mjs", "dist/jobs-runtime/inngest-guardian.mjs"]
+  },
+  "configuration": {
+    "GODSEYE_MODE": "local",
+    "GODSEYE_JOBS_RUNTIME": "autonomous",
+    "GODSEYE_INNGEST_CELLS": "Existing owner project/environment cells JSON; same strict six-listener shape as previous integration",
+    "GODSEYE_JOBS_PLATFORM": "Independent sentinel project/environment UUIDs and six listener ports; required by executable supervisor",
+    "GODSEYE_JOBS_CONTROL_FILE": "Absolute private control.json containing databaseUrl; mutually exclusive with direct GODSEYE_DATABASE_URL",
+    "GODSEYE_JOBS_STORAGE_FILE": "Absolute private array of exact application plus platform PostgreSQL/Redis bindings",
+    "GODSEYE_JOBS_WORKER_MODULE": "Optional absolute owner-selected first-party module exporting createWorker({scope})"
+  },
+  "implemented": [
+    "Separate trusted supervisor with shared PostgreSQL owner journal and independent local + session-held database singleton ownership",
+    "Owner HTTP detached mode consumes no local.jobs work, starts no application listener/native engine and retains owner admission/UI operations",
+    "Foundation consumer adapter/environment partitions apply before queued validation and expired-lease mutation",
+    "Cell application/SDK/handler processes receive only their own settings, paths, keys and own engine storage; environment and exec arguments exclude owner/foreign authority",
+    "Strict monotonic capability IPC with independent byte/pending/actual-call bounds, safe errors and retained timeout capacity",
+    "Current Foundation lease plus backend lifecycle is checked before dispatch and again at the actual child handler boundary, including manual and cron work",
+    "Trusted application module routes, handlers and outbox senders/inspection execute only in the cell child",
+    "Remote outbox delivery is authorized against its original durable scoped claim, attempt, payload digest and current lifecycle",
+    "Durable fresh-owner-authorized reconciliation queue permits detached owner UI to request actual remote read-only probes without executing application code in HTTP",
+    "Read-only reconciliation payload acquisition and final child authorization validate their own matching reconciling lease rather than incorrectly requiring a running mutation lease; parent-bound mode cannot be selected by child, mutation checkpoint and outbox remain fenced",
+    "Dynamic per-cell bounded cron catalog rebuild and SDK PUT reconciliation; overflow refuses rather than silently truncating global overview",
+    "Separate signed platform maintenance engine and child with independent PostgreSQL, Redis and key material; no application envelope capability or second jobs dispatch calendar",
+    "External workflow bindings require both private authenticated PostgreSQL/Redis and refuse embedded fallback, duplicate/aliased stores, owner database reuse, superuser workflow roles and nonpersistent/evicting Redis",
+    "Native engine guardian owns the actual ChildProcess handle and terminates it on inherited IPC disconnect, with bounded escalation and no stale numeric PID killing",
+    "Concurrent cold PostgreSQL migrations serialize before any lock table bootstrap",
+    "Compiled supervisor/cell/platform entrypoints retain SDK runtime package assets and include guardian plus additive migrations",
+    "Prepared Compose corrected with independent PostgreSQL bootstrap material, non-superuser workflow initialization, explicit PGDATA parent volume, AOF always and Compose2.23.1 config-content requirement"
+  ],
+  "verification_observed": {
+    "productionTypecheck": "Passed after final source formatting/split",
+    "jobsBuild": "Passed before last mechanical registry split; root must run final full build",
+    "compiledHelp": "Passed",
+    "brokerRegression": "Tests satellite reproduced manual/cron stale-epoch invocation before fix, then reported six passing cases after current-lease callback",
+    "nativeCompiledInitial": "Tests satellite reported three passing compiled native cases: owner HTTP stopped with terminal application work/restart; physical child hard kill retains unknown/no replay/reopen; independent platform terminal/cross-key/signature rejection",
+    "externalPersistence": "Tests satellite reported real external PostgreSQL/Redis sleeping workflow restart case passed; native services helper author reported actual persistent start/stop/restart sentinel retention",
+    "finalAcceptance": "Root owns final source review, scanners, full static/build/regression/native/mutation/trace gates; no final completion claim in this worker report",
+    "nativeFollowup": "Initial dynamic cron registration appeared in actual PostgreSQL but no terminal Foundation cron job was observed over105s. Official pinned executor/service.go1086-1089 proves cron event.id is UTC RFC3339, which the inherited opaque-only validator rejected. Narrow correction now retains legacy IDs and admits only canonical valid UTC-second RFC3339 identities; dedupe unchanged, no polling workaround or broader deadline. Source formatted and typecheck passed; two authored regression cases and actual compiled cron execution remain tests-satellite/root gates. Read-only native fixture had incorrectly awaited mutation checkpoint; corrected fixture and final mode-bound probe authorization are being rerun. Compiled hard-supervisor-kill proof subsequently passed with11listeners released and unrelated listener preserved."
+  },
+  "reviewRemediation": {
+    "E06-PLAN-01": "Canonical W/C/P IDs and D-to-W crosswalk documented",
+    "E06-PLAN-02": "Strict Message, WorkerSettings, Execution, Delivery and broker method schemas plus lifetime/capacity documented",
+    "E06-PLAN-03": "IPC engine guardian ownership and hard-kill/restart contract implemented and bound to P04",
+    "E06-CODE-P01": "Bound application close/exit waits with actual-handle SIGTERM then SIGKILL escalation",
+    "E06-CODE-P02": "Confirmed by independent deterministic test, fixed parent lease callback plus child final authorization; read-only probe final boundary uses a separate parent-bound narrow reconciliation callback",
+    "frozen_followup_admission": "Admission rechecked after awaited lifecycle/lease/lookup guards, including exact outbox authorization"
+  },
+  "preservedLimits": [
+    "Existing PGlite owner journal is preserved; autonomous topology explicitly requires a selected PostgreSQL journal with existing prepared cells. No owner account/project or data migration is performed automatically.",
+    "Native first-party process/capability separation does not qualify Docker/gVisor hostile-code containment, firewall/IPv6/quota behavior or the dedicated server.",
+    "Prepared Compose remains unqualified until actual image/daemon/runtime deployment is proven; native local proof is the enabled local persistence path.",
+    "Pinned upstream engine event ingress remains in-memory even with external stores; application source intent is acknowledged only after durable Foundation receipt and redriven with stable domain identity.",
+    "Coordinated cross-service disaster recovery and release-host qualification remain broader V1 obligations, not implied by local restart tests."
+  ],
+  "ownership": {
+    "thisSatellite": "Production runtime/core/store/build/Compose code and design/implementation artifacts",
+    "testSatellite": "Behavioral tests/native harness/mutation tooling",
+    "researchSatellite": "Current upstream research and supported native service/installer tooling",
+    "root": "Final independent review, integrated checks, public documentation orchestration and final status"
+  }
+}

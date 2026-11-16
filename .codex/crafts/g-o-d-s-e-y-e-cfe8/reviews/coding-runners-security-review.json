@@ -1,0 +1,136 @@
+{
+  "version": 1,
+  "kind": "security-auditor + AEGIS scoped triage",
+  "status": "changes-required",
+  "reviewedAt": "2026-11-14T10:10:24.394115+00:00",
+  "authorization": "Local source-only review; no Git commands, protected/private files, model requests, external pentest, global installations or persistent system changes.",
+  "method": "Independent fresh reviewer. Source-to-sink STRIDE review, source-confirmed logical findings with explicit refutation. No executable exploit or physical containment certification claimed. No production edits.",
+  "degradations": [
+    "Single reviewer; no nested swarm because all four agent slots occupied.",
+    "Security-auditor original shared skill path absent; loaded available C:/Users/osiri/.agents/skills/security-auditor/SKILL.md.",
+    "No Git PoCs under assigned authorization; reproducers below are reviewable procedures for authorized disposable guest test owner, not executed proofs.",
+    "Semgrep and SBOM tool coverage unavailable per orchestrator; source review is not a substitute.",
+    "AEGIS waiver ledger/cache not independently read; no waiver written or inferred."
+  ],
+  "scannerTriage": {
+    "source": "Orchestrator preliminary scanner result supplied in task; not independently rerun by reviewer.",
+    "bunAudit": "0 reported",
+    "gitleaks": "731 public paths scanned; one known synthetic placeholder local.ts:37; zero actual new secrets reported.",
+    "finalScannerFreeze": "Pending orchestrator final scan after concurrent edits."
+  },
+  "summaryTable": [
+    {
+      "id": "SEC-CR-01",
+      "severity": "high",
+      "cwe": "CWE-367",
+      "status": "source-confirmed; physical PoC pending",
+      "title": "Test success is not bound to exported patch and immutable baseline"
+    },
+    {
+      "id": "SEC-CR-02",
+      "severity": "high",
+      "cwe": "CWE-693",
+      "status": "source-confirmed; physical PoC pending",
+      "title": "Failed guest pids admission still launches untrusted code"
+    },
+    {
+      "id": "SEC-CR-03",
+      "severity": "high",
+      "cwe": "CWE-706",
+      "status": "source-confirmed; physical PoC pending",
+      "title": "Git archive attributes silently transform exact selected source"
+    }
+  ],
+  "findings": [
+    {
+      "id": "SEC-CR-01",
+      "layer": "logic",
+      "severity": "high",
+      "cwe": "CWE-367",
+      "reachability": "llm-judged",
+      "status": "CONFIRMED_SOURCE",
+      "evidence": [
+        "scripts/coding_guest_worker.mjs:90-96 recursively assigns /seed common Git metadata and /workspace to CLI UID1000.",
+        "scripts/coding_guest_worker.mjs:108-116 waits only direct CLI, exports patch, then executes untrusted tests and publishes earlier patch with their status.",
+        "apps/control-api/src/coding-provider.ts maps guest.test.code=0 to passed without tree/patch execution digest."
+      ],
+      "sourceToSink": "Repository-controlled CLI descendants/test script -> mutable workspace/index/config -> previously captured patch + later test exit -> owner result marked passed.",
+      "impact": "A passing test can examine or create a different tree than downloadable patch represents. Writable baseline/index also allows omission of changes from git diff. This violates independent test evidence and exact result binding; it does not establish host escape.",
+      "refutation": "Trusted root worker owns its result channel, and API verifies patch SHA256. Those facts prove transmission integrity of chosen bytes, not that test ran against those bytes. Direct CLI exit does not prove all runner descendants stopped.",
+      "refutationSurvived": true,
+      "suggestion": "Quiesce all CLI descendants; retain root-owned immutable baseline and trusted Git metadata; export final tree independently of mutable index/config; run checks against exact frozen candidate and reject test-side mutation, bind result to candidate/patch digest.",
+      "pocProcedure": "Disposable guest only: prepare package test script that changes a tracked file to a valid value before testing and returns 0, while CLI leaves invalid value. Existing worker captures invalid patch first and then reports passed. Separately test tracked assume-unchanged metadata hiding an edit. No PoC executed by reviewer."
+    },
+    {
+      "id": "SEC-CR-02",
+      "layer": "logic",
+      "severity": "high",
+      "cwe": "CWE-693",
+      "reachability": "llm-judged",
+      "status": "CONFIRMED_SOURCE",
+      "evidence": [
+        "scripts/coding_guest_task.py:94-103 init shell mounts/enables cgroups and writes pids.max without set -e, readback or checked exits.",
+        "scripts/coding_guest_worker.mjs:31 uses echo ... cgroup.procs; exec setuidgid, so failed cgroup write does not prevent execution."
+      ],
+      "sourceToSink": "Missing/unsupported/failed guest pids controller -> shell continues -> child cgroup write fails -> semicolon launches arbitrary repository CLI anyway.",
+      "impact": "Advertised maxProcesses=64 can be false for guest processes; outer VMM TasksMax bounds host threads only and cannot bound guest PID exhaustion.",
+      "refutation": "Pinned guest may currently support cgroup2/pids and outer service is bounded. Neither implies a failed setup is safe; current code explicitly continues and never inspects actual child membership.",
+      "refutationSurvived": true,
+      "suggestion": "Fail closed on every init control operation; read back pids.max and controller status; child must verify membership and successful cgroup write before exec, emit trusted containment evidence used for readiness.",
+      "pocProcedure": "Disposable guest only: build qualification variant with pids.max/cgroup.procs unavailable. CLI must never start. Current semicolon wrapper can be demonstrated with a deliberately unwritable cgroup.procs target and an inert marker command after the separator. No production mutation or PoC execution by reviewer."
+    },
+    {
+      "id": "SEC-CR-03",
+      "layer": "logic",
+      "severity": "high",
+      "cwe": "CWE-706",
+      "reachability": "llm-judged",
+      "status": "CONFIRMED_SOURCE",
+      "evidence": [
+        "scripts/coding_guest_worker.mjs:76 uses git archive commit to derive /seed then commits the exported result as private baseline.",
+        "scripts/coding_guest_worker.mjs:117 and provider result retain original task.commitSha even though archive applies export-ignore/export-subst attributes."
+      ],
+      "sourceToSink": "Committed .gitattributes -> git archive -> transformed or omitted source files -> newly initialized baseline -> result still names original selected commit.",
+      "impact": "A valid source commit can materialize a different tree; omitted tests/files and substituted content invalidate exact source/worktree claims and patch applicability.",
+      "refutation": "All interpretation occurs in KVM and original commit object SHA is verified. Containment and commit identity do not guarantee git archive reproduces the exact commit tree; committed archive attributes intentionally change export output.",
+      "refutationSurvived": true,
+      "suggestion": "Materialize exact tree inside guest with disabled hooks/filters/config and safe metadata handling, or independently verify every extracted file mode/type/blob against selected tree before CLI starts; purge unrelated source history before UID1000 execution.",
+      "pocProcedure": "Authorized disposable repository only: commit .gitattributes containing hidden.test.cjs export-ignore and a tracked hidden.test.cjs. Archive selected commit and observe omission; worker still reports original commitSha. Also test export-subst placeholders. No Git command executed by reviewer."
+    }
+  ],
+  "positiveSourceTraces": [
+    "Core owner checks/strict input schemas and repository revision freeze precede admission; serialized writes and Foundation controls retained.",
+    "Core source commit and repository hash verified before queue; submissionIntended precedes submit; unknown paths inspect instead of physical replay.",
+    "Current guest CLI/tests use UID1000 while trusted worker/proxy remain root; serial devices mode0600; no guest network NIC and no native/TCG fallback.",
+    "Source object snapshot uses nofollow directory descriptors, finite counts/bytes and loose commit SHA1 verification; original source.git and tree archive purged before CLI starts.",
+    "Host QEMU jailed after canonical root systemd-run/setpriv UID drop; actual cgroup max values read before exec, KVM-only acceleration/no NIC/no host mounts.",
+    "Broker accepts fixed vendor HTTPS host/path only, no redirects/retries, no ambient auth; conservative durable debit/fsync precedes POST and per-POST Foundation IPC authorization is awaited.",
+    "Native inspect/stop bind request hash, boot ID and systemd InvocationID; uncertainty quarantines without pretending stop acknowledgement is proof.",
+    "Core post-await dispatch/deadline checks, revocation marker handling and conservative settlement remain explicit."
+  ],
+  "notReviewed": [
+    "Actual private bindings, real broker keys, journals and retained private task state; deliberately not read.",
+    "Paid entitlement or model requests; no paid call permitted or made.",
+    "Physical KVM/CLI chain proof and guest adversarial tests; currently running by runtime owner, not certified by source review.",
+    "Final startup/server binding still concurrent; startup module inspected but complete server boot not executed.",
+    "Final scanner/lockfile/CVE/SBOM/license audit beyond reported preliminary Bun/Gitleaks.",
+    "Actual browser UI, rendered downloads and broad unrelated auth/foundation subsystem; other review/test owners cover them.",
+    "Changes after hashes below require focused closure and fresh runtime qualification."
+  ],
+  "files": {
+    "packages/contracts/src/coding.ts": "05c8cbfa2dbec7ddc9fad727d6fb35d8ece52b2defb41048de1e1e59ed55f9bc",
+    "packages/core/src/coding-preparation.ts": "7e36f52a374e3e515dad969386122bdc2d2a3ca3760645ddf044a097e18cdeec",
+    "packages/core/src/coding-execution.ts": "c2986573e58dcfc737129443778817778f6b3ef7e92bc8759d03d2425a88c084",
+    "packages/core/src/coding-state.ts": "5c22d839f5045f9e12effbc107f78f1b364faedd4f5d9e17ff584f975804f370",
+    "apps/control-api/src/coding-provider.ts": "4ebc6a3fa96b6cb9babcc84d6369ada89d86cef5ada054880e3dc787f7a79705",
+    "apps/control-api/src/coding-startup.ts": "575692151baac5334454a805237d61060bc280e3137db16c81fe230145c55a0e",
+    "apps/control-api/src/coding-routes.ts": "ca7b1f7fadf494ff63a15eb2e8be253a3577c198e9d94a21c621fd31ad16d509",
+    "scripts/coding_guest_control.py": "05c5c5c720276af5d6fdfc800662dfe470c0ed835e116748ad507f4787d37319",
+    "scripts/coding_guest_source.py": "7342be2bb68c5a3f6088c557bd6862252ddc0edeedddc41e8b1545c78e1e4a42",
+    "scripts/coding_guest_task.py": "c3f9e125490f075339f3dd1874d7a9776b883f70daa5fc8b370575159a4950d0",
+    "scripts/coding_guest_lab.py": "72450fc89244464aeed9090138a6d922d144517cc39c2ccf057274b33b87ece0",
+    "scripts/coding_guest_worker.mjs": "59f1fb89b5824ded068e816f8a2f6b79458284c8d09cf7f1383805fa3a874aba",
+    "scripts/coding_guest_proxy.mjs": "eae8db053a85591c8f0a2e4ce5ac5cee3a070626c959a39512eb62fb9f8a4ca7",
+    "scripts/coding_guest_broker.py": "d903f540529574109053165dd84ecd2281d9dfe6824ff09b3cf30acf6879430a"
+  }
+}

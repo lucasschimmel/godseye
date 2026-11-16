@@ -1,0 +1,76 @@
+{
+  "verdict": "pass",
+  "kind": "code",
+  "reviewer": "security-auditor / FABER fresh-context satellite; final frozen-source delta",
+  "criticity": "production",
+  "qualification": "Local-only first-party control boundary source review; no production, remote-admission or external-provider certification.",
+  "artifact": [
+    "apps/control-api/src/api-types.ts",
+    "apps/control-api/src/foundation-routes.ts",
+    "apps/control-api/src/openapi.ts",
+    "apps/control-api/src/app.ts",
+    "packages/contracts/src/http.ts",
+    "packages/contracts/src/http-schemas.ts",
+    "packages/contracts/src/http-endpoints.ts",
+    "packages/contracts/src/http-openapi.ts",
+    "packages/contracts/src/http-domain.ts",
+    "packages/control-client/src/index.ts",
+    "packages/control-client/src/transport.ts"
+  ],
+  "findings": [],
+  "criteria_run": 7,
+  "criteria_passed": 7,
+  "criteria": ["COR-01", "COR-02", "COR-03", "COR-04 (+kind=concurrent)", "SAF-01", "SAF-02", "HYG-04"],
+  "evidence": [
+    {
+      "criterion": "server-derived-authority",
+      "reference": "apps/control-api/src/app.ts:87-114; apps/control-api/src/app.ts:211-212",
+      "result": "Foundation routes and OpenAPI are registered after the versioned owner middleware. Only health, owner session status and the separately HMAC-protected local command are exempted. Each protected request obtains its actor from identity.actor(headers) inside identity.exclusive; request JSON and legacy headers do not create actors."
+    },
+    {
+      "criterion": "scoped-identifiers-do-not-confer-authority",
+      "reference": "apps/control-api/src/foundation-routes.ts:24-104; packages/core/src/foundation-data.ts:76-109; packages/core/src/foundation-plans.ts:137-190",
+      "result": "Routes parse UUIDs and strict DTOs then pass the server actor to the broker. Environment/project and typed resource-reference checks remain in the broker. The owner intentionally has the global owner view; no project-service HTTP identity was added."
+    },
+    {
+      "criterion": "no-private-executor-command-exposure",
+      "reference": "apps/control-api/src/foundation-routes.ts; packages/contracts/src/http-endpoints.ts; packages/control-client/src/index.ts",
+      "result": "The HTTP/client allowlists expose resource/budget/plan preparation, exact approval, enqueue, owner cancellation/reconciliation and audit reads. They expose no worker claim, heartbeat, finish, grant authorization or epoch-advance endpoint. Returned run IDs, fence/epoch/lease metadata and grant IDs are owner metadata and do not supply a callable executor authority boundary."
+    },
+    {
+      "criterion": "unqualified-effects-fail-closed",
+      "reference": "apps/control-api/src/server.ts:56; packages/core/src/foundation-data.ts:30-58; packages/core/src/foundation-plans.ts:171",
+      "result": "Runtime constructs FoundationEngine without adapters. The adapter registry defaults empty and adapterFor requires an explicitly registered qualified adapter. New HTTP transport does not qualify providers or dispatch arbitrary commands."
+    },
+    {
+      "criterion": "safe-producer-and-consumer-boundaries",
+      "reference": "apps/control-api/src/api-types.ts:15-38; apps/control-api/src/app.ts:219-264; packages/contracts/src/http.ts:27-61; packages/control-client/src/transport.ts:32-109",
+      "result": "Successful first-party JSON is parsed against its exact endpoint response schema before transmission. Invalid producer output becomes a safe generic 500; logs contain event/request ID/status/code only. Client requests, idempotency keys, version headers, bounded response bytes and success/error DTOs are checked before exposing values. Error JSON is not treated as a successful DTO."
+    },
+    {
+      "criterion": "published-contract-does-not-relax-native-auth",
+      "reference": "packages/contracts/src/http-openapi.ts:135-243; packages/contracts/src/http-endpoints.ts:66-74; apps/control-api/src/app.ts:80-85",
+      "result": "OpenAPI is deterministic contract metadata behind the owner gate. The local-command schema documents its distinct HMAC authority and never embeds proof values. BetterAuth vendor WebAuthn remains a separately pinned /api/auth protocol with its existing endpoint allowlist; the native GitHub webhook keeps raw-byte signature authentication."
+    },
+    {
+      "criterion": "reference-and-input-bounds",
+      "reference": "packages/contracts/src/http-schemas.ts; apps/control-api/src/foundation-routes.ts:97-107; packages/control-client/src/index.ts:29-32",
+      "result": "First-party DTO objects reject unknown fields, IDs are validated before client path construction, audit query keys reject duplicates/unknowns, and cursor/limit values are bounded. No free-form shell, SQL, filesystem path or credential sink was introduced by these transport changes."
+    }
+  ],
+  "supplied_execution_evidence": {
+    "source": "Parent runner reports; not independently executed by this reviewer",
+    "results": [
+      "14 HTTP/client target tests green, including invalid producer output returning a safe 500.",
+      "25 owner-auth HTTP tests and 14 actual-browser checks green before the final guard/full-suite run.",
+      "Seven actual Windows filesystem/offline-CLI tests green for the final owner-runtime remediation."
+    ],
+    "pending": ["Parent final full-suite execution after source freeze."]
+  },
+  "not_reviewed": [
+    "No independent test rerun, ACL mutation/probe, actual owner state/key read, actual enrollment/recovery or remote action was performed by this reviewer.",
+    "Deep broker/executor internals outside the route call-chain checks rely on their existing separate reviews and tests; this is a transport/authority-boundary delta review.",
+    "Real PostgreSQL multiprocess isolation, external adapter/provider qualification, remote/private-network admission and production remain unqualified.",
+    "Full dependency/SAST scanning and nonsecurity REU/HYG checks remain owned by the parent workflow."
+  ]
+}

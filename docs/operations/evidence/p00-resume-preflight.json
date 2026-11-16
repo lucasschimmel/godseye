@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "phase": "P00",
+  "subphase": "handoff-resume-read-only-recheck",
+  "recordedAtUtc": "2026-11-14T21:43:04Z",
+  "repository": {
+    "branch": "develop",
+    "headCommit": "bc7f79c51c7ceb4c566194bc68f18c04cd7bdd2c",
+    "existingChangesPreserved": true
+  },
+  "ssh": {
+    "directKeyBasedConnection": "passed",
+    "configuredAlias": "godseye-host",
+    "configuredAliasStatus": "blocked_by_utf8_bom_in_local_ssh_config",
+    "privateMaterialReadOrLogged": false
+  },
+  "remoteObservation": {
+    "kernel": "7.0.0-22-generic",
+    "diskSerials": [
+      "S675NU0W263145",
+      "S675NU0W263148"
+    ],
+    "raid1MembersPresent": true,
+    "replacementDiskObserved": false,
+    "configurationChanged": false
+  },
+  "decision": "Remain paused before P02 until the worn NVMe replacement is observed and the destructive target is rebound."
+}

@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "status": "fixed-guest-routing-implemented; pinned-CLI-guest-run-pending-runtime",
+  "files": {
+    "scripts/coding_runner_config.mjs": "89f6d5dfb73bec86ea54bc08561fdf9d87bce3a1a532bdf24f9835ae9e5ab7ca",
+    "scripts/coding_runner_config.d.mts": "466b347dc97dfbf8b9a73823fc9389750bc4f8e0f501b4bc3a546aee3349e594",
+    "apps/control-api/src/coding-protocol.ts": "d62353936d97058a95936cc1e5457f3dcb36cd66654b861bdd7d8621b12d1574"
+  },
+  "sources": [
+    "https://learn.chatgpt.com/docs/config-file/config-reference",
+    "https://learn.chatgpt.com/docs/enterprise/roll-out-a-gateway"
+  ],
+  "observations": [
+    "Official configuration documents custom Responses providers with env_key authentication, request_max_retries, stream_max_retries and stream_idle_timeout_ms",
+    "Official gateway documentation says local model_catalog_json replaces bundled catalog and prevents remote discovery; minimal model catalog structure used here",
+    "Pinned Linux Codex0.167.0-alpha.4.1 help previously observed -c overrides, exec --json/--sandbox/--ignore-user-config/--ignore-rules/--model flags"
+  ],
+  "configuration": {
+    "provider": "godseye",
+    "baseURL": "http://127.0.0.1:8080/v1",
+    "keyEnvironment": "CODEX_API_KEY",
+    "requiresOpenAIAuth": false,
+    "supportsWebsockets": false,
+    "wireAPI": "responses",
+    "model": "gpt-5.4-mini",
+    "catalogPath": "/coding/codex-models.json",
+    "requestRetries": 0,
+    "streamRetries": 0,
+    "streamIdleTimeoutMilliseconds": 15000,
+    "search": "disabled",
+    "credentialStore": "ephemeral",
+    "startupUpdateCheck": false
+  },
+  "qualification": [
+    "TypeScript full repository check passed after helper import",
+    "Biome three touched files passed",
+    "Static helper import/routing boundedness check passed; no vendor CLI launched outside KVM",
+    "Actual pinned CLI config-schema and local catalog protocol acceptance remain runtime guest evidence; no paid entitlement claim"
+  ],
+  "runtimeHandoff": "Bake helper at /coding/runner-config.mjs; import codingCodexArguments and codingCodexCatalog in trusted guest worker; root writes readonly /coding/codex-models.json before dropping UID; bind helper/catalog into image recipe; use fixed Codex argv without task.model appends",
+  "notChanged": [
+    "Native lifecycle, repository interpretation/export, broker debit, production credentials and desktop authentication"
+  ]
+}

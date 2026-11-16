@@ -1,0 +1,51 @@
+{
+  "kind": "gauntlet-local-broker",
+  "coverage": {
+    "branch": null,
+    "line": null
+  },
+  "mutation": {
+    "finishedAt": "2026-11-11T17:27:38.164Z",
+    "selected": 18,
+    "restoredPassed": 18,
+    "scope": "18 selected behavioral mutations, not exhaustive coverage",
+    "killed": 18,
+    "invalid": 0,
+    "baselinePassed": 18,
+    "survivors": [],
+    "sourceUnchanged": true
+  },
+  "flaky": [],
+  "layers_run": [
+    "real Windows OpenBao2.7.2 native non-dev Raft qualification",
+    "real PGlite broker authority/rotation/restart",
+    "actual FoundationEngine grant/cancellation/context races",
+    "bounded owned HTTP transport faults",
+    "real private CLI stdin/file/process locking and renewal",
+    "targeted race/audit failure regressions",
+    "TypeScript and Biome",
+    "isolated selected mutation experiment"
+  ],
+  "authored_test_counts": {
+    "authority": 13,
+    "rotation": 11,
+    "task": 10,
+    "privateCli": 3,
+    "nativeProvider": 8,
+    "transportFaults": 5
+  },
+  "aggregate_status": "Targeted slices passed; orchestrator must run and record final combined suite",
+  "tool": {
+    "publishedChecksumVerified": true,
+    "otherPlatformsExecuted": false,
+    "platform": "Windows x64",
+    "signatureVerified": false,
+    "version": "2.7.2"
+  },
+  "gaps": [
+    "line/branch/full mutation coverage unmeasured",
+    "real PostgreSQL static credential transition unqualified",
+    "off-host recovery and replacement snapshot drill not executed",
+    "remote TLS/private-network/OS cell qualification deferred"
+  ]
+}

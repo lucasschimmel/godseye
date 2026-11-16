@@ -1,0 +1,137 @@
+{
+  "scope": "Local E07 Agent Center: real owner/project/environment profiles, bounded conversation tasks and durable tracking",
+  "date": "2026-11-13",
+  "phase": "local-request-complete",
+  "prediction": "prediction-1794601881-4e39bebb",
+  "mode": "sequential dependent epic with research/provider and test satellites",
+  "provider": "OpenAI",
+  "defaultModel": "gpt-6-luna",
+  "modelSources": [
+    "https://developers.openai.com/api/docs/models/gpt-6-luna",
+    "https://developers.openai.com/api/docs/pricing"
+  ],
+  "serverTouched": false,
+  "paidCalls": 0,
+  "stories": [
+    {
+      "id": "E07.CENTER01",
+      "state": "local-request-verified",
+      "owner": "agent_center_core"
+    },
+    {
+      "id": "E07.CENTER02",
+      "state": "local-request-verified",
+      "owner": "agent_center_research"
+    },
+    {
+      "id": "E07.CENTER03",
+      "state": "local-request-verified",
+      "owner": "root"
+    },
+    {
+      "id": "E07.CENTER04",
+      "state": "local-request-verified",
+      "owner": "root/GAUNTLET/fresh-review"
+    }
+  ],
+  "contract": "agent-center-design.md",
+  "criteria": [
+    {
+      "id": "AC-721",
+      "testId": "T-AC-721",
+      "status": "verified-local-scope"
+    },
+    {
+      "id": "AC-722",
+      "testId": "T-AC-722",
+      "status": "verified-local-scope"
+    },
+    {
+      "id": "AC-723",
+      "testId": "T-AC-723",
+      "status": "verified-local-scope"
+    },
+    {
+      "id": "AC-724",
+      "testId": "T-AC-724",
+      "status": "verified-local-scope"
+    },
+    {
+      "id": "AC-725",
+      "testId": "T-AC-725",
+      "status": "verified-local-scope"
+    },
+    {
+      "id": "AC-726",
+      "testId": "T-AC-726",
+      "status": "verified-local-scope"
+    },
+    {
+      "id": "AC-727",
+      "testId": "T-AC-727",
+      "status": "verified-local-scope"
+    },
+    {
+      "id": "AC-728",
+      "testId": "T-AC-728",
+      "status": "verified-local-scope"
+    },
+    {
+      "id": "AC-729",
+      "testId": "T-AC-729",
+      "status": "verified-local-scope"
+    },
+    {
+      "id": "AC-730",
+      "testId": "T-AC-730",
+      "status": "verified-local-scope"
+    },
+    {
+      "id": "AC-731",
+      "testId": "T-AC-731",
+      "status": "verified-local-scope"
+    }
+  ],
+  "remainingFullEpic": [
+    "General tools/disposable OS execution",
+    "Approval/clarification chat and external publication inbox",
+    "Remote coding runners",
+    "E09 operational skill bundles",
+    "Dedicated-host networking/quotas/recovery and provider account qualification"
+  ],
+  "modelDecision": "decision-1794604586-690fa8a3",
+  "verification": {
+    "ordinary": 1329,
+    "nativeDefaultSkipped": 14,
+    "collectedFiles": 120,
+    "vitestSeconds": 2195.94,
+    "agentOrdinaryIncluded": 47,
+    "agentBrowser": 7,
+    "selectedExistingConsoleBrowser": 2,
+    "actualHermesNativeScenarios": 3,
+    "actualPythonReplyCounterCase": 1,
+    "selectedMutationKills": 4,
+    "productionHashes": 53,
+    "sourceScanPaths": 92,
+    "sourceScanFindings": 0,
+    "nodeAuditPackages": 495,
+    "nodeAdvisories": 0,
+    "pythonDistributions": 74,
+    "thirdPartyOsvQueries": 73,
+    "pythonKnownFindings": 0,
+    "static": "pass",
+    "contracts": "control1.10.0-application1.0.0-pass",
+    "build": "pass",
+    "builtSmoke": "pass"
+  },
+  "completedAt": "2026-11-13T21:35:03.627Z",
+  "outcome": "outcome-1794605646-fa3165de",
+  "wholeEpicComplete": false,
+  "remaining": [
+    "Full interactive chat/SSE/artifacts/clarification",
+    "General disposable tools/approval inbox/coding runners",
+    "E08 invoicing reconciliation",
+    "E09 operational skills",
+    "Dedicated-host deployment/containment/recovery"
+  ]
+}
