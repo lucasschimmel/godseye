@@ -6,20 +6,29 @@ Needs: **C** code by the assistant, **S** server work by the assistant, **O** ow
 
 Vocabulary: *local* means done with fixtures and tests only; *server* means proven on the real server according to the ledger.
 
+## 0. Owner decisions of 2026-11-16 (after this inventory was written)
+
+- **Notifications go to Discord, not email.** A GODSEYE Discord server with one category per project (status, logs, later a limited dashboard and two-way chat with Hermes). Phase 1: a Discord-format webhook adapter (Discord rejects the current generic body, which has no `content` or `embeds`) for alerts, status and logs; the external heartbeat uses healthchecks.io forwarding to Discord so it does not depend on the monitored server. Phase 2: a Discord bot for two-way use, restricted to the owner's Discord user id, with the bot token in OpenBao and dangerous actions still gated by passkey approval. Email (L1) is dropped.
+- **No payment for GitHub Actions.** The repository stays public; scheduled and manual `external-observer` runs succeed again (2026-11-16 20:06 UTC), so the billing block recorded in ledger entries 020 and 022 is stale.
+- **First real project: Melvyn** (`D:\Developer\Projects\Melvyn`, private GitHub repository, Bun and discord.js bot with SQLite). It also exercises the GitHub App, webhook and delivery chain. Only one bot process may run per token and database: stop any other deployment before this one starts.
+- **Host reboot drill only when reconnection is certain** (laptop WireGuard tested, two OpenBao shares reachable, remote console requested from Hetzner).
+- **OpenBao shares stay on the desktop for now**; no redistribution yet.
+- **Code backlog is paused** (the items marked C in sections 3.1 and 3.2 and step 5 of the critical path) until the owner picks what to start with. The priority is the server and owner steps.
+
 ## 1. Known limits (recorded so they are not forgotten)
 
 | # | Limit | Where it bites |
 |---|---|---|
 | L1 | Notification webhooks were never sent to a real receiver; only fakes and a private-address refusal were tested. There is no email channel (no SMTP contract). | A11, DS11 |
 | L2 | Restore activation cannot promote on the shipped pgBackRest stack (`PROMOTION_UNAVAILABLE`); it only works with a fixture provider. Jobs, backend and domain definitions stay on the fenced source; the restored database is not adopted as a managed allocation. | G1, E03.S03 |
-| L3 | Jenkins build links depend on the git plugin revision shape taken from Jenkins documentation; not tried against the real Jenkins. Links are derived per request, so older runs show "Build Jenkins non rapporté". | A5, E05.S06 |
+| L3 | Jenkins build links depend on the git plugin revision shape. Checked on the real Jenkins (`godseye-platform` build 13 exposes `lastBuiltRevision.SHA1`, equal to the `main` commit); the console rendering itself was not re-checked with a real build. Links are derived per request, so older runs show "Build Jenkins non rapporté". | A5, E05.S06 |
 | L4 | Reports of green Jenkins builds are not stored in the repository (no JUnit, no config hash). | DS15 |
 | L5 | No project, database or hosted backend cell exists on the server; everything about cells is lab-level. | E03, E04, E06 |
 | L6 | The controller has no OpenBao identity (`bao.auth` missing); the Access page shows `no_authority`. Raft snapshot and the jobs and Redis units are disabled. | E02.S02 |
 | L7 | The capacity over-commit (480 of 472 GiB disks, 99.1 % RAM) is undecided; no dedicated coding VM fits. | DS03 |
 | L8 | Notification retries after an unclear send rely on the receiver honouring `Idempotency-Key`; Slack/Discord-style incoming webhooks probably reject the body, so use a generic receiver (ntfy, healthchecks). | A11 |
 | L9 | Local PC: the OpenBao lab tool is not installed, so `access-cli` and `openbao-provider` vitest files fail there (they pass where the tool is installed). | tests |
-| L10 | The repository is public; reverting it to private stops GitHub Actions and the external observer. The observer is currently blocked by account billing. | DS11 |
+| L10 | The repository is public; reverting it to private stops GitHub Actions and the external observer. The observer ran successfully on 2026-11-16 (the earlier billing block no longer applies). | DS11 |
 
 ## 2. Corrections to earlier claims
 
