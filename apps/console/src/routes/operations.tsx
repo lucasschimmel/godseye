@@ -1,6 +1,7 @@
 import type { AuditView, OperationView } from "@godseye/contracts";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
+import { AuditIntegrityPanel } from "@/components/audit-integrity-panel";
 import {
   EmptyState,
   Failure,
@@ -68,6 +69,7 @@ function Operations() {
           </Table>
         )}
       </section>
+      <AuditIntegrityPanel />
       <section className="panel activity-panel">
         <div className="panel-heading">
           <SectionTitle>Activité de l’espace</SectionTitle>
