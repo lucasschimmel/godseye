@@ -52,6 +52,14 @@ export const HostHealthDigest = z.object({
   scrubAgeDays: Quantity.nullable(),
   /** Age of the oldest per-VM newest archive: the weakest recoverability claim across guests. */
   weakestVmBackupAgeHours: Quantity.nullable(),
+  /** State of the host's off-host (Backblaze B2) copy as the host last recorded it; null when absent. */
+  offhostBackup: z
+    .object({
+      state: z.string().min(1).max(40),
+      mode: z.string().max(40).nullable(),
+      recordedAt: Moment.nullable(),
+    })
+    .nullable(),
   guests: z.array(z.object({ vmid: z.string().max(12), state: z.string().max(24) })).max(16),
   alerts: z
     .array(z.object({ severity: z.enum(["critical", "warning"]), message: z.string().max(240) }))

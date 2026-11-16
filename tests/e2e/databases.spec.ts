@@ -151,6 +151,11 @@ test("T-AC-28 T-AC-33 prepares a bounded profile for the selected preview and ke
   await expect(
     page.getByRole("heading", { name: "Rotation des secrets à connecter", exact: true }),
   ).toBeVisible();
+  const cadence = page.getByRole("region", { name: "Cadence réelle des sauvegardes" });
+  await expect(
+    cadence.getByText(/Inconnu · source non configurée|Aucune cellule/).first(),
+  ).toBeVisible();
+  await expect(cadence.getByText(/Dernier test de restauration enregistré/)).toBeVisible();
   await expect(page.getByText(/Aucun canal de notification externe n’est configuré/)).toBeVisible();
   await expect(page.getByRole("heading", { name: "Incidents", exact: true })).toBeVisible();
   await expect(
