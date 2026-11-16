@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+# godseye-host-status-receive: forced command for the `hoststatus` account on godseye-pro.
+#
+# The Proxmox host pushes its status JSON here over SSH; nothing else can be done with that key (the
+# authorized_keys line carries `restrict`, `from=` and this command). SSH_ORIGINAL_COMMAND selects one of two
+# fixed targets, stdin is size-capped and must parse as JSON with the expected shape before it replaces the
+# published file atomically. The control API reads the result read-only through the `godseye` group.
+set -euo pipefail
+umask 027
+
+DEST_DIR="${GODSEYE_HOST_STATUS_DIR:-/var/lib/godseye-host-status}"
+MAX_BYTES=262144
+
+case "${SSH_ORIGINAL_COMMAND:-}" in
+  host-health) NAME=host-health.json ;;
+  offhost-backup) NAME=offhost-backup.json ;;
+  *)
+    echo "unsupported target" >&2
+    exit 64
+    ;;
+esac
+
+TMP="$(mktemp "$DEST_DIR/.incoming.XXXXXX")"
+trap 'rm -f "$TMP"' EXIT
+head -c "$((MAX_BYTES + 1))" >"$TMP"
+SIZE="$(stat -c %s "$TMP")"
+if [ "$SIZE" -eq 0 ] || [ "$SIZE" -gt "$MAX_BYTES" ]; then
+  echo "empty or oversized payload" >&2
+  exit 65
+fi
+if [ "$NAME" = host-health.json ]; then
+  jq -e '(.ts | type == "string") and (.status | IN("ok","degraded","critical"))' "$TMP" >/dev/null \
+    || { echo "invalid host-health payload" >&2; exit 65; }
+else
+  jq -e '(.ts | type == "string") and (.state | type == "string")' "$TMP" >/dev/null \
+    || { echo "invalid offhost-backup payload" >&2; exit 65; }
+fi
+chmod 0640 "$TMP"
+mv -f "$TMP" "$DEST_DIR/$NAME"
+trap - EXIT
+echo "stored $NAME ($SIZE bytes)"

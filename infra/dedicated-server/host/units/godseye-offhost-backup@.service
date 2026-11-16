@@ -5,6 +5,8 @@ Wants=network-online.target
 
 [Service]
 Type=oneshot
+CacheDirectory=godseye-restic
+Environment=RESTIC_CACHE_DIR=/var/cache/godseye-restic
 ExecStart=/usr/local/sbin/godseye-offhost-backup %i
 Nice=15
 IOSchedulingClass=idle

@@ -50,6 +50,10 @@ GODSEYE_BAO_MOUNT=godseye
 NODE_EXTRA_CA_CERTS=/etc/openbao/bao.crt
 GODSEYE_DATA_DIR=/var/lib/godseye/data
 GODSEYE_STATE_DIR=/var/lib/godseye/state
+GODSEYE_OBSERVE_ROOT_PATH=/
+GODSEYE_OBSERVE_CELL_DATA_PATH=${GODSEYE_OBSERVE_CELL_DATA_PATH:-/srv/godseye/pg}
+GODSEYE_HOST_HEALTH_FILE=${GODSEYE_HOST_HEALTH_FILE:-/var/lib/godseye-host-status/host-health.json}
+GODSEYE_PG_BACKUP_STATUS_DIR=${GODSEYE_PG_BACKUP_STATUS_DIR:-/var/lib/godseye/pg-backup}
 ENVEOF
   # Signed webhook intake stays disabled until the owner provisions the key out of band.
   [ -z "$WEBHOOK_KEY" ] || echo "GODSEYE_GITHUB_WEBHOOK_KEY=${WEBHOOK_KEY}"
@@ -57,7 +61,7 @@ ENVEOF
   # other installers added; only the keys managed above and the dropped legacy ones are not copied.
   if [ -f "$ENV_FILE" ]; then
     grep -E '^[A-Z][A-Z0-9_]*=' "$ENV_FILE" \
-      | grep -vE '^(GODSEYE_MODE|NODE_ENV|GODSEYE_PUBLIC_ORIGIN|GODSEYE_API_HOST|GODSEYE_API_PORT|GODSEYE_CONSOLE_PORT|GODSEYE_TRUSTED_PROXIES|GODSEYE_DATABASE_URL|DATABASE_URL|GODSEYE_BAO_ADDRESS|GODSEYE_BAO_MOUNT|NODE_EXTRA_CA_CERTS|GODSEYE_DATA_DIR|GODSEYE_STATE_DIR|GODSEYE_GITHUB_WEBHOOK_KEY|REDIS_URL|GODSEYE_SESSION_SECRET|GODSEYE_INTERNAL_TOKEN)=' \
+      | grep -vE '^(GODSEYE_MODE|NODE_ENV|GODSEYE_PUBLIC_ORIGIN|GODSEYE_API_HOST|GODSEYE_API_PORT|GODSEYE_CONSOLE_PORT|GODSEYE_TRUSTED_PROXIES|GODSEYE_DATABASE_URL|DATABASE_URL|GODSEYE_BAO_ADDRESS|GODSEYE_BAO_MOUNT|NODE_EXTRA_CA_CERTS|GODSEYE_DATA_DIR|GODSEYE_STATE_DIR|GODSEYE_OBSERVE_ROOT_PATH|GODSEYE_OBSERVE_CELL_DATA_PATH|GODSEYE_HOST_HEALTH_FILE|GODSEYE_PG_BACKUP_STATUS_DIR|GODSEYE_GITHUB_WEBHOOK_KEY|REDIS_URL|GODSEYE_SESSION_SECRET|GODSEYE_INTERNAL_TOKEN)=' \
       || true
   fi
 } >"$ENV_FILE.new"
@@ -88,8 +92,12 @@ WantedBy=multi-user.target
 EOF
 
 systemctl daemon-reload
-systemctl enable --now godseye-control-api
-sleep 3
+systemctl enable godseye-control-api
+# `enable --now` does not restart a running service: restart so the freshly built bundle is the one running.
+systemctl restart godseye-control-api
+if systemctl is-enabled godseye-console >/dev/null 2>&1; then systemctl restart godseye-console; fi
+sleep 4
 systemctl is-active godseye-control-api
-curl -fsS http://127.0.0.1:4301/api/v1/openapi.json | head -c 200
+# The OpenAPI document needs an owner session in server mode; the public health endpoint does not.
+curl -fsS http://127.0.0.1:4301/api/v1/health
 echo ""
