@@ -240,7 +240,7 @@ test("T-AC-35 T-AC-40 shows derived backup, rotation and incident states without
   await expect(page.getByText(/Aucun fournisseur de sauvegarde n’est connecté/)).toBeVisible();
   await expect(page.getByText("Aucune sauvegarde conservée", { exact: true })).toBeVisible();
   await expect(
-    page.getByRole("heading", { name: "Rotation des secrets à connecter", exact: true }),
+    page.getByRole("heading", { name: "Rotation des secrets non branchée", exact: true }),
   ).toBeVisible();
   await page.getByRole("button", { name: "Réévaluer les incidents", exact: true }).click();
   await expect(page.getByText("Aucun incident enregistré", { exact: true })).toBeVisible();
