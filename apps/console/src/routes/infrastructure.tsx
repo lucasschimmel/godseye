@@ -22,10 +22,12 @@ import {
   infrastructureStates,
 } from "@/lib/infra-labels";
 import { ownerAuth } from "@/lib/owner";
+import { useDeployment } from "@/lib/use-deployment";
 
 export const Route = createFileRoute("/infrastructure")({ component: Infrastructure });
 function Infrastructure() {
   const owner = useOwner();
+  const deployment = useDeployment();
   const inventory = useQuery(
     resource<InfrastructureOverviewView>("infrastructure", "/infrastructure"),
   );
@@ -107,12 +109,14 @@ function Infrastructure() {
                   {data.executionAvailable ? "Admission disponible" : "Exécution non qualifiée"}
                 </h2>
                 <p>
-                  Un seul hôte Proxmox, une VM professionnelle, une VM jeux et une éventuelle VM
-                  tâche. Les cellules restent dans la VM professionnelle.
+                  {deployment.isLocal
+                    ? "Un seul hôte Proxmox, une VM professionnelle, une VM jeux et une éventuelle VM tâche. Les cellules restent dans la VM professionnelle."
+                    : "Un seul serveur dédié héberge la VM professionnelle (console, API, cellules et services), la VM jeux et, si elle est déclarée, une VM tâche jetable. Les cellules des projets restent dans la VM professionnelle."}
                 </p>
                 <p>
-                  Le contrôleur local ne certifie ni le serveur dédié, ni les quotas persistants, ni
-                  le filtrage hôte et réseau dans les deux familles.
+                  {deployment.isLocal
+                    ? "Le contrôleur local ne certifie ni le serveur dédié, ni les quotas persistants, ni le filtrage hôte et réseau dans les deux familles."
+                    : "Le contrôleur observe la VM professionnelle où il s’exécute. Les quotas persistants, le filtrage réseau dans les deux familles et l’exécution isolée des environnements restent à qualifier sur le serveur."}
                 </p>
                 {!fresh && (
                   <p>
@@ -136,7 +140,9 @@ function Infrastructure() {
                           expectedRevision: data.observationRevision,
                         });
                         setMessage(
-                          "Mesures locales actualisées. La qualification du serveur reste distincte.",
+                          deployment.isLocal
+                            ? "Mesures locales actualisées. La qualification du serveur reste distincte."
+                            : "Mesures actualisées. La qualification de l’exécution reste distincte.",
                         );
                       })
                     }
