@@ -109,6 +109,53 @@ describe("GitHub raw-body HTTP boundary", () => {
     expect(await core.listCiRuns(owner)).toHaveLength(1);
   });
 
+  it("T41 accepts a signed delivery that arrives under the public site name", async () => {
+    const delivery = signedDelivery();
+
+    const response = await app.request(hookUrl, {
+      method: "POST",
+      headers: {
+        host: "godseye.example.test",
+        "content-type": "application/json",
+        "x-github-delivery": delivery.deliveryId,
+        "x-github-event": delivery.event,
+        "x-hub-signature-256": delivery.signature,
+      },
+      body: Buffer.from(delivery.rawBody).toString("utf8"),
+    });
+
+    expect(response.status).toBe(202);
+  });
+
+  it("T41 still rejects an unsigned delivery under the public site name", async () => {
+    const delivery = signedDelivery();
+
+    const response = await app.request(hookUrl, {
+      method: "POST",
+      headers: {
+        host: "godseye.example.test",
+        "content-type": "application/json",
+        "x-github-delivery": delivery.deliveryId,
+        "x-github-event": delivery.event,
+      },
+      body: Buffer.from(delivery.rawBody).toString("utf8"),
+    });
+
+    expect(response.status).toBe(401);
+    expect(await core.listCiRuns(owner)).toHaveLength(0);
+  });
+
+  it("T41 keeps rejecting an unknown host on every other route", async () => {
+    const response = await app.request(`${apiUrl}/health`, {
+      headers: { host: "godseye.example.test" },
+    });
+
+    expect(response.status).toBe(403);
+    expect((await response.json()) as ApiErrorBody).toMatchObject({
+      error: { code: "INVALID_HOST" },
+    });
+  });
+
   it("T41 refuses the webhook route when its verification key is not configured", async () => {
     const unconfigured = createApp(core, loadConfiguration({ GODSEYE_MODE: "local" }));
     const delivery = signedDelivery();
