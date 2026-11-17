@@ -8,7 +8,10 @@
 #   2. creates an orphan, periodic token whose ONLY policy is that one (no default policy);
 #   3. stops the controller, installs the token as <identityDir>/bao.auth through the repository CLI
 #      (which refuses anything but the exact compiled policy), starts the controller again;
-#   4. installs a weekly timer that renews the token so it never expires while the platform runs.
+#   4. revokes the previous controller token when this replaces an older one.
+# The token is periodic with a one-year period and is NOT renewed automatically: its minimal policy does not
+# allow `auth/token/renew-self` (verified: HTTP 403). Before the expiry date recorded in the execution ledger,
+# run `identity` again (it replaces bao.auth atomically and revokes the old token).
 # revoke-admin: revokes the short-lived admin (root) token typed at the prompt and proves it is dead.
 #
 # The only input is a short-lived OpenBao admin token typed at a silent prompt (generate it with two unseal
@@ -25,7 +28,7 @@ STATE_DIR="${GODSEYE_STATE_DIR:-/var/lib/godseye/state}"
 DATA_DIR="${GODSEYE_DATA_DIR:-/var/lib/godseye/data}"
 IDENTITY_DIR="${STATE_DIR}/owner"
 SERVICE=godseye-control-api.service
-TOKEN_PERIOD="${GODSEYE_CONTROLLER_TOKEN_PERIOD:-720h}"
+TOKEN_PERIOD="${GODSEYE_CONTROLLER_TOKEN_PERIOD:-8760h}"
 
 [ "$(id -u)" -eq 0 ] || { echo "Run as root (sudo)." >&2; exit 1; }
 [ -t 0 ] || [ "${GODSEYE_NONINTERACTIVE:-}" = 1 ] || { echo "Interactive terminal required (ssh -t), or GODSEYE_NONINTERACTIVE=1 with the secrets on stdin." >&2; exit 1; }
@@ -76,48 +79,26 @@ case "$COMMAND" in
     { [ -n "$CONTROLLER_TOKEN" ] && [ "$CONTROLLER_TOKEN" != null ]; } || { echo "Token creation failed." >&2; exit 1; }
 
     REPLACE=()
-    [ -e "${IDENTITY_DIR}/bao.auth" ] && REPLACE=(--replace)
+    OLD_TOKEN=""
+    if [ -e "${IDENTITY_DIR}/bao.auth" ]; then REPLACE=(--replace); OLD_TOKEN="$(cat "${IDENTITY_DIR}/bao.auth")"; fi
     systemctl stop "$SERVICE"
     restart() { systemctl start "$SERVICE" || true; }
-    trap 'restart; unset BAO_ADMIN_TOKEN CONTROLLER_TOKEN POLICY' EXIT
+    trap 'restart; unset BAO_ADMIN_TOKEN CONTROLLER_TOKEN OLD_TOKEN POLICY' EXIT
     printf '%s' "$CONTROLLER_TOKEN" | access_cli access:provider-auth "${REPLACE[@]}"
     unset CONTROLLER_TOKEN
+    if [ -n "$OLD_TOKEN" ]; then
+      # Best effort: the replaced token must not stay valid for its remaining lifetime.
+      jq -n --arg t "$OLD_TOKEN" '{token:$t}' | bao_send POST auth/token/revoke >/dev/null || echo "Old controller token could not be revoked (it expires on its own)." >&2
+      unset OLD_TOKEN
+    fi
+    # An earlier version installed a renewal timer that cannot work; remove it if present.
+    if [ -e /etc/systemd/system/godseye-bao-renew.timer ]; then
+      systemctl disable --now godseye-bao-renew.timer >/dev/null 2>&1 || true
+      rm -f /etc/systemd/system/godseye-bao-renew.timer /etc/systemd/system/godseye-bao-renew.service /usr/local/sbin/godseye-bao-renew.sh
+      systemctl daemon-reload
+      systemctl reset-failed godseye-bao-renew.service >/dev/null 2>&1 || true
+    fi
 
-    install -d -m 0755 /usr/local/sbin
-    cat >/usr/local/sbin/godseye-bao-renew.sh <<RENEW
-#!/usr/bin/env bash
-# Renews the controller's OpenBao token. Runs as the godseye user (weekly timer).
-set -euo pipefail
-curl -fsS --cacert ${BAO_CACERT} -K <(printf 'header = "X-Vault-Token: %s"\n' "\$(cat ${IDENTITY_DIR}/bao.auth)") \\
-  -X POST ${BAO_ADDR}/v1/auth/token/renew-self -o /dev/null
-RENEW
-    chmod 0755 /usr/local/sbin/godseye-bao-renew.sh
-    cat >/etc/systemd/system/godseye-bao-renew.service <<'UNIT'
-[Unit]
-Description=Renew the GODSEYE controller OpenBao token
-After=openbao.service
-
-[Service]
-Type=oneshot
-User=godseye
-Group=godseye
-ExecStart=/usr/local/sbin/godseye-bao-renew.sh
-UNIT
-    cat >/etc/systemd/system/godseye-bao-renew.timer <<'UNIT'
-[Unit]
-Description=Weekly renewal of the GODSEYE controller OpenBao token
-
-[Timer]
-OnCalendar=weekly
-Persistent=true
-RandomizedDelaySec=1h
-
-[Install]
-WantedBy=timers.target
-UNIT
-    systemctl daemon-reload
-    systemctl enable --now godseye-bao-renew.timer >/dev/null
-    systemctl start godseye-bao-renew.service
     echo "CONTROLLER_IDENTITY_INSTALLED. Next: revoke the admin token with the revoke-admin command."
     ;;
   *)
