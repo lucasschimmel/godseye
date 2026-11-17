@@ -22,7 +22,7 @@ for (const [layout, width, height] of [
     page,
   }, testInfo) => {
     await page.setViewportSize({ width, height });
-    await page.goto("/agents");
+    await page.goto("/hermes?vue=code");
     // Project/auth/binding and preparation use actual owner HTTP. Only completed
     // execution/result reads below are labeled UI fixtures, never native proof.
     const project = (await page.evaluate(

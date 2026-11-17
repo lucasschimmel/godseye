@@ -26,7 +26,7 @@ import { collectedMeasuresServerNote, headroomEvidence } from "@/lib/infra-serve
 import { ownerAuth } from "@/lib/owner";
 import { useDeployment } from "@/lib/use-deployment";
 
-export const Route = createFileRoute("/infrastructure")({ component: Infrastructure });
+export const Route = createFileRoute("/platform/server")({ component: Infrastructure });
 function Infrastructure() {
   const owner = useOwner();
   const deployment = useDeployment();
@@ -71,9 +71,9 @@ function Infrastructure() {
   return (
     <>
       <PageHeading
-        eyebrow="HÉBERGEMENT PRIVÉ"
-        title="Infrastructure"
-        description="Inventaire souhaité, mesures réelles et préparation isolée des environnements."
+        eyebrow="Plateforme"
+        title="Serveur"
+        description="Mesures réelles, inventaire souhaité et préparation isolée des environnements."
         action={
           <Button
             variant="outline"

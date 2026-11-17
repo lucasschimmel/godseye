@@ -26,7 +26,7 @@ import { Button } from "@/components/ui/button";
 import { api, resource, timestamp } from "@/lib/api";
 import { ownerAuth } from "@/lib/owner";
 
-export const Route = createFileRoute("/databases")({ component: Databases });
+export const Route = createFileRoute("/platform/data")({ component: Databases });
 function Databases() {
   const overview = useQuery(resource<DatabaseOverviewView>("databases", "/databases"));
   const projects = useQuery(resource<ProjectDTO[]>("projects", "/projects"));
@@ -68,9 +68,9 @@ function Databases() {
   return (
     <>
       <PageHeading
-        eyebrow="DONNÉES DES PROJETS"
-        title="Bases de données"
-        description="Une instance PostgreSQL indépendante pour chaque environnement. Les profils préparés restent distincts des ressources vérifiées."
+        eyebrow="Plateforme"
+        title="Données"
+        description="Une instance PostgreSQL indépendante par environnement, ses sauvegardes et ses restaurations tenues."
         action={
           <Button
             variant="outline"

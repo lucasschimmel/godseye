@@ -24,7 +24,7 @@
 }
 .agents-coding summary {
   cursor: pointer;
-  font: 11px / 1.75 var(--font-data);
+  font: 13px / 1.75 var(--font-data);
 }
 .agents-coding pre {
   min-width: 0;
@@ -34,7 +34,7 @@
   padding: 12px;
   margin: 12px 0;
   background: var(--surface-subtle);
-  font: 11px / 1.75 var(--font-data);
+  font: 13px / 1.75 var(--font-data);
 }
 .agents-coding button {
   justify-self: start;

@@ -48,7 +48,7 @@
   width: 100%;
 }
 .telemetry-section :is(input, select, summary):focus-visible {
-  outline: 2px solid var(--accent-ink);
+  outline: 2px solid var(--link);
   outline-offset: 3px;
 }
 .telemetry-form fieldset {
@@ -73,7 +73,7 @@
 }
 .telemetry-totals dt {
   color: var(--text-secondary);
-  font-size: 12px;
+  font-size: 13.5px;
   margin-bottom: 6px;
 }
 .telemetry-totals dd {

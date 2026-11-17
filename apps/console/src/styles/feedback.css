@@ -6,7 +6,7 @@
   background: var(--danger-ink-surface);
   padding: 15px;
   border-radius: var(--radius);
-  font-size: 12px;
+  font-size: 13.5px;
   line-height: 1.6;
   margin-bottom: 20px;
 }
@@ -14,11 +14,11 @@
   flex-shrink: 0;
 }
 .success-message {
-  color: var(--accent-ink);
+  color: var(--link);
   background: var(--accent-surface);
   padding: 12px 15px;
   margin-bottom: 20px;
-  font-size: 12px;
+  font-size: 13.5px;
   border-radius: var(--radius);
 }
 .loading {
@@ -28,7 +28,7 @@
   align-items: center;
   gap: 12px;
   color: var(--text-secondary);
-  font-size: 12px;
+  font-size: 13.5px;
 }
 .spin {
   animation: spin 1s linear infinite;

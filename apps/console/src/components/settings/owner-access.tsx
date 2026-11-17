@@ -1,10 +1,9 @@
 import type { OwnerSecurityView } from "@godseye/contracts";
 import { useQuery } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
 import { Fingerprint, KeyRound, LogOut, ShieldCheck } from "lucide-react";
 import { useState } from "react";
 import { useOwner } from "@/components/owner-gate";
-import { Failure, Loading, PageHeading, SectionTitle } from "@/components/shared";
+import { Failure, Loading, SectionTitle, SubHeading } from "@/components/shared";
 import { Button } from "@/components/ui/button";
 import { WithReason } from "@/components/with-reason";
 import { api, resource, timestamp } from "@/lib/api";
@@ -16,8 +15,7 @@ import {
 import { ownerAuth } from "@/lib/owner";
 import { useDeployment } from "@/lib/use-deployment";
 
-export const Route = createFileRoute("/security")({ component: OwnerSecurity });
-function OwnerSecurity() {
+export function OwnerSecurity() {
   const owner = useOwner();
   const deployment = useDeployment();
   const recovery = recoveryCopy(deployment);
@@ -45,7 +43,7 @@ function OwnerSecurity() {
   }
   return (
     <>
-      <PageHeading
+      <SubHeading
         eyebrow="IDENTITÉ & AUTORISATIONS"
         title="Accès propriétaire"
         description="Gérez vos clés d’accès et les sessions autorisées à piloter votre infrastructure."

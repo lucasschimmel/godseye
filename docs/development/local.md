@@ -40,6 +40,8 @@ Data and identity directories are protected before use. Shared roots and linked 
 
 ## Current journeys and API
 
+The console was reorganized (see the console map in the README): `/access` and `/security` are now **Réglages** (`/settings`), `/agents` is **Hermes** (`/hermes`), and the platform pages live under `/platform/*`. Former addresses redirect.
+
 The owner can register a project, inspect its two planned environment configurations, bind a repository, validate local configuration, inspect operation/audit history, manage owner keys/sessions and manage scoped service identities/slots at `/access`. These configuration actions do not provision infrastructure. The auto-deploy checkbox stores a preference only.
 
 Private `/api/v1` routes require the authenticated fixed owner. Health and sanitized owner-session status are public local reads; the local administration endpoint requires separate filesystem-derived HMAC proof. `/hooks/github` uses its own raw-body HMAC authority. The passkey wire routes under `/api/auth` are an explicit allowlist; public signup, password/social login and public native session inspection are unavailable.

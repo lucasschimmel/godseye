@@ -1,11 +1,10 @@
 import type { AccessOverviewView, OwnerSecurityView, ProjectDTO } from "@godseye/contracts";
 import { useQuery } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
 import { Fingerprint, KeyRound, RefreshCw } from "lucide-react";
 import { useState } from "react";
 import { providerLabels, purposeLabels, states } from "@/components/access-labels";
 import { useOwner } from "@/components/owner-gate";
-import { EmptyState, Failure, Loading, PageHeading, SectionTitle } from "@/components/shared";
+import { EmptyState, Failure, Loading, SectionTitle, SubHeading } from "@/components/shared";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { api, resource, timestamp } from "@/lib/api";
@@ -20,8 +19,7 @@ import {
 } from "@/lib/secrets-bindings";
 import { useDeployment } from "@/lib/use-deployment";
 
-export const Route = createFileRoute("/access")({ component: AccessManagement });
-function AccessManagement() {
+export function AccessManagement() {
   const owner = useOwner();
   const deployment = useDeployment();
   const access = useQuery(resource<AccessOverviewView>("access", "/access"));
@@ -61,7 +59,7 @@ function AccessManagement() {
   }
   return (
     <>
-      <PageHeading
+      <SubHeading
         eyebrow="ACCÈS DES SERVICES"
         title="Secrets et identités de service"
         description="Isolez chaque usage dans son projet et son environnement. Les valeurs restent dans le circuit privé."

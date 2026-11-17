@@ -57,7 +57,7 @@
   color: var(--text-secondary);
 }
 .pressure-ok {
-  color: var(--accent-ink);
+  color: var(--link);
 }
 .pressure-warn,
 .pressure-critical {

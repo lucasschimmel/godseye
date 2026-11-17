@@ -39,6 +39,25 @@ bun run owner:setup
 
 Open the single-use link printed by the command and register your own device passkey or security key. The browser ceremony requires your presence; virtual authenticators used by tests do not enroll the real owner. There is no public signup or developer-owner bypass. See [owner access and recovery](docs/development/owner-access.md).
 
+### Console map
+
+The console starts on **Aujourd’hui** (decisions, incidents, unknown results). Former addresses still work and redirect to their new place; the guides under `docs/development` may use either form.
+
+| Section                                              | Address                               | Former address                  |
+| ---------------------------------------------------- | ------------------------------------- | ------------------------------- |
+| Aujourd’hui                                          | `/`                                   | `/` (overview)                  |
+| Projets, project tabs                                | `/projects`, `/projects/:id?onglet=…` | same                            |
+| Hermes (conversations, plans, tâches, code, profils) | `/hermes?vue=…`                       | `/agents`                       |
+| Serveur                                              | `/platform/server`                    | `/infrastructure`               |
+| Livraison                                            | `/platform/delivery`                  | `/pipelines`                    |
+| Données                                              | `/platform/data`                      | `/databases`                    |
+| Jobs                                                 | `/platform/jobs`                      | `/jobs`                         |
+| Coûts                                                | `/costs`                              | `/usage`                        |
+| Journal (chronologie, opérations, incidents)         | `/journal?vue=…`                      | `/operations`, `/observability` |
+| Réglages (propriétaire, services, notifications)     | `/settings?section=…`                 | `/security`, `/access`          |
+
+A sensitive action refused for a stale passkey opens one confirmation sheet and is retried once after confirmation.
+
 The API listens on `127.0.0.1:4301`. The control database persists under `.local/control`; private identity/process state defaults to `.local/control-state`. Local mode remains mandatory and production startup is refused while private remote admission is unqualified.
 
 The console can register projects, prepare separate development/production configurations, associate repositories, validate local configuration, manage owner keys/sessions and register scoped service identities/slots at `/access`. At `/infrastructure`, the owner can declare desired topology, refresh actual local-controller metadata, prepare immutable application profiles and inspect admission reasons or allocation state. Default startup has no qualified infrastructure provider. OpenBao is unconfigured unless the local operator supplies limited provider authority. Staging values and issuing proofs use offline private commands; the console has no reveal endpoint. Planned environments are not running containers. GitHub events remain `pending_verification`; Jenkins dispatch and automatic deployments are not active.

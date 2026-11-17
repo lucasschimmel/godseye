@@ -1,7 +1,4 @@
 @media (min-width: 1600px) {
-  main {
-    padding-top: 45px;
-  }
   .overview-banner {
     min-height: 250px;
   }
@@ -10,29 +7,6 @@
   }
 }
 @media (max-width: 1190px) {
-  :root {
-    --rail-width: 210px;
-  }
-  .sidebar {
-    padding-inline: 12px;
-  }
-  .brand {
-    font-size: 14px;
-    gap: 8px;
-  }
-  .brand small {
-    font-size: 7px;
-  }
-  main {
-    padding: 29px 26px;
-  }
-  .topbar,
-  .connection-strip {
-    padding-inline: 26px;
-  }
-  .connection-strip > span:nth-of-type(2) {
-    display: none;
-  }
   .control-graphic {
     right: -70px;
     opacity: 0.5;
@@ -64,10 +38,10 @@
     padding-inline: 17px;
   }
   .metric > div {
-    font-size: 9px;
+    font-size: 12px;
   }
   .metric small {
-    font-size: 8px;
+    font-size: 11.5px;
   }
   .environment-grid,
   .detail-grid {
@@ -102,10 +76,10 @@
     border-bottom: 1px solid var(--border-default);
   }
   .metric > div {
-    font-size: 11px;
+    font-size: 13px;
   }
   .metric small {
-    font-size: 10px;
+    font-size: 12.5px;
   }
   .overview-banner {
     padding: 25px;
@@ -134,7 +108,7 @@
   }
   .page-heading > a,
   .page-heading > button {
-    font-size: 10px;
+    font-size: 12.5px;
   }
   .capability-grid {
     grid-template-columns: 1fr;
@@ -143,6 +117,6 @@
     border-right: 0;
   }
   .activity-list time {
-    font-size: 8px;
+    font-size: 11.5px;
   }
 }

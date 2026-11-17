@@ -25,16 +25,16 @@ import {
 import { resource, timestamp } from "@/lib/api";
 import { useDeployment } from "@/lib/use-deployment";
 
-export const Route = createFileRoute("/pipelines")({ component: Pipelines });
+export const Route = createFileRoute("/platform/delivery")({ component: Pipelines });
 function Pipelines() {
   const deployment = useDeployment();
   const runs = useQuery(resource<CiRunView[]>("ci-runs", "/ci/runs"));
   return (
     <>
       <PageHeading
-        eyebrow="INTÉGRATION & LIVRAISON"
-        title="CI / CD"
-        description="Du dépôt au déploiement, un parcours vérifiable pour chaque version."
+        eyebrow="Plateforme"
+        title="Livraison"
+        description="Du dépôt au déploiement : politiques, builds, releases et previews."
       />
       <section className="panel pipeline-overview">
         <div className="panel-heading">

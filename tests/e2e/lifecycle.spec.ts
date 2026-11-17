@@ -13,6 +13,10 @@ async function createProject(page: Page, prefix: string) {
   await page.getByLabel("Nom du projet", { exact: true }).fill(name);
   await page.getByRole("button", { name: "Enregistrer le projet", exact: true }).click();
   await expect(page.getByRole("heading", { name, exact: true })).toBeVisible();
+  await page
+    .getByRole("navigation", { name: "Sections du projet" })
+    .getByRole("link", { name: "Cycle de vie" })
+    .click();
   return name;
 }
 const panel = (page: Page) => page.getByRole("region", { name: "Cycle de vie du projet" });

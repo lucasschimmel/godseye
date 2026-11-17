@@ -1,0 +1,110 @@
+/* Hermes workspace: full-height, edge to edge. */
+.hermes {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 56px);
+  background: var(--bg);
+}
+.hermes-bar {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 14px 28px;
+  border-bottom: 1px solid var(--line);
+  background: var(--rail);
+  flex-wrap: wrap;
+}
+.hermes-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-right: auto;
+  min-width: 0;
+}
+.hermes-title > div {
+  display: grid;
+}
+.hermes-title h1 {
+  font-size: 22px;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+}
+.seg-count {
+  min-width: 18px;
+  padding: 0 5px;
+  border-radius: 9px;
+  font: 500 10.5px / 18px var(--font-data);
+  text-align: center;
+  background: var(--raised);
+  color: var(--text-2);
+}
+.seg-count.signal {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+.hermes-notice {
+  margin: 14px 28px 0;
+}
+.hermes-scope-note {
+  margin-bottom: 16px;
+}
+.hermes-pad {
+  padding: 24px 28px 64px;
+  max-width: 1280px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* Conversations: the chat fills the workspace as three columns. */
+.hermes.view-conversations .chat-center {
+  flex: 1;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+.hermes.view-conversations .chat-center > .panel-header {
+  display: none;
+}
+.hermes.view-conversations .chat-layout {
+  flex: 1;
+  min-height: calc(100vh - 56px - 70px);
+}
+.hermes .chat-sidebar {
+  background: var(--rail);
+  border-right: 1px solid var(--line);
+}
+.hermes .chat-sidebar nav button {
+  border-radius: 12px;
+  border: 1px solid transparent;
+  background: transparent;
+  text-align: left;
+}
+.hermes .chat-sidebar nav button:hover {
+  background: var(--surface);
+}
+.hermes .chat-sidebar nav button[aria-pressed="true"] {
+  background: var(--surface);
+  border-color: var(--line);
+  box-shadow: var(--card-edge);
+}
+.hermes .chat-create {
+  border-top: 1px solid var(--line);
+}
+.hermes .chat-main {
+  background: var(--bg);
+}
+.hermes .chat-compose {
+  border-radius: 18px;
+  border: 1px solid var(--line-strong);
+  background: var(--surface);
+  box-shadow: var(--card-edge);
+}
+.hermes .chat-outputs {
+  background: var(--rail);
+  border-left: 1px solid var(--line);
+}

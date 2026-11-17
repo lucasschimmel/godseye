@@ -1,14 +1,13 @@
 import type { AuditView, OperationView } from "@godseye/contracts";
 import { useQuery } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
 import { AuditIntegrityPanel } from "@/components/audit-integrity-panel";
 import {
   EmptyState,
   Failure,
   Loading,
-  PageHeading,
   SectionTitle,
   Status,
+  SubHeading,
 } from "@/components/shared";
 import {
   Table,
@@ -20,13 +19,12 @@ import {
 } from "@/components/ui/table";
 import { resource, timestamp } from "@/lib/api";
 
-export const Route = createFileRoute("/operations")({ component: Operations });
-function Operations() {
+export function JournalOperations() {
   const operations = useQuery(resource<OperationView[]>("operations", "/operations"));
   const audit = useQuery(resource<AuditView[]>("audit", "/audit"));
   return (
     <>
-      <PageHeading
+      <SubHeading
         eyebrow="TRAÇABILITÉ"
         title="Opérations"
         description="Les actions exécutées et les modifications apportées à votre espace."

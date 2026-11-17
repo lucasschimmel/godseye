@@ -5,6 +5,7 @@
     "includes": [
       "**",
       "!docs",
+      "!design",
       "!tests/STRATEGY.md",
       "!.codex",
       "!.crafts",

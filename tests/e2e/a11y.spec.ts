@@ -8,18 +8,22 @@ import { enrollConsoleOwner } from "./owner-fixture.js";
 
 /** Every owner-console page reachable from the main navigation, rendered in local mode. */
 const ROUTES = [
-  { path: "/", name: "overview" },
+  { path: "/", name: "today" },
   { path: "/projects", name: "projects" },
-  { path: "/databases", name: "databases" },
-  { path: "/pipelines", name: "pipelines" },
-  { path: "/jobs", name: "jobs" },
-  { path: "/usage", name: "usage" },
-  { path: "/observability", name: "observability" },
-  { path: "/operations", name: "operations" },
-  { path: "/infrastructure", name: "infrastructure" },
-  { path: "/agents", name: "agents" },
-  { path: "/security", name: "security" },
-  { path: "/access", name: "access" },
+  { path: "/hermes", name: "hermes" },
+  { path: "/hermes?vue=plans", name: "hermes-plans" },
+  { path: "/hermes?vue=profils", name: "hermes-profiles" },
+  { path: "/platform/server", name: "server" },
+  { path: "/platform/delivery", name: "delivery" },
+  { path: "/platform/data", name: "data" },
+  { path: "/platform/jobs", name: "jobs" },
+  { path: "/costs", name: "costs" },
+  { path: "/journal", name: "journal" },
+  { path: "/journal?vue=operations", name: "journal-operations" },
+  { path: "/journal?vue=observabilite", name: "journal-observability" },
+  { path: "/settings", name: "settings" },
+  { path: "/settings?section=services", name: "settings-services" },
+  { path: "/settings?section=notifications", name: "settings-notifications" },
 ] as const;
 
 const VIEWPORTS = [
@@ -108,7 +112,7 @@ for (const viewport of POPULATED_VIEWPORTS) {
     }) => {
       const project = await createProject(page, `A11y livraison ${randomUUID().slice(0, 8)}`);
       await mockReleaseData(page, project);
-      await page.goto("/pipelines");
+      await page.goto("/platform/delivery");
       const releases = page.getByRole("region", { name: "Versions en service" });
       const row = releases.getByRole("row").filter({ hasText: project.name });
       await expect(row.getByText("a1b2c3d4e5f6")).toBeVisible();
@@ -127,7 +131,7 @@ for (const viewport of POPULATED_VIEWPORTS) {
     }) => {
       const project = await createProject(page, `A11y dialogue ${randomUUID().slice(0, 8)}`);
       await mockReleaseData(page, project);
-      await page.goto("/pipelines");
+      await page.goto("/platform/delivery");
       const row = page
         .getByRole("region", { name: "Versions en service" })
         .getByRole("row")
@@ -181,7 +185,7 @@ test.describe("forms with errors", () => {
 
   test("repository form announces a validation error without violations", async ({ page }) => {
     const project = await createProject(page, `A11y dépôt ${randomUUID().slice(0, 8)}`);
-    await page.goto(`/projects/${project.id}`);
+    await page.goto(`/projects/${project.id}?onglet=reglages`);
     await page.getByLabel("Dépôt", { exact: true }).fill("pas un dépôt");
     await page.getByLabel("ID du dépôt", { exact: true }).fill("12345");
     await page.getByLabel("ID de l’installation GitHub App", { exact: true }).fill("67890");
@@ -221,7 +225,7 @@ for (const viewport of REFLOW_VIEWPORTS) {
     }) => {
       const project = await createProject(page, `A11y reflow ${randomUUID().slice(0, 8)}`);
       await mockReleaseData(page, project);
-      await page.goto("/pipelines");
+      await page.goto("/platform/delivery");
       const row = page
         .getByRole("region", { name: "Versions en service" })
         .getByRole("row")
@@ -253,7 +257,7 @@ test.describe("keyboard and landmarks", () => {
   });
 
   test("exposes one banner, one main, labelled navigation and a single h1", async ({ page }) => {
-    await page.goto("/infrastructure");
+    await page.goto("/platform/server");
     await expect(page.locator("main h1").first()).toBeVisible();
     await expect(page.getByRole("banner")).toHaveCount(1);
     await expect(page.getByRole("main")).toHaveCount(1);

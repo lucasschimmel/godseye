@@ -14,8 +14,12 @@ async function projectAndAccess(page: Page) {
   await page.getByRole("button", { name: "Enregistrer le projet", exact: true }).click();
   await expect(page.getByRole("heading", { name, exact: true })).toBeVisible();
   await page
-    .getByRole("navigation", { name: "Navigation principale" })
-    .getByRole("link", { name: "Secrets & services", exact: true })
+    .getByRole("complementary", { name: "Barre latérale" })
+    .getByRole("link", { name: "Réglages", exact: true })
+    .click();
+  await page
+    .getByRole("navigation", { name: "Sections des réglages" })
+    .getByRole("link", { name: "Secrets et services", exact: true })
     .click();
   await expect(
     page.getByRole("heading", { name: "Secrets et identités de service", exact: true }),

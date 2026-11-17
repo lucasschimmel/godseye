@@ -1,0 +1,26 @@
+/*
+ * Defaults for the feature panels written before the redesign. Loaded before their own
+ * stylesheets so that their specific rules still win; legacy-overrides.css runs last.
+ */
+label {
+  color: var(--text-2);
+  font-size: 13px;
+}
+select {
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-xs);
+  padding: 0 10px;
+  height: 36px;
+  color: var(--text);
+  background: var(--surface-2);
+}
+input[type="checkbox"],
+input[type="radio"] {
+  accent-color: var(--accent);
+}
+table {
+  font-size: 13px;
+}
+details > summary {
+  cursor: pointer;
+}

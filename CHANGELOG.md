@@ -2,6 +2,16 @@
 
 ## [Unreleased]
 
+### Console redesign
+
+- Console only (owner API unchanged). New information architecture: **Aujourd’hui** (decisions, incidents, unknown results, server state, day ribbon), **Projets**, **Hermes**, **Plateforme** (Serveur, Livraison, Données, Jobs), **Suivi** (Coûts, Journal) and **Réglages**. Former addresses (`/agents`, `/pipelines`, `/databases`, `/jobs`, `/usage`, `/observability`, `/operations`, `/infrastructure`, `/security`, `/access`) redirect to their new place.
+- New dark-first design system (light theme available): Geist and Geist Mono, a single amber accent meaning “this concerns you”, and one visual grammar for truth: solid = observed, hatched = declared or estimated, dashed amber = unknown. Feature panels inherit the tokens through a legacy bridge.
+- Live sidebar (measured server CPU/RAM, badges from pending decisions, incidents, unknown jobs and running Hermes tasks, session time left), `Ctrl/Cmd+K` command palette and `G` then letter shortcuts.
+- Project page: environment switch and tabs (Aperçu, Livraison, Domaines, Backend, Cycle de vie, Réglages); the overview shows the delivery path of the selected environment and its guards with their truth state.
+- Hermes is one workspace with views (Conversations, Plans, Tâches, Code, Profils). A sensitive action refused with `STEP_UP_REQUIRED` opens a single passkey sheet and is retried once with the same idempotency key; nothing is retried when the owner cancels.
+- The Journal merges the audit chronology (grouped by day, filterable), operations and incidents/telemetry.
+- No value is invented: unobserved server metrics, usage and backups are shown as unknown, never as zero or healthy.
+
 ### Jenkins build links on recent builds
 
 - `GET /ci/runs` now fills a run's `providerRef` with the Jenkins build URL when a platform build (read-only Jenkins source) reports having built exactly that commit (git plugin revision) and the build URL is on the configured Jenkins origin. A recorded `providerRef` is never overwritten; with Jenkins unconfigured, unreachable or silent about the commit, no link is offered. `PlatformBuild` gains a nullable `commitSha`. The console accepts plain http(s) build links without credentials because the private controller may be http.

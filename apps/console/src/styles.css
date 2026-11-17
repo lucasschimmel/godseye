@@ -1,8 +1,10 @@
 @import "tailwindcss";
 @import "./styles/theme.css";
 @import "./styles/base.css";
+@import "./styles/ds-primitives.css";
+@import "./styles/ds-viz.css";
 @import "./styles/shell.css";
-@import "./styles/headings.css";
+@import "./styles/legacy-bridge.css";
 @import "./styles/overview.css";
 @import "./styles/panels.css";
 @import "./styles/projects.css";
@@ -22,7 +24,12 @@
 @import "./styles/agents.css";
 @import "./styles/agents-chat.css";
 @import "./styles/agents-coding.css";
-
+@import "./styles/agents-plans.css";
 @import "./styles/panel-sections.css";
 @import "./styles/telemetry.css";
+@import "./styles/pages-today.css";
+@import "./styles/pages-project.css";
+@import "./styles/pages-hermes.css";
+@import "./styles/pages-platform.css";
+@import "./styles/legacy-overrides.css";
 @import "./styles/accessibility.css";

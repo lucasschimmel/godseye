@@ -17,11 +17,11 @@
   margin-bottom: 35px;
 }
 .owner-entry-brand > svg {
-  color: var(--accent-ink);
+  color: var(--link);
 }
 .owner-entry-brand small {
   display: block;
-  font: 8px var(--font-data);
+  font: 11.5px var(--font-data);
   color: var(--text-secondary);
   letter-spacing: 2px;
   margin-top: 7px;
@@ -43,14 +43,14 @@
   border-radius: 50%;
   border: 1px solid var(--border-default);
   background: var(--accent-surface);
-  color: var(--accent-ink);
+  color: var(--link);
   margin: 0 auto 25px;
 }
 .owner-entry-card h1 {
   font-size: 28px;
 }
 .owner-entry-card > p:not(.eyebrow) {
-  font-size: 12px;
+  font-size: 13.5px;
   line-height: 1.9;
   color: var(--text-secondary);
   margin-top: 20px;
@@ -58,7 +58,7 @@
 .owner-entry-action {
   width: 100%;
   margin-top: 25px;
-  font-size: 12px;
+  font-size: 13.5px;
 }
 .owner-entry-note {
   display: flex;
@@ -69,14 +69,14 @@
   border-top: 1px solid var(--border-default);
   padding-top: 20px;
   color: var(--text-secondary);
-  font-size: 9px;
+  font-size: 12px;
 }
 .owner-entry-footer {
   display: flex;
   align-items: center;
   gap: 7px;
   color: var(--text-secondary);
-  font-size: 10px;
+  font-size: 12.5px;
   margin-top: 25px;
 }
 .owner-command {
@@ -89,13 +89,13 @@
   border: 1px solid var(--border-default);
   background: var(--surface-subtle);
   border-radius: var(--radius);
-  color: var(--accent-ink);
-  font: 12px var(--font-data);
+  color: var(--link);
+  font: 13.5px var(--font-data);
 }
 .owner-command small {
   display: block;
   margin-top: 10px;
-  font-size: 10px;
+  font-size: 12.5px;
   color: var(--text-secondary);
   line-height: 1.7;
 }
@@ -111,7 +111,7 @@
   padding: 24px;
 }
 .owner-assurance > svg {
-  color: var(--accent-ink);
+  color: var(--link);
   flex-shrink: 0;
 }
 .owner-assurance h2,
@@ -121,7 +121,7 @@
 }
 .owner-assurance p,
 .owner-recovery p {
-  font-size: 11px;
+  font-size: 13px;
   color: var(--text-secondary);
   line-height: 1.8;
   margin-top: 10px;
@@ -129,7 +129,7 @@
 .owner-assurance button {
   margin-left: auto;
   flex-shrink: 0;
-  font-size: 10px;
+  font-size: 12.5px;
 }
 .owner-security-list {
   padding: 0 24px;
@@ -145,24 +145,24 @@
   border-bottom: 0;
 }
 .owner-security-list svg {
-  color: var(--accent-ink);
+  color: var(--link);
   flex-shrink: 0;
 }
 .owner-security-list strong {
   display: block;
-  font-size: 12px;
+  font-size: 13.5px;
   font-weight: 550;
 }
 .owner-security-list small {
   display: block;
-  font-size: 10px;
+  font-size: 12.5px;
   color: var(--text-secondary);
   line-height: 1.8;
   margin-top: 6px;
 }
 .owner-security-list button {
   margin-left: auto;
-  font-size: 10px;
+  font-size: 12.5px;
 }
 .owner-recovery {
   padding: 25px;
@@ -174,8 +174,8 @@
   background: var(--surface-subtle);
   border: 1px solid var(--border-default);
   border-radius: var(--radius);
-  color: var(--accent-ink);
-  font: 12px var(--font-data);
+  color: var(--link);
+  font: 13.5px var(--font-data);
 }
 @media (max-width: 680px) {
   .owner-entry-card {
@@ -205,6 +205,6 @@
     margin-left: 28px;
   }
   .owner-entry-note {
-    font-size: 8px;
+    font-size: 11.5px;
   }
 }

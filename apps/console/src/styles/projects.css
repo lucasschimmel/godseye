@@ -19,18 +19,18 @@
 }
 .search-field input {
   padding-left: 35px;
-  font-size: 11px;
+  font-size: 13px;
   box-shadow: none;
 }
 th {
   font-weight: 500;
-  font-size: 10px;
+  font-size: 12.5px;
   height: 40px;
   color: var(--text-secondary);
   background: var(--surface-subtle);
 }
 td {
-  font-size: 11px;
+  font-size: 13px;
   padding-block: 16px;
 }
 th:first-child,
@@ -53,17 +53,17 @@ td:last-child {
   border-radius: 6px;
   display: grid;
   place-items: center;
-  color: var(--accent-ink);
+  color: var(--link);
   background: var(--surface-subtle);
 }
 .project-cell strong {
   display: block;
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 550;
 }
 .project-cell small {
   display: block;
-  font-size: 9px;
+  font-size: 12px;
   color: var(--text-secondary);
   margin-top: 4px;
 }
@@ -72,14 +72,14 @@ td:last-child {
   align-items: center;
   gap: 7px;
   color: var(--text-secondary);
-  font-size: 10px;
+  font-size: 12.5px;
 }
 .back-link {
   display: inline-flex;
   align-items: center;
   gap: 6px;
   color: var(--text-secondary);
-  font-size: 11px;
+  font-size: 13px;
   margin-bottom: 22px;
 }
 .form-layout {
@@ -101,7 +101,7 @@ td:last-child {
 .form-section p {
   margin-top: 8px;
   color: var(--text-secondary);
-  font-size: 11px;
+  font-size: 13px;
   line-height: 1.7;
 }
 .field {
@@ -112,7 +112,7 @@ td:last-child {
 }
 .field label,
 .field legend {
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 550;
 }
 .field legend {
@@ -124,11 +124,11 @@ td:last-child {
 }
 .field input,
 .field textarea {
-  font-size: 12px;
+  font-size: 13.5px;
   box-shadow: none;
 }
 .field small {
-  font-size: 10px;
+  font-size: 12.5px;
   color: var(--text-secondary);
   line-height: 1.6;
 }
@@ -158,7 +158,7 @@ td:last-child {
   cursor: pointer;
 }
 .type-option:focus-within {
-  outline: 2px solid var(--accent-ink);
+  outline: 2px solid var(--link);
   outline-offset: 2px;
 }
 .type-option input:focus {
@@ -168,18 +168,18 @@ td:last-child {
   color: var(--text-secondary);
 }
 .type-option strong {
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 550;
 }
 .type-option small {
-  font-size: 9px;
+  font-size: 12px;
 }
 .type-option.selected {
-  border-color: var(--accent-ink);
+  border-color: var(--link);
   background: var(--accent-surface);
 }
 .type-option.selected > svg {
-  color: var(--accent-ink);
+  color: var(--link);
 }
 .type-check {
   position: absolute;
@@ -195,7 +195,7 @@ td:last-child {
 }
 .form-actions a,
 .form-actions button {
-  font-size: 11px;
+  font-size: 13px;
 }
 .form-aside {
   padding-top: 18px;
@@ -207,7 +207,7 @@ td:last-child {
   height: 51px;
   border: 1px solid var(--border-default);
   border-radius: 50%;
-  color: var(--accent-ink);
+  color: var(--link);
   margin-bottom: 22px;
 }
 .form-aside h2 {
@@ -219,14 +219,14 @@ td:last-child {
 }
 .form-aside p {
   color: var(--text-secondary);
-  font-size: 12px;
+  font-size: 13.5px;
   line-height: 1.8;
   margin-top: 12px;
 }
 .form-aside ul {
   padding-left: 16px;
   color: var(--text-secondary);
-  font-size: 11px;
+  font-size: 13px;
   line-height: 2.5;
   margin-block: 22px;
 }
@@ -234,6 +234,6 @@ td:last-child {
   border-top: 1px solid var(--border-default);
   padding-top: 20px;
   color: var(--text-secondary);
-  font-size: 10px;
+  font-size: 12.5px;
   line-height: 1.8;
 }

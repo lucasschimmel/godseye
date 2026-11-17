@@ -1,10 +1,11 @@
-import type { AgentOverviewView, OwnerSecurityView, ProjectDTO } from "@godseye/contracts";
+import type { AgentOverviewView, OrchestrationOverviewView, ProjectDTO } from "@godseye/contracts";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Bot, Fingerprint, RefreshCw } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+import { RefreshCw } from "lucide-react";
 import { useRef, useState } from "react";
-import { api, resource } from "@/lib/api";
+import { api, isStepUpRequired, resource } from "@/lib/api";
 import { runtimeHeading } from "@/lib/deployment";
-import { ownerAuth } from "@/lib/owner";
+import { confirmIdentity, MANUAL_STEP_UP } from "@/lib/step-up";
 import { useDeployment } from "@/lib/use-deployment";
 import { AgentsChat } from "./agents-chat";
 import { AgentsCoding } from "./agents-coding";
@@ -14,10 +15,26 @@ import { AgentsProfileForm } from "./agents-profile-form";
 import { AgentsProfiles } from "./agents-profiles";
 import { AgentsTaskForm } from "./agents-task-form";
 import { AgentsTaskHistory } from "./agents-task-history";
+import { HermesMark, StatusPill } from "./ds/viz";
 import { Failure, Loading } from "./shared";
 import { Button } from "./ui/button";
 
-export function AgentsPanel() {
+export const HERMES_VIEWS = {
+  conversations: "Conversations",
+  plans: "Plans",
+  taches: "Tâches",
+  code: "Code",
+  profils: "Profils",
+} as const;
+export type HermesView = keyof typeof HERMES_VIEWS;
+
+const ACTIVE_TASKS = new Set(["queued", "running", "cancel_requested"]);
+
+/**
+ * Hermes workspace. One shared, idempotent `post` serves every view; a refused sensitive action
+ * opens the passkey sheet and is retried once with the same idempotency key.
+ */
+export function AgentsPanel({ view }: { view: HermesView }) {
   const overview = useQuery({
     ...resource<AgentOverviewView>("agents", "/agents"),
     refetchInterval: AGENT_REFRESH_MS,
@@ -26,8 +43,8 @@ export function AgentsPanel() {
     ...resource<ProjectDTO[]>("projects", "/projects"),
     refetchInterval: AGENT_REFRESH_MS,
   });
-  const security = useQuery({
-    ...resource<OwnerSecurityView>("owner-security", "/owner/security"),
+  const plans = useQuery({
+    ...resource<OrchestrationOverviewView>("orchestration", "/agents/orchestration"),
     refetchInterval: AGENT_REFRESH_MS,
   });
   const cache = useQueryClient();
@@ -35,6 +52,7 @@ export function AgentsPanel() {
   const intents = useRef(new Map<string, string>());
   const [selectedTask, setSelectedTask] = useState("");
   const mutation = useMutation({
+    meta: MANUAL_STEP_UP,
     mutationFn: async ({
       path,
       body,
@@ -66,162 +84,194 @@ export function AgentsPanel() {
       await cache.invalidateQueries();
     },
   });
-  const confirmation = useMutation({
-    mutationFn: async () => {
-      const result = await ownerAuth.signIn.passkey();
-      if (result.error) throw new Error("La confirmation propriétaire a échoué.");
-    },
-    onSuccess: async () => {
-      await cache.invalidateQueries();
-    },
-  });
   if (!overview.data)
     return overview.isError ? (
-      <Failure error={overview.error} retry={() => void overview.refetch()} />
+      <div className="hermes-pad">
+        <Failure error={overview.error} retry={() => void overview.refetch()} />
+      </div>
     ) : (
       <Loading />
     );
   if (!projects.data)
     return projects.isError ? (
-      <Failure error={projects.error} retry={() => void projects.refetch()} />
+      <div className="hermes-pad">
+        <Failure error={projects.error} retry={() => void projects.refetch()} />
+      </div>
     ) : (
       <Loading />
     );
   const data = overview.data;
   const stale = overview.isError || projects.isError;
   const disabled = mutation.isPending || stale;
-  const freshIdentity = !security.isError && security.data?.fresh === true;
-  const sensitiveDisabled = disabled || !freshIdentity;
-  const post: AgentPost = (path, body, method = "POST") =>
-    mutation.mutateAsync({ path, body, method });
+  const post: AgentPost = async (path, body, method = "POST") => {
+    try {
+      return await mutation.mutateAsync({ path, body, method });
+    } catch (error) {
+      if (!isStepUpRequired(error)) throw error;
+      const confirmed = await confirmIdentity(
+        "Confirmer l’action Hermes",
+        "Créer, reconfigurer, lancer ou approuver exige une confirmation récente.",
+      );
+      if (!confirmed) throw error;
+      return mutation.mutateAsync({ path, body, method });
+    }
+  };
+  const available = data.status === "available";
+  const running = data.tasks.filter((task) => ACTIVE_TASKS.has(task.state)).length;
+  const pendingPlans = (plans.data?.plans ?? []).filter(
+    (plan) => plan.state === "pending" || plan.state === "waiting_clarification",
+  ).length;
+  const counts: Partial<Record<HermesView, number>> = {
+    plans: pendingPlans,
+    taches: running,
+    profils: data.profiles.length,
+  };
   return (
-    <div className="agents-center">
-      <section className="panel agents-runtime" aria-label="Runtime Hermès">
-        <div className="agents-runtime-heading">
-          <Bot size={28} />
+    <div className={`hermes view-${view}`}>
+      <header className="hermes-bar">
+        <div className="hermes-title">
+          <HermesMark size={30} />
           <div>
-            <p className="eyebrow">{deployment.isLocal ? "HERMÈS · LOCAL" : "HERMÈS · SERVEUR"}</p>
-            <h2>{runtimeHeading(data.status === "available", deployment.isLocal)}</h2>
+            <h1>Hermes</h1>
+            <span className="faint small">
+              {runtimeHeading(available, deployment.isLocal)} ·{" "}
+              {data.tools.length
+                ? `${data.tools.length} outils isolés disponibles`
+                : "outils isolés indisponibles"}
+            </span>
           </div>
-          <span className={`agents-badge ${data.status === "available" ? "" : "agents-attention"}`}>
-            {data.status === "available" ? "Configuré" : "Non configuré"}
-          </span>
+          <StatusPill tone={available ? "ok" : "decl"}>
+            {available ? "Configuré" : "Non configuré"}
+          </StatusPill>
         </div>
-        <p>
-          {data.status === "available"
-            ? "Chaque lancement vérifie à nouveau son périmètre, ses droits et sa réservation."
-            : "Vous pouvez lier et configurer vos profils. Le lancement restera bloqué jusqu’à la connexion d’un runtime autorisé pour leur périmètre."}
-        </p>
-        <p className="muted">
-          Un skill de contexte versionné et des outils de fichiers autorisés tâche par tâche. GPT-6
-          Luna par défaut. Conversations en direct et tâches suivies en arrière-plan ; fermer cet
-          onglet n’annule pas la tâche.
-        </p>
-        <p className="muted">
-          {data.tools.length
-            ? "Outils isolés configurés ; leur disponibilité et leurs limites sont vérifiées avant chaque tâche."
-            : "Outils isolés indisponibles. Les tâches sans outils restent accessibles si le modèle est configuré."}{" "}
-          Les outils Hermès ne donnent pas accès aux commandes système ni aux builds. Pour coder
-          dans un invité KVM jetable, consultez la disponibilité de Codex et Claude Code ci-dessous.
-        </p>
-        <div className="agents-actions">
-          <Button
-            variant="outline"
-            disabled={overview.isFetching}
-            onClick={() =>
-              void Promise.all([overview.refetch(), projects.refetch(), security.refetch()])
-            }
-          >
-            <RefreshCw size={15} />
-            Actualiser Hermès
-          </Button>
-          <Button
-            variant="outline"
-            disabled={confirmation.isPending}
-            onClick={() => confirmation.mutate()}
-          >
-            <Fingerprint size={15} />
-            Confirmer mon identité
-          </Button>
-        </div>
-        <p className="muted">
-          {security.isError
-            ? "La confirmation propriétaire n’a pas pu être actualisée. Les demandes d’arrêt restent disponibles."
-            : freshIdentity
-              ? "Identité propriétaire confirmée récemment."
-              : "Confirmez votre identité pour créer un profil, le reconfigurer ou lancer une tâche. Les demandes d’arrêt restent disponibles."}
-        </p>
-      </section>
+        <nav className="seg" aria-label="Vues Hermes">
+          {(Object.keys(HERMES_VIEWS) as HermesView[]).map((key) => (
+            <Link
+              key={key}
+              to="/hermes"
+              search={{ vue: key }}
+              aria-current={view === key ? "page" : undefined}
+            >
+              {HERMES_VIEWS[key]}
+              {counts[key] ? (
+                <span className={`seg-count ${key === "plans" ? "signal" : ""}`}>
+                  {counts[key]}
+                </span>
+              ) : null}
+            </Link>
+          ))}
+        </nav>
+        <Button
+          variant="ghost"
+          size="icon"
+          aria-label="Actualiser Hermes"
+          disabled={overview.isFetching}
+          onClick={() =>
+            void Promise.all([overview.refetch(), projects.refetch(), plans.refetch()])
+          }
+        >
+          <RefreshCw className={overview.isFetching ? "spin" : ""} />
+        </Button>
+      </header>
       {stale && (
-        <p className="agents-notice" role="alert">
+        <p className="agents-notice hermes-notice" role="alert">
           Actualisation échouée : les données peuvent être périmées. Actualisez avant une nouvelle
           action.
         </p>
       )}
-      {(mutation.isError || confirmation.isError) && (
-        <Failure
-          error={
-            mutation.error ?? confirmation.error ?? new Error("L’action Hermès n’a pas abouti.")
-          }
+      {mutation.isError && !isStepUpRequired(mutation.error) && (
+        <div className="hermes-notice">
+          <Failure error={mutation.error} />
+        </div>
+      )}
+      {!available && view !== "profils" && (
+        <p className="callout hermes-notice">
+          <span>
+            <b>Runtime non connecté.</b> Les profils se configurent ; les lancements restent bloqués
+            jusqu’à la connexion d’un runtime autorisé pour leur périmètre.
+          </span>
+        </p>
+      )}
+      {view === "conversations" && data.profiles.length === 0 && (
+        <p className="callout hermes-notice">
+          <span>
+            <b>Aucun profil Hermes.</b> Une conversation s’ouvre toujours dans le périmètre d’un
+            profil lié à un projet et à un environnement.
+          </span>
+          <Link className="link" to="/hermes" search={{ vue: "profils" }}>
+            Créer un profil
+          </Link>
+        </p>
+      )}
+      {view === "conversations" && (
+        <AgentsChat
+          profiles={data.profiles}
+          projects={projects.data}
+          post={post}
+          disabled={disabled}
+          fresh
+          toolsAvailable={data.tools.length > 0}
         />
       )}
-      <AgentsCoding
-        projects={projects.data}
-        post={post}
-        disabled={disabled}
-        fresh={freshIdentity}
-      />
-      <AgentsPlans
-        projects={projects.data}
-        overview={data}
-        post={post}
-        disabled={disabled}
-        fresh={freshIdentity}
-        selectTask={(id) => {
-          setSelectedTask(id);
-          document.getElementById("agents-task-history")?.scrollIntoView({ block: "start" });
-        }}
-      />
-      <AgentsChat
-        profiles={data.profiles}
-        projects={projects.data}
-        post={post}
-        disabled={disabled}
-        fresh={freshIdentity}
-        toolsAvailable={data.tools.length > 0}
-      />
-      <AgentsProfiles
-        overview={data}
-        projects={projects.data}
-        disabled={sensitiveDisabled}
-        post={post}
-        selectTask={setSelectedTask}
-      />
-      <div className="agents-composer">
-        <AgentsProfileForm
-          overview={data}
-          projects={projects.data}
-          disabled={sensitiveDisabled}
-          post={post}
-        />
-        <AgentsTaskForm
-          overview={data}
-          projects={projects.data}
-          disabled={sensitiveDisabled}
-          post={post}
-          selectTask={setSelectedTask}
-        />
-      </div>
-      <div id="agents-task-history">
-        <AgentsTaskHistory
-          overview={data}
-          projects={projects.data}
-          selectedId={selectedTask}
-          selectTask={setSelectedTask}
-          disabled={disabled}
-          post={post}
-        />
-      </div>
+      {view === "plans" && (
+        <div className="hermes-pad">
+          <AgentsPlans
+            projects={projects.data}
+            overview={data}
+            post={post}
+            disabled={disabled}
+            fresh
+            selectTask={(id) => setSelectedTask(id)}
+          />
+        </div>
+      )}
+      {view === "taches" && (
+        <div className="hermes-pad">
+          <p className="faint small hermes-scope-note">
+            Une tâche = une réservation bornée dans le périmètre de son profil. Les outils Hermes ne
+            donnent pas accès aux commandes système ni aux builds ; le code passe par la vue Code.
+          </p>
+          <AgentsTaskForm
+            overview={data}
+            projects={projects.data}
+            disabled={disabled}
+            post={post}
+            selectTask={setSelectedTask}
+          />
+          <div id="agents-task-history">
+            <AgentsTaskHistory
+              overview={data}
+              projects={projects.data}
+              selectedId={selectedTask}
+              selectTask={setSelectedTask}
+              disabled={disabled}
+              post={post}
+            />
+          </div>
+        </div>
+      )}
+      {view === "code" && (
+        <div className="hermes-pad">
+          <AgentsCoding projects={projects.data} post={post} disabled={disabled} fresh />
+        </div>
+      )}
+      {view === "profils" && (
+        <div className="hermes-pad">
+          <AgentsProfiles
+            overview={data}
+            projects={projects.data}
+            disabled={disabled}
+            post={post}
+            selectTask={setSelectedTask}
+          />
+          <AgentsProfileForm
+            overview={data}
+            projects={projects.data}
+            disabled={disabled}
+            post={post}
+          />
+        </div>
+      )}
     </div>
   );
 }

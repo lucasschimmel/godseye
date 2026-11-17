@@ -15,9 +15,9 @@ async function projectAndInfrastructure(page: Page) {
   await expect(page.getByRole("heading", { name, exact: true })).toBeVisible();
   await page
     .getByRole("navigation", { name: "Navigation principale" })
-    .getByRole("link", { name: "Infrastructure", exact: true })
+    .getByRole("link", { name: "Serveur", exact: true })
     .click();
-  await expect(page.getByRole("heading", { name: "Infrastructure", exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Serveur", level: 1 })).toBeVisible();
   await expect(
     page.getByRole("heading", { name: "Exécution non qualifiée", exact: true }),
   ).toBeVisible();
@@ -126,7 +126,7 @@ test("T-AC-24 keeps public IPv4 exceptions explicit after native owner confirmat
   await page.reload();
   await expect(page.getByText(new RegExp(`${hostName} ·`))).toBeVisible();
   await page.setViewportSize({ width: 390, height: 844 });
-  await expect(page.getByRole("heading", { name: "Infrastructure", exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Serveur", level: 1 })).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(
     true,
   );

@@ -12,14 +12,22 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AccessRouteImport } from './routes/access'
 import { Route as AgentsRouteImport } from './routes/agents'
+import { Route as CostsRouteImport } from './routes/costs'
 import { Route as DatabasesRouteImport } from './routes/databases'
+import { Route as HermesRouteImport } from './routes/hermes'
 import { Route as InfrastructureRouteImport } from './routes/infrastructure'
 import { Route as JobsRouteImport } from './routes/jobs'
+import { Route as JournalRouteImport } from './routes/journal'
 import { Route as ObservabilityRouteImport } from './routes/observability'
 import { Route as OperationsRouteImport } from './routes/operations'
 import { Route as PipelinesRouteImport } from './routes/pipelines'
 import { Route as SecurityRouteImport } from './routes/security'
+import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as UsageRouteImport } from './routes/usage'
+import { Route as PlatformDataRouteImport } from './routes/platform/data'
+import { Route as PlatformDeliveryRouteImport } from './routes/platform/delivery'
+import { Route as PlatformJobsRouteImport } from './routes/platform/jobs'
+import { Route as PlatformServerRouteImport } from './routes/platform/server'
 import { Route as ProjectsIndexRouteImport } from './routes/projects.index'
 import { Route as ProjectsProjectIdRouteImport } from './routes/projects.$projectId'
 import { Route as ProjectsNewRouteImport } from './routes/projects.new'
@@ -39,9 +47,19 @@ const AgentsRoute = AgentsRouteImport.update({
   path: '/agents',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CostsRoute = CostsRouteImport.update({
+  id: '/costs',
+  path: '/costs',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DatabasesRoute = DatabasesRouteImport.update({
   id: '/databases',
   path: '/databases',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HermesRoute = HermesRouteImport.update({
+  id: '/hermes',
+  path: '/hermes',
   getParentRoute: () => rootRouteImport,
 } as any)
 const InfrastructureRoute = InfrastructureRouteImport.update({
@@ -52,6 +70,11 @@ const InfrastructureRoute = InfrastructureRouteImport.update({
 const JobsRoute = JobsRouteImport.update({
   id: '/jobs',
   path: '/jobs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const JournalRoute = JournalRouteImport.update({
+  id: '/journal',
+  path: '/journal',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ObservabilityRoute = ObservabilityRouteImport.update({
@@ -74,9 +97,34 @@ const SecurityRoute = SecurityRouteImport.update({
   path: '/security',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const UsageRoute = UsageRouteImport.update({
   id: '/usage',
   path: '/usage',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PlatformDataRoute = PlatformDataRouteImport.update({
+  id: '/platform/data',
+  path: '/platform/data',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PlatformDeliveryRoute = PlatformDeliveryRouteImport.update({
+  id: '/platform/delivery',
+  path: '/platform/delivery',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PlatformJobsRoute = PlatformJobsRouteImport.update({
+  id: '/platform/jobs',
+  path: '/platform/jobs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PlatformServerRoute = PlatformServerRouteImport.update({
+  id: '/platform/server',
+  path: '/platform/server',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProjectsIndexRoute = ProjectsIndexRouteImport.update({
@@ -99,14 +147,22 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/access': typeof AccessRoute
   '/agents': typeof AgentsRoute
+  '/costs': typeof CostsRoute
   '/databases': typeof DatabasesRoute
+  '/hermes': typeof HermesRoute
   '/infrastructure': typeof InfrastructureRoute
   '/jobs': typeof JobsRoute
+  '/journal': typeof JournalRoute
   '/observability': typeof ObservabilityRoute
   '/operations': typeof OperationsRoute
   '/pipelines': typeof PipelinesRoute
   '/security': typeof SecurityRoute
+  '/settings': typeof SettingsRoute
   '/usage': typeof UsageRoute
+  '/platform/data': typeof PlatformDataRoute
+  '/platform/delivery': typeof PlatformDeliveryRoute
+  '/platform/jobs': typeof PlatformJobsRoute
+  '/platform/server': typeof PlatformServerRoute
   '/projects/$projectId': typeof ProjectsProjectIdRoute
   '/projects/new': typeof ProjectsNewRoute
   '/projects/': typeof ProjectsIndexRoute
@@ -115,14 +171,22 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/access': typeof AccessRoute
   '/agents': typeof AgentsRoute
+  '/costs': typeof CostsRoute
   '/databases': typeof DatabasesRoute
+  '/hermes': typeof HermesRoute
   '/infrastructure': typeof InfrastructureRoute
   '/jobs': typeof JobsRoute
+  '/journal': typeof JournalRoute
   '/observability': typeof ObservabilityRoute
   '/operations': typeof OperationsRoute
   '/pipelines': typeof PipelinesRoute
   '/security': typeof SecurityRoute
+  '/settings': typeof SettingsRoute
   '/usage': typeof UsageRoute
+  '/platform/data': typeof PlatformDataRoute
+  '/platform/delivery': typeof PlatformDeliveryRoute
+  '/platform/jobs': typeof PlatformJobsRoute
+  '/platform/server': typeof PlatformServerRoute
   '/projects/$projectId': typeof ProjectsProjectIdRoute
   '/projects/new': typeof ProjectsNewRoute
   '/projects': typeof ProjectsIndexRoute
@@ -132,14 +196,22 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/access': typeof AccessRoute
   '/agents': typeof AgentsRoute
+  '/costs': typeof CostsRoute
   '/databases': typeof DatabasesRoute
+  '/hermes': typeof HermesRoute
   '/infrastructure': typeof InfrastructureRoute
   '/jobs': typeof JobsRoute
+  '/journal': typeof JournalRoute
   '/observability': typeof ObservabilityRoute
   '/operations': typeof OperationsRoute
   '/pipelines': typeof PipelinesRoute
   '/security': typeof SecurityRoute
+  '/settings': typeof SettingsRoute
   '/usage': typeof UsageRoute
+  '/platform/data': typeof PlatformDataRoute
+  '/platform/delivery': typeof PlatformDeliveryRoute
+  '/platform/jobs': typeof PlatformJobsRoute
+  '/platform/server': typeof PlatformServerRoute
   '/projects/$projectId': typeof ProjectsProjectIdRoute
   '/projects/new': typeof ProjectsNewRoute
   '/projects/': typeof ProjectsIndexRoute
@@ -150,14 +222,22 @@ export interface FileRouteTypes {
     | '/'
     | '/access'
     | '/agents'
+    | '/costs'
     | '/databases'
+    | '/hermes'
     | '/infrastructure'
     | '/jobs'
+    | '/journal'
     | '/observability'
     | '/operations'
     | '/pipelines'
     | '/security'
+    | '/settings'
     | '/usage'
+    | '/platform/data'
+    | '/platform/delivery'
+    | '/platform/jobs'
+    | '/platform/server'
     | '/projects/$projectId'
     | '/projects/new'
     | '/projects/'
@@ -166,14 +246,22 @@ export interface FileRouteTypes {
     | '/'
     | '/access'
     | '/agents'
+    | '/costs'
     | '/databases'
+    | '/hermes'
     | '/infrastructure'
     | '/jobs'
+    | '/journal'
     | '/observability'
     | '/operations'
     | '/pipelines'
     | '/security'
+    | '/settings'
     | '/usage'
+    | '/platform/data'
+    | '/platform/delivery'
+    | '/platform/jobs'
+    | '/platform/server'
     | '/projects/$projectId'
     | '/projects/new'
     | '/projects'
@@ -182,14 +270,22 @@ export interface FileRouteTypes {
     | '/'
     | '/access'
     | '/agents'
+    | '/costs'
     | '/databases'
+    | '/hermes'
     | '/infrastructure'
     | '/jobs'
+    | '/journal'
     | '/observability'
     | '/operations'
     | '/pipelines'
     | '/security'
+    | '/settings'
     | '/usage'
+    | '/platform/data'
+    | '/platform/delivery'
+    | '/platform/jobs'
+    | '/platform/server'
     | '/projects/$projectId'
     | '/projects/new'
     | '/projects/'
@@ -199,14 +295,22 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AccessRoute: typeof AccessRoute
   AgentsRoute: typeof AgentsRoute
+  CostsRoute: typeof CostsRoute
   DatabasesRoute: typeof DatabasesRoute
+  HermesRoute: typeof HermesRoute
   InfrastructureRoute: typeof InfrastructureRoute
   JobsRoute: typeof JobsRoute
+  JournalRoute: typeof JournalRoute
   ObservabilityRoute: typeof ObservabilityRoute
   OperationsRoute: typeof OperationsRoute
   PipelinesRoute: typeof PipelinesRoute
   SecurityRoute: typeof SecurityRoute
+  SettingsRoute: typeof SettingsRoute
   UsageRoute: typeof UsageRoute
+  PlatformDataRoute: typeof PlatformDataRoute
+  PlatformDeliveryRoute: typeof PlatformDeliveryRoute
+  PlatformJobsRoute: typeof PlatformJobsRoute
+  PlatformServerRoute: typeof PlatformServerRoute
   ProjectsProjectIdRoute: typeof ProjectsProjectIdRoute
   ProjectsNewRoute: typeof ProjectsNewRoute
   ProjectsIndexRoute: typeof ProjectsIndexRoute
@@ -235,11 +339,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AgentsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/costs': {
+      id: '/costs'
+      path: '/costs'
+      fullPath: '/costs'
+      preLoaderRoute: typeof CostsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/databases': {
       id: '/databases'
       path: '/databases'
       fullPath: '/databases'
       preLoaderRoute: typeof DatabasesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/hermes': {
+      id: '/hermes'
+      path: '/hermes'
+      fullPath: '/hermes'
+      preLoaderRoute: typeof HermesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/infrastructure': {
@@ -254,6 +372,13 @@ declare module '@tanstack/react-router' {
       path: '/jobs'
       fullPath: '/jobs'
       preLoaderRoute: typeof JobsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/journal': {
+      id: '/journal'
+      path: '/journal'
+      fullPath: '/journal'
+      preLoaderRoute: typeof JournalRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/observability': {
@@ -284,11 +409,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SecurityRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/usage': {
       id: '/usage'
       path: '/usage'
       fullPath: '/usage'
       preLoaderRoute: typeof UsageRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/platform/data': {
+      id: '/platform/data'
+      path: '/platform/data'
+      fullPath: '/platform/data'
+      preLoaderRoute: typeof PlatformDataRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/platform/delivery': {
+      id: '/platform/delivery'
+      path: '/platform/delivery'
+      fullPath: '/platform/delivery'
+      preLoaderRoute: typeof PlatformDeliveryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/platform/jobs': {
+      id: '/platform/jobs'
+      path: '/platform/jobs'
+      fullPath: '/platform/jobs'
+      preLoaderRoute: typeof PlatformJobsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/platform/server': {
+      id: '/platform/server'
+      path: '/platform/server'
+      fullPath: '/platform/server'
+      preLoaderRoute: typeof PlatformServerRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/projects/': {
@@ -319,14 +479,22 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AccessRoute: AccessRoute,
   AgentsRoute: AgentsRoute,
+  CostsRoute: CostsRoute,
   DatabasesRoute: DatabasesRoute,
+  HermesRoute: HermesRoute,
   InfrastructureRoute: InfrastructureRoute,
   JobsRoute: JobsRoute,
+  JournalRoute: JournalRoute,
   ObservabilityRoute: ObservabilityRoute,
   OperationsRoute: OperationsRoute,
   PipelinesRoute: PipelinesRoute,
   SecurityRoute: SecurityRoute,
+  SettingsRoute: SettingsRoute,
   UsageRoute: UsageRoute,
+  PlatformDataRoute: PlatformDataRoute,
+  PlatformDeliveryRoute: PlatformDeliveryRoute,
+  PlatformJobsRoute: PlatformJobsRoute,
+  PlatformServerRoute: PlatformServerRoute,
   ProjectsProjectIdRoute: ProjectsProjectIdRoute,
   ProjectsNewRoute: ProjectsNewRoute,
   ProjectsIndexRoute: ProjectsIndexRoute,

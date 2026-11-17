@@ -37,7 +37,7 @@
   border: 1px solid var(--border-default);
   padding: 1px 6px;
   border-radius: 4px;
-  font: 9px var(--font-data);
+  font: 12px var(--font-data);
 }
 .dashboard-grid {
   display: grid;
@@ -68,11 +68,11 @@
   margin: 10px auto 19px;
   color: var(--text-secondary);
   line-height: 1.7;
-  font-size: 11px;
+  font-size: 13px;
 }
 .empty-state a,
 .empty-state button {
-  font-size: 11px;
+  font-size: 13px;
 }
 .connection-list {
   padding: 5px 23px 8px;
@@ -83,7 +83,7 @@
   gap: 10px;
   padding: 11px 0;
   border-bottom: 1px solid var(--border-default);
-  font-size: 11px;
+  font-size: 13px;
 }
 .connection-list > div:last-child {
   border: 0;
@@ -100,7 +100,7 @@
   flex-shrink: 0;
 }
 .state {
-  font-size: 9px;
+  font-size: 12px;
   font-weight: 400;
   padding: 3px 7px;
   gap: 5px;
@@ -113,7 +113,7 @@
 .state-validated,
 .state-succeeded {
   background: var(--accent-surface);
-  color: var(--accent-ink);
+  color: var(--link);
   border-color: var(--accent-surface);
 }
 .state-running,
@@ -130,13 +130,13 @@
   border-top: 1px solid var(--border-default);
   color: var(--text-secondary);
   padding: 12px 23px;
-  font-size: 10px;
+  font-size: 12.5px;
   line-height: 1.6;
 }
 .quiet-empty {
   color: var(--text-secondary);
   padding: 29px 23px;
-  font-size: 11px;
+  font-size: 13px;
   line-height: 1.7;
 }
 .activity-list {
@@ -155,18 +155,18 @@
 .activity-dot {
   display: block;
   flex-shrink: 0;
-  background: var(--accent-ink);
+  background: var(--link);
   width: 6px;
   height: 6px;
   border-radius: 50%;
   margin-top: 5px;
 }
 .activity-list strong {
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 550;
 }
 .activity-list p {
-  font-size: 11px;
+  font-size: 13px;
   color: var(--text-secondary);
   line-height: 1.6;
   margin-top: 5px;
@@ -175,7 +175,7 @@
 .activity-list time {
   margin-left: auto;
   color: var(--text-secondary);
-  font: 9px var(--font-data);
+  font: 12px var(--font-data);
   white-space: nowrap;
   padding-top: 3px;
 }
@@ -185,11 +185,11 @@
   border-top: 1px solid var(--border-default);
   padding: 17px 38px;
   color: var(--text-secondary);
-  font-size: 9px;
+  font-size: 12px;
 }
 .app-footer .mono {
   margin-left: 10px;
-  font-size: 9px;
+  font-size: 12px;
 }
 
 .connection-list .state {

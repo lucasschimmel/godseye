@@ -1,0 +1,8 @@
+import { createFileRoute, redirect } from "@tanstack/react-router";
+
+/** Former address, kept so bookmarks and links keep working. */
+export const Route = createFileRoute("/jobs")({
+  beforeLoad: () => {
+    throw redirect({ to: "/platform/jobs", replace: true });
+  },
+});

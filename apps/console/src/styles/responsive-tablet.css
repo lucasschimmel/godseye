@@ -1,42 +1,8 @@
 /*
  * Tablet breakpoint (769px to 1024px, verified at 768 and 1024 by tests/e2e/a11y.spec.ts).
- * A 210px rail leaves too little width for the data tables, so the navigation becomes a wrapping
- * top bar and the content uses the full viewport width. Phones (<= 680px) refine this further in
- * responsive-mobile.css, which is imported after this file.
+ * The shell's own breakpoints live in shell.css; this file only adapts feature panels.
  */
 @media (max-width: 1024px) {
-  .app-shell {
-    flex-direction: column;
-  }
-  .sidebar {
-    position: relative;
-    width: 100%;
-    padding: 16px 26px 10px;
-  }
-  .workspace-label,
-  .nav-label,
-  .sidebar-bottom {
-    display: none;
-  }
-  .sidebar nav {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-top: 14px;
-  }
-  .nav-link {
-    margin: 0;
-    padding: 10px 12px;
-    white-space: nowrap;
-    min-height: 40px;
-  }
-  .nav-link > svg:last-child:not(:first-child) {
-    display: none;
-  }
-  .main-column {
-    margin-left: 0;
-    width: 100%;
-  }
   .panel-heading {
     flex-wrap: wrap;
   }
