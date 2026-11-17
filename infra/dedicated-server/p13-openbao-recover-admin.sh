@@ -55,6 +55,11 @@ else
 fi
 [ -n "$SHARE1" ] && [ -n "$SHARE2" ] && [ "$SHARE1" != "$SHARE2" ] || { echo "Two different non-empty shares are required." >&2; exit 1; }
 
+if [ "${GODSEYE_RECOVER_RESUME:-}" = 1 ]; then
+# Resume after an interruption at step 3: OpenBao is already restarted, unsealed and the legacy endpoint is on.
+echo "== resume: steps 0-2 skipped (OpenBao already unsealed) =="
+curl -fsS --cacert "$BAO_CACERT" "${BAO_ADDR}/v1/sys/seal-status" | jq -e '.sealed == false' >/dev/null || { echo "OpenBao is sealed; run without RESUME." >&2; exit 1; }
+else
 echo "== 0/5 safety copy of the OpenBao data (root-only) =="
 SAFE="/root/openbao-backups/data-$(date -u +%Y%m%dT%H%M%SZ)"
 install -d -m 0700 /root/openbao-backups
@@ -78,17 +83,36 @@ for share in "$SHARE1" "$SHARE2"; do
 done
 curl -fsS --cacert "$BAO_CACERT" "${BAO_ADDR}/v1/sys/seal-status" | jq -e '.sealed == false' >/dev/null || { echo "OpenBao is still sealed." >&2; exit 1; }
 echo "OpenBao unsealed."
+fi
+
+# One legacy call with retries (a node that has just unsealed can answer 5xx for a few seconds). The answer
+# body is only printed on failure and never contains a secret (the one-time password is not echoed).
+legacy_call() { # legacy_call <path> <json on stdin> -> body in $LEGACY_BODY
+  local payload code try
+  payload="$(cat)"
+  for try in 1 2 3 4 5 6; do
+    code="$(printf '%s' "$payload" | curl -sS --cacert "$BAO_CACERT" -X PUT --data @- -o /tmp/.bao-legacy.json -w '%{http_code}' "${BAO_ADDR}/v1/$1" 2>/dev/null || echo 000)"
+    if [ "$code" = 200 ]; then LEGACY_BODY="$(cat /tmp/.bao-legacy.json)"; rm -f /tmp/.bao-legacy.json; return 0; fi
+    echo "legacy call $1 answered HTTP $code (try $try): $(jq -c '{errors}' /tmp/.bao-legacy.json 2>/dev/null | head -c 200)" >&2
+    case "$1" in */attempt) curl -s -o /dev/null --cacert "$BAO_CACERT" -X DELETE "${BAO_ADDR}/v1/sys/generate-root/attempt" || true ;; esac
+    sleep 3
+  done
+  rm -f /tmp/.bao-legacy.json
+  return 1
+}
 
 echo "== 3/5 generate a short-lived root token =="
-START="$(echo '{}' | api PUT sys/generate-root/attempt)"
-NONCE="$(echo "$START" | jq -r '.nonce')"
-OTP="$(echo "$START" | jq -r '.otp')"
-{ [ -n "$NONCE" ] && [ "$NONCE" != null ] && [ -n "$OTP" ] && [ "$OTP" != null ]; } || { echo "The legacy endpoint did not start an attempt." >&2; exit 1; }
+curl -s -o /dev/null --cacert "$BAO_CACERT" -X DELETE "${BAO_ADDR}/v1/sys/generate-root/attempt" || true
+echo '{}' | legacy_call sys/generate-root/attempt || { echo "The legacy endpoint did not start an attempt." >&2; exit 1; }
+NONCE="$(echo "$LEGACY_BODY" | jq -r '.nonce')"
+OTP="$(echo "$LEGACY_BODY" | jq -r '.otp')"
+{ [ -n "$NONCE" ] && [ "$NONCE" != null ] && [ -n "$OTP" ] && [ "$OTP" != null ]; } || { echo "The attempt carried no nonce or one-time password." >&2; exit 1; }
 ENCODED=""
 for share in "$SHARE1" "$SHARE2"; do
-  RESULT="$(jq -n --arg k "$share" --arg n "$NONCE" '{key:$k,nonce:$n}' | api PUT sys/generate-root/update)"
-  ENCODED="$(echo "$RESULT" | jq -r '.encoded_token // empty')"
+  jq -n --arg k "$share" --arg n "$NONCE" '{key:$k,nonce:$n}' | legacy_call sys/generate-root/update || { echo "A share was refused by the legacy endpoint." >&2; exit 1; }
+  ENCODED="$(echo "$LEGACY_BODY" | jq -r '.encoded_token // empty')"
 done
+unset LEGACY_BODY
 [ -n "$ENCODED" ] || { echo "No encoded token after two shares." >&2; exit 1; }
 BAO_ADMIN_TOKEN="$(python3 - "$OTP" "$ENCODED" <<'PY'
 import base64, sys
