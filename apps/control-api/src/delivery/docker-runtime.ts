@@ -17,14 +17,28 @@ const NON_ROOT_USER = "65532:65532";
 const TMPFS_MAX_MIB = 256;
 const Inspect = z.array(
   z.object({
-    Config: z.object({ Labels: z.record(z.string(), z.string()).nullable() }),
+    Config: z.object({
+      Labels: z.record(z.string(), z.string()).nullable(),
+      User: z.string(),
+    }),
     State: z.object({ Running: z.boolean() }),
     HostConfig: z.object({
       Runtime: z.string(),
       ReadonlyRootfs: z.boolean(),
+      Privileged: z.boolean(),
       CapDrop: z.array(z.string()).nullable(),
+      CapAdd: z.array(z.string()).nullable(),
+      SecurityOpt: z.array(z.string()).nullable(),
+      NetworkMode: z.string(),
+      PidMode: z.string(),
+      IpcMode: z.string(),
       Memory: z.number(),
+      MemorySwap: z.number(),
       PidsLimit: z.number().nullable(),
+      Binds: z.array(z.string()).nullable(),
+      Devices: z.array(z.unknown()).nullable(),
+      PortBindings: z.record(z.string(), z.unknown()).nullable(),
+      PublishAllPorts: z.boolean(),
     }),
   }),
 );
@@ -217,13 +231,32 @@ export class DockerRuntime {
       await this.connectCaddy(scope);
     });
   }
-  private hardened(found: z.infer<typeof Inspect>[number]) {
+  /** Full policy check on what the Engine reports, never on the arguments this code sent. */
+  private hardened(found: z.infer<typeof Inspect>[number], scope: DeliveryScope) {
+    const host = found.HostConfig;
+    const capDrop = host.CapDrop ?? [];
     return (
-      found.HostConfig.Runtime === "runsc" &&
-      found.HostConfig.ReadonlyRootfs &&
-      (found.HostConfig.CapDrop ?? []).includes("ALL") &&
-      found.HostConfig.Memory > 0 &&
-      (found.HostConfig.PidsLimit ?? 0) > 0
+      host.Runtime === (this.config.runtime ?? "runsc") &&
+      host.ReadonlyRootfs &&
+      !host.Privileged &&
+      capDrop.length === 1 &&
+      capDrop[0] === "ALL" &&
+      (host.CapAdd ?? []).length === 0 &&
+      (host.SecurityOpt ?? []).some(
+        (option) => option === "no-new-privileges" || option === "no-new-privileges:true",
+      ) &&
+      found.Config.User === NON_ROOT_USER &&
+      host.NetworkMode === networkName(scope) &&
+      host.PidMode === "" &&
+      host.IpcMode !== "host" &&
+      !host.IpcMode.startsWith("container:") &&
+      host.Memory > 0 &&
+      host.MemorySwap === host.Memory &&
+      (host.PidsLimit ?? 0) > 0 &&
+      (host.Binds ?? []).length === 0 &&
+      (host.Devices ?? []).length === 0 &&
+      Object.keys(host.PortBindings ?? {}).length === 0 &&
+      !host.PublishAllPorts
     );
   }
   private async healthy(scope: DeliveryScope) {
@@ -259,7 +292,7 @@ export class DockerRuntime {
       present: owned,
       ready,
       active,
-      privateRuntime: owned ? this.hardened(found) : true,
+      privateRuntime: owned ? this.hardened(found, scope) : true,
       syntheticDataOnly: manifest.syntheticDataOnly,
       ...(active ? { url: `https://${this.host(scope)}` } : {}),
       evidence: owned ? "docker-runsc-label-inspection" : "docker-owned-absence",
