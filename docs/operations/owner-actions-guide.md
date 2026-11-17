@@ -6,14 +6,14 @@ Rédigé le 2026-11-16 à partir des runbooks (`openbao-custody.md`, `break-glas
 
 ## Checklist ordonnée
 
-1. Choisir la capacité (A, B ou C, point 1), puis confirmer la topologie dans la console.
+1. Capacité : exception A acceptée le 2026-11-16 (entrée 027). Il reste à confirmer la topologie dans la console (point 1).
 2. Copier le mot de passe restic hors du PC (point 3).
-3. Régler GitHub : facturation Actions ou visibilité du dépôt (point 5).
+3. GitHub Actions : plus bloquant tant que le dépôt est public (entrée 027, point 5).
 4. Laptop et mobile : WireGuard, SSH, interface Proxmox ; TOTP Proxmox ; clé d'urgence hors ligne (point 4).
 5. Clés B2 par préfixe et règle lifecycle (point 3).
 6. OpenBao : redistribuer les parts, répéter le déverrouillage, créer les identités, révoquer le jeton racine (point 2).
 7. Canal d'alerte, test d'arrivée, heartbeat (point 5).
-8. GitHub App et identifiants du registre (point 6).
+8. GitHub App : FAIT le 2026-11-17 (entrée 030). Reste les identifiants du registre (point 6).
 9. Décisions : VM de code et IPv6 (points 7 et 8).
 10. Fenêtre de reboot complet de l'hôte, toi présent (point 9).
 11. Projets réels et jeu de référence (point 10).
@@ -23,7 +23,8 @@ Rédigé le 2026-11-16 à partir des runbooks (`openbao-custody.md`, `break-glas
 
 ## BLOQUANT pour le soak
 
-### 1. Capacité, ZFS et topologie (décision)
+### 1. Capacité, ZFS et topologie (décision prise : option A, entrée 027)
+- **Mise à jour 2026-11-17.** Tu as choisi l'option A le 2026-11-16 : l'exception de thin-provisioning est enregistrée dans l'entrée 027 et ce point n'est plus bloquant. Le constat et les options ci-dessous sont conservés pour mémoire ; seule la confirmation de la topologie dans la console reste à faire.
 - **Constat.** Disques provisionnés 420 GiB + quota de sauvegarde 60 GiB = 480 GiB sur un pool de 472 GiB (101,7 %). RAM engagée 63 488 sur 64 076 MiB (99,1 %). La règle des 80 % est violée.
 - **Options.**
   - **A (recommandée par le ledger).** Enregistrer une exception de thin-provisioning tant que l'espace réellement alloué reste sous 50 % du pool (~236 GiB). Conditions : alerte à 70 % (déjà en place), refus de nouvelles cellules au-dessus de 60 %, quota de sauvegarde ≤ 60 GiB, plafonds `p12-cell-ceilings.sh` sur les cellules. Le coding runner reste sur `godseye-work`, sans VM dédiée.
@@ -35,7 +36,7 @@ Rédigé le 2026-11-16 à partir des runbooks (`openbao-custody.md`, `break-glas
 
 ### 2. OpenBao : identité du contrôleur, jeton racine, parts, déverrouillage
 - **Pourquoi bloqué.** Les parts de déverrouillage (3 parts, seuil 2) ne sont que chez toi. L'assistant ne doit ni les voir ni les manipuler.
-- **État.** Fichier d'init supprimé de la VM (sur ta déclaration, non revérifié). Révocation du jeton racine non prouvée. `bao.auth` absent : la page Accès affiche `no_authority`. Aucune répétition de déverrouillage.
+- **État (mis à jour le 2026-11-17, entrée 029).** FAIT : le jeton racine initial était déjà révoqué ; le plan B a été exécuté, `bao.auth` est installé (jeton périodique 8760 h, politique `godseye-broker-v1` seule), le jeton admin est révoqué et OpenBao le refuse, les AppRoles existent et le snapshot raft quotidien tourne. La répétition de déverrouillage a été faite comme redémarrage du service (pas un reboot de la VM ni de l'hôte). RESTE : redistribuer les parts (copie unique sur le bureau, reportée), voir la page Accès avec ta session (`ready` attendu au lieu de `no_authority`), renouveler `bao.auth` avant environ 2027-11-17.
 - **Vigilance.** Tu travailles à distance : au moins 2 parts doivent être accessibles depuis le laptop, sinon un reboot n'est pas récupérable à distance.
 
 **a) Jeton admin.** Depuis OpenBao 2.6, `bao operator generate-root` passe par un endpoint authentifié (les anciens endpoints non authentifiés sont désactivés par défaut, vérifié sur le serveur : réponse 403 sans jeton). On ne peut donc pas fabriquer un jeton racine avec les seules parts. Le jeton à utiliser est le **jeton racine initial** du fichier d'initialisation sur ton bureau (champ `root_token`). Il n'a jamais été révoqué par les scripts du dépôt (`p07-openbao-and-db.sh` l'utilise sans le révoquer). La séance `p13-openbao-owner-session.sh` le teste, fait tout le travail, puis le révoque et prouve que OpenBao le refuse. **Plan B s'il est déjà révoqué** (c'est le cas constaté le 2026-11-17 : le serveur a refusé le jeton du fichier) : `p13-openbao-recover-admin.sh` réactive temporairement les endpoints non authentifiés sur le seul listener de loopback (option `disable_unauthed_generate_root_endpoints=false`, confirmée par la documentation du listener TCP d'OpenBao 2.7), redémarre OpenBao, le déverrouille avec 2 parts tapées à l'invite silencieuse, génère un jeton avec les mêmes 2 parts, restaure la configuration, puis enchaîne la séance complète et révoque le jeton :
@@ -56,7 +57,7 @@ ssh -t godseye-pro "sudo bash /opt/godseye/infra/dedicated-server/p12-openbao-ow
 ```
 Crée les AppRoles `godseye-bindings-render` et `godseye-snapshot`. L'assistant lance ensuite `p12-install-snapshots.sh` pour activer le timer de snapshot raft.
 
-**c) Identité du contrôleur (`bao.auth`).** Le contrôleur reçoit un jeton dont la seule politique est `godseye-broker-v1` (périodique 720 h, renouvelé chaque semaine par un timer). Le script écrit la politique compilée, crée le jeton, arrête le contrôleur, installe `bao.auth` par la CLI du dépôt, redémarre le contrôleur et installe le timer de renouvellement :
+**c) Identité du contrôleur (`bao.auth`).** Le contrôleur reçoit un jeton dont la seule politique est `godseye-broker-v1` (périodique 8760 h, sans timer de renouvellement : la politique minimale interdit `renew-self`, renouvellement manuel avant environ 2027-11-17, entrée 029 ; l'ancienne version de ce texte parlait de 720 h et d'un timer hebdomadaire). Le script écrit la politique compilée, crée le jeton, arrête le contrôleur, installe `bao.auth` par la CLI du dépôt, redémarre le contrôleur et installe le timer de renouvellement :
 ```
 ssh -t godseye-pro "sudo bash /opt/godseye/infra/dedicated-server/p13-openbao-controller-identity.sh identity"
 ```
@@ -96,7 +97,7 @@ Renvoie « OK » et l'heure. L'assistant vérifie `Sealed false`, redémarre l'e
 - **Canal d'alerte.** Il faut un récepteur HTTPS public, port 443, nom DNS public (pas d'IP, pas de `.local`), répondant 2xx. Le corps est `{"source":"godseye", ...}` avec les en-têtes `Idempotency-Key` et, si un secret est défini, `X-Godseye-Timestamp` et `X-Godseye-Signature: v1=<HMAC-SHA256>`. Les webhooks entrants de Slack, Discord ou Telegram attendent un JSON précis et refuseront probablement ce corps (à vérifier). Options simples : **ntfy.sh** (topic au nom aléatoire long, URL `https://ntfy.sh/<topic>`, appli sur le téléphone) ou **healthchecks.io** (URL `https://hc-ping.com/<uuid>/fail`). Ne pas auto-héberger le récepteur sur le serveur surveillé.
   - Dans la console : **Observabilité et incidents**, **Canaux webhook du propriétaire**, **Confirmer mon identité**, remplis Nom, Adresse https et Secret de signature (facultatif, 16 caractères minimum), **Ajouter le canal**, puis **Envoyer un test d'arrivée**. Attendu : « Test confirmé : … HTTP 2xx » **et** une notification réellement reçue sur le téléphone (le 2xx seul ne prouve pas qu'un humain est prévenu). Renvoie le nom du canal et « reçu sur téléphone », jamais l'URL.
 - **Heartbeat externe.** Aucun script heartbeat n'existe dans le dépôt : l'assistant doit l'écrire. De ton côté : compte healthchecks.io, check « godseye-host » (période 30 min, grâce 30 min) relié à ton email ou Telegram, puis `ssh -t godseye-wg 'umask 077; read -rs U; printf %s "$U" > /etc/godseye/heartbeat-url'`. Vérification : l'assistant coupe le ping, l'alerte doit arriver.
-- **GitHub Actions.** Le workflow `external-observer.yml` est bloqué par un échec de paiement (entrée 020). Deux voies :
+- **GitHub Actions (mis à jour 2026-11-17, entrée 027).** Le blocage de paiement de l'entrée 020 ne s'applique plus tant que le dépôt reste public : l'observateur externe a tourné avec succès le 2026-11-16. Le texte ci-dessous reste utile seulement si le dépôt repasse en privé. Deux voies :
   - **Facturation** : Settings > Billing and plans > Payment information, puis Spending limits (Actions). Ensuite `gh workflow run external-observer.yml --ref main`.
   - **Dépôt public** (c'est déjà le cas aujourd'hui) : les minutes Actions sont gratuites. Repasser en privé arrêterait Actions et l'observateur. Sur un dépôt public, GitHub désactive les workflows planifiés après 60 jours sans activité. Le dépôt contient l'IP publique, des empreintes SSH et des numéros de série : décide quoi anonymiser, l'assistant peut lancer un scan de secrets sur l'historique.
   - Active aussi l'email d'échec Actions (Settings > Notifications).

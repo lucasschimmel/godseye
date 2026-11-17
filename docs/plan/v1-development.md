@@ -2,7 +2,7 @@
 
 Status: E01–E06 local implementation assessed; E07 local Agent Center, advanced chat, trusted data tools, locally qualified coding runners and requested bounded owner-approved orchestration implemented, 2026-11-14. The requested local orchestration software is complete and locally verified. See the story-level local completion/qualification table below; complete deployed E07 and V1 acceptance remain distinct. Historical checkpoints apply to their original source. Scope authority: [V1 requirements](../spec/v1.md), [isolation/data contract](../spec/isolation.md), [ADR-002](../adr/ADR-002-professional-vm-and-dual-stack.md) and [ADR-003](../adr/ADR-003-local-first-and-ci.md).
 
-Server update 2026-11-16: the platform runs on the dedicated server (a Hetzner `EX44-1-LTD`, not the AX41 first assumed); owner API is `1.19.0`; delivery uses Docker + `runsc` without Coolify, the control DB is PostgreSQL 17 and project cells PostgreSQL 18, the console is reachable only over WireGuard ([ADR-021](../adr/ADR-021-direct-docker-runsc-delivery-and-server-decisions.md)); custom domains are F47 ([ADR-020](../adr/ADR-020-custom-application-domains.md)); the work VM sandbox is the server-only deviation I10a. Server qualification status lives in the [execution ledger](../operations/dedicated-server-execution.md). Story rows below that say Coolify or AX41 are corrected inline; the historical checkpoint text keeps its original wording.
+Server update 2026-11-16: the platform runs on the dedicated server (a Hetzner `EX44-1-LTD`, not the AX41 first assumed); owner API is `1.22.0`; delivery uses Docker + `runsc` without Coolify, the control DB is PostgreSQL 17 and project cells PostgreSQL 18, the console is reachable only over WireGuard ([ADR-021](../adr/ADR-021-direct-docker-runsc-delivery-and-server-decisions.md)); custom domains are F47 ([ADR-020](../adr/ADR-020-custom-application-domains.md)); the work VM sandbox is the server-only deviation I10a. Server qualification status lives in the [execution ledger](../operations/dedicated-server-execution.md). Story rows below that say Coolify or AX41 are corrected inline; the historical checkpoint text keeps its original wording.
 
 ## Delivery rules
 
@@ -297,7 +297,7 @@ Completion is behavioral, not a count of screenshots, files, coverage percentage
 
 ### Current E01–E07 status
 
-Owner control API: `1.19.0` (this checkpoint section was written at `1.11.0`). Application API: `1.0.0`. The [2026-11-12 audit and remediation record](../reviews/2026-11-12-e01-e06-audit.md) preserves the preceding hardening checkpoint; the current E06 continuation is described above. The detailed checkpoint table below preserves historical runs.
+Owner control API: `1.22.0` (this checkpoint section was written at `1.11.0`). Application API: `1.0.0`. The [2026-11-12 audit and remediation record](../reviews/2026-11-12-e01-e06-audit.md) preserves the preceding hardening checkpoint; the current E06 continuation is described above. The detailed checkpoint table below preserves historical runs.
 
 | Epic | Current local status | Next software work | Separate qualification |
 | --- | --- | --- | --- |

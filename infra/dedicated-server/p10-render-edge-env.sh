@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# TEMPLATE - reviewed but NOT executed. Runs as ROOT before the edge container starts (called by
+# Executed on godseye-pro on 2026-11-15 (ledger entry 016). Runs as ROOT before the edge container starts (called by
 # godseye-edge-env.service, see p10-install-edge-caddy.sh). Logs in to OpenBao with the AppRole
 # `godseye-edge` (files written by p10-store-edge-credentials.sh) and writes the OVH DNS-01
 # credentials to ${ENV_FILE} (tmpfs under /run, 0600 root) for `docker run --env-file`.
