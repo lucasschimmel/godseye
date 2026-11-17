@@ -43,6 +43,18 @@ trap revoke_token EXIT
 [ "$(lookup_code)" = 200 ] || { echo "OpenBao refuses that token (revoked or mistyped). Nothing was changed." >&2; trap - EXIT; unset BAO_ADMIN_TOKEN; exit 1; }
 export BAO_ADMIN_TOKEN
 
+echo "== 0/3 stray root tokens =="
+# Revoke every OPENBAO root token other than the one in use (for example one left by an interrupted attempt).
+OWN_ACCESSOR="$(curl -fsS --cacert "$BAO_CACERT" -K <(printf 'header = "X-Vault-Token: %s"\n' "$BAO_ADMIN_TOKEN") "${BAO_ADDR}/v1/auth/token/lookup-self" | jq -r '.data.accessor')"
+STRAY=0
+while read -r accessor; do
+  [ -n "$accessor" ] && [ "$accessor" != "$OWN_ACCESSOR" ] || continue
+  policies="$(printf '{"accessor":"%s"}' "$accessor" | curl -fsS --cacert "$BAO_CACERT" -K <(printf 'header = "X-Vault-Token: %s"\n' "$BAO_ADMIN_TOKEN") -X POST --data @- "${BAO_ADDR}/v1/auth/token/lookup-accessor" 2>/dev/null | jq -r '.data.policies | join(",")' 2>/dev/null || true)"
+  if [ "$policies" = root ]; then
+    printf '{"accessor":"%s"}' "$accessor" | curl -fsS --cacert "$BAO_CACERT" -K <(printf 'header = "X-Vault-Token: %s"\n' "$BAO_ADMIN_TOKEN") -X POST --data @- "${BAO_ADDR}/v1/auth/token/revoke-accessor" >/dev/null && STRAY=$((STRAY + 1))
+  fi
+done < <(curl -fsS --cacert "$BAO_CACERT" -K <(printf 'header = "X-Vault-Token: %s"\n' "$BAO_ADMIN_TOKEN") -X LIST "${BAO_ADDR}/v1/auth/token/accessors" | jq -r '.data.keys[]?')
+echo "stray root tokens revoked: $STRAY"
 echo "== 1/3 AppRoles =="
 bash "$DIR/p12-openbao-owner-setup.sh" "$DIR/templates"
 echo "== 2/3 Controller identity =="
