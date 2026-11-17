@@ -103,13 +103,13 @@ legacy_call() { # legacy_call <path> <json on stdin> -> body in $LEGACY_BODY
 
 echo "== 3/5 generate a short-lived root token =="
 curl -s -o /dev/null --cacert "$BAO_CACERT" -X DELETE "${BAO_ADDR}/v1/sys/generate-root/attempt" || true
-echo '{}' | legacy_call sys/generate-root/attempt || { echo "The legacy endpoint did not start an attempt." >&2; exit 1; }
+legacy_call sys/generate-root/attempt <<<'{}' || { echo "The legacy endpoint did not start an attempt." >&2; exit 1; }
 NONCE="$(echo "$LEGACY_BODY" | jq -r '.nonce')"
 OTP="$(echo "$LEGACY_BODY" | jq -r '.otp')"
 { [ -n "$NONCE" ] && [ "$NONCE" != null ] && [ -n "$OTP" ] && [ "$OTP" != null ]; } || { echo "The attempt carried no nonce or one-time password." >&2; exit 1; }
 ENCODED=""
 for share in "$SHARE1" "$SHARE2"; do
-  jq -n --arg k "$share" --arg n "$NONCE" '{key:$k,nonce:$n}' | legacy_call sys/generate-root/update || { echo "A share was refused by the legacy endpoint." >&2; exit 1; }
+  legacy_call sys/generate-root/update <<<"$(jq -n --arg k "$share" --arg n "$NONCE" '{key:$k,nonce:$n}')" || { echo "A share was refused by the legacy endpoint." >&2; exit 1; }
   ENCODED="$(echo "$LEGACY_BODY" | jq -r '.encoded_token // empty')"
 done
 unset LEGACY_BODY
