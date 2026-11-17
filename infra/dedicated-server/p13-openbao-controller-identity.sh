@@ -28,7 +28,7 @@ SERVICE=godseye-control-api.service
 TOKEN_PERIOD="${GODSEYE_CONTROLLER_TOKEN_PERIOD:-720h}"
 
 [ "$(id -u)" -eq 0 ] || { echo "Run as root (sudo)." >&2; exit 1; }
-[ -t 0 ] || { echo "Interactive terminal required (ssh -t)." >&2; exit 1; }
+[ -t 0 ] || [ "${GODSEYE_NONINTERACTIVE:-}" = 1 ] || { echo "Interactive terminal required (ssh -t), or GODSEYE_NONINTERACTIVE=1 with the secrets on stdin." >&2; exit 1; }
 command -v jq >/dev/null || { echo "jq is required." >&2; exit 1; }
 trap 'unset BAO_ADMIN_TOKEN CONTROLLER_TOKEN POLICY' EXIT
 

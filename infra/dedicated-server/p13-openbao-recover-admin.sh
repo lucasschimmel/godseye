@@ -25,7 +25,7 @@ BAO_ADDR="${GODSEYE_BAO_ADDR:-https://127.0.0.1:8200}"
 BAO_CACERT="${GODSEYE_BAO_CACERT:-/etc/openbao/bao.crt}"
 
 [ "$(id -u)" -eq 0 ] || { echo "Run as root (sudo)." >&2; exit 1; }
-[ -t 0 ] || { echo "Interactive terminal required (ssh -t)." >&2; exit 1; }
+[ -t 0 ] || [ "${GODSEYE_NONINTERACTIVE:-}" = 1 ] || { echo "Interactive terminal required (ssh -t), or GODSEYE_NONINTERACTIVE=1 with the secrets on stdin." >&2; exit 1; }
 for tool in jq python3 curl; do command -v "$tool" >/dev/null || { echo "$tool is required." >&2; exit 1; }; done
 [ ! -e "$BACKUP" ] || { echo "A previous backup exists ($BACKUP): restore or remove it first." >&2; exit 1; }
 
@@ -43,9 +43,23 @@ cleanup() {
 }
 trap cleanup EXIT
 
-read -rs -p "Unseal share 1: " SHARE1; echo >&2
-read -rs -p "Unseal share 2 (a different one): " SHARE2; echo >&2
+if [ "${GODSEYE_NONINTERACTIVE:-}" = 1 ]; then
+  # Two shares, one per line, on stdin (sent over SSH by the owner's assistant); never echoed or stored.
+  IFS= read -r SHARE1 || true
+  IFS= read -r SHARE2 || true
+  SHARE1="$(printf '%s' "$SHARE1" | tr -d '\r\n ')"
+  SHARE2="$(printf '%s' "$SHARE2" | tr -d '\r\n ')"
+else
+  read -rs -p "Unseal share 1: " SHARE1; echo >&2
+  read -rs -p "Unseal share 2 (a different one): " SHARE2; echo >&2
+fi
 [ -n "$SHARE1" ] && [ -n "$SHARE2" ] && [ "$SHARE1" != "$SHARE2" ] || { echo "Two different non-empty shares are required." >&2; exit 1; }
+
+echo "== 0/5 safety copy of the OpenBao data (root-only) =="
+SAFE="/root/openbao-backups/data-$(date -u +%Y%m%dT%H%M%SZ)"
+install -d -m 0700 /root/openbao-backups
+cp -a /var/lib/openbao/data "$SAFE"
+echo "safety copy: $SAFE"
 
 echo "== 1/5 enable the legacy endpoint on the loopback listener =="
 cp -a "$CONF" "$BACKUP"
