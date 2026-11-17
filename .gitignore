@@ -23,6 +23,7 @@ blob-report/
 !.env.example
 !.env.*.example
 /.local/
+apps/*/.local/
 /data/
 /artifacts/
 **/identity.key

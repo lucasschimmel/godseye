@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### Boards (Excalidraw)
+
+- New `apps/boards` workspace: a TanStack Start application embedding the upstream Excalidraw editor, with email/password accounts, several boards per account, owner/editor/viewer sharing and optimistic-concurrency autosave (a stale save is refused, never overwrites). Owner control API unchanged. Local only: it needs a database and volume that the delivery runtime does not yet provide. See [Boards](docs/development/boards.md).
+- `bun run typecheck` now also checks `apps/boards` with its own TypeScript project.
+
 ### Console redesign
 
 - Console only (owner API unchanged). New information architecture: **Aujourd’hui** (decisions, incidents, unknown results, server state, day ribbon), **Projets**, **Hermes**, **Plateforme** (Serveur, Livraison, Données, Jobs), **Suivi** (Coûts, Journal) and **Réglages**. Former addresses (`/agents`, `/pipelines`, `/databases`, `/jobs`, `/usage`, `/observability`, `/operations`, `/infrastructure`, `/security`, `/access`) redirect to their new place.

@@ -40,7 +40,7 @@
     "access:issue": "node --import tsx apps/control-api/src/access-cli.ts issue",
     "dev": "node scripts/dev.mjs",
     "build": "bun run --filter @godseye/console build && node scripts/build-api.mjs && bun run build:sdk && bun run build:backend && bun run build:jobs && node scripts/build-cell-helper.mjs",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --noEmit && tsc --noEmit -p apps/boards/tsconfig.json",
     "lint": "biome check .",
     "format": "biome check --write .",
     "test": "vitest run",

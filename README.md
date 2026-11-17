@@ -113,17 +113,18 @@ At `/pipelines`, a recent owner passkey confirmation permits exact expiring deli
 
 See [local development](docs/development/local.md), [control foundations](docs/development/foundations.md), [service access and OpenBao](docs/development/service-access.md), [infrastructure inventory and cell preparation](docs/development/infrastructure.md), [independent project databases](docs/development/project-databases.md) and [CI preparation](docs/development/ci.md) for current commands and qualification boundaries.
 
-| Workspace                 | Responsibility                                                                  |
-| ------------------------- | ------------------------------------------------------------------------------- |
-| `apps/console`            | Private React/TanStack Start console and owner-access UI                        |
-| `apps/control-api`        | Authenticated local Hono boundary, owner administration and private access CLI  |
-| `apps/backend-template`   | Explicit local application template and authenticated domain-route example      |
-| `packages/contracts`      | Versioned requests, response schemas and OpenAPI definitions                    |
-| `packages/control-client` | Internal typed owner API client; separate from the application SDK              |
-| `packages/app-backend`    | Independent application authentication, private files, SSE and held recovery    |
-| `packages/sdk`            | Versioned TypeScript application client and standalone browser artifact         |
-| `packages/core`           | Project, execution, grant, budget, audit, OpenBao broker and signed-event logic |
-| `packages/store`          | Checksummed migrations and Drizzle/PGlite/PostgreSQL storage                    |
+| Workspace                 | Responsibility                                                                                         |
+| ------------------------- | ------------------------------------------------------------------------------------------------------ |
+| `apps/console`            | Private React/TanStack Start console and owner-access UI                                               |
+| `apps/control-api`        | Authenticated local Hono boundary, owner administration and private access CLI                         |
+| `apps/backend-template`   | Explicit local application template and authenticated domain-route example                             |
+| `apps/boards`             | Excalidraw whiteboards with accounts, several boards and sharing ([guide](docs/development/boards.md)) |
+| `packages/contracts`      | Versioned requests, response schemas and OpenAPI definitions                                           |
+| `packages/control-client` | Internal typed owner API client; separate from the application SDK                                     |
+| `packages/app-backend`    | Independent application authentication, private files, SSE and held recovery                           |
+| `packages/sdk`            | Versioned TypeScript application client and standalone browser artifact                                |
+| `packages/core`           | Project, execution, grant, budget, audit, OpenBao broker and signed-event logic                        |
+| `packages/store`          | Checksummed migrations and Drizzle/PGlite/PostgreSQL storage                                           |
 
 ## Implementation baseline
 
