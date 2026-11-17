@@ -73,10 +73,18 @@ case "$COMMAND" in
     POLICY="$(access_cli access:policy)"
     [ -n "$POLICY" ] || { echo "The compiled broker policy is empty." >&2; exit 1; }
     jq -n --arg p "$POLICY" '{policy:$p}' | bao_send PUT sys/policies/acl/godseye-broker-v1 >/dev/null
+    # OpenBao caps a token's real TTL at the token backend's max lease TTL (32 days by default), even for a
+    # periodic token with a longer period: raise that ceiling to the requested period first. Application tokens
+    # (AppRole) keep their own short explicit TTLs, so only operator-created long-lived tokens are affected.
+    jq -n --arg m "$TOKEN_PERIOD" '{max_lease_ttl:$m}' | bao_send POST sys/auth/token/tune >/dev/null
     CONTROLLER_TOKEN="$(jq -n --arg period "$TOKEN_PERIOD" \
       '{policies:["godseye-broker-v1"],no_default_policy:true,no_parent:true,renewable:true,period:$period,display_name:"godseye-controller"}' \
       | bao_send POST auth/token/create | jq -r '.auth.client_token')"
     { [ -n "$CONTROLLER_TOKEN" ] && [ "$CONTROLLER_TOKEN" != null ]; } || { echo "Token creation failed." >&2; exit 1; }
+    # The real TTL must be close to the period (more than 300 days for a 1-year period) or the token would expire early.
+    REAL_TTL="$(curl -fsS --cacert "$BAO_CACERT" -K <(printf 'header = "X-Vault-Token: %s"\n' "$CONTROLLER_TOKEN") "${BAO_ADDR}/v1/auth/token/lookup-self" | jq -r '.data.ttl')"
+    [ "${REAL_TTL:-0}" -gt 25920000 ] || { echo "The new controller token only lives ${REAL_TTL:-0}s; refusing to install it." >&2; exit 1; }
+    echo "controller token real TTL: $((REAL_TTL / 86400)) days"
 
     REPLACE=()
     OLD_TOKEN=""
