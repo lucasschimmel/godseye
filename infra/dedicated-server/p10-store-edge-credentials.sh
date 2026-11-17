@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# TEMPLATE - reviewed but NOT executed. Run by the OWNER interactively on godseye-pro as root
+# Executed on godseye-pro on 2026-11-15 (ledger entry 016). Run by the OWNER interactively on godseye-pro as root
 # (`ssh -t <host> sudo ./p10-store-edge-credentials.sh`). It is the only place the OVH values and a
 # short-lived OpenBao admin token are typed. Nothing is accepted from argv, the environment or a
 # file; prompts are silent (read -s); values never reach argv, shell history or the repository.

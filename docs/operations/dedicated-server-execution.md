@@ -1,6 +1,6 @@
 # Dedicated-server execution ledger
 
-Status (2026-11-16): `P00`–`P04` observed/installed, `P05`–`P08` lab-level or partial, `P09` soak invalidated and to be rerun last (entry 017); sections 1–5 are the 2026-11-14/15 baseline and phase table, and entries 015–026 record what changed since (Release 1 and Release 2 are merged to `main`; the platform runs from `develop` `d9cf3e1` per entry 025, later merges are in entry 026). An independent audit on 2026-11-15 found the claim that `P03`–`P09` are complete overstated. The open gaps are listed in the [gap inventory](../reviews/2026-11-16-gap-inventory.md).
+Status (2026-11-16): `P00`–`P04` observed/installed, `P05`–`P08` lab-level or partial, `P09` soak invalidated and to be rerun last (entry 017); sections 1–5 are the 2026-11-14/15 baseline and phase table, and entries 015–026 record what changed since (Release 1 and Release 2 are merged to `main`; the platform runs from `develop` `d9cf3e1` per entry 025, later merges are in entry 026). An independent audit on 2026-11-15 found the claim that `P03`–`P09` are complete overstated. The open gaps are listed in the [gap inventory](../reviews/2026-11-17-gap-inventory.md), which supersedes the 2026-11-16 one for status. Entries 027–030 (capacity exception, OpenBao controller identity and snapshots, GitHub App on `Melvyn`) are more recent than the status line above.
 
 Authority and references:
 - Handoff brief: [gemini-server-handoff.md](../development/gemini-server-handoff.md)

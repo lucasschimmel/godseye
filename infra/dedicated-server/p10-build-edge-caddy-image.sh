@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# TEMPLATE - reviewed but NOT executed. Builds the edge Caddy image WITH the OVH DNS-01 module
+# Executed on godseye-pro on 2026-11-15 (ledger entry 016). Builds the edge Caddy image WITH the OVH DNS-01 module
 # (run as root on the pro guest, or any Docker host). Stock caddy images contain no DNS provider.
 #
 # Supply chain: the builder and the runtime base are pinned by sha256 digest (caller-supplied,

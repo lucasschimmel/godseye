@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# TEMPLATE - reviewed but NOT executed. Installs the edge Caddy as the CONTAINER `godseye-edge`
+# Executed on godseye-pro on 2026-11-15 (ledger entry 016). Installs the edge Caddy as the CONTAINER `godseye-edge`
 # (run as root on the pro guest). It replaces the host-systemd Caddy of p07-caddy-https.sh, because
 # the delivery runtime (apps/control-api/src/delivery/docker-runtime.ts) must attach the edge to each
 # per-environment `--internal` Docker network and swap upstreams by file.
