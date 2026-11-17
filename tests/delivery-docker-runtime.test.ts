@@ -92,14 +92,25 @@ function fakeDocker() {
       return ok(
         JSON.stringify([
           {
-            Config: { Labels: c.labels },
+            Config: { Labels: c.labels, User: a.includes("--user") ? flag(a, "--user") : "" },
             State: { Running: c.running },
             HostConfig: {
               Runtime: a.find((x) => x.startsWith("--runtime="))?.split("=")[1] ?? "",
               ReadonlyRootfs: a.includes("--read-only"),
+              Privileged: a.includes("--privileged"),
               CapDrop: a.includes("--cap-drop") ? [flag(a, "--cap-drop")] : [],
+              CapAdd: a.includes("--cap-add") ? [flag(a, "--cap-add")] : [],
+              SecurityOpt: a.includes("--security-opt") ? [flag(a, "--security-opt")] : [],
+              NetworkMode: a.includes("--network") ? flag(a, "--network") : "",
+              PidMode: "",
+              IpcMode: "private",
               Memory: 1,
+              MemorySwap: 1,
               PidsLimit: Number(flag(a, "--pids-limit")),
+              Binds: a.includes("--volume") ? [flag(a, "--volume")] : [],
+              Devices: a.includes("--device") ? [flag(a, "--device")] : [],
+              PortBindings: a.includes("--publish") ? { "8080/tcp": [] } : {},
+              PublishAllPorts: a.includes("--publish-all"),
             },
           },
         ]),
@@ -234,6 +245,26 @@ describe("Docker runsc delivery runtime", () => {
       privateRuntime: true,
     });
   });
+
+  it.each([
+    ["privileged mode", ["--privileged"]],
+    ["a host bind mount", ["--volume", "/srv/data:/data"]],
+    ["a device", ["--device", "/dev/kvm"]],
+    ["a published port", ["--publish", "8080:8080"]],
+    ["an added capability", ["--cap-add", "NET_ADMIN"]],
+  ])(
+    "reports the runtime as not private when the container drifted to %s",
+    async (_label, extra) => {
+      const { docker, provider } = setup();
+      const r = release(crypto.randomUUID(), digestOf("one"));
+      await provider.stage(r.scope, r.manifest, r.artifact, guard);
+      docker.containers.get(`gdy-${r.scope.runId}`)?.args.push(...extra);
+
+      const state = await provider.readiness(r.scope, r.manifest);
+
+      expect(state?.privateRuntime).toBe(false);
+    },
+  );
 
   it("is idempotent when stage is repeated after a lost acknowledgment", async () => {
     const { docker, provider } = setup();
