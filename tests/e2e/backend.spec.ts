@@ -13,6 +13,10 @@ async function project(page: Page, prefix: string) {
   await page.getByLabel("Nom du projet", { exact: true }).fill(name);
   await page.getByRole("button", { name: "Enregistrer le projet", exact: true }).click();
   await expect(page.getByRole("heading", { name, exact: true })).toBeVisible();
+  await page
+    .getByRole("navigation", { name: "Sections du projet" })
+    .getByRole("link", { name: "Backend" })
+    .click();
   const panel = page.getByRole("region", { name: "Backend applicatif", exact: true });
   await expect(panel.getByText("Non configuré", { exact: true })).toBeVisible();
   return {

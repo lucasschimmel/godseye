@@ -1,0 +1,178 @@
+/*
+ * Brings the feature panels written before the redesign onto the new design language:
+ * cards, pills, inputs and quieter section labels. Loaded after their stylesheets.
+ */
+.panel {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  box-shadow: var(--card-edge);
+  margin-bottom: 16px;
+}
+.panel-heading,
+.panel-header {
+  border-bottom: 1px solid var(--line);
+  min-height: 0;
+  padding: 18px 22px;
+}
+.panel-heading h2,
+.panel-header h2,
+.section-title h2 {
+  font-size: 15px;
+  font-weight: 500;
+}
+.eyebrow {
+  color: var(--text-3);
+  font: 500 11.5px var(--font-body);
+  letter-spacing: 0.02em;
+  text-transform: none;
+  margin-bottom: 4px;
+}
+.panel h3 {
+  font-weight: 500;
+}
+.count {
+  border-radius: 99px;
+  background: var(--raised);
+  border: 0;
+  padding: 0 8px;
+  font: 500 11.5px / 20px var(--font-data);
+}
+.state.pill-status {
+  height: 24px;
+  padding: 0 10px;
+  font-size: 12px;
+  font-weight: 400;
+  border-radius: 99px;
+}
+.state.pill-status.ok {
+  color: var(--ok);
+  background: var(--ok-soft);
+  border-color: transparent;
+}
+.state.pill-status.warn {
+  color: var(--accent);
+  background: var(--accent-soft);
+  border-color: transparent;
+}
+.state.pill-status.danger {
+  color: var(--danger);
+  background: var(--danger-soft);
+  border-color: transparent;
+}
+.state.pill-status.unk {
+  color: var(--accent);
+  border: 1px dashed var(--accent-line);
+  background: transparent;
+}
+.state.pill-status.decl,
+.state.pill-status.muted {
+  color: var(--text-2);
+  background: transparent;
+  border: 1px dashed var(--line-strong);
+}
+.status-dot {
+  display: none;
+}
+
+/* Form controls (shadcn Input/Textarea and native fields). */
+.panel input:not([type="checkbox"]):not([type="radio"]),
+.panel textarea,
+.panel select,
+form input:not([type="checkbox"]):not([type="radio"]),
+form textarea,
+form select {
+  background: var(--surface-2);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-xs);
+  color: var(--text);
+  font-size: 13.5px;
+}
+.panel input:focus-visible,
+.panel textarea:focus-visible,
+.panel select:focus-visible,
+form input:focus-visible,
+form textarea:focus-visible,
+form select:focus-visible {
+  outline: 2px solid var(--accent-line);
+  outline-offset: 0;
+  border-color: var(--accent);
+}
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-3);
+}
+
+/* Feedback. */
+.error-message {
+  border-radius: var(--r-sm);
+  border: 1px solid var(--danger-soft);
+  font-size: 13px;
+}
+.success-message {
+  color: var(--ok);
+  background: var(--ok-soft);
+  border-radius: var(--r-sm);
+  font-size: 13px;
+}
+.loading {
+  font-size: 13px;
+  color: var(--text-3);
+}
+.empty-state {
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--r);
+  background: transparent;
+}
+.empty-state h1,
+.empty-state h2 {
+  font-size: 16px;
+  font-weight: 500;
+}
+.empty-state p {
+  font-size: 13px;
+}
+.empty-icon {
+  background: var(--raised);
+  border-color: var(--line);
+}
+.panel-note,
+.quiet-empty {
+  font-size: 12.5px;
+  color: var(--text-2);
+  background: transparent;
+}
+
+/* Tables. */
+table thead tr {
+  background: var(--surface-2);
+}
+table th {
+  color: var(--text-3);
+  font-weight: 500;
+  font-size: 12px;
+}
+table tr {
+  border-color: var(--line);
+}
+table tbody tr:hover {
+  background: var(--raised);
+}
+
+/* Legacy metric tiles follow the new value typography. */
+.metric {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  box-shadow: var(--card-edge);
+}
+.metric strong {
+  font-weight: 300;
+  letter-spacing: -0.03em;
+}
+.text-link {
+  text-decoration: none;
+}
+.text-link.subtle {
+  color: var(--text-3);
+}

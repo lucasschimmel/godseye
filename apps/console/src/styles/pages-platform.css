@@ -1,0 +1,8 @@
+/* Platform pages reuse the feature panels; only spacing is adjusted here. */
+.telemetry-stack {
+  display: grid;
+  gap: 16px;
+}
+.telemetry-stack > .panel {
+  margin-bottom: 0;
+}

@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="fr" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>G.O.D.S.E.Y.E — maquette console</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="pages.css" />
+</head>
+<body>
+  <div class="shell">
+    <aside class="rail" id="rail" aria-label="Navigation principale"></aside>
+    <div class="main">
+      <header class="topbar">
+        <div class="crumbs" id="crumbs"></div>
+        <div class="topbar-right">
+          <button class="btn pill-btn" type="button" data-toast="Maquette : nouveau fil Hermes, le périmètre est choisi en premier.">
+            <span class="agent-dot"></span>Demander à Hermes
+          </button>
+          <button class="icon-btn" type="button" data-action="theme" aria-label="Basculer le thème"><i data-icon="contrast"></i></button>
+        </div>
+      </header>
+      <main id="view" tabindex="-1"></main>
+    </div>
+  </div>
+
+  <div class="overlay" id="palette" hidden>
+    <div class="palette" role="dialog" aria-label="Palette de commandes">
+      <label class="palette-input"><i data-icon="search"></i><input id="palette-input" type="text" placeholder="Aller à, ou lancer une action…" autocomplete="off" /></label>
+      <ul id="palette-list"></ul>
+      <footer><span><kbd>↑</kbd><kbd>↓</kbd> naviguer</span><span><kbd>Entrée</kbd> ouvrir</span><span><kbd>Échap</kbd> fermer</span><span class="push">raccourcis : <kbd>G</kbd> puis <kbd>A</kbd>, <kbd>P</kbd>, <kbd>H</kbd>…</span></footer>
+    </div>
+  </div>
+
+  <div class="overlay" id="sheet" hidden>
+    <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title" id="sheet-body"></div>
+  </div>
+
+  <div class="toast" id="toast" role="status" hidden></div>
+
+  <script src="icons.js"></script>
+  <script src="charts.js"></script>
+  <script src="data.js"></script>
+  <script src="view-today.js"></script>
+  <script src="view-project.js"></script>
+  <script src="view-hermes.js"></script>
+  <script src="view-platform.js"></script>
+  <script src="view-follow.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

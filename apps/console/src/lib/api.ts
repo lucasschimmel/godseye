@@ -83,6 +83,22 @@ const messages: Record<string, string> = {
   SLUG_MISMATCH: "L’identifiant saisi ne correspond pas à ce projet.",
 };
 
+/** A refused API call; `code` is the stable server error code (for example STEP_UP_REQUIRED). */
+export class ApiError extends Error {
+  constructor(
+    message: string,
+    readonly code: string,
+    readonly status: number,
+  ) {
+    super(message);
+    this.name = "ApiError";
+  }
+}
+
+export function isStepUpRequired(error: unknown): boolean {
+  return error instanceof ApiError && error.code === "STEP_UP_REQUIRED";
+}
+
 export async function api<T>(path: string, init?: RequestInit): Promise<T> {
   const response = await fetch(`${LOCAL_DEFAULTS.apiBase}${path}`, {
     ...init,
@@ -91,8 +107,10 @@ export async function api<T>(path: string, init?: RequestInit): Promise<T> {
   if (!response.ok) {
     if (response.status === 401) ownerAuthenticationRequired();
     const payload = (await response.json()) as ApiErrorBody;
-    throw new Error(
+    throw new ApiError(
       messages[payload.error.code] ?? "L’action n’a pas abouti. Réessayez ou consultez le journal.",
+      payload.error.code,
+      response.status,
     );
   }
   return parseControlResponse<T>(

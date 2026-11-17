@@ -16,7 +16,7 @@
 }
 .overview-banner .eyebrow {
   color: var(--navigation-muted);
-  font-size: 8px;
+  font-size: 11.5px;
 }
 .overview-banner h2 {
   color: var(--surface);
@@ -28,7 +28,7 @@
   margin-bottom: 13px;
 }
 .overview-banner p {
-  font-size: 11px;
+  font-size: 13px;
   color: var(--navigation-text);
   line-height: 1.7;
   max-width: 380px;
@@ -37,8 +37,8 @@
   display: inline-flex;
   align-items: center;
   gap: 9px;
-  font-size: 11px;
-  color: var(--accent-ink);
+  font-size: 13px;
+  color: var(--link);
   font-weight: 550;
 }
 .overview-banner .text-link {
@@ -51,7 +51,7 @@
 }
 .text-link.subtle {
   color: var(--text-secondary);
-  font-size: 10px;
+  font-size: 12.5px;
 }
 .control-graphic {
   position: absolute;
@@ -143,7 +143,7 @@
   justify-content: space-between;
   gap: 8px;
   color: var(--text-secondary);
-  font-size: 10px;
+  font-size: 12.5px;
 }
 .metric > strong {
   font-family: var(--font-display);
@@ -156,5 +156,5 @@
 }
 .metric small {
   color: var(--text-secondary);
-  font-size: 9px;
+  font-size: 12px;
 }

@@ -15,13 +15,19 @@ async function registerProject(page: Page, prefix: string) {
   await page.getByLabel("Nom du projet", { exact: true }).fill(name);
   await page.getByRole("button", { name: "Enregistrer le projet", exact: true }).click();
   await expect(page.getByRole("heading", { name, exact: true })).toBeVisible();
+  // Project metadata, previews and environment limits live in the project's settings tab.
+  await page
+    .getByRole("navigation", { name: "Sections du projet" })
+    .getByRole("link", { name: "Réglages" })
+    .click();
+  await expect(page).toHaveURL(/onglet=reglages/);
   return { name, url: page.url() };
 }
 
 async function openDatabases(page: Page) {
-  await page.goto("/databases");
-  await expect(page).toHaveURL(/\/databases$/);
-  await expect(page.getByRole("heading", { name: "Bases de données", exact: true })).toBeVisible();
+  await page.goto("/platform/data");
+  await expect(page).toHaveURL(/\/platform\/data$/);
+  await expect(page.getByRole("heading", { name: "Données", level: 1 })).toBeVisible();
 }
 
 async function createPreview(page: Page) {

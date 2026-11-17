@@ -17,6 +17,10 @@ async function boundProject(page: Page, prefix: string) {
   await expect(page.getByRole("heading", { name, exact: true })).toBeVisible();
   const projectId = page.url().split("/").at(-1);
   if (!projectId) throw new Error("Synthetic delivery browser project missing");
+  await page
+    .getByRole("navigation", { name: "Sections du projet" })
+    .getByRole("link", { name: "Réglages" })
+    .click();
   await page.getByLabel("Dépôt", { exact: true }).fill("fixture/browser-delivery");
   await page.getByLabel("ID du dépôt", { exact: true }).fill("12345");
   await page.getByLabel("ID de l’installation GitHub App", { exact: true }).fill("67890");

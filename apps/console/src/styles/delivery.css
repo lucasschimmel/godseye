@@ -13,7 +13,7 @@
   min-width: 0;
 }
 .delivery-assurance-actions button {
-  font-size: 11px;
+  font-size: 13px;
 }
 .delivery-assurance > h2 {
   margin: 23px 23px 12px;
@@ -24,12 +24,12 @@
   margin: 0 23px 12px;
   max-width: 90ch;
   color: var(--text-secondary);
-  font-size: 11px;
+  font-size: 13px;
   line-height: 1.8;
 }
 .delivery-assurance > p:last-child {
   margin-bottom: 23px;
-  color: var(--accent-ink);
+  color: var(--link);
 }
 .delivery-policy {
   display: grid;
@@ -42,7 +42,7 @@
 }
 .delivery-policy p {
   color: var(--text-secondary);
-  font-size: 11px;
+  font-size: 13px;
   line-height: 1.8;
   overflow-wrap: anywhere;
 }
@@ -52,7 +52,7 @@
   gap: 8px;
   min-width: 0;
   color: var(--text-primary);
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 550;
   line-height: 1.6;
 }
@@ -60,7 +60,7 @@
 .delivery-policy select {
   min-width: 0;
   width: 100%;
-  font-size: 12px;
+  font-size: 13.5px;
   box-shadow: none;
 }
 .delivery-policy select {
@@ -72,7 +72,7 @@
   background: var(--surface);
 }
 .delivery-policy select:focus-visible {
-  outline: 2px solid var(--accent-ink);
+  outline: 2px solid var(--link);
   outline-offset: 2px;
 }
 .delivery-source-fields,
@@ -93,7 +93,7 @@
   grid-column: 1 / -1;
 }
 .delivery-policy-fields > .mono {
-  color: var(--accent-ink);
+  color: var(--link);
 }
 .delivery-resource-fields {
   display: grid;
@@ -111,11 +111,11 @@
   height: 15px;
   flex-shrink: 0;
   margin-top: 2px;
-  accent-color: var(--accent-ink);
+  accent-color: var(--link);
 }
 .delivery-policy-fields > button {
   justify-self: start;
-  font-size: 12px;
+  font-size: 13.5px;
 }
 .delivery-history > .section-title {
   min-height: 63px;
@@ -129,7 +129,7 @@
 .delivery-history > p {
   padding: 18px 23px 0;
   color: var(--text-secondary);
-  font-size: 11px;
+  font-size: 13px;
   line-height: 1.8;
 }
 .delivery-history .operation-row {
@@ -147,20 +147,20 @@
   min-width: 0;
 }
 .delivery-history .operation-row strong {
-  font-size: 12px;
+  font-size: 13.5px;
   font-weight: 600;
 }
 .delivery-history .operation-row p,
 .delivery-history .operation-row small {
   display: block;
   margin-top: 7px;
-  font-size: 11px;
+  font-size: 13px;
   color: var(--text-secondary);
   line-height: 1.7;
   overflow-wrap: anywhere;
 }
 .delivery-history .operation-row a {
-  color: var(--accent-ink);
+  color: var(--link);
   text-decoration: underline;
   text-underline-offset: 3px;
 }
@@ -176,7 +176,7 @@
   height: auto;
   white-space: normal;
   line-height: 1.5;
-  font-size: 11px;
+  font-size: 13px;
   text-align: center;
 }
 @media (max-width: 680px) {
@@ -245,6 +245,6 @@
   font-weight: 600;
 }
 .platform-job .mono {
-  font-size: 10px;
+  font-size: 12.5px;
   font-weight: 400;
 }

@@ -14,7 +14,7 @@ test("T-AC-771 saves an actual owner tool ceiling while unavailable execution ke
   page,
 }) => {
   const project = await createProject(page, "Outils réels");
-  await page.goto("/agents");
+  await page.goto("/hermes?vue=profils");
   await page
     .getByRole("combobox", { name: "Projet du profil", exact: true })
     .selectOption({ label: project });
@@ -41,6 +41,7 @@ test("T-AC-771 saves an actual owner tool ceiling while unavailable execution ke
   await expect(
     configured.getByRole("checkbox", { name: "Vérifier du JSON", exact: true }),
   ).not.toBeChecked();
+  await page.goto("/hermes?vue=taches");
   await expect(
     page.getByRole("checkbox", { name: "Outils pour cette tâche", exact: true }),
   ).toBeDisabled();
@@ -54,7 +55,7 @@ test("T-AC-771 labeled lost-response contract preserves the exact nested tool gr
   page,
 }) => {
   const project = await createProject(page, "Outils reprise UI");
-  await page.goto("/agents");
+  await page.goto("/hermes?vue=profils");
   await page
     .getByRole("combobox", { name: "Projet du profil", exact: true })
     .selectOption({ label: project });
@@ -70,7 +71,7 @@ test("T-AC-771 labeled lost-response contract preserves the exact nested tool gr
     enableTools: true,
     loseFirstTaskReply: true,
   });
-  await page.reload();
+  await page.goto("/hermes?vue=taches");
   const form = page.getByRole("form", { name: "Nouvelle tâche Hermès", exact: true });
   await form.getByRole("checkbox", { name: "Outils pour cette tâche", exact: true }).check();
   // The tool catalog only renders after the refreshed /api/v1/agents reply; wait for it explicitly.
@@ -91,7 +92,7 @@ test("T-AC-771 labeled lost-response contract preserves the exact nested tool gr
     form.getByRole("button", { name: "Vérifier le lancement", exact: true }),
   ).toBeEnabled();
   fixture.advanceProfileRevision();
-  await page.getByRole("button", { name: "Actualiser Hermès", exact: true }).click();
+  await page.getByRole("button", { name: "Actualiser Hermes", exact: true }).click();
   await expect(
     form.getByRole("checkbox", { name: "Outils pour cette tâche", exact: true }),
   ).toBeDisabled();
@@ -112,7 +113,7 @@ test("T-AC-771 labeled mobile UI contract sends explicit task rights and copied 
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   const project = await createProject(page, "Outils UI");
-  await page.goto("/agents");
+  await page.goto("/hermes?vue=profils");
   await page
     .getByRole("combobox", { name: "Projet du profil", exact: true })
     .selectOption({ label: project });
@@ -125,7 +126,7 @@ test("T-AC-771 labeled mobile UI contract sends explicit task rights and copied 
     page.getByRole("article", { name: new RegExp(`^Opérations · ${project} ·`) }),
   ).toBeVisible();
   const fixture = await agentBrowserResponses(page, project, { enableTools: true });
-  await page.reload();
+  await page.goto("/hermes?vue=taches");
   const form = page.getByRole("form", { name: "Nouvelle tâche Hermès", exact: true });
   await expect(
     form.getByRole("checkbox", { name: "Outils pour cette tâche", exact: true }),
@@ -154,7 +155,7 @@ test("T-AC-771 labeled mobile UI contract sends explicit task rights and copied 
   ]);
   expect(await page.evaluate(() => "__toolXss" in window)).toBe(false);
   fixture.uncertain();
-  await page.getByRole("button", { name: "Actualiser Hermès", exact: true }).click();
+  await page.getByRole("button", { name: "Actualiser Hermes", exact: true }).click();
   await expect(detail.getByText("Nettoyage non confirmé", { exact: true })).toBeVisible();
   await expect(
     detail.getByText(
@@ -179,8 +180,8 @@ async function createProject(page: Page, prefix: string) {
 }
 
 async function createProfile(page: Page, name: string) {
-  await page.goto("/agents");
-  await expect(page.getByRole("heading", { name: "Agent Center", exact: true })).toBeVisible();
+  await page.goto("/hermes?vue=profils");
+  await expect(page.getByRole("heading", { name: "Hermes", level: 1 })).toBeVisible();
   await page
     .getByRole("combobox", { name: "Projet du profil", exact: true })
     .selectOption({ label: name });
@@ -196,8 +197,8 @@ async function createProfile(page: Page, name: string) {
 test("T-AC-730 shows real unavailable state without presenting a simulated running agent", async ({
   page,
 }) => {
-  await page.goto("/agents");
-  await expect(page.getByRole("heading", { name: "Agent Center", exact: true })).toBeVisible();
+  await page.goto("/hermes?vue=taches");
+  await expect(page.getByRole("heading", { name: "Hermes", level: 1 })).toBeVisible();
   await expect(page.getByText("Aucune tâche lancée", { exact: true })).toBeVisible();
   await expect(
     page.getByText(/ne donnent pas accès aux commandes système ni aux builds/i).first(),
@@ -216,12 +217,14 @@ test("T-AC-730 binds a real profile and preserves pause, reconfiguration and res
   const card = await createProfile(page, project);
   await expect(card.getByText("gpt-6-luna", { exact: true })).toBeVisible();
   await expect(card.getByText("godseye-context · 1.0.0", { exact: true })).toBeVisible();
+  await page.goto("/hermes?vue=taches");
   await expect(
     page.getByText("Connectez le runtime local de ce profil avant de lancer une tâche.", {
       exact: true,
     }),
   ).toBeVisible();
   await expect(page.getByRole("button", { name: "Lancer la tâche", exact: true })).toBeDisabled();
+  await page.goto("/hermes?vue=profils");
   await card.getByRole("button", { name: "Mettre en pause", exact: true }).click();
   await expect(card.getByText("En pause", { exact: true })).toBeVisible();
   await card.getByRole("button", { name: "Reprendre le profil", exact: true }).click();
@@ -234,13 +237,13 @@ test("T-AC-730 binds a real profile and preserves pause, reconfiguration and res
   await page.reload();
   await expect(card.getByText(/256 tokens/)).toBeVisible();
   await expect(card.getByRole("button", { name: "Mettre en pause", exact: true })).toBeVisible();
-  await page.getByRole("heading", { name: "Agent Center", exact: true }).click();
+  await page.getByRole("heading", { name: "Hermes", level: 1 }).click();
   await page.screenshot({ path: "artifacts/agents-desktop.png", fullPage: true });
 });
 
 test("T-AC-730 validates profile caps before sending a request", async ({ page }) => {
   const project = await createProject(page, "Agent validation");
-  await page.goto("/agents");
+  await page.goto("/hermes?vue=profils");
   await page
     .getByRole("combobox", { name: "Projet du profil", exact: true })
     .selectOption({ label: project });
@@ -273,7 +276,7 @@ test("T-AC-730 keeps profile controls and actions reachable on mobile", async ({
   });
   expect(bounds.left).toBeGreaterThanOrEqual(0);
   expect(bounds.right).toBeLessThanOrEqual(bounds.width + 1);
-  await page.getByRole("heading", { name: "Agent Center", exact: true }).click();
+  await page.getByRole("heading", { name: "Hermes", level: 1 }).click();
   await page.screenshot({ path: "artifacts/agents-mobile.png", fullPage: true });
 });
 
@@ -283,7 +286,7 @@ test("T-AC-730 UI contract fixture launches, tracks uncertainty and displays a s
   const project = await createProject(page, "Agent suivi UI");
   await createProfile(page, project);
   const fixture = await agentBrowserResponses(page, project);
-  await page.reload();
+  await page.goto("/hermes?vue=taches");
   const form = page.getByRole("form", { name: "Nouvelle tâche Hermès", exact: true });
   await form
     .getByLabel("Demande à Hermès", { exact: true })
@@ -292,7 +295,7 @@ test("T-AC-730 UI contract fixture launches, tracks uncertainty and displays a s
   const detail = page.getByRole("article", { name: "Détail de la tâche Hermès", exact: true });
   await expect(detail.getByText("En cours", { exact: true }).first()).toBeVisible();
   fixture.uncertain();
-  await page.getByRole("button", { name: "Actualiser Hermès", exact: true }).click();
+  await page.getByRole("button", { name: "Actualiser Hermes", exact: true }).click();
   await expect(detail.getByText("Résultat incertain", { exact: true }).first()).toBeVisible();
   await expect(form.getByRole("button", { name: "Lancer la tâche", exact: true })).toBeDisabled();
   await detail.getByRole("button", { name: "Vérifier le résultat", exact: true }).click();
@@ -310,7 +313,7 @@ test("T-AC-730 UI contract fixture preserves pending stop and budget messaging u
   const project = await createProject(page, "Agent arrêt UI");
   await createProfile(page, project);
   const fixture = await agentBrowserResponses(page, project);
-  await page.reload();
+  await page.goto("/hermes?vue=taches");
   const form = page.getByRole("form", { name: "Nouvelle tâche Hermès", exact: true });
   await form
     .getByLabel("Demande à Hermès", { exact: true })
@@ -331,35 +334,36 @@ test("T-AC-730 UI contract fixture preserves pending stop and budget messaging u
   expect(fixture.postKeys).toHaveLength(1);
 });
 
-test("T-AC-730 security refresh failure disables sensitive controls while preserving protective stop", async ({
+test("T-AC-730 a launch refused for a stale identity asks for the passkey and is retried once with the same key", async ({
   page,
 }) => {
   const project = await createProject(page, "Agent identité UI");
   await createProfile(page, project);
-  await agentBrowserResponses(page, project);
-  await page.reload();
-  const create = page
-    .getByRole("form", { name: "Créer un profil Hermès", exact: true })
-    .getByRole("button", { name: "Créer le profil", exact: true });
-  await expect(create).toBeEnabled();
+  const fixture = await agentBrowserResponses(page, project);
+  // The first launch is refused before anything runs; later attempts reach the fixture.
+  const refusedKeys: string[] = [];
+  await page.route("**/api/v1/agents/tasks", async (route) => {
+    if (route.request().method() !== "POST" || refusedKeys.length) return route.fallback();
+    refusedKeys.push(route.request().headers()["idempotency-key"] ?? "");
+    await route.fulfill({
+      status: 403,
+      contentType: "application/json",
+      body: JSON.stringify({
+        error: { code: "STEP_UP_REQUIRED", message: "fresh identity required", requestId: "r" },
+      }),
+    });
+  });
+  await page.goto("/hermes?vue=taches");
   const form = page.getByRole("form", { name: "Nouvelle tâche Hermès", exact: true });
   await form.getByLabel("Demande à Hermès", { exact: true }).fill("Un brouillon privé.");
   await form.getByRole("button", { name: "Lancer la tâche", exact: true }).click();
+  const sheet = page.getByRole("dialog", { name: "Confirmer l’action Hermes" });
+  await expect(sheet).toBeVisible();
+  await sheet.getByRole("button", { name: "Confirmer avec la passkey", exact: true }).click();
   const detail = page.getByRole("article", { name: "Détail de la tâche Hermès", exact: true });
   await expect(detail.getByRole("button", { name: "Demander l’arrêt", exact: true })).toBeEnabled();
-  await page.route("**/api/v1/owner/security", (route) => route.abort());
-  await page.getByRole("button", { name: "Actualiser Hermès", exact: true }).click();
-  await expect(
-    page.getByText(
-      "La confirmation propriétaire n’a pas pu être actualisée. Les demandes d’arrêt restent disponibles.",
-      { exact: true },
-    ),
-  ).toBeVisible();
-  await expect(create).toBeDisabled();
-  await expect(
-    page.getByText("Identité propriétaire confirmée récemment.", { exact: true }),
-  ).toHaveCount(0);
-  await expect(detail.getByRole("button", { name: "Demander l’arrêt", exact: true })).toBeEnabled();
+  await expect(sheet).toHaveCount(0);
+  expect(fixture.postKeys).toEqual(refusedKeys);
 });
 
 test("T-AC-750 creates a real scoped conversation and keeps the unavailable composer disabled after reload", async ({
@@ -367,6 +371,7 @@ test("T-AC-750 creates a real scoped conversation and keeps the unavailable comp
 }) => {
   const project = await createProject(page, "Chat réel");
   await createProfile(page, project);
+  await page.goto("/hermes?vue=conversations");
   const create = page.getByRole("form", { name: "Créer une conversation", exact: true });
   await create
     .getByLabel("Titre de la conversation", { exact: true })
@@ -393,6 +398,7 @@ test("T-AC-750 UI contract receives partial EventSource text, reconnects without
   await page.setViewportSize({ width: 390, height: 844 });
   const project = await createProject(page, "Chat mobile");
   await createProfile(page, project);
+  await page.goto("/hermes?vue=conversations");
   const create = page.getByRole("form", { name: "Créer une conversation", exact: true });
   await create.getByLabel("Titre de la conversation", { exact: true }).fill("Discussion mobile");
   await create.getByRole("button", { name: "Créer une conversation", exact: true }).click();
@@ -484,6 +490,7 @@ test("T-AC-750 UI contract retries an unconfirmed send with the original revisio
 }) => {
   const project = await createProject(page, "Chat réponse perdue");
   await createProfile(page, project);
+  await page.goto("/hermes?vue=conversations");
   const create = page.getByRole("form", { name: "Créer une conversation", exact: true });
   await create.getByLabel("Titre de la conversation", { exact: true }).fill("Envoi incertain");
   await create.getByRole("button", { name: "Créer une conversation", exact: true }).click();

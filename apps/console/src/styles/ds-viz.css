@@ -1,0 +1,257 @@
+/* Data visualisation. Solid = observed, hatched = declared/estimated, dashed amber = unknown. */
+.meter-bar {
+  position: relative;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--raised);
+}
+.meter-bar > span {
+  position: absolute;
+  inset: 0 auto 0 0;
+  border-radius: 3px;
+  background: var(--chart);
+  transition: width 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.meter.decl .meter-bar > span,
+.meter.est .meter-bar > span {
+  background: repeating-linear-gradient(135deg, var(--chart) 0 2px, transparent 2px 5px);
+  box-shadow: inset 0 0 0 1px var(--chart);
+}
+.meter.unk .meter-bar {
+  background: var(--hatch);
+  outline: 1px dashed var(--accent-line);
+}
+.meter-bar > i {
+  position: absolute;
+  top: -4px;
+  bottom: -4px;
+  width: 1px;
+  background: var(--text-3);
+}
+.meter.hot .meter-bar > span {
+  background: var(--accent);
+  box-shadow: none;
+}
+.meter-text {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+  font-size: 13px;
+}
+.meter-text .meter-pct {
+  margin-left: auto;
+  color: var(--text-2);
+}
+.ring {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+}
+.ring svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+.ring .track {
+  fill: none;
+  stroke: var(--raised);
+  stroke-width: 4;
+}
+.ring .value {
+  fill: none;
+  stroke: var(--chart);
+  stroke-width: 4;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.ring.hot .value {
+  stroke: var(--accent);
+}
+.ring > span {
+  position: relative;
+  font: 500 12px var(--font-data);
+}
+.steps-bar {
+  display: flex;
+  gap: 3px;
+}
+.steps-bar i {
+  flex: 1;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--raised);
+}
+.steps-bar i.done {
+  background: var(--text-2);
+}
+.steps-bar i.run {
+  background: var(--accent);
+  animation: breathe 1.8s ease-in-out infinite;
+}
+.strip {
+  display: inline-flex;
+  gap: 3px;
+}
+.strip i {
+  width: 14px;
+  height: 22px;
+  border-radius: 4px;
+  background: var(--text-2);
+  opacity: 0.85;
+}
+.strip i.late {
+  background: var(--accent);
+  opacity: 1;
+}
+.strip i.miss {
+  background: repeating-linear-gradient(135deg, var(--danger) 0 1.5px, transparent 1.5px 4px);
+  box-shadow: inset 0 0 0 1px var(--danger);
+  opacity: 1;
+}
+.strip i.none {
+  background: var(--hatch);
+  box-shadow: inset 0 0 0 1px var(--line-strong);
+  opacity: 1;
+}
+.pipeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  gap: 6px;
+}
+.pipeline li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: var(--raised);
+  border: 1px solid var(--line);
+  min-width: 0;
+}
+.pipeline li div {
+  display: grid;
+  min-width: 0;
+}
+.pipeline li strong {
+  font-size: 13px;
+}
+.pipeline li .mono {
+  font-size: 11.5px;
+  color: var(--text-2);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.pip {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  flex: none;
+  background: var(--primary);
+  color: var(--primary-ink);
+}
+.pipeline li.pending .pip {
+  background: transparent;
+  border: 1.5px solid var(--line-strong);
+}
+.pipeline li.pending {
+  background: var(--hatch), var(--surface);
+}
+.pipeline li.unk {
+  background:
+    repeating-linear-gradient(135deg, var(--accent-soft) 0 6px, transparent 6px 12px),
+    var(--surface);
+  border: 1px dashed var(--accent-line);
+}
+.pipeline li.unk .pip {
+  background: transparent;
+  border: 1.5px dashed var(--accent);
+}
+.pipeline li.unk .mono {
+  color: var(--accent);
+}
+.pipeline li.fail .pip {
+  background: var(--danger);
+  color: #fff;
+}
+.pipeline li.run .pip {
+  background: transparent;
+  border: 1.5px solid var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-soft);
+}
+.live-dot {
+  position: relative;
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--ok);
+  flex: none;
+}
+.live-dot::after {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  border: 1px solid var(--ok);
+  opacity: 0;
+  animation: ping 2.4s ease-out infinite;
+}
+.live-dot.warn {
+  background: var(--accent);
+}
+.live-dot.warn::after {
+  border-color: var(--accent);
+}
+.live-dot.off {
+  background: var(--text-3);
+}
+.live-dot.off::after {
+  display: none;
+}
+@keyframes ping {
+  0% {
+    transform: scale(0.6);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+@keyframes breathe {
+  50% {
+    opacity: 0.45;
+  }
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.rise {
+  animation: rise 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.spin {
+  animation: spin 0.9s linear infinite;
+}

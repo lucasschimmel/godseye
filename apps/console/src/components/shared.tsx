@@ -1,5 +1,6 @@
 import { AlertCircle, ArrowUpRight, Check, CircleDashed, LoaderCircle } from "lucide-react";
 import type { ReactNode } from "react";
+import { isStepUpRequired } from "@/lib/api";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 
@@ -9,20 +10,41 @@ export function PageHeading({
   description,
   action,
 }: {
-  eyebrow: string;
-  title: string;
-  description: string;
+  eyebrow?: ReactNode;
+  title: ReactNode;
+  description?: ReactNode;
   action?: ReactNode;
 }) {
   return (
-    <div className="page-heading">
+    <header className="hero">
       <div>
-        <p className="eyebrow">{eyebrow}</p>
+        {eyebrow && <p className="hero-eyebrow">{eyebrow}</p>}
         <h1>{title}</h1>
-        <p>{description}</p>
+        {description && <p className="hero-lede">{description}</p>}
       </div>
-      {action}
-    </div>
+      {action && <div className="hero-actions">{action}</div>}
+    </header>
+  );
+}
+/** Heading of a section that sits inside a page (settings tabs, journal views): an h2, not an h1. */
+export function SubHeading({
+  title,
+  description,
+  action,
+}: {
+  eyebrow?: ReactNode;
+  title: ReactNode;
+  description?: ReactNode;
+  action?: ReactNode;
+}) {
+  return (
+    <header className="sub-hero">
+      <div>
+        <h2>{title}</h2>
+        {description && <p className="dim">{description}</p>}
+      </div>
+      {action && <div className="hero-actions">{action}</div>}
+    </header>
   );
 }
 const stateLabels: Record<string, string> = {
@@ -56,10 +78,42 @@ const stateLabels: Record<string, string> = {
   stale: "Archive trop ancienne",
   released: "Réservation libérée",
 };
+const stateTones: Record<string, string> = {
+  active: "ok",
+  succeeded: "ok",
+  ready: "ok",
+  configured: "ok",
+  validated: "ok",
+  "restore-verified": "ok",
+  "archive-healthy": "ok",
+  "backup-created": "ok",
+  running: "warn",
+  queued: "warn",
+  pending_verification: "warn",
+  unqualified: "warn",
+  suspended: "warn",
+  stale: "warn",
+  failed: "danger",
+  quarantined: "danger",
+  unavailable: "danger",
+  unknown: "unk",
+  planned: "decl",
+  draft: "decl",
+  local: "decl",
+  unconfigured: "decl",
+  reserved: "decl",
+};
+export function statusTone(value: string): string {
+  return stateTones[value] ?? "muted";
+}
+export function statusLabel(value: string): string {
+  return stateLabels[value] ?? value;
+}
 export function Status({ value }: { value: string }) {
+  const tone = statusTone(value);
   return (
-    <Badge variant="outline" className={`state state-${value}`}>
-      <span className="status-dot" />
+    <Badge variant="outline" className={`state state-${value} pill-status ${tone}`}>
+      <span className={`dot ${tone}`} aria-hidden="true" />
       {stateLabels[value] ?? value}
     </Badge>
   );
@@ -92,6 +146,8 @@ export function Loading() {
   );
 }
 export function Failure({ error, retry }: { error: Error; retry?: () => void }) {
+  // A missing step-up is handled by the shell's passkey sheet, not shown as a failure.
+  if (isStepUpRequired(error)) return null;
   return (
     <div className="error-message" role="alert">
       <AlertCircle size={18} />

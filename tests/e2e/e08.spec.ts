@@ -33,10 +33,8 @@ for (const [layout, width, height] of [
   }, info) => {
     await page.setViewportSize({ width, height });
     const project = await createProject(page);
-    await page.goto("/usage");
-    await expect(
-      page.getByRole("heading", { name: "Consommation et budgets", exact: true }),
-    ).toBeVisible();
+    await page.goto("/costs");
+    await expect(page.getByRole("heading", { name: "Coûts", level: 1 })).toBeVisible();
     await scopeUsage(page, project);
     await expect(
       page
@@ -58,10 +56,8 @@ for (const [layout, width, height] of [
     await expect(form.getByRole("status")).toHaveText("Enregistrement confirmé.");
     await expect(page.getByText(/0\/1 simultanées/)).toBeVisible();
     await page.screenshot({ path: info.outputPath(`usage-${layout}.png`), fullPage: true });
-    await page.goto("/observability");
-    await expect(
-      page.getByRole("heading", { name: "Observabilité et incidents", exact: true }),
-    ).toBeVisible();
+    await page.goto("/journal?vue=observabilite");
+    await expect(page.getByRole("heading", { name: "Journal", level: 1 })).toBeVisible();
     await expect(page.getByText(/Métriques d’hôte distant indisponibles/)).toBeVisible();
     await expect(
       page.getByRole("heading", { name: "Événements structurés", exact: true }),

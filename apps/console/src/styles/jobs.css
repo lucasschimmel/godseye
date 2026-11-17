@@ -4,7 +4,7 @@
 }
 .jobs-form p {
   color: var(--text-secondary);
-  font-size: 11px;
+  font-size: 13px;
   line-height: 1.8;
 }
 .jobs-engine .panel-heading {
@@ -22,7 +22,7 @@
   min-width: 0;
 }
 .jobs-engine-actions button {
-  font-size: 11px;
+  font-size: 13px;
 }
 .jobs-engine > h2 {
   margin: 23px 23px 12px;
@@ -37,13 +37,13 @@
   margin: 0 23px 12px;
   max-width: 90ch;
   color: var(--text-secondary);
-  font-size: 11px;
+  font-size: 13px;
   line-height: 1.8;
   overflow-wrap: anywhere;
 }
 .jobs-engine > p:last-child {
   margin-bottom: 23px;
-  color: var(--accent-ink);
+  color: var(--link);
 }
 .job-state-failed,
 .job-state-unknown,
@@ -63,7 +63,7 @@
 .job-state-delivered,
 .job-state-false {
   background: var(--accent-surface);
-  color: var(--accent-ink);
+  color: var(--link);
   border-color: var(--accent-surface);
 }
 .jobs-list > .section-title {
@@ -75,11 +75,11 @@
 .jobs-list > p {
   padding: 18px 23px 0;
   color: var(--text-secondary);
-  font-size: 11px;
+  font-size: 13px;
   line-height: 1.8;
 }
 .jobs-list table {
-  font-size: 11px;
+  font-size: 13px;
 }
 .jobs-list .operation-row {
   display: flex;
@@ -96,14 +96,14 @@
   min-width: 0;
 }
 .jobs-list .operation-row strong {
-  font-size: 12px;
+  font-size: 13.5px;
   font-weight: 600;
 }
 .jobs-list .operation-row p,
 .jobs-list .operation-row small {
   display: block;
   margin-top: 7px;
-  font-size: 11px;
+  font-size: 13px;
   color: var(--text-secondary);
   line-height: 1.7;
   overflow-wrap: anywhere;
@@ -125,7 +125,7 @@
   height: auto;
   white-space: normal;
   line-height: 1.5;
-  font-size: 11px;
+  font-size: 13px;
   text-align: center;
 }
 .jobs-inline-form {
@@ -140,7 +140,7 @@
   align-content: start;
   gap: 8px;
   min-width: 0;
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 550;
   line-height: 1.6;
 }
@@ -152,13 +152,13 @@
   border-radius: var(--radius);
   color: var(--text-primary);
   background: var(--surface);
-  font-size: 12px;
+  font-size: 13.5px;
   min-width: 0;
   width: 100%;
 }
 .jobs-inline-form select:focus-visible,
 .jobs-form select:focus-visible {
-  outline: 2px solid var(--accent-ink);
+  outline: 2px solid var(--link);
   outline-offset: 2px;
 }
 .jobs-inline-form button {
@@ -172,7 +172,7 @@
 .jobs-form input {
   min-width: 0;
   width: 100%;
-  font-size: 12px;
+  font-size: 13.5px;
   box-shadow: none;
 }
 .jobs-fields {

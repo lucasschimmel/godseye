@@ -13,7 +13,7 @@ async function projectAndProfile(page: Page) {
   await page.getByLabel("Nom du projet", { exact: true }).fill(name);
   await page.getByRole("button", { name: "Enregistrer le projet", exact: true }).click();
   await expect(page.getByRole("heading", { name, exact: true })).toBeVisible();
-  await page.goto("/agents");
+  await page.goto("/hermes?vue=profils");
   await page
     .getByRole("combobox", { name: "Projet du profil", exact: true })
     .selectOption({ label: name });
@@ -24,6 +24,7 @@ async function projectAndProfile(page: Page) {
   await expect(
     page.getByRole("article", { name: new RegExp(`^Opérations · ${name} ·`) }),
   ).toBeVisible();
+  await page.goto("/hermes?vue=plans");
   return name;
 }
 

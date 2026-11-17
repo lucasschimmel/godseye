@@ -11,9 +11,10 @@ test.beforeEach(async ({ page, baseURL }, testInfo) => {
 
 test("T-AC-01 manages owner passkeys and signs out of the private console", async ({ page }) => {
   await page
-    .getByRole("navigation", { name: "Navigation principale" })
-    .getByRole("link", { name: "Accès propriétaire", exact: true })
+    .getByRole("complementary", { name: "Barre latérale" })
+    .getByRole("link", { name: "Réglages", exact: true })
     .click();
+  await expect(page.getByRole("heading", { name: "Réglages", level: 1 })).toBeVisible();
   await expect(
     page.getByRole("heading", { name: "Accès propriétaire", exact: true }),
   ).toBeVisible();
@@ -56,10 +57,13 @@ test("T33 shows a local overview without inventing infrastructure measurements",
 }) => {
   await page.goto("/");
 
-  await expect(page.getByRole("heading", { name: "Vue d’ensemble", exact: true })).toBeVisible();
-  await expect(page.getByText("Serveur non connecté", { exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Rien ne vous attend.", level: 1 })).toBeVisible();
+  await expect(page.getByText("Développement local", { exact: true })).toBeVisible();
+  // No measurement is invented: the unobserved server is labelled as such.
+  await expect(page.getByText("charge non mesurée", { exact: true })).toBeVisible();
+  await expect(page.getByText("Serveur", { exact: true }).first()).toBeVisible();
   await expect(page.getByRole("link", { name: "Nouveau projet", exact: true })).toBeVisible();
-  await expect(page.getByText("Votre premier projet vous attend", { exact: true })).toBeVisible();
+  await expect(page.getByText("Aucun projet pour le moment.", { exact: true })).toBeVisible();
   await page.screenshot({ path: "artifacts/console-desktop.png", fullPage: true });
 });
 
@@ -81,15 +85,11 @@ test("T33 registers, validates and reloads a project with its GitHub association
 
   await expect(page).toHaveURL(/\/projects\/[a-f0-9-]{36}$/);
   await expect(page.getByRole("heading", { name, exact: true })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Production", exact: true })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Développement", exact: true })).toBeVisible();
-  await expect(page.getByText("Prévu", { exact: true })).toHaveCount(2);
-  await expect(
-    page.getByText(
-      "Aucun service déployé. Les métriques seront disponibles après provisionnement.",
-      { exact: true },
-    ),
-  ).toHaveCount(2);
+  const environments = page.getByRole("navigation", { name: "Environnement" });
+  await expect(environments.getByRole("link", { name: "production" })).toBeVisible();
+  await expect(environments.getByRole("link", { name: "development" })).toBeVisible();
+  // Planned limits are shown as declared, never as measurements.
+  await expect(page.getByText("plafond déclaré", { exact: true })).toHaveCount(3);
   await page.reload();
   await expect(page.getByRole("heading", { name, exact: true })).toBeVisible();
 
@@ -97,8 +97,14 @@ test("T33 registers, validates and reloads a project with its GitHub association
   await expect(
     page.getByRole("status").filter({ hasText: "Configuration locale validée" }),
   ).toHaveText("Configuration locale validée. Le projet n’a pas été provisionné.");
-  await expect(page.getByText("Configuration validée", { exact: true })).toBeVisible();
+  await expect(page.getByText("Validé, non provisionné", { exact: true })).toBeVisible();
 
+  await page
+    .getByRole("navigation", { name: "Sections du projet" })
+    .getByRole("link", { name: "Réglages" })
+    .click();
+  await expect(page.getByRole("heading", { name: "Production", exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Développement", exact: true })).toBeVisible();
   await page.getByLabel("Dépôt", { exact: true }).fill("fixture/browser-project");
   await page.getByLabel("ID du dépôt", { exact: true }).fill("12345");
   await page.getByLabel("ID de l’installation GitHub App", { exact: true }).fill("67890");
@@ -115,7 +121,7 @@ test("T33 registers, validates and reloads a project with its GitHub association
     "67890",
   );
   await expect(page.getByLabel("Branche suivie", { exact: true })).toHaveValue("main");
-  await expect(page.getByText("Configuration validée", { exact: true })).toBeVisible();
+  await expect(page.getByText("Validé, non provisionné", { exact: true })).toBeVisible();
 });
 
 // T-AC-06: required local views expose useful, honest capability states.
@@ -125,8 +131,8 @@ test("T33 navigates the CI, operations, infrastructure and Hermes views with hon
   await page.goto("/");
   const navigation = page.getByRole("navigation", { name: "Navigation principale" });
 
-  await navigation.getByRole("link", { name: "CI / CD", exact: true }).click();
-  await expect(page.getByRole("heading", { name: "CI / CD", exact: true })).toBeVisible();
+  await navigation.getByRole("link", { name: "Livraison", exact: true }).click();
+  await expect(page.getByRole("heading", { name: "Livraison", level: 1 })).toBeVisible();
   await expect(page.getByText("Aucune exécution reçue", { exact: true })).toBeVisible();
   await expect(
     page.getByText(
@@ -135,12 +141,16 @@ test("T33 navigates the CI, operations, infrastructure and Hermes views with hon
     ),
   ).toBeVisible();
 
-  await navigation.getByRole("link", { name: "Opérations", exact: true }).click();
-  await expect(page.getByRole("heading", { name: "Opérations", exact: true })).toBeVisible();
+  await navigation.getByRole("link", { name: "Journal", exact: true }).click();
+  await expect(page.getByRole("heading", { name: "Journal", level: 1 })).toBeVisible();
+  await page
+    .getByRole("navigation", { name: "Vues du journal" })
+    .getByRole("link", { name: "Opérations", exact: true })
+    .click();
   await expect(page.getByRole("heading", { name: "Journal des opérations" })).toBeVisible();
 
-  await navigation.getByRole("link", { name: "Infrastructure", exact: true }).click();
-  await expect(page.getByRole("heading", { name: "Infrastructure", exact: true })).toBeVisible();
+  await navigation.getByRole("link", { name: "Serveur", exact: true }).click();
+  await expect(page.getByRole("heading", { name: "Serveur", level: 1 })).toBeVisible();
   await expect(
     page.getByRole("heading", { name: "Exécution non qualifiée", exact: true }),
   ).toBeVisible();
@@ -150,11 +160,10 @@ test("T33 navigates the CI, operations, infrastructure and Hermes views with hon
     }),
   ).toBeVisible();
 
-  await navigation.getByRole("link", { name: "Hermes CORE", exact: true }).click();
-  await expect(page.getByRole("heading", { name: "Agent Center", exact: true })).toBeVisible();
-  await expect(
-    page.getByRole("heading", { name: "Runtime local à connecter", exact: true }),
-  ).toBeVisible();
+  await navigation.getByRole("link", { name: "Hermes", exact: true }).click();
+  await expect(page.getByRole("heading", { name: "Hermes", level: 1 })).toBeVisible();
+  await expect(page.getByText(/^Runtime local à connecter/)).toBeVisible();
+  await expect(page.getByText("Non configuré", { exact: true })).toBeVisible();
 });
 
 test("shows the audit anchor and downloads a journal export from the operations page", async ({
@@ -175,7 +184,7 @@ test("T33 keeps the mobile views within the viewport and supports the keyboard s
   page,
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  for (const route of ["/", "/projects/new", "/pipelines", "/infrastructure", "/agents"]) {
+  for (const route of ["/", "/projects/new", "/platform/delivery", "/platform/server", "/hermes"]) {
     await page.goto(route);
     await expect(page.locator("h1")).toBeVisible();
     const horizontalOverflow = await page.evaluate(
@@ -185,7 +194,7 @@ test("T33 keeps the mobile views within the viewport and supports the keyboard s
   }
 
   await page.goto("/");
-  await expect(page.getByRole("heading", { name: "Vue d’ensemble", exact: true })).toBeVisible();
+  await expect(page.locator("main h1")).toBeVisible();
   await page.screenshot({ path: "artifacts/console-mobile.png", fullPage: true });
   await page.keyboard.press("Tab");
   await expect(page.getByRole("link", { name: "Aller au contenu", exact: true })).toBeFocused();

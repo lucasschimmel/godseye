@@ -33,36 +33,39 @@ export function ProjectTimeline({
     resource<ObservabilityTimelineView>(`timeline:${query}`, `/observability/timeline?${query}`),
   );
   return (
-    <section className="panel telemetry-section">
-      <h2>Chronologie corrélée</h2>
-      <p>Journal de contrôle ; seules les identités explicites établissent une corrélation.</p>
+    <section className="card" aria-labelledby="timeline-title">
+      <div className="card-head">
+        <h2 id="timeline-title">Chronologie corrélée</h2>
+        <span className="legend">seules les identités explicites corrèlent</span>
+      </div>
       {timeline.isError ? (
         <Failure error={timeline.error} retry={() => void timeline.refetch()} />
       ) : !timeline.data ? (
         <Loading />
       ) : (
         <>
-          {timeline.data.truncated && <p>Chronologie tronquée aux entrées conservées.</p>}
-          {!timeline.data.entries.length && <p>Aucune entrée dans ce périmètre.</p>}
-          {timeline.data.entries.map((entry) => (
-            <div key={`${entry.kind}:${entry.id}`} className="telemetry-record">
-              <strong>
-                {entry.kind} · {entry.state}
-              </strong>
-              <p>
-                {timestamp(entry.occurredAt)} · {entry.source}
-              </p>
-              <p>
-                Projet {entry.projectId ?? "Global"} · environnement {entry.environmentId ?? "—"}
-              </p>
-              <p>
-                {entry.correlation
-                  ? `${entry.correlation.kind} : ${entry.correlation.id}`
-                  : "Aucune corrélation explicite"}{" "}
-                · {entry.id}
-              </p>
-            </div>
-          ))}
+          {!timeline.data.entries.length && (
+            <p className="faint">Aucune entrée dans ce périmètre.</p>
+          )}
+          <ol className="timeline-rows">
+            {timeline.data.entries.slice(0, 20).map((entry) => (
+              <li key={`${entry.kind}:${entry.id}`}>
+                <time className="mono faint" dateTime={entry.occurredAt}>
+                  {timestamp(entry.occurredAt)}
+                </time>
+                <span className="tag mono">{entry.kind}</span>
+                <span>{entry.state}</span>
+                <span className="mono faint" title={entry.id}>
+                  {entry.correlation
+                    ? `${entry.correlation.kind} ${entry.correlation.id.slice(0, 8)}`
+                    : "sans corrélation"}
+                </span>
+              </li>
+            ))}
+          </ol>
+          {(timeline.data.truncated || timeline.data.entries.length > 20) && (
+            <p className="faint small">Chronologie tronquée aux entrées les plus récentes.</p>
+          )}
         </>
       )}
     </section>

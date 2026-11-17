@@ -1,17 +1,8 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { JobsPanel } from "@/components/jobs-panel";
-import { PageHeading } from "@/components/shared";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/jobs")({ component: Jobs });
-function Jobs() {
-  return (
-    <>
-      <PageHeading
-        eyebrow="TRAVAUX DURABLES"
-        title="Jobs"
-        description="Tâches planifiées ou manuelles, exécutions et effets sortants, avec un état toujours exact et jamais relancé à l’aveugle."
-      />
-      <JobsPanel />
-    </>
-  );
-}
+/** Former address, kept so bookmarks and links keep working. */
+export const Route = createFileRoute("/jobs")({
+  beforeLoad: () => {
+    throw redirect({ to: "/platform/jobs", replace: true });
+  },
+});

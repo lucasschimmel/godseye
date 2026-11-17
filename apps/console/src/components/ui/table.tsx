@@ -5,7 +5,9 @@ import { cn } from "@/lib/utils";
 
 const Table = React.forwardRef<HTMLTableElement, React.HTMLAttributes<HTMLTableElement>>(
   ({ className, ...props }, ref) => (
-    <div className="relative w-full overflow-auto">
+    // A scrollable table must be reachable by keyboard (WCAG 2.1.1).
+    // biome-ignore lint/a11y/noNoninteractiveTabindex: focus lets keyboard users scroll a wide table.
+    <div className="relative w-full overflow-auto" tabIndex={0}>
       <table ref={ref} className={cn("w-full caption-bottom text-sm", className)} {...props} />
     </div>
   ),
