@@ -16,7 +16,7 @@ BAO_ADDR="${GODSEYE_BAO_ADDR:-https://127.0.0.1:8200}"
 BAO_CACERT="${GODSEYE_BAO_CACERT:-/etc/openbao/bao.crt}"
 
 [ "$(id -u)" -eq 0 ] || { echo "Run as root (sudo)." >&2; exit 1; }
-[ -t 0 ] || { echo "Interactive terminal required (ssh -t)." >&2; exit 1; }
+[ -t 0 ] || [ "${GODSEYE_NONINTERACTIVE:-}" = 1 ] || { echo "Interactive terminal required (ssh -t), or GODSEYE_NONINTERACTIVE=1 with the secrets on stdin." >&2; exit 1; }
 command -v jq >/dev/null || { echo "jq is required." >&2; exit 1; }
 
 curl -fsS --cacert "$BAO_CACERT" "${BAO_ADDR}/v1/sys/seal-status" | jq -e '.sealed == false' >/dev/null \
