@@ -32,3 +32,5 @@ license/source obligations require separate review before any redistribution.
 These assets are private project-local downloads; no binary
 redistribution or general license-compatibility approval is claimed. See
 [coding runner operations](docs/development/coding-runners.md).
+
+The optional Boards application embeds `@excalidraw/excalidraw` (MIT, Excalidraw contributors) as an unmodified npm dependency; its license travels with the package. See [Boards](docs/development/boards.md).
