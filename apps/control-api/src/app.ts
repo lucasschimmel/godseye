@@ -96,8 +96,13 @@ export function createApp(
     }
     // The edge reaches the ask guard by its private gateway address, so only that read is exempt.
     const askGuard = context.req.method === "GET" && context.req.path === DOMAIN_ASK_PATH;
+    // GitHub reaches the signed webhook through the public site name, which is never an allowed API host.
+    // The route is authenticated by its HMAC signature (checked before parsing), not by the host header,
+    // and it is not browser-reachable, so only this exact POST is exempt from the host allowlist.
+    const webhookGuard = context.req.method === "POST" && context.req.path === "/hooks/github";
     if (
       !askGuard &&
+      !webhookGuard &&
       !config.hosts.includes(context.req.header("host") ?? new URL(context.req.url).host)
     ) {
       throw new DomainError("INVALID_HOST", "Local host is not allowed", 403);
