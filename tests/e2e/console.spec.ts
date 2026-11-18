@@ -59,8 +59,9 @@ test("T33 shows a local overview without inventing infrastructure measurements",
 
   await expect(page.getByRole("heading", { name: "Rien ne vous attend.", level: 1 })).toBeVisible();
   await expect(page.getByText("Développement local", { exact: true })).toBeVisible();
-  // No measurement is invented: the unobserved server is labelled as such.
-  await expect(page.getByText("charge non mesurée", { exact: true })).toBeVisible();
+  // No measurement is invented: a host the collector cannot read (Windows) is labelled as such,
+  // while a Linux host (the Jenkins agent) legitimately reports its own local CPU load.
+  await expect(page.getByText(/^(charge non mesurée|% charge)$/)).toBeVisible();
   await expect(page.getByText("Serveur", { exact: true }).first()).toBeVisible();
   await expect(page.getByRole("link", { name: "Nouveau projet", exact: true })).toBeVisible();
   await expect(page.getByText("Aucun projet pour le moment.", { exact: true })).toBeVisible();

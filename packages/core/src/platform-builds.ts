@@ -1,6 +1,7 @@
 import {
   PLATFORM_BUILD_JOBS,
   PLATFORM_BUILD_LIMIT,
+  type PlatformBuildInfrastructureView,
   type PlatformBuildJobView,
   type PlatformBuildsView,
   type PlatformBuildUnavailableReason,
@@ -21,6 +22,8 @@ export interface PlatformBuildSource {
   /** Origin of the controller; without it no build link is ever offered for a CI run. */
   readonly origin?: string;
   recentBuilds(job: string, limit: number): Promise<PlatformBuildView[]>;
+  /** Agents and queue of the controller; adapters that cannot report them omit it. */
+  infrastructure?(): Promise<PlatformBuildInfrastructureView>;
 }
 
 export interface PlatformBuildsOptions {
@@ -71,16 +74,30 @@ export class PlatformBuilds {
 
   async observe(actor: Actor): Promise<PlatformBuildsView> {
     assertOwner(actor);
+    return this.observeSystem();
+  }
+
+  /** Same read-only view for the controller's own detectors (no owner session involved). */
+  async observeSystem(): Promise<PlatformBuildsView> {
     const { mode, source } = this.options;
     if (mode !== "server") return { state: "not_connected", reason: "LOCAL_MODE" };
     if (!source) return { state: "not_connected", reason: "NOT_CONFIGURED" };
     const jobs = await Promise.all(
       (this.options.jobs ?? PLATFORM_BUILD_JOBS).map((name) => this.job(source, name)),
     );
+    const infrastructure = source.infrastructure
+      ? await source.infrastructure().catch(
+          (error): PlatformBuildInfrastructureView => ({
+            state: "unavailable",
+            reason: error instanceof PlatformBuildsError ? error.reason : "ERROR",
+          }),
+        )
+      : undefined;
     return {
       state: "connected",
       observedAt: (this.options.now?.() ?? new Date()).toISOString(),
       jobs,
+      ...(infrastructure ? { infrastructure } : {}),
     };
   }
 

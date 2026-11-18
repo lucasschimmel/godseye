@@ -45666,6 +45666,127 @@
                               }
                             ]
                           }
+                        },
+                        "infrastructure": {
+                          "oneOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "state": {
+                                  "type": "string",
+                                  "const": "observed"
+                                },
+                                "agents": {
+                                  "maxItems": 32,
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "name": {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 100
+                                      },
+                                      "online": {
+                                        "type": "boolean"
+                                      },
+                                      "executors": {
+                                        "type": "integer",
+                                        "minimum": 0,
+                                        "maximum": 9007199254740991
+                                      },
+                                      "busy": {
+                                        "type": "boolean"
+                                      },
+                                      "offlineReason": {
+                                        "anyOf": [
+                                          {
+                                            "type": "string",
+                                            "maxLength": 160
+                                          },
+                                          {
+                                            "type": "null"
+                                          }
+                                        ]
+                                      }
+                                    },
+                                    "required": [
+                                      "name",
+                                      "online",
+                                      "executors",
+                                      "busy",
+                                      "offlineReason"
+                                    ],
+                                    "additionalProperties": false
+                                  }
+                                },
+                                "queue": {
+                                  "type": "object",
+                                  "properties": {
+                                    "length": {
+                                      "type": "integer",
+                                      "minimum": 0,
+                                      "maximum": 9007199254740991
+                                    },
+                                    "stuck": {
+                                      "type": "integer",
+                                      "minimum": 0,
+                                      "maximum": 9007199254740991
+                                    },
+                                    "oldestWaitMs": {
+                                      "anyOf": [
+                                        {
+                                          "type": "integer",
+                                          "minimum": 0,
+                                          "maximum": 9007199254740991
+                                        },
+                                        {
+                                          "type": "null"
+                                        }
+                                      ]
+                                    }
+                                  },
+                                  "required": [
+                                    "length",
+                                    "stuck",
+                                    "oldestWaitMs"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              },
+                              "required": [
+                                "state",
+                                "agents",
+                                "queue"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "state": {
+                                  "type": "string",
+                                  "const": "unavailable"
+                                },
+                                "reason": {
+                                  "type": "string",
+                                  "enum": [
+                                    "UNREACHABLE",
+                                    "TIMEOUT",
+                                    "UNAUTHORIZED",
+                                    "NOT_FOUND",
+                                    "INVALID",
+                                    "ERROR"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "state",
+                                "reason"
+                              ],
+                              "additionalProperties": false
+                            }
+                          ]
                         }
                       },
                       "required": [

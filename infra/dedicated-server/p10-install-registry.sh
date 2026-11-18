@@ -11,7 +11,8 @@ BASE_URL="https://github.com/project-zot/zot/releases/download/v${ZOT_VERSION}"
 cd /tmp
 curl -fsSLO "${BASE_URL}/zot-linux-amd64"
 curl -fsSLO "${BASE_URL}/checksums.sha256.txt"
-grep ' zot-linux-amd64$' checksums.sha256.txt | sha256sum -c -
+# The upstream file marks entries as binary ("<hash> *<name>"), so match the optional asterisk.
+grep -E ' \*?zot-linux-amd64$' checksums.sha256.txt | sha256sum -c -
 install -m 0755 zot-linux-amd64 /usr/local/bin/zot
 rm -f zot-linux-amd64 checksums.sha256.txt
 

@@ -54,6 +54,33 @@ export const PlatformBuildJob = z.discriminatedUnion("state", [
   }),
 ]);
 
+/** A Jenkins build agent as the controller reports it. */
+export const PlatformAgent = z.object({
+  name: z.string().min(1).max(100),
+  online: z.boolean(),
+  executors: z.number().int().nonnegative(),
+  busy: z.boolean(),
+  /** Short offline reason reported by Jenkins; null when online or not stated. */
+  offlineReason: z.string().max(160).nullable(),
+});
+export const PlatformQueue = z.object({
+  length: z.number().int().nonnegative(),
+  /** Items Jenkins itself flags as stuck. */
+  stuck: z.number().int().nonnegative(),
+  /** Longest wait of a queued item; null when the queue is empty. */
+  oldestWaitMs: z.number().int().nonnegative().nullable(),
+});
+/** Agents and queue of the controller; unreadable state is explicit, never an empty fleet. */
+export const PlatformBuildInfrastructure = z.discriminatedUnion("state", [
+  z.object({
+    state: z.literal("observed"),
+    agents: z.array(PlatformAgent).max(32),
+    queue: PlatformQueue,
+  }),
+  z.object({ state: z.literal("unavailable"), reason: z.enum(PLATFORM_BUILD_UNAVAILABLE_REASONS) }),
+]);
+export type PlatformBuildInfrastructureView = z.infer<typeof PlatformBuildInfrastructure>;
+
 /**
  * Read-only view of the platform's own Jenkins builds. Local mode and a missing binding are
  * explicit "not connected" states; no build is ever fabricated.
@@ -67,6 +94,8 @@ export const PlatformBuilds = z.discriminatedUnion("state", [
     state: z.literal("connected"),
     observedAt: Moment,
     jobs: z.array(PlatformBuildJob).max(8),
+    /** Absent when the source cannot report agents and queue. */
+    infrastructure: PlatformBuildInfrastructure.optional(),
   }),
 ]);
 export type PlatformBuildView = z.infer<typeof PlatformBuild>;
