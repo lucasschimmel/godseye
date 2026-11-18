@@ -91,6 +91,7 @@ table inet godseye_egress {
 		meta skuid "$DNS_USER" ip daddr { $(echo "$UPSTREAM_DNS" | sed 's/ /, /g') } udp dport 53 accept comment "resolver upstream"
 		meta skuid "$DNS_USER" ip daddr { $(echo "$UPSTREAM_DNS" | sed 's/ /, /g') } tcp dport 53 accept comment "resolver upstream"
 		ip daddr @allowed4 tcp dport { 22, 80, 443 } accept comment "allowlisted names resolved by the local dnsmasq"
+		ip daddr 10.20.1.10 tcp dport 5000 accept comment "private image registry on the pro VM (app build agent pushes)"
 		counter reject with icmpx type admin-prohibited
 	}
 }

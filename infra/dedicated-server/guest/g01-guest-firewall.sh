@@ -46,6 +46,7 @@ render() {
     pro)
       extra="
 		ip saddr ${WG_V4} tcp dport 8080 accept comment \"Jenkins UI from WireGuard peers\"
+		ip saddr 10.20.3.10 tcp dport 5000 accept comment \"private registry from the build agent\"
 		ip saddr ${EDGE_SUBNET} ip daddr 172.30.0.1 tcp dport { 4300, 4301 } accept comment \"edge to console/API forwards\""
       ;;
     games)
