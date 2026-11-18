@@ -68,6 +68,12 @@ export interface InfrastructureOptions {
     coveredKinds: readonly never[];
     coveredKeys: string[];
   }>;
+  /** Optional CI health detector (failed builds, offline agent, blocked queue) feeding incidents. */
+  ciHealth?: () => Promise<{
+    findings: Finding[];
+    coveredKinds: readonly never[];
+    coveredKeys: string[];
+  }>;
   /** Private role-rotation provider; omitting it keeps rotation honestly unconfigured. */
   rotationProvider?: DatabaseRotationProvider;
   /** Optional external owner notifier; omitting it keeps incident delivery `unconfigured`. */
@@ -124,19 +130,26 @@ export class InfrastructureEngine {
       notifier: options.incidentNotifier ?? this.notifications.notifier(),
       sources: {
         system: async () => {
-          const [health, usage, schedule] = await Promise.all([
+          const [health, usage, schedule, ci] = await Promise.all([
             this.observability.systemFindings(),
             this.usage.systemFindings(),
             // A failing detector must not hide the others; it contributes nothing instead of "healthy".
             options.backupSchedule?.().catch(() => null) ?? null,
+            options.ciHealth?.().catch(() => null) ?? null,
           ]);
           return {
-            findings: [...health.findings, ...usage.findings, ...(schedule?.findings ?? [])],
+            findings: [
+              ...health.findings,
+              ...usage.findings,
+              ...(schedule?.findings ?? []),
+              ...(ci?.findings ?? []),
+            ],
             coveredKinds: [...health.coveredKinds, ...usage.coveredKinds],
             coveredKeys: [
               ...health.coveredKeys,
               ...usage.coveredKeys,
               ...(schedule?.coveredKeys ?? []),
+              ...(ci?.coveredKeys ?? []),
             ],
           };
         },

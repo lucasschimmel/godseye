@@ -60,6 +60,22 @@ export class JenkinsHttpError extends Error {
     this.name = "JenkinsHttpError";
   }
 }
+const ComputersView = z.object({
+  computer: z.array(
+    z.object({
+      displayName: z.string(),
+      offline: z.boolean(),
+      offlineCauseReason: z.string().nullish(),
+      numExecutors: z.number().int().nonnegative(),
+      idle: z.boolean(),
+    }),
+  ),
+});
+const QueueDetailView = z.object({
+  items: z.array(
+    z.object({ stuck: z.boolean().optional(), inQueueSince: z.number().nonnegative().optional() }),
+  ),
+});
 const QueueView = z.object({
   items: z.array(z.object({ id: z.number().int(), actions: z.array(z.unknown()) })),
 });
@@ -99,6 +115,26 @@ export class JenkinsClient {
       RecentBuildsView,
       timeoutMs,
     );
+  }
+  /** Read-only agent list as the controller reports it. */
+  async agents(timeoutMs: number) {
+    const tree = "computer[displayName,offline,offlineCauseReason,numExecutors,idle]";
+    const view = await this.json(
+      `/computer/api/json?tree=${encodeURIComponent(tree)}`,
+      ComputersView,
+      timeoutMs,
+    );
+    return view.computer;
+  }
+  /** Read-only queue entries with their stuck flag and enqueue time. */
+  async queueItems(timeoutMs: number) {
+    const tree = "items[stuck,inQueueSince]";
+    const view = await this.json(
+      `/queue/api/json?tree=${encodeURIComponent(tree)}`,
+      QueueDetailView,
+      timeoutMs,
+    );
+    return view.items;
   }
   private jobPath() {
     return `/job/${encodeURIComponent(this.config.jobName)}`;

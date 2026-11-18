@@ -1,6 +1,7 @@
 import {
   AesGcmSealer,
   ControlPlane,
+  ciHealthFindings,
   InfrastructureEngine,
   JOBS_ADAPTER_ID,
   PlatformBuilds,
@@ -123,7 +124,13 @@ async function start() {
     // Private per-cell PostgreSQL/pgBackRest providers; absent binding keeps everything unconfigured.
     const cells = configuredCellProviders();
     if (cells) console.info("Private PostgreSQL cell providers are configured");
+    // One read-only Jenkins view feeds both the console panel and the CI incident detector.
+    const platformBuilds = new PlatformBuilds({
+      mode: config.mode === "server" ? "server" : "local",
+      source: configuredPlatformBuildSource(process.env) ?? null,
+    });
     const infrastructure = new InfrastructureEngine(store, {
+      ciHealth: async () => ciHealthFindings(await platformBuilds.observeSystem()),
       ...configuredDelivery(process.env),
       ...cells,
       agents: { provider: hermes, toolExecutor: hermesTools },
@@ -184,10 +191,7 @@ async function start() {
       broker,
       infrastructure,
       undefined,
-      new PlatformBuilds({
-        mode: config.mode === "server" ? "server" : "local",
-        source: configuredPlatformBuildSource(process.env) ?? null,
-      }),
+      platformBuilds,
     );
     server = serve({ fetch: app.fetch, port: config.apiPort, hostname: config.host }, () => {
       console.info(

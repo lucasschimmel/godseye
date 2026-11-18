@@ -72,7 +72,7 @@ pipeline {
         if (fileExists('scripts/ci-report.mjs')) { sh 'node scripts/ci-report.mjs' }
       }
       junit allowEmptyResults: true, testResults: 'artifacts/test-results/*.xml'
-      archiveArtifacts allowEmptyArchive: true, artifacts: 'artifacts/playwright-results/**,artifacts/playwright/**,artifacts/ci/**'
+      archiveArtifacts allowEmptyArchive: true, artifacts: 'artifacts/test-results/*.xml,artifacts/playwright-results/**,artifacts/playwright/**,artifacts/ci/**'
       deleteDir()
     }
   }

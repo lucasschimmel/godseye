@@ -50,6 +50,7 @@ export * from "./backend-configuration.js";
 export * from "./backup-schedule.js";
 export * from "./cell-helper.js";
 export * from "./cell-host.js";
+export * from "./ci-health.js";
 export * from "./database.js";
 export * from "./database-server-transport.js";
 export * from "./delivery.js";

@@ -1,5 +1,6 @@
 import {
   PLATFORM_BUILD_RESULTS,
+  type PlatformBuildInfrastructureView,
   type PlatformBuildUnavailableReason,
   type PlatformBuildView,
 } from "@godseye/contracts";
@@ -40,14 +41,19 @@ function branchOf(actions: unknown[]): string | null {
 const COMMIT_SHA = /^[a-f0-9]{40}$/;
 const Revision = z.object({ lastBuiltRevision: z.object({ SHA1: z.string() }) });
 
-/** Commit the git plugin recorded for the build; null unless it is a full lowercase SHA-1. */
+/**
+ * Commit the git plugin recorded for the build; null unless it is a full lowercase SHA-1. A job
+ * that is not lightweight records its pipeline-definition checkout first and the workspace
+ * checkout (the source actually tested) last, so the last revision wins.
+ */
 function commitOf(actions: unknown[]): string | null {
+  let found: string | null = null;
   for (const action of actions) {
     const parsed = Revision.safeParse(action);
     if (parsed.success && COMMIT_SHA.test(parsed.data.lastBuiltRevision.SHA1))
-      return parsed.data.lastBuiltRevision.SHA1;
+      found = parsed.data.lastBuiltRevision.SHA1;
   }
-  return null;
+  return found;
 }
 
 function classify(error: unknown): PlatformBuildUnavailableReason {
@@ -83,6 +89,41 @@ export class JenkinsPlatformBuildSource implements PlatformBuildSource {
     } catch (error) {
       if (error instanceof PlatformBuildsError) throw error;
       throw new PlatformBuildsError(classify(error));
+    }
+  }
+
+  async infrastructure(): Promise<PlatformBuildInfrastructureView> {
+    try {
+      const [computers, queue] = await Promise.all([
+        this.client.agents(this.timeoutMs),
+        this.client.queueItems(this.timeoutMs),
+      ]);
+      const now = Date.now();
+      const waits = queue.flatMap((item) =>
+        item.inQueueSince === undefined ? [] : [Math.max(0, now - item.inQueueSince)],
+      );
+      return {
+        state: "observed",
+        // The built-in node has no executors by design; it is not a build agent.
+        agents: computers
+          .filter((c) => c.numExecutors > 0 || c.offline)
+          .slice(0, 32)
+          .map((c) => ({
+            name: c.displayName.slice(0, 100),
+            online: !c.offline,
+            executors: c.numExecutors,
+            busy: !c.idle,
+            offlineReason:
+              c.offline && c.offlineCauseReason ? c.offlineCauseReason.slice(0, 160) : null,
+          })),
+        queue: {
+          length: queue.length,
+          stuck: queue.filter((item) => item.stuck).length,
+          oldestWaitMs: waits.length ? Math.max(...waits) : null,
+        },
+      };
+    } catch (error) {
+      throw error instanceof PlatformBuildsError ? error : new PlatformBuildsError(classify(error));
     }
   }
 
