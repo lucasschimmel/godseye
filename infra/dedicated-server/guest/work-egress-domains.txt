@@ -15,6 +15,13 @@ nodejs.org
 deb.nodesource.com
 bun.sh
 
+# Application image builds (app build agent): base images from Docker Hub and the Trivy vulnerability
+# database from GHCR or the Google mirror. Images are pinned by digest in the agent environment.
+docker.io
+docker.com
+ghcr.io
+gcr.io
+
 # Python
 pypi.org
 pythonhosted.org
