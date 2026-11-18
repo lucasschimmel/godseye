@@ -32,7 +32,10 @@ pipeline {
     }
     stage('Security and integration') {
       steps {
-        sh 'bun audit --audit-level=high'
+        // GHSA-fc5q-39xc-vjpf (picomatch ReDoS, <=4.0.7) has no patched release yet (4.0.7 is the latest) and is
+        // reachable only through build-time glob patterns from our own config. Waived until a fix ships;
+        // remove the --ignore as soon as `bun audit` is clean without it.
+        sh 'bun audit --audit-level=high --ignore=GHSA-fc5q-39xc-vjpf'
         sh 'bun run test'
       }
     }
